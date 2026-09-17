@@ -155,3 +155,53 @@ def test_interactive_wizard_defaults(monkeypatch, sample_slide_pdf, tmp_path):
     finally:
         os.chdir(old_cwd)
 
+
+def test_parse_index_ranges():
+    from slide_printer.cli import parse_index_ranges
+
+    # Basic ranges and numbers
+    assert parse_index_ranges("1-3, 5", 5) == [0, 1, 2, 4]
+    assert parse_index_ranges("1, 2, 3, 5", 5) == [0, 1, 2, 4]
+    assert parse_index_ranges("2-4", 5) == [1, 2, 3]
+    assert parse_index_ranges(" 1 - 3 , 5 ", 5) == [0, 1, 2, 4]
+    assert parse_index_ranges("3", 5) == [2]
+    assert parse_index_ranges("3-1", 5) == [2, 1, 0]
+
+    # Non-index strings return None
+    assert parse_index_ranges("lecture.pdf", 5) is None
+    assert parse_index_ranges(".", 5) is None
+    assert parse_index_ranges("", 5) is None
+    assert parse_index_ranges("*", 5) is None
+
+    # Out of range raises ValueError
+    with pytest.raises(ValueError, match="Index 6 is out of range"):
+        parse_index_ranges("1-3, 6", 5)
+
+    with pytest.raises(ValueError, match="Index 0 is out of range"):
+        parse_index_ranges("0-2", 5)
+
+
+def test_interactive_wizard_range_selection(monkeypatch, sample_slide_pdf, tmp_path):
+    import shutil
+    import os
+    from slide_printer.cli import interactive_wizard
+
+    # Create 3 presentations
+    shutil.copy(sample_slide_pdf, tmp_path / "lecture1.pdf")
+    shutil.copy(sample_slide_pdf, tmp_path / "lecture2.pdf")
+    shutil.copy(sample_slide_pdf, tmp_path / "lecture3.pdf")
+
+    old_cwd = os.getcwd()
+    os.chdir(tmp_path)
+    try:
+        # Style: 1 (grid), Paper: 1 (a4), Selection: "1, 3" (lecture1 and lecture3, skip lecture2), Open: n
+        inputs = iter(["1", "1", "1, 3", "n"])
+        monkeypatch.setattr("builtins.input", lambda prompt="": next(inputs))
+        res = interactive_wizard()
+        assert res == 0
+        assert (tmp_path / "lecture1_grid.pdf").exists()
+        assert not (tmp_path / "lecture2_grid.pdf").exists()
+        assert (tmp_path / "lecture3_grid.pdf").exists()
+    finally:
+        os.chdir(old_cwd)
+

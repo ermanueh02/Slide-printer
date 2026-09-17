@@ -178,6 +178,60 @@ def get_pdf_page_count(path: str) -> Optional[int]:
         return None
 
 
+def parse_index_ranges(expr: str, max_count: int) -> Optional[List[int]]:
+    """Parses index selections and ranges such as '1-3, 5' or '1, 3, 5-7'.
+
+    Returns:
+        List of 0-based unique indices if expr is a valid selection, or None
+        if expr does not represent an index expression.
+    Raises:
+        ValueError: If an index in a valid expression is out of range (e.g. > max_count or < 1).
+    """
+    clean = expr.strip()
+    if not clean:
+        return None
+
+    import re
+    # Must contain only digits, commas, hyphens, spaces, semicolons
+    if not re.match(r"^[\d\s,;\-]+$", clean):
+        return None
+
+    # Must contain at least one digit
+    if not re.search(r"\d", clean):
+        return None
+
+    parts = [p.strip() for p in clean.replace(";", ",").split(",") if p.strip()]
+    indices: List[int] = []
+
+    for part in parts:
+        if "-" in part:
+            sub = [s.strip() for s in part.split("-")]
+            if len(sub) == 2 and sub[0].isdigit() and sub[1].isdigit():
+                start, end = int(sub[0]), int(sub[1])
+                step = 1 if start <= end else -1
+                for val in range(start, end + step, step):
+                    if 1 <= val <= max_count:
+                        zero_idx = val - 1
+                        if zero_idx not in indices:
+                            indices.append(zero_idx)
+                    else:
+                        raise ValueError(f"Index {val} is out of range (found {max_count} presentations).")
+            else:
+                return None
+        elif part.isdigit():
+            val = int(part)
+            if 1 <= val <= max_count:
+                zero_idx = val - 1
+                if zero_idx not in indices:
+                    indices.append(zero_idx)
+            else:
+                raise ValueError(f"Index {val} is out of range (found {max_count} presentations).")
+        else:
+            return None
+
+    return indices if indices else None
+
+
 def print_summary_table(rows: List[Dict[str, Any]], elapsed: float, out_dir: str, paper: str) -> None:
     """Prints a polished Unicode summary table of processed presentations."""
     if not rows:
@@ -322,7 +376,7 @@ def interactive_wizard() -> int:
             sz_label = format_bytes(sz)
             print(f"  [{cyan(str(i))}] {pdf_name} {dim(f'({pgs_label} · {sz_label})')}")
         print(dim(f"\n  - Press Enter to process current directory '.' {bold('[default]')}"))
-        print(dim(f"  - Type a number (1-{len(local_pdf_info)}), or '*' to process all above."))
+        print(dim(f"  - Select files by number or range (e.g. '1-3, 5', '2', or '*' for all)."))
     else:
         print(dim("  No presentation PDF files detected in current directory."))
         print(dim("  - Drag & drop any PDF or folder directly into this terminal."))
@@ -350,35 +404,39 @@ def interactive_wizard() -> int:
 
     files_to_process: List[str] = []
 
-    # Check if user typed a number matching local_pdfs
-    if local_pdf_info and entry.isdigit():
-        idx = int(entry) - 1
-        if 0 <= idx < len(local_pdf_info):
-            files_to_process = [local_pdf_info[idx][0]]
-        else:
-            print(red(f"❌ Index {entry} out of range."))
+    # Check if user typed a number or range matching local_pdfs (e.g. '1-3, 5')
+    if local_pdf_info:
+        try:
+            matched_indices = parse_index_ranges(entry, len(local_pdf_info))
+        except ValueError as err:
+            print(red(f"❌ {err}"))
             return 1
-    elif local_pdf_info and entry in ("*", "all", "a", "A"):
-        files_to_process = [p[0] for p in local_pdf_info]
-    elif os.path.isdir(entry):
-        files_to_process = sorted(glob.glob(os.path.join(entry, "*.pdf")))
-    elif entry == ".":
-        files_to_process = [p[0] for p in local_pdf_info]
-    else:
-        # Delimited list or single file
-        delimiter = ";" if ";" in entry else "|"
-        items = [item.strip().strip("\"'") for item in entry.split(delimiter) if item.strip()]
-        for item in items:
-            is_p, match_pdf = check_pptx_file(item)
-            if is_p:
-                if match_pdf:
-                    files_to_process.append(match_pdf)
-                continue
-            path = item if item.lower().endswith(".pdf") else f"{item}.pdf"
-            if os.path.isfile(path):
-                files_to_process.append(path)
-            else:
-                print(yellow(f"⚠️  File not found: '{path}'. Skipping..."))
+
+        if matched_indices is not None:
+            files_to_process = [local_pdf_info[i][0] for i in matched_indices]
+
+    if not files_to_process:
+        if local_pdf_info and entry in ("*", "all", "a", "A"):
+            files_to_process = [p[0] for p in local_pdf_info]
+        elif entry == ".":
+            files_to_process = [p[0] for p in local_pdf_info]
+        elif os.path.isdir(entry):
+            files_to_process = sorted(glob.glob(os.path.join(entry, "*.pdf")))
+        else:
+            # Delimited list or single file
+            delimiter = ";" if ";" in entry else "|"
+            items = [item.strip().strip("\"'") for item in entry.split(delimiter) if item.strip()]
+            for item in items:
+                is_p, match_pdf = check_pptx_file(item)
+                if is_p:
+                    if match_pdf:
+                        files_to_process.append(match_pdf)
+                    continue
+                path = item if item.lower().endswith(".pdf") else f"{item}.pdf"
+                if os.path.isfile(path):
+                    files_to_process.append(path)
+                else:
+                    print(yellow(f"⚠️  File not found: '{path}'. Skipping..."))
 
     if not files_to_process:
         print(red("❌ No valid PDF presentations found to process."))

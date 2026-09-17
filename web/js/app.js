@@ -270,20 +270,55 @@
 
   // --- Localization (i18n) Engine ---
   function detectInitialLanguage() {
-    const savedLang = localStorage.getItem('slide_printer_lang');
-    if (savedLang && ['en', 'es', 'gl'].includes(savedLang)) {
-      return savedLang;
+    // Check if user previously made an explicit manual choice
+    try {
+      const explicitLang = localStorage.getItem('slide_printer_user_lang');
+      if (explicitLang && ['en', 'es', 'gl'].includes(explicitLang)) {
+        return explicitLang;
+      }
+    } catch (e) {
+      // localStorage may be restricted or unavailable
     }
-    const navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
-    if (navLang.startsWith('gl')) return 'gl';
-    if (navLang.startsWith('es')) return 'es';
+
+    // Inspect user and system language preferences
+    const candidates = [];
+    try {
+      if (Array.isArray(navigator.languages) && navigator.languages.length > 0) {
+        candidates.push(...navigator.languages);
+      }
+      if (navigator.language) candidates.push(navigator.language);
+      if (navigator.userLanguage) candidates.push(navigator.userLanguage);
+      if (navigator.browserLanguage) candidates.push(navigator.browserLanguage);
+    } catch (e) {
+      // Ignore navigator access issues
+    }
+
+    for (const raw of candidates) {
+      if (!raw || typeof raw !== 'string') continue;
+      const clean = raw.toLowerCase().trim();
+      if (clean.startsWith('gl') || clean === 'gl') return 'gl';
+      if (clean.startsWith('es') || clean === 'es') return 'es';
+    }
+
+    // If neither Spanish nor Galician, default to English
     return 'en';
   }
 
-  function setLanguage(lang) {
+  function setLanguage(lang, isManualChoice = false) {
     if (!TRANSLATIONS[lang]) lang = 'en';
     state.lang = lang;
-    localStorage.setItem('slide_printer_lang', lang);
+    if (isManualChoice) {
+      try {
+        localStorage.setItem('slide_printer_user_lang', lang);
+      } catch (e) {}
+    }
+
+    document.documentElement.lang = lang;
+    document.title = lang === 'en'
+      ? "Slide-Printer — Print slides with dedicated note space"
+      : (lang === 'gl'
+        ? "Slide-Printer — Imprime diapositivas con espazo para notas"
+        : "Slide-Printer — Imprime diapositivas con espacio para notas");
 
     // Update active state in language buttons
     document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -387,12 +422,12 @@
 
   function setupLanguage() {
     const initialLang = detectInitialLanguage();
-    setLanguage(initialLang);
+    setLanguage(initialLang, false);
 
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const lang = btn.getAttribute('data-lang');
-        setLanguage(lang);
+        setLanguage(lang, true);
       });
     });
   }
