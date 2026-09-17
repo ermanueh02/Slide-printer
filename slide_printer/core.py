@@ -194,6 +194,7 @@ class SlidePrinter:
         styles: List[str],
         output_dir: Optional[str] = None,
         on_file_complete: Optional[Callable[[str, List[str]], None]] = None,
+        progress_cb: Optional[Callable[[str, str, int, int], None]] = None,
     ) -> List[str]:
         """Resolves wildcards, folders, and individual paths, then processes all found PDFs."""
         resolved_files: List[str] = []
@@ -221,7 +222,10 @@ class SlidePrinter:
 
         all_generated: List[str] = []
         for file_path in unique_files:
-            generated = self.process_file(file_path, styles, output_dir=output_dir)
+            file_progress = None
+            if progress_cb:
+                file_progress = lambda style, cur, tot, fp=file_path: progress_cb(fp, style, cur, tot)
+            generated = self.process_file(file_path, styles, output_dir=output_dir, progress_cb=file_progress)
             all_generated.extend(generated)
             if on_file_complete:
                 on_file_complete(file_path, generated)

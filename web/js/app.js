@@ -70,6 +70,7 @@
       compressingMsg: "Compressing archive...",
       preparingPrintMsg: "Preparing print view...",
       invalidPdfMsg: "Please select a valid PDF presentation file.",
+      pptxNotice: "PowerPoint file detected. Slide-Printer operates directly on PDF to guarantee 100% exact vector layout, fonts, and active hyperlinks.\n\nTo convert: In PowerPoint, choose File > Export > Create PDF, then drop the resulting PDF here!",
       slidesLabel: "slides",
       slideLabel: "slide",
     },
@@ -135,6 +136,7 @@
       compressingMsg: "Comprimiendo archivo ZIP...",
       preparingPrintMsg: "Preparando vista de impresión...",
       invalidPdfMsg: "Por favor, selecciona un archivo PDF válido.",
+      pptxNotice: "Has seleccionado un archivo de PowerPoint (.pptx).\n\nSlide-Printer procesa archivos PDF para mantener el diseño vectorial, las tipografías y los hipervínculos intactos.\n\nCómo convertirlo:\n1. En PowerPoint, ve a Archivo > Exportar > Crear documento PDF/XPS (o Imprimir > Microsoft Print to PDF).\n2. Arrastra aquí el PDF generado.",
       slidesLabel: "diapositivas",
       slideLabel: "diapositiva",
     },
@@ -200,6 +202,7 @@
       compressingMsg: "Comprimindo arquivo ZIP...",
       preparingPrintMsg: "Preparando vista de impresión...",
       invalidPdfMsg: "Por favor, selecciona un arquivo PDF válido.",
+      pptxNotice: "Seleccionaches un arquivo de PowerPoint (.pptx).\n\nSlide-Printer procesa arquivos PDF para manter o deseño vectorial, as tipografías e os hiperenlaces intactos.\n\nComo convertelo:\n1. En PowerPoint, vai a Ficheiro > Exportar > Crear documento PDF/XPS (ou Imprimir > Gardar como PDF).\n2. Arrastra aquí o PDF xerado.",
       slidesLabel: "diapositivas",
       slideLabel: "diapositiva",
     }
@@ -531,7 +534,13 @@
     if (!file) return;
     const dict = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
 
-    const isPdf = file.name.toLowerCase().endsWith('.pdf') || (file.type && file.type.includes('pdf'));
+    const fileNameLower = (file.name || '').toLowerCase();
+    if (fileNameLower.endsWith('.pptx') || fileNameLower.endsWith('.ppt')) {
+      alert(dict.pptxNotice);
+      return;
+    }
+
+    const isPdf = fileNameLower.endsWith('.pdf') || (file.type && file.type.includes('pdf'));
     if (!isPdf) {
       alert(dict.invalidPdfMsg);
       return;
