@@ -489,15 +489,26 @@
       fileInput.click();
     }
 
+    dropZone.addEventListener('click', (e) => {
+      openFilePicker(e);
+    });
+
     if (browseBtn) {
-      browseBtn.addEventListener('click', openFilePicker);
+      browseBtn.addEventListener('click', (e) => {
+        openFilePicker(e);
+      });
     }
-    dropZone.addEventListener('click', openFilePicker);
+
+    if (replaceFileBtn) {
+      replaceFileBtn.addEventListener('click', (e) => {
+        openFilePicker(e);
+      });
+    }
 
     dropZone.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        fileInput.click();
+        openFilePicker(e);
       }
     });
 
@@ -507,10 +518,6 @@
       }
       fileInput.value = '';
     });
-
-    if (replaceFileBtn) {
-      replaceFileBtn.addEventListener('click', openFilePicker);
-    }
   }
 
   function formatBytes(bytes) {
@@ -537,13 +544,16 @@
       state.file = file;
       state.fileName = file.name;
       state.fileSizeStr = formatBytes(file.size);
-      state.pdfBytes = arrayBuffer;
 
-      const uint8Data = new Uint8Array(arrayBuffer);
+      // Keep a pristine, untouched Uint8Array copy that will NEVER be detached
+      state.pdfBytes = new Uint8Array(arrayBuffer);
+
+      // Provide a separate clone to pdfjsLib so worker transfer never touches state.pdfBytes
+      const pdfjsData = new Uint8Array(arrayBuffer.slice(0));
 
       SlidePrinterPreview.resetCache();
       const loadingTask = pdfjsLib.getDocument({
-        data: uint8Data,
+        data: pdfjsData,
         cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/',
         cMapPacked: true,
       });
@@ -871,6 +881,57 @@
     if (!state.pdfBytes || state.isProcessing) return;
     const dict = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
 
+    // Pre-open a blank tab synchronously to preserve user gesture and avoid popup blocker interception
+    let printWindow = null;
+    try {
+      printWindow = window.open('', '_blank');
+      if (printWindow) {
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <title>${dict.printBtn || 'Print Folio'} · Slide-Printer</title>
+              <style>
+                body {
+                  margin: 0;
+                  padding: 40px;
+                  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                  background: #fdfbf7;
+                  color: #1a2332;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: center;
+                  min-height: 70vh;
+                  text-align: center;
+                }
+                .spinner {
+                  width: 36px;
+                  height: 36px;
+                  border: 3px solid rgba(197, 160, 89, 0.2);
+                  border-top-color: #c5a059;
+                  border-radius: 50%;
+                  animation: spin 0.9s linear infinite;
+                  margin-bottom: 1.5rem;
+                }
+                @keyframes spin { to { transform: rotate(360deg); } }
+                h2 { font-weight: 500; font-family: "Playfair Display", Georgia, serif; margin: 0 0 0.5rem; color: #1a2332; }
+                p { color: #5a6578; font-size: 0.95rem; margin: 0; }
+              </style>
+            </head>
+            <body>
+              <div class="spinner"></div>
+              <h2>${dict.preparingPrintMsg || 'Preparing handout...'}</h2>
+              <p>Your high-resolution folio is being compiled for printing.</p>
+            </body>
+          </html>
+        `);
+      }
+    } catch (e) {
+      console.warn('Could not pre-open window:', e);
+    }
+
     state.isProcessing = true;
     showLoading(true, dict.preparingPrintMsg);
 
@@ -885,7 +946,7 @@
           separation: state.separation,
           onProgress: (current, total) => {
             const pct = Math.round((current / total) * 100);
-            updateProgress(pct, `${dict.folioLabel} ${current} ${dict.ofLabel} ${total}...`);
+            updateProgress(pct, `${dict.folioLabel || 'Folio'} ${current} ${dict.ofLabel || 'of'} ${total}...`);
           },
         }
       );
@@ -893,30 +954,17 @@
       const blob = new Blob([outBytes], { type: 'application/pdf' });
       const blobUrl = URL.createObjectURL(blob);
 
-      const printIframe = document.createElement('iframe');
-      printIframe.style.position = 'fixed';
-      printIframe.style.right = '0';
-      printIframe.style.bottom = '0';
-      printIframe.style.width = '0';
-      printIframe.style.height = '0';
-      printIframe.style.border = '0';
-      printIframe.src = blobUrl;
-
-      document.body.appendChild(printIframe);
-
-      printIframe.onload = () => {
-        try {
-          printIframe.contentWindow.focus();
-          printIframe.contentWindow.print();
-        } catch (e) {
-          window.open(blobUrl, '_blank');
-        }
-        setTimeout(() => {
-          document.body.removeChild(printIframe);
-          URL.revokeObjectURL(blobUrl);
-        }, 60000);
-      };
+      if (printWindow && !printWindow.closed) {
+        printWindow.location.href = blobUrl;
+      } else {
+        // Fallback: download the print-ready PDF directly
+        const filename = `${getBaseFileName()}_${state.style}_print.pdf`;
+        triggerDownload(blob, filename);
+      }
     } catch (err) {
+      if (printWindow && !printWindow.closed) {
+        printWindow.close();
+      }
       console.error('Print preparation failed:', err);
       alert(`Print preparation failed: ${err.message || err}`);
     } finally {

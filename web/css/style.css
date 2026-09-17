@@ -443,12 +443,17 @@ body::before {
   opacity: 1;
 }
 
-.drop-zone * {
+.drop-zone-icon-box,
+.drop-zone-text,
+.drop-zone-subtext {
   pointer-events: none;
 }
 
-.drop-zone button {
+.drop-zone .btn-primary,
+.drop-zone button,
+.drop-zone label {
   pointer-events: auto;
+  cursor: pointer;
 }
 
 .drop-zone-icon-box {

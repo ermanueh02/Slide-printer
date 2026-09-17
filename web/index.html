@@ -63,6 +63,9 @@
         Preserve slide aspect ratios and interactive hyperlinks while adorning each sheet with bespoke note-taking space.
       </p>
 
+      <!-- Hidden File Input placed outside clickable containers -->
+      <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display: none;">
+
       <!-- Dropzone: The Desk Folio -->
       <div class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Deposit presentation PDF here or click to browse">
         <div class="drop-zone-icon-box">📜</div>
@@ -71,7 +74,6 @@
         <button type="button" class="btn-primary" id="browseBtn">
           <span id="browseBtnText">Select Document</span>
         </button>
-        <input type="file" id="fileInput" accept=".pdf,application/pdf" style="position: fixed; top: -9999px; left: -9999px; opacity: 0;">
       </div>
 
       <!-- Features Strip -->
