@@ -1,48 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Slide-Printer — The Atelier of Printed Presentation Handouts</title>
-  <meta name="description" content="Transform widescreen presentation slides into elegant, printable lecture handouts with custom handwriting lines, quadrille grid, stipple dots, or pure vellum notes.">
+  <title>Slide-Printer — Imprime diapositivas con espacio para notas</title>
+  <meta name="description" content="Convierte presentaciones PDF en documentos listos para imprimir con espacio para notas: líneas de pauta, cuadrícula, bullet points o blanco.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23c2410c%22 stroke-width=%222%22><rect x=%223%22 y=%223%22 width=%2218%22 height=%2218%22 rx=%222%22/><line x1=%223%22 y1=%2212%22 x2=%2221%22 y2=%2212%22/><line x1=%227%22 y1=%2216%22 x2=%2217%22 y2=%2216%22/></svg>">
 </head>
 <body>
 
   <!-- App Header -->
   <header class="app-header">
     <div class="header-inner">
-      <a href="#" class="brand-group" id="brandHomeLink" title="Slide-Printer Handout Atelier">
-        <div class="brand-insignia">✦</div>
+      <a href="#" class="brand-group" id="brandHomeLink" title="Slide-Printer">
+        <div class="brand-insignia" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="7" y1="16" x2="17" y2="16"></line>
+          </svg>
+        </div>
         <div class="brand-text-col">
           <span class="brand-title">Slide—Printer</span>
-          <span class="brand-subtitle" id="brandSubtitleText">Atelier de Handouts · Est. 2026</span>
+          <span class="brand-subtitle" id="brandSubtitleText">Diapositivas con notas</span>
         </div>
       </a>
 
       <div class="header-actions">
         <!-- Language Selector -->
-        <div class="lang-selector-group" role="group" aria-label="Language Selector">
-          <button type="button" class="lang-btn active" data-lang="en" title="English">EN</button>
-          <span class="lang-divider">·</span>
-          <button type="button" class="lang-btn" data-lang="es" title="Español">ES</button>
-          <span class="lang-divider">·</span>
+        <div class="lang-selector-group" role="group" aria-label="Idioma">
+          <button type="button" class="lang-btn" data-lang="en" title="English">EN</button>
+          <span class="lang-divider">/</span>
+          <button type="button" class="lang-btn active" data-lang="es" title="Español">ES</button>
+          <span class="lang-divider">/</span>
           <button type="button" class="lang-btn" data-lang="gl" title="Galego">GL</button>
         </div>
 
-        <div class="privacy-badge" title="Files are processed entirely within your browser via WebAssembly. Nothing leaves your machine.">
-          <span class="privacy-dot"></span>
-          <span id="privacyBadgeText">Archival Privacy · 100% In-Browser</span>
+        <div class="privacy-badge" title="Tus archivos se procesan únicamente en tu navegador. Nada se sube a ningún servidor.">
+          <span class="privacy-dot" aria-hidden="true"></span>
+          <span id="privacyBadgeText">100% privado · En tu navegador</span>
         </div>
 
         <!-- Automatic / System / Light / Dark Theme Button -->
-        <button type="button" class="theme-mode-btn" id="themeToggleBtn" title="Theme Mode: Auto (System) / Light / Dark" aria-label="Toggle Theme Mode">
-          <span id="themeModeIcon">✦</span>
-          <span id="themeModeText">System</span>
+        <button type="button" class="theme-mode-btn" id="themeToggleBtn" title="Tema: Automático (Preferencia del sistema)" aria-label="Cambiar tema">
+          <span id="themeModeIcon" aria-hidden="true">◐</span>
+          <span id="themeModeText">Sistema</span>
         </button>
 
-        <a href="https://github.com/ermanueh02/Slide-printer" target="_blank" rel="noopener noreferrer" class="icon-btn" id="githubLink" title="View Source on GitHub" aria-label="GitHub Repository">
+        <a href="https://github.com/ermanueh02/Slide-printer" target="_blank" rel="noopener noreferrer" class="icon-btn" id="githubLink" title="Código fuente en GitHub" aria-label="Repositorio GitHub">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
           </svg>
@@ -56,42 +65,49 @@
 
     <!-- Hero / Initial State -->
     <section class="hero-section" id="initialHero">
-      <div class="hero-supertitle" id="heroSuperText">Handout Studio & Repositorium</div>
-      <h1 class="hero-title" id="heroTitleText">The Art of the <em>Printed Handout</em></h1>
+      <div class="hero-supertitle" id="heroSuperText">Conversor de PDF a apuntes</div>
+      <h1 class="hero-title" id="heroTitleText">Imprime diapositivas con espacio para notas</h1>
       <p class="hero-subtitle" id="heroSubText">
-        Transform digital presentation slides into timeless, printable lecture folios.
-        Preserve slide aspect ratios and interactive hyperlinks while adorning each sheet with bespoke note-taking space.
+        Convierte cualquier presentación en documentos listos para imprimir. Añade espacio para escribir debajo de cada diapositiva conservando proporciones e hiperenlaces.
       </p>
 
       <!-- Hidden File Input placed outside clickable containers -->
       <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display: none;">
 
-      <!-- Dropzone: The Desk Folio -->
-      <div class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Deposit presentation PDF here or click to browse">
-        <div class="drop-zone-icon-box">📜</div>
-        <div class="drop-zone-text" id="dropZoneTitleText">Deposit Presentation Manuscript</div>
-        <div class="drop-zone-subtext" id="dropZoneSubText">Drop any PDF presentation (16:9 widescreen or 4:3 standard)</div>
+      <!-- Dropzone -->
+      <div class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Arrastra una presentación PDF aquí o pulsa para seleccionar">
+        <div class="drop-zone-icon-box" aria-hidden="true">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="8" y1="13" x2="16" y2="13"></line>
+            <line x1="8" y1="17" x2="16" y2="17"></line>
+            <line x1="8" y1="9" x2="10" y2="9"></line>
+          </svg>
+        </div>
+        <div class="drop-zone-text" id="dropZoneTitleText">Arrastra tu presentación PDF aquí</div>
+        <div class="drop-zone-subtext" id="dropZoneSubText">Compatible con diapositivas 16:9 y 4:3</div>
         <button type="button" class="btn-primary" id="browseBtn">
-          <span id="browseBtnText">Select Document</span>
+          <span id="browseBtnText">Seleccionar documento</span>
         </button>
       </div>
 
       <!-- Features Strip -->
       <div class="features-grid">
         <div class="feature-item">
-          <div class="feature-item-num" id="feat1NumText">I. HYPERLINKS</div>
-          <div class="feature-item-title" id="feat1TitleText">Coordinate Re-Alignment</div>
-          <div class="feature-item-desc" id="feat1DescText">Clickable hyperlinks and digital references are mathematically translated to remain active on the scaled slide.</div>
+          <div class="feature-item-num" id="feat1NumText">01</div>
+          <div class="feature-item-title" id="feat1TitleText">Hiperenlaces activos</div>
+          <div class="feature-item-desc" id="feat1DescText">Los enlaces originales se recalculan y permanecen clicables en el PDF generado.</div>
         </div>
         <div class="feature-item">
-          <div class="feature-item-num" id="feat2NumText">II. ATELIER PATTERNS</div>
-          <div class="feature-item-title" id="feat2TitleText">Four Bespoke Styles</div>
-          <div class="feature-item-desc" id="feat2DescText">Choice of ruled handwriting lines (~5mm), quadrille graph grid, stipple dot matrix, or unadorned vellum.</div>
+          <div class="feature-item-num" id="feat2NumText">02</div>
+          <div class="feature-item-title" id="feat2TitleText">4 estilos de notas</div>
+          <div class="feature-item-desc" id="feat2DescText">Líneas de pauta, cuadrícula, bullet points o blanco según tu método de estudio.</div>
         </div>
         <div class="feature-item">
-          <div class="feature-item-num" id="feat3NumText">III. CONFIDENTIALITY</div>
-          <div class="feature-item-title" id="feat3TitleText">Absolute Client Privacy</div>
-          <div class="feature-item-desc" id="feat3DescText">All compilation occurs locally in your browser with WebAssembly. No manuscripts are ever uploaded to any server.</div>
+          <div class="feature-item-num" id="feat3NumText">03</div>
+          <div class="feature-item-title" id="feat3TitleText">100% privado</div>
+          <div class="feature-item-desc" id="feat3DescText">El procesamiento se realiza en tu navegador. El archivo nunca sale de tu ordenador.</div>
         </div>
       </div>
     </section>
@@ -105,46 +121,60 @@
         <!-- File Metadata Card -->
         <div class="card file-info-bar">
           <div class="file-meta-content">
-            <div class="file-name-text" id="metaFileName">manuscript.pdf</div>
+            <div class="file-name-text" id="metaFileName">presentacion.pdf</div>
             <div class="file-pills">
-              <span class="pill" id="metaPageCount">0 slides</span>
+              <span class="pill" id="metaPageCount">0 diapositivas</span>
               <span class="pill" id="metaAspectRatio">16:9</span>
               <span class="pill" id="metaFileSize">0 MB</span>
             </div>
           </div>
-          <button type="button" class="btn-secondary-sm" id="replaceFileBtn" title="Choose another document">Change</button>
+          <button type="button" class="btn-secondary-sm" id="replaceFileBtn" title="Seleccionar otra presentación">Cambiar archivo</button>
         </div>
 
         <!-- Note Style Selection -->
         <div class="card">
           <div class="section-label">
-            <span id="patternSectionLabel">Note Taking Pattern</span>
-            <span class="section-label-sub" id="patternSectionSub">Section I</span>
+            <span id="patternSectionLabel">Estilo de notas</span>
+            <span class="section-label-sub" id="patternSectionSub">01</span>
           </div>
-          <div class="style-grid" role="radiogroup" aria-label="Note Taking Pattern">
+          <div class="style-grid" role="radiogroup" aria-label="Estilo de notas">
             
             <div class="style-card active" data-style="lines" role="radio" aria-checked="true" tabindex="0" id="styleCardLines">
-              <div class="style-num">I.</div>
-              <div class="style-card-title" id="styleLinesTitle">Ruled Cadence</div>
-              <div class="style-card-desc" id="styleLinesDesc">Feint handwriting lines (~5mm)</div>
+              <div class="style-swatch style-swatch-lines" aria-hidden="true">
+                <span></span><span></span><span></span><span></span>
+              </div>
+              <div class="style-card-header">
+                <div class="style-card-title" id="styleLinesTitle">Líneas de pauta</div>
+                <div class="style-num">01</div>
+              </div>
+              <div class="style-card-desc" id="styleLinesDesc">Líneas de ~5mm para escritura manual</div>
             </div>
 
             <div class="style-card" data-style="grid" role="radio" aria-checked="false" tabindex="0" id="styleCardGrid">
-              <div class="style-num">II.</div>
-              <div class="style-card-title" id="styleGridTitle">Quadrille Grid</div>
-              <div class="style-card-desc" id="styleGridDesc">Architectural graph paper</div>
+              <div class="style-swatch style-swatch-grid" aria-hidden="true"></div>
+              <div class="style-card-header">
+                <div class="style-card-title" id="styleGridTitle">Cuadrícula</div>
+                <div class="style-num">02</div>
+              </div>
+              <div class="style-card-desc" id="styleGridDesc">Cuadrícula técnica para diagramas</div>
             </div>
 
             <div class="style-card" data-style="dots" role="radio" aria-checked="false" tabindex="0" id="styleCardDots">
-              <div class="style-num">III.</div>
-              <div class="style-card-title" id="styleDotsTitle">Stipple Point</div>
-              <div class="style-card-desc" id="styleDotsDesc">Discreet bullet dot matrix</div>
+              <div class="style-swatch style-swatch-dots" aria-hidden="true"></div>
+              <div class="style-card-header">
+                <div class="style-card-title" id="styleDotsTitle">Bullet points</div>
+                <div class="style-num">03</div>
+              </div>
+              <div class="style-card-desc" id="styleDotsDesc">Matriz de puntos guía</div>
             </div>
 
             <div class="style-card" data-style="blank" role="radio" aria-checked="false" tabindex="0" id="styleCardBlank">
-              <div class="style-num">IV.</div>
-              <div class="style-card-title" id="styleBlankTitle">Pure Vellum</div>
-              <div class="style-card-desc" id="styleBlankDesc">Open space & hairline rule</div>
+              <div class="style-swatch style-swatch-blank" aria-hidden="true"></div>
+              <div class="style-card-header">
+                <div class="style-card-title" id="styleBlankTitle">Blanco</div>
+                <div class="style-num">04</div>
+              </div>
+              <div class="style-card-desc" id="styleBlankDesc">Espacio despejado con separador</div>
             </div>
 
           </div>
@@ -153,13 +183,13 @@
         <!-- Paper & Page Settings -->
         <div class="card">
           <div class="section-label">
-            <span id="paperSectionLabel">Paper Stock & Layout</span>
-            <span class="section-label-sub" id="paperSectionSub">Section II</span>
+            <span id="paperSectionLabel">Formato de página</span>
+            <span class="section-label-sub" id="paperSectionSub">02</span>
           </div>
           
           <div class="form-group">
             <label for="paperSelect" class="form-label">
-              <span id="paperSelectLabelText">Paper Standard</span>
+              <span id="paperSelectLabelText">Tamaño de papel</span>
             </label>
             <select id="paperSelect" class="form-select">
               <option value="a4" id="optA4" selected>DIN A4 (210 × 297 mm)</option>
@@ -171,48 +201,63 @@
 
           <!-- Fine Tuning -->
           <details class="settings-details" id="advancedSettings">
-            <summary id="tuningSummaryText">✦ Typography & Margin Metrics</summary>
+            <summary id="tuningSummaryText">Márgenes y espaciado</summary>
             
             <div class="form-group">
               <div class="form-label">
-                <span id="marginLabelText">Page Margin</span>
-                <span id="marginValue">40 pt</span>
+                <span id="marginLabelText">Margen de página</span>
+                <span id="marginValue" class="mono-val">40 pt</span>
               </div>
               <input type="range" id="marginSlider" class="range-slider" min="20" max="60" value="40" step="2">
             </div>
 
             <div class="form-group">
               <div class="form-label">
-                <span id="densityLabelText">Rule / Dot Density</span>
-                <span id="stepValue">14 pt</span>
+                <span id="densityLabelText">Espaciado de líneas / puntos</span>
+                <span id="stepValue" class="mono-val">14 pt</span>
               </div>
               <input type="range" id="stepSlider" class="range-slider" min="10" max="24" value="14" step="1">
             </div>
 
             <div class="form-group">
               <div class="form-label">
-                <span id="sepLabelText">Slide Separation</span>
-                <span id="separationValue">10 pt</span>
+                <span id="sepLabelText">Separación de diapositiva</span>
+                <span id="separationValue" class="mono-val">10 pt</span>
               </div>
               <input type="range" id="separationSlider" class="range-slider" min="4" max="24" value="10" step="1">
             </div>
 
-            <button type="button" class="btn-secondary-sm" id="resetSettingsBtn" style="margin-top: 0.5rem;">Restore Standards</button>
+            <button type="button" class="btn-secondary-sm" id="resetSettingsBtn" style="margin-top: 0.5rem;">Restablecer valores</button>
           </details>
         </div>
 
         <!-- Action Stack -->
         <div class="action-stack">
           <button type="button" class="btn-cta-lg" id="downloadBtn">
-            <span id="downloadBtnText">Export Handout Manuscript (PDF)</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span id="downloadBtnText">Descargar PDF</span>
           </button>
 
           <div class="btn-row">
-            <button type="button" class="btn-secondary" id="exportAllBtn" title="Download ZIP archive with all 4 pattern styles">
-              <span id="exportAllBtnText">Archive All 4 (ZIP)</span>
+            <button type="button" class="btn-secondary" id="exportAllBtn" title="Descargar archivo ZIP con los 4 estilos">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="21 8 21 21 3 21 3 8"></polyline>
+                <rect x="1" y="3" width="22" height="5"></rect>
+                <line x1="10" y1="12" x2="14" y2="12"></line>
+              </svg>
+              <span id="exportAllBtnText">Descargar los 4 (ZIP)</span>
             </button>
-            <button type="button" class="btn-secondary" id="printBtn" title="Open print dialog formatted to target paper size">
-              <span id="printBtnText">Print Folio</span>
+            <button type="button" class="btn-secondary" id="printBtn" title="Abrir cuadro de diálogo de impresión">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              <span id="printBtnText">Imprimir</span>
             </button>
           </div>
         </div>
@@ -223,14 +268,14 @@
       <section class="preview-pane">
 
         <!-- Page Navigator Bar -->
-        <div class="page-navigator" role="navigation" aria-label="Slide Page Navigation">
-          <button type="button" class="nav-btn" id="prevPageBtn" title="Previous Slide (Left Arrow)" aria-label="Previous Slide">‹</button>
+        <div class="page-navigator" role="navigation" aria-label="Navegación de diapositivas">
+          <button type="button" class="nav-btn" id="prevPageBtn" title="Diapositiva anterior" aria-label="Diapositiva anterior">←</button>
           <div class="page-display">
-            <span id="slideFolioText">Folio</span>
-            <input type="number" id="pageInput" class="page-number-input" min="1" value="1" aria-label="Current slide number">
-            <span><span id="slideOfText">of</span> <span id="totalPagesSpan">1</span></span>
+            <span id="slideFolioText">Diapositiva</span>
+            <input type="number" id="pageInput" class="page-number-input" min="1" value="1" aria-label="Número de diapositiva actual">
+            <span><span id="slideOfText">de</span> <span id="totalPagesSpan" class="mono-val">1</span></span>
           </div>
-          <button type="button" class="nav-btn" id="nextPageBtn" title="Next Slide (Right Arrow)" aria-label="Next Slide">›</button>
+          <button type="button" class="nav-btn" id="nextPageBtn" title="Siguiente diapositiva" aria-label="Siguiente diapositiva">→</button>
         </div>
 
         <!-- Simulated Paper Sheet Container -->
@@ -247,25 +292,29 @@
   <!-- Progress Overlay Modal -->
   <div class="progress-overlay hidden" id="progressOverlay" role="dialog" aria-modal="true" aria-labelledby="progressStatus">
     <div class="progress-card">
-      <div class="progress-monogram">✦ S · P ✦</div>
-      <div class="progress-status-text" id="progressStatus">Preparing presentation folios...</div>
+      <div class="progress-monogram">SLIDE—PRINTER</div>
+      <div class="progress-status-text" id="progressStatus">Generando documento...</div>
       <div class="progress-track">
         <div class="progress-fill" id="progressBar"></div>
       </div>
-      <div class="progress-percentage" id="progressText">0%</div>
+      <div class="progress-percentage mono-val" id="progressText">0%</div>
     </div>
   </div>
 
   <!-- App Footer -->
   <footer class="app-footer">
-    <div class="footer-heritage-text" id="footerTitleText">Slide—Printer Handout Atelier</div>
-    <div id="footerSubtitleText">Bespoke Handout Repositorium · Open Source Typography</div>
-    <div class="footer-links">
-      <a href="https://github.com/ermanueh02/Slide-printer" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
-      <span>·</span>
-      <a href="https://github.com/ermanueh02/Slide-printer/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
-      <span>·</span>
-      <span id="footerPrivacyText">100% In-Browser Confidentiality</span>
+    <div class="footer-inner">
+      <div class="footer-col-main">
+        <span class="footer-brand" id="footerTitleText">Slide—Printer</span>
+        <span class="footer-desc" id="footerSubtitleText">Conversor de presentaciones a formato de apuntes</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/ermanueh02/Slide-printer" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <span class="footer-sep">/</span>
+        <a href="https://github.com/ermanueh02/Slide-printer/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Licencia MIT</a>
+        <span class="footer-sep">/</span>
+        <span id="footerPrivacyText">Procesamiento 100% en el navegador</span>
+      </div>
     </div>
   </footer>
 
