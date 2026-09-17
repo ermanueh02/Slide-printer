@@ -72,10 +72,10 @@
       </p>
 
       <!-- Hidden File Input placed outside clickable containers -->
-      <input type="file" id="fileInput" accept=".pdf,application/pdf" style="display: none;">
+      <input type="file" id="fileInput" accept=".pdf,application/pdf" multiple style="display: none;">
 
       <!-- Dropzone -->
-      <div class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Arrastra una presentación PDF aquí o pulsa para seleccionar">
+      <div class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Arrastra una o varias presentaciones PDF aquí o pulsa para seleccionar">
         <div class="drop-zone-icon-box" aria-hidden="true">
           <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -85,10 +85,10 @@
             <line x1="8" y1="9" x2="10" y2="9"></line>
           </svg>
         </div>
-        <div class="drop-zone-text" id="dropZoneTitleText">Arrastra tu presentación PDF aquí</div>
-        <div class="drop-zone-subtext" id="dropZoneSubText">Compatible con diapositivas 16:9 y 4:3</div>
+        <div class="drop-zone-text" id="dropZoneTitleText">Arrastra una o varias presentaciones PDF aquí</div>
+        <div class="drop-zone-subtext" id="dropZoneSubText">Compatible con diapositivas 16:9 y 4:3 · Procesa múltiples archivos a la vez</div>
         <button type="button" class="btn-primary" id="browseBtn">
-          <span id="browseBtnText">Seleccionar documento</span>
+          <span id="browseBtnText">Seleccionar documentos</span>
         </button>
       </div>
 
@@ -115,6 +115,28 @@
     <!-- Workspace State (Appears when PDF is loaded) -->
     <section class="workspace-container hidden" id="workspace">
 
+      <!-- Multi-file Queue Strip (Shown when multiple files are loaded) -->
+      <div class="card batch-bar" id="batchBar" style="display: none;">
+        <div class="batch-bar-header">
+          <div class="batch-bar-title-group">
+            <span class="batch-badge" id="batchCountBadge">1</span>
+            <span class="batch-bar-title" id="batchBarTitle">Cola de presentaciones</span>
+          </div>
+          <div class="batch-bar-actions">
+            <button type="button" class="btn-secondary-xs" id="addMoreFilesBtn">
+              <span>+</span> <span id="addMoreFilesText">Añadir más</span>
+            </button>
+            <button type="button" class="btn-primary-xs" id="exportBatchBtn" title="Descargar todas las presentaciones procesadas en un archivo ZIP">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
+              <span id="exportBatchBtnText">Descargar lote (ZIP)</span>
+            </button>
+          </div>
+        </div>
+        <div class="batch-tabs-track" id="batchTabsTrack">
+          <!-- Dynamically populated presentation chips -->
+        </div>
+      </div>
+
       <!-- File Metadata Card -->
       <div class="card file-info-bar workspace-meta-bar">
         <div class="file-meta-content">
@@ -125,7 +147,10 @@
             <span class="pill" id="metaFileSize">0 MB</span>
           </div>
         </div>
-        <button type="button" class="btn-secondary-sm" id="replaceFileBtn" title="Seleccionar otra presentación">Cambiar archivo</button>
+        <div class="workspace-meta-actions">
+          <button type="button" class="btn-secondary-sm" id="addFilesHeaderBtn" title="Añadir más presentaciones al lote">+ Añadir otro PDF</button>
+          <button type="button" class="btn-secondary-sm" id="replaceFileBtn" title="Seleccionar otra presentación">Cambiar archivo</button>
+        </div>
       </div>
 
       <div class="workspace-layout">
@@ -235,6 +260,15 @@
 
         <!-- Action Stack -->
         <div class="action-stack">
+          <button type="button" class="btn-primary" id="exportBatchSidebarBtn" style="display: none; width: 100%; margin-bottom: 0.5rem; justify-content: center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="21 8 21 21 3 21 3 8"></polyline>
+              <rect x="1" y="3" width="22" height="5"></rect>
+              <line x1="10" y1="12" x2="14" y2="12"></line>
+            </svg>
+            <span id="exportBatchSidebarBtnText">Descargar lote completo (ZIP)</span>
+          </button>
+
           <button type="button" class="btn-cta-lg" id="downloadBtn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>

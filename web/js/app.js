@@ -20,9 +20,17 @@
       heroSuper: "PDF Handout Generator",
       heroTitle: "Print slides with dedicated note space",
       heroSubtitle: "Transform any presentation into clean, printable study handouts. Adds note-taking area beneath each slide while preserving aspect ratios and clickable links.",
-      dropTitle: "Drop your presentation PDF here",
-      dropSub: "Compatible with 16:9 and 4:3 slide formats",
-      browseBtn: "Select Document",
+      dropTitle: "Drop presentation PDF(s) here",
+      dropSub: "Compatible with 16:9 and 4:3 slide formats · Multi-file batch ready",
+      browseBtn: "Select Documents",
+      batchTitle: "Presentation Queue",
+      addMoreBtn: "Add More",
+      addFilesHeader: "+ Add Another PDF",
+      exportBatchBtn: "Download Batch (ZIP)",
+      exportBatchSidebar: "Download Full Batch ({count} PDFs)",
+      readingBatchMsg: "Loading presentation {current} of {total}...",
+      generatingBatchMsg: "Generating handouts for all {count} presentations...",
+      removeTip: "Remove presentation",
       feat1Num: "01",
       feat1Title: "Active Hyperlinks",
       feat1Desc: "Original clickable links are mathematically recalculated and stay active in the output PDF.",
@@ -86,9 +94,17 @@
       heroSuper: "Conversor de PDF a apuntes",
       heroTitle: "Imprime diapositivas con espacio para notas",
       heroSubtitle: "Convierte cualquier presentación en documentos listos para imprimir. Añade espacio para escribir debajo de cada diapositiva conservando proporciones e hiperenlaces.",
-      dropTitle: "Arrastra tu presentación PDF aquí",
-      dropSub: "Compatible con diapositivas 16:9 y 4:3",
-      browseBtn: "Seleccionar documento",
+      dropTitle: "Arrastra tus presentaciones PDF aquí",
+      dropSub: "Compatible con diapositivas 16:9 y 4:3 · Procesa múltiples archivos a la vez",
+      browseBtn: "Seleccionar documentos",
+      batchTitle: "Cola de presentaciones",
+      addMoreBtn: "Añadir más",
+      addFilesHeader: "+ Añadir otro PDF",
+      exportBatchBtn: "Descargar lote (ZIP)",
+      exportBatchSidebar: "Descargar lote completo ({count} PDFs)",
+      readingBatchMsg: "Cargando presentación {current} de {total}...",
+      generatingBatchMsg: "Generando apuntes para las {count} presentaciones...",
+      removeTip: "Quitar presentación",
       feat1Num: "01",
       feat1Title: "Hiperenlaces activos",
       feat1Desc: "Los enlaces originales se recalculan y permanecen clicables en el PDF generado.",
@@ -152,9 +168,17 @@
       heroSuper: "Conversor de PDF a apuntamentos",
       heroTitle: "Imprime diapositivas con espazo para notas",
       heroSubtitle: "Converte calquera presentación en documentos listos para imprimir. Engade espazo para escribir debaixo de cada diapositiva conservando proporcións e ligazóns.",
-      dropTitle: "Arrastra a túa presentación PDF aquí",
-      dropSub: "Compatible con diapositivas 16:9 e 4:3",
-      browseBtn: "Seleccionar documento",
+      dropTitle: "Arrastra as túas presentacións PDF aquí",
+      dropSub: "Compatible con diapositivas 16:9 e 4:3 · Procesa múltiples ficheiros á vez",
+      browseBtn: "Seleccionar documentos",
+      batchTitle: "Fila de presentacións",
+      addMoreBtn: "Engadir máis",
+      addFilesHeader: "+ Engadir outro PDF",
+      exportBatchBtn: "Descargar lote (ZIP)",
+      exportBatchSidebar: "Descargar lote completo ({count} PDFs)",
+      readingBatchMsg: "Cargando presentación {current} de {total}...",
+      generatingBatchMsg: "Xerando apuntamentos para as {count} presentacións...",
+      removeTip: "Eliminar presentación",
       feat1Num: "01",
       feat1Title: "Ligazóns activas",
       feat1Desc: "As ligazóns orixinais son recalculadas e fican clicables no PDF xerado.",
@@ -219,6 +243,8 @@
 
   // App State
   const state = {
+    files: [],
+    activeFileIndex: 0,
     file: null,
     fileName: '',
     fileSizeStr: '',
@@ -343,6 +369,15 @@
     setText('footerSubtitleText', dict.footerSubtitle);
     setText('footerPrivacyText', dict.footerPrivacy);
 
+    // Batch Bar & Multi-File Labels
+    setText('batchBarTitle', dict.batchTitle);
+    setText('addMoreFilesText', dict.addMoreBtn);
+    setText('addFilesHeaderBtn', dict.addFilesHeader);
+    if (state.files && state.files.length > 1) {
+      setText('exportBatchBtnText', (dict.exportBatchBtn || 'Download Batch (ZIP)').replace('{count}', state.files.length));
+      setText('exportBatchSidebarBtnText', (dict.exportBatchSidebar || 'Download Full Batch ({count} PDFs)').replace('{count}', state.files.length));
+    }
+
     // Update metadata count if loaded
     if (state.numPages > 0) {
       const label = state.numPages === 1 ? dict.slideLabel : dict.slidesLabel;
@@ -426,99 +461,126 @@
     }
   }
 
-  // --- Drag & Drop / File Loading ---
+  // --- Drag & Drop / Multi-File Batch Loading ---
+  let isAppendMode = false;
+
   function setupDropZone() {
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const browseBtn = document.getElementById('browseBtn');
     const replaceFileBtn = document.getElementById('replaceFileBtn');
+    const addFilesHeaderBtn = document.getElementById('addFilesHeaderBtn');
+    const addMoreFilesBtn = document.getElementById('addMoreFilesBtn');
 
-    if (!dropZone || !fileInput) return;
+    if (!fileInput) return;
 
-    // 1. Prevent default file drop navigation across the whole window
+    // Window-wide drag prevention + smart drop handling
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
       window.addEventListener(eventName, (e) => {
         e.preventDefault();
       }, false);
     });
 
-    let dragCounter = 0;
-
-    dropZone.addEventListener('dragenter', (e) => {
+    window.addEventListener('drop', (e) => {
       e.preventDefault();
-      e.stopPropagation();
-      dragCounter++;
-      dropZone.classList.add('drag-active');
-    }, false);
-
-    dropZone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (e.dataTransfer) {
-        e.dataTransfer.dropEffect = 'copy';
-      }
-      dropZone.classList.add('drag-active');
-    }, false);
-
-    dropZone.addEventListener('dragleave', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      dragCounter--;
-      if (dragCounter <= 0) {
-        dragCounter = 0;
-        dropZone.classList.remove('drag-active');
-      }
-    }, false);
-
-    dropZone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      dragCounter = 0;
-      dropZone.classList.remove('drag-active');
-
       const dt = e.dataTransfer;
       if (dt && dt.files && dt.files.length > 0) {
-        handleFile(dt.files[0]);
+        const workspace = document.getElementById('workspace');
+        const isWorkspaceActive = workspace && !workspace.classList.contains('hidden');
+        handleFiles(dt.files, isWorkspaceActive);
       }
     }, false);
 
-    // 2. Click-to-browse handling
-    function openFilePicker(e) {
+    let dragCounter = 0;
+
+    if (dropZone) {
+      dropZone.addEventListener('dragenter', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dragCounter++;
+        dropZone.classList.add('drag-active');
+      }, false);
+
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.dataTransfer) {
+          e.dataTransfer.dropEffect = 'copy';
+        }
+        dropZone.classList.add('drag-active');
+      }, false);
+
+      dropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dragCounter--;
+        if (dragCounter <= 0) {
+          dragCounter = 0;
+          dropZone.classList.remove('drag-active');
+        }
+      }, false);
+
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dragCounter = 0;
+        dropZone.classList.remove('drag-active');
+
+        const dt = e.dataTransfer;
+        if (dt && dt.files && dt.files.length > 0) {
+          handleFiles(dt.files, false);
+        }
+      }, false);
+
+      dropZone.addEventListener('click', (e) => {
+        openReplacePicker(e);
+      });
+
+      dropZone.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openReplacePicker(e);
+        }
+      });
+    }
+
+    function openReplacePicker(e) {
       if (e) {
         e.preventDefault();
         e.stopPropagation();
       }
+      isAppendMode = false;
       fileInput.click();
     }
 
-    dropZone.addEventListener('click', (e) => {
-      openFilePicker(e);
-    });
+    function openAddPicker(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      isAppendMode = true;
+      fileInput.click();
+    }
 
     if (browseBtn) {
-      browseBtn.addEventListener('click', (e) => {
-        openFilePicker(e);
-      });
+      browseBtn.addEventListener('click', openReplacePicker);
     }
-
     if (replaceFileBtn) {
-      replaceFileBtn.addEventListener('click', (e) => {
-        openFilePicker(e);
-      });
+      replaceFileBtn.addEventListener('click', openReplacePicker);
     }
-
-    dropZone.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        openFilePicker(e);
-      }
-    });
+    if (addFilesHeaderBtn) {
+      addFilesHeaderBtn.addEventListener('click', openAddPicker);
+    }
+    if (addMoreFilesBtn) {
+      addMoreFilesBtn.addEventListener('click', openAddPicker);
+    }
 
     fileInput.addEventListener('change', (e) => {
       if (e.target.files && e.target.files.length > 0) {
-        handleFile(e.target.files[0]);
+        handleFiles(e.target.files, isAppendMode);
       }
       fileInput.value = '';
+      isAppendMode = false;
     });
   }
 
@@ -530,93 +592,248 @@
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   }
 
-  async function handleFile(file) {
-    if (!file) return;
+  async function handleFiles(fileList, append = false) {
+    if (!fileList || fileList.length === 0) return;
     const dict = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
+    const rawFiles = Array.from(fileList);
 
-    const fileNameLower = (file.name || '').toLowerCase();
-    if (fileNameLower.endsWith('.pptx') || fileNameLower.endsWith('.ppt')) {
+    // 1. Check for PowerPoint files
+    const pptxFound = rawFiles.some(f => {
+      const name = (f.name || '').toLowerCase();
+      return name.endsWith('.pptx') || name.endsWith('.ppt');
+    });
+    if (pptxFound) {
       alert(dict.pptxNotice);
+    }
+
+    // 2. Filter for PDF files
+    const pdfFiles = rawFiles.filter(f => {
+      const name = (f.name || '').toLowerCase();
+      return name.endsWith('.pdf') || (f.type && f.type.includes('pdf'));
+    });
+
+    if (pdfFiles.length === 0) {
+      if (!pptxFound) {
+        alert(dict.invalidPdfMsg);
+      }
       return;
     }
 
-    const isPdf = fileNameLower.endsWith('.pdf') || (file.type && file.type.includes('pdf'));
-    if (!isPdf) {
-      alert(dict.invalidPdfMsg);
-      return;
-    }
+    showLoading(true, dict.readingMsg);
 
     try {
-      showLoading(true, dict.readingMsg);
-      const arrayBuffer = await file.arrayBuffer();
-      state.file = file;
-      state.fileName = file.name;
-      state.fileSizeStr = formatBytes(file.size);
+      const parsedItems = [];
+      for (let i = 0; i < pdfFiles.length; i++) {
+        const file = pdfFiles[i];
+        if (pdfFiles.length > 1) {
+          const msg = (dict.readingBatchMsg || 'Loading presentation {current} of {total}...')
+            .replace('{current}', i + 1)
+            .replace('{total}', pdfFiles.length);
+          updateProgress(Math.round(((i) / pdfFiles.length) * 100), msg);
+        }
 
-      // Keep a pristine, untouched Uint8Array copy that will NEVER be detached
-      state.pdfBytes = new Uint8Array(arrayBuffer);
+        const arrayBuffer = await file.arrayBuffer();
+        const pdfBytes = new Uint8Array(arrayBuffer);
+        const pdfjsData = new Uint8Array(arrayBuffer.slice(0));
 
-      // Provide a separate clone to pdfjsLib so worker transfer never touches state.pdfBytes
-      const pdfjsData = new Uint8Array(arrayBuffer.slice(0));
+        const loadingTask = pdfjsLib.getDocument({
+          data: pdfjsData,
+          cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/',
+          cMapPacked: true,
+        });
+        const pdfjsDoc = await loadingTask.promise;
+        const numPages = pdfjsDoc.numPages;
 
-      SlidePrinterPreview.resetCache();
-      const loadingTask = pdfjsLib.getDocument({
-        data: pdfjsData,
-        cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/',
-        cMapPacked: true,
-      });
-      state.pdfjsDoc = await loadingTask.promise;
-      state.numPages = state.pdfjsDoc.numPages;
-      state.currentPage = 1;
+        const firstPage = await pdfjsDoc.getPage(1);
+        const vp = firstPage.getViewport({ scale: 1.0 });
+        const ratio = vp.width / vp.height;
+        let ratioText = 'Standard';
+        if (Math.abs(ratio - 16 / 9) < 0.15) {
+          ratioText = '16:9';
+        } else if (Math.abs(ratio - 4 / 3) < 0.15) {
+          ratioText = '4:3';
+        } else if (Math.abs(ratio - 16 / 10) < 0.15) {
+          ratioText = '16:10';
+        } else {
+          ratioText = `${ratio.toFixed(2)}:1`;
+        }
 
-      // Aspect ratio
-      const firstPage = await state.pdfjsDoc.getPage(1);
-      const vp = firstPage.getViewport({ scale: 1.0 });
-      const ratio = vp.width / vp.height;
-      let ratioText = 'Standard';
-      if (Math.abs(ratio - 16 / 9) < 0.15) {
-        ratioText = '16:9 Widescreen';
-      } else if (Math.abs(ratio - 4 / 3) < 0.15) {
-        ratioText = '4:3 Standard';
-      } else if (Math.abs(ratio - 16 / 10) < 0.15) {
-        ratioText = '16:10 Widescreen';
-      } else {
-        ratioText = `${ratio.toFixed(2)}:1`;
+        parsedItems.push({
+          id: 'pdf_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+          file,
+          name: file.name,
+          sizeStr: formatBytes(file.size),
+          pdfBytes,
+          pdfjsDoc,
+          numPages,
+          ratioText,
+        });
       }
 
-      // Update UI elements
-      const metaFileName = document.getElementById('metaFileName');
-      const metaPageCount = document.getElementById('metaPageCount');
-      const metaFileSize = document.getElementById('metaFileSize');
-      const metaAspectRatio = document.getElementById('metaAspectRatio');
-      const totalPagesSpan = document.getElementById('totalPagesSpan');
-      const pageInput = document.getElementById('pageInput');
+      if (append && state.files && state.files.length > 0) {
+        for (const item of parsedItems) {
+          const exists = state.files.some(f => f.name === item.name && f.sizeStr === item.sizeStr);
+          if (!exists) {
+            state.files.push(item);
+          }
+        }
+      } else {
+        state.files = parsedItems;
+        state.activeFileIndex = 0;
+      }
+
+      activateFile(state.activeFileIndex);
+
       const initialHero = document.getElementById('initialHero');
       const workspace = document.getElementById('workspace');
-
-      if (metaFileName) metaFileName.textContent = file.name;
-      const countLabel = state.numPages === 1 ? dict.slideLabel : dict.slidesLabel;
-      if (metaPageCount) metaPageCount.textContent = `${state.numPages} ${countLabel}`;
-      if (metaFileSize) metaFileSize.textContent = state.fileSizeStr;
-      if (metaAspectRatio) metaAspectRatio.textContent = ratioText;
-      if (totalPagesSpan) totalPagesSpan.textContent = state.numPages;
-      if (pageInput) {
-        pageInput.max = state.numPages;
-        pageInput.value = 1;
-      }
-
       if (initialHero) initialHero.classList.add('hidden');
       if (workspace) workspace.classList.remove('hidden');
 
       showLoading(false);
-      requestAnimationFrame(() => {
-        renderCurrentPreview();
-      });
     } catch (err) {
       showLoading(false);
-      console.error('Error loading PDF:', err);
-      alert(`Could not load presentation: ${err.message || err}`);
+      console.error('Error loading presentations:', err);
+      alert(`Error loading presentation: ${err.message || err}`);
     }
+  }
+
+  function activateFile(index) {
+    if (!state.files || index < 0 || index >= state.files.length) return;
+    state.activeFileIndex = index;
+    const item = state.files[index];
+
+    state.file = item.file;
+    state.fileName = item.name;
+    state.fileSizeStr = item.sizeStr;
+    state.pdfBytes = item.pdfBytes;
+    state.pdfjsDoc = item.pdfjsDoc;
+    state.numPages = item.numPages;
+    state.currentPage = 1;
+
+    SlidePrinterPreview.resetCache();
+
+    // Update UI elements
+    const metaFileName = document.getElementById('metaFileName');
+    const metaPageCount = document.getElementById('metaPageCount');
+    const metaFileSize = document.getElementById('metaFileSize');
+    const metaAspectRatio = document.getElementById('metaAspectRatio');
+    const totalPagesSpan = document.getElementById('totalPagesSpan');
+    const pageInput = document.getElementById('pageInput');
+    const dict = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
+
+    if (metaFileName) metaFileName.textContent = item.name;
+    const countLabel = state.numPages === 1 ? dict.slideLabel : dict.slidesLabel;
+    if (metaPageCount) metaPageCount.textContent = `${state.numPages} ${countLabel}`;
+    if (metaFileSize) metaFileSize.textContent = item.sizeStr;
+    if (metaAspectRatio) metaAspectRatio.textContent = item.ratioText;
+    if (totalPagesSpan) totalPagesSpan.textContent = state.numPages;
+    if (pageInput) {
+      pageInput.max = state.numPages;
+      pageInput.value = 1;
+    }
+
+    renderBatchTabs();
+    requestAnimationFrame(() => {
+      renderCurrentPreview();
+    });
+  }
+
+  function removeFileAt(index) {
+    if (!state.files || index < 0 || index >= state.files.length) return;
+    state.files.splice(index, 1);
+
+    if (state.files.length === 0) {
+      // Return to hero section
+      const initialHero = document.getElementById('initialHero');
+      const workspace = document.getElementById('workspace');
+      if (initialHero) initialHero.classList.remove('hidden');
+      if (workspace) workspace.classList.add('hidden');
+      state.file = null;
+      state.fileName = '';
+      state.pdfBytes = null;
+      state.pdfjsDoc = null;
+      state.numPages = 0;
+      SlidePrinterPreview.resetCache();
+      return;
+    }
+
+    if (state.activeFileIndex >= state.files.length) {
+      state.activeFileIndex = state.files.length - 1;
+    }
+    activateFile(state.activeFileIndex);
+  }
+
+  function renderBatchTabs() {
+    const batchBar = document.getElementById('batchBar');
+    const batchTabsTrack = document.getElementById('batchTabsTrack');
+    const batchCountBadge = document.getElementById('batchCountBadge');
+    const exportBatchSidebarBtn = document.getElementById('exportBatchSidebarBtn');
+
+    if (!batchBar || !batchTabsTrack) return;
+
+    const totalFiles = state.files ? state.files.length : 0;
+    if (totalFiles <= 1) {
+      batchBar.style.display = 'none';
+      if (exportBatchSidebarBtn) exportBatchSidebarBtn.style.display = 'none';
+      return;
+    }
+
+    batchBar.style.display = 'flex';
+    if (exportBatchSidebarBtn) exportBatchSidebarBtn.style.display = 'inline-flex';
+    if (batchCountBadge) batchCountBadge.textContent = totalFiles;
+
+    const dict = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
+    const sidebarBtnText = document.getElementById('exportBatchSidebarBtnText');
+    if (sidebarBtnText) {
+      sidebarBtnText.textContent = (dict.exportBatchSidebar || "Download Full Batch ({count} PDFs)").replace('{count}', totalFiles);
+    }
+    const exportBatchBtnText = document.getElementById('exportBatchBtnText');
+    if (exportBatchBtnText) {
+      exportBatchBtnText.textContent = (dict.exportBatchBtn || "Download Batch (ZIP)").replace('{count}', totalFiles);
+    }
+
+    batchTabsTrack.innerHTML = '';
+    state.files.forEach((item, idx) => {
+      const chip = document.createElement('div');
+      chip.className = `batch-chip ${idx === state.activeFileIndex ? 'active' : ''}`;
+      chip.setAttribute('data-idx', idx);
+      chip.setAttribute('role', 'tab');
+      chip.setAttribute('aria-selected', idx === state.activeFileIndex ? 'true' : 'false');
+
+      const icon = document.createElement('span');
+      icon.className = 'batch-chip-icon';
+      icon.textContent = '📄';
+
+      const name = document.createElement('span');
+      name.className = 'batch-chip-name';
+      name.textContent = item.name;
+      name.title = item.name;
+
+      const pages = document.createElement('span');
+      pages.className = 'batch-chip-pages';
+      pages.textContent = `${item.numPages}p`;
+
+      const closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.className = 'batch-chip-close';
+      closeBtn.innerHTML = '&times;';
+      closeBtn.title = dict.removeTip || 'Remove';
+      closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        removeFileAt(idx);
+      });
+
+      chip.appendChild(icon);
+      chip.appendChild(name);
+      chip.appendChild(pages);
+      chip.appendChild(closeBtn);
+
+      chip.addEventListener('click', () => {
+        activateFile(idx);
+      });
+
+      batchTabsTrack.appendChild(chip);
+    });
   }
 
   // --- Controls & Options ---
@@ -772,10 +989,14 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const exportAllBtn = document.getElementById('exportAllBtn');
     const printBtn = document.getElementById('printBtn');
+    const exportBatchBtn = document.getElementById('exportBatchBtn');
+    const exportBatchSidebarBtn = document.getElementById('exportBatchSidebarBtn');
 
     if (downloadBtn) downloadBtn.addEventListener('click', () => exportCurrentHandout());
     if (exportAllBtn) exportAllBtn.addEventListener('click', () => exportAllStylesZip());
     if (printBtn) printBtn.addEventListener('click', () => printCurrentHandout());
+    if (exportBatchBtn) exportBatchBtn.addEventListener('click', () => exportBatchZip());
+    if (exportBatchSidebarBtn) exportBatchSidebarBtn.addEventListener('click', () => exportBatchZip());
   }
 
   function getBaseFileName() {
@@ -792,6 +1013,60 @@
     a.click();
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }
+
+  async function exportBatchZip() {
+    if (!state.files || state.files.length === 0 || state.isProcessing) return;
+    if (typeof JSZip === 'undefined') {
+      alert('JSZip library is required for batch ZIP archive.');
+      return;
+    }
+    const dict = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
+    state.isProcessing = true;
+    const msg = (dict.generatingBatchMsg || 'Generating handouts for all presentations...').replace('{count}', state.files.length);
+    showLoading(true, msg);
+
+    try {
+      const zip = new JSZip();
+      const style = state.style;
+      const styleCode = SlidePrinterEngine.STYLES[style]?.code || style;
+      const totalFiles = state.files.length;
+
+      for (let fIdx = 0; fIdx < totalFiles; fIdx++) {
+        const item = state.files[fIdx];
+        const outBytes = await SlidePrinterEngine.convertSlidesToHandout(
+          item.pdfBytes.slice(0),
+          {
+            style: state.style,
+            paperSize: state.paperSize,
+            margin: state.margin,
+            step: state.step,
+            separation: state.separation,
+            onProgress: (current, total) => {
+              const filePct = Math.round((fIdx / totalFiles) * 100 + (current / total) * (100 / totalFiles));
+              updateProgress(
+                filePct,
+                `[${fIdx + 1}/${totalFiles}] ${item.name} (${current}/${total} ${dict.slidesLabel})...`
+              );
+            },
+          }
+        );
+
+        const baseName = item.name.replace(/\.[^/.]+$/, '');
+        zip.file(`${baseName}_${styleCode}.pdf`, outBytes);
+      }
+
+      updateProgress(98, dict.compressingMsg || 'Compressing ZIP archive...');
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const zipFileName = `handouts_${styleCode}_${totalFiles}_presentations.zip`;
+      triggerDownload(zipBlob, zipFileName);
+    } catch (err) {
+      console.error('Batch ZIP export failed:', err);
+      alert(`Batch ZIP export failed: ${err.message || err}`);
+    } finally {
+      state.isProcessing = false;
+      showLoading(false);
+    }
   }
 
   async function exportCurrentHandout() {
