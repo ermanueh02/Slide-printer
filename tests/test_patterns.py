@@ -40,3 +40,29 @@ def test_create_notes_overlay_custom_paper():
     )
     assert float(overlay.mediabox.width) == pytest.approx(letter_size[0], 0.1)
     assert float(overlay.mediabox.height) == pytest.approx(letter_size[1], 0.1)
+
+
+def test_create_notes_overlay_page_number():
+    a4_size = PAPER_SIZES["a4"]
+    overlay_with = create_notes_overlay(
+        page_size=a4_size,
+        y_sep=500.0,
+        margin=40.0,
+        width=a4_size[0] - 80.0,
+        bottom_margin=40.0,
+        style="blank",
+        page_number=42,
+    )
+    assert "42" in overlay_with.extract_text()
+
+    overlay_without = create_notes_overlay(
+        page_size=a4_size,
+        y_sep=500.0,
+        margin=40.0,
+        width=a4_size[0] - 80.0,
+        bottom_margin=40.0,
+        style="blank",
+        page_number=None,
+    )
+    assert overlay_without.extract_text().strip() == ""
+

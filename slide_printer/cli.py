@@ -10,7 +10,8 @@ import glob
 import time
 import argparse
 import subprocess
-from typing import List, Optional, Tuple, Dict, Any
+import re
+from typing import List, Optional, Tuple, Dict, Any, Union
 
 from pypdf import PdfReader
 
@@ -23,6 +24,7 @@ from slide_printer.constants import (
     DEFAULT_OUTPUT_DIR,
     DEFAULT_MARGIN,
     DEFAULT_STEP,
+    DEFAULT_PAGE_NUMBERS,
 )
 from slide_printer.core import SlidePrinter, resolve_style
 
@@ -232,6 +234,91 @@ def parse_index_ranges(expr: str, max_count: int) -> Optional[List[int]]:
     return indices if indices else None
 
 
+def parse_styles_arg(raw_input: Union[str, List[str], None]) -> List[str]:
+    """Parses style selections from CLI args or wizard input into canonical style codes.
+    
+    Supports:
+      - Individual styles: 'grid', 'lines', 'dots', 'blank'
+      - Numbers: '1' (grid), '2' (lines), '3' (dots), '4' (blank)
+      - Ranges: '1-2' (grid, lines), '2-3', '1-3', etc.
+      - Lists & natural separators: 'lines, grid', 'lines and grid', '1, 2', '1 + 2'
+      - Wildcards / all: 'all', 'a', '*', 'todos'
+    """
+    if not raw_input:
+        return ["grid"]
+
+    style_code_map = {
+        "1": "grid",
+        "2": "lines",
+        "3": "dots",
+        "4": "blank",
+        "grid": "grid",
+        "cuadricula": "grid",
+        "lines": "lines",
+        "line": "lines",
+        "lineas": "lines",
+        "ruled": "lines",
+        "dots": "dots",
+        "dot": "dots",
+        "puntos": "dots",
+        "blank": "blank",
+        "blanco": "blank",
+        "en_blanco": "blank",
+    }
+
+    raw_items: List[str] = []
+    if isinstance(raw_input, str):
+        raw_items = [raw_input]
+    else:
+        raw_items = list(raw_input)
+
+    tokens: List[str] = []
+    for item in raw_items:
+        cleaned = item.replace(",", " ").replace("+", " ").replace("&", " ")
+        cleaned = re.sub(r'\b(and|y|e)\b', ' ', cleaned, flags=re.IGNORECASE)
+        for part in cleaned.split():
+            p = part.strip().lower()
+            if p:
+                tokens.append(p)
+
+    if any(t in ("all", "a", "*", "todos") for t in tokens):
+        return ["grid", "lines", "dots", "blank"]
+
+    resolved: List[str] = []
+    for tok in tokens:
+        # Check range pattern e.g. "1-2"
+        if "-" in tok:
+            sub = tok.split("-")
+            if len(sub) == 2 and sub[0].strip().isdigit() and sub[1].strip().isdigit():
+                start, end = int(sub[0].strip()), int(sub[1].strip())
+                step = 1 if start <= end else -1
+                for n in range(start, end + step, step):
+                    s_str = str(n)
+                    if s_str in style_code_map:
+                        code = style_code_map[s_str]
+                        if code not in resolved:
+                            resolved.append(code)
+                    else:
+                        raise ValueError(f"Style number {n} is invalid. Supported: 1 (grid), 2 (lines), 3 (dots), 4 (blank).")
+                continue
+
+        if tok in style_code_map:
+            code = style_code_map[tok]
+            if code not in resolved:
+                resolved.append(code)
+        else:
+            try:
+                code = resolve_style(tok)
+                if code not in resolved:
+                    resolved.append(code)
+            except ValueError:
+                raise ValueError(
+                    f"Unknown style '{tok}'. Valid styles: grid, lines, dots, blank (or numbers 1-4, ranges like 1-2)."
+                )
+
+    return resolved if resolved else ["grid"]
+
+
 def print_summary_table(rows: List[Dict[str, Any]], elapsed: float, out_dir: str, paper: str) -> None:
     """Prints a polished Unicode summary table of processed presentations."""
     if not rows:
@@ -299,49 +386,13 @@ def interactive_wizard() -> int:
     print(f"  [{cyan('3')}] Dot matrix   (Subtle dot grid for flexible bullet notes)")
     print(f"  [{cyan('4')}] Blank        (Clean blank space with hairline divider)")
     print(f"  [{cyan('A')}] All 4 styles (Generate all 4 note variants at once)")
+    print(dim("  - Enter numbers or names (e.g. '1, 2' for Grid + Lined, '1-2', 'lines grid', or 'A' for all)."))
 
     raw_selection = input(f"\nEnter choice [{bold('1')}, 2, 3, 4, or A] (default: 1): ").strip()
-
-    wizard_style_map = {
-        "1": "grid",
-        "2": "lines",
-        "3": "dots",
-        "4": "blank",
-        "grid": "grid",
-        "cuadricula": "grid",
-        "lines": "lines",
-        "lineas": "lines",
-        "ruled": "lines",
-        "dots": "dots",
-        "puntos": "dots",
-        "blank": "blank",
-        "en_blanco": "blank",
-    }
-
-    if not raw_selection:
-        selected_styles = ["grid"]
-    elif raw_selection.upper() == "A":
-        selected_styles = ["grid", "lines", "dots", "blank"]
-    else:
-        selected_styles = []
-        # Support commas or spaces e.g. "1,2" or "1 3"
-        parts = [p.strip() for p in raw_selection.replace(",", " ").split() if p.strip()]
-        for part in parts:
-            part_lower = part.lower()
-            if part_lower in wizard_style_map:
-                canonical = wizard_style_map[part_lower]
-                if canonical not in selected_styles:
-                    selected_styles.append(canonical)
-            else:
-                try:
-                    canonical = resolve_style(part_lower)
-                    if canonical not in selected_styles:
-                        selected_styles.append(canonical)
-                except ValueError:
-                    pass
-
-    if not selected_styles:
-        print(yellow("⚠️  No recognized style selected. Defaulting to 'Graph grid' (grid)."))
+    try:
+        selected_styles = parse_styles_arg(raw_selection)
+    except ValueError as err:
+        print(yellow(f"⚠️  {err} Defaulting to 'Graph grid' (grid)."))
         selected_styles = ["grid"]
 
     # 2. Paper Size Selection
@@ -484,14 +535,7 @@ def interactive_wizard() -> int:
             for gen in generated:
                 if not first_output:
                     first_output = gen
-                base_out = os.path.basename(gen)
-                matched_style = None
-                for st in selected_styles:
-                    code = STYLE_METADATA[st]["code"]
-                    if base_out.endswith(f"_{code}.pdf"):
-                        matched_style = code
-                        break
-                folder = matched_style or "handout"
+                folder = os.path.basename(os.path.dirname(gen))
                 print(f"   ├─ {cyan(folder):<7} {green('✔')} {gen}")
 
             summary_rows.append({
@@ -510,7 +554,7 @@ def interactive_wizard() -> int:
     if first_output and os.path.exists(first_output):
         open_choice = input(dim("Open output folder now? [Y/n]: ")).strip().lower()
         if open_choice in ("", "y", "yes"):
-            open_path_in_os(os.path.dirname(first_output) or ".")
+            open_path_in_os(os.path.dirname(first_output))
 
     return 0
 
@@ -544,13 +588,13 @@ Examples:
         "--styles",
         nargs="+",
         default=["grid"],
-        help="Note styles: 'grid', 'lines', 'dots', 'blank', 'all' (or numbers 1-4). Multiple allowed (default: 'grid').",
+        help="Note styles: 'grid', 'lines', 'dots', 'blank', numbers (1-4), ranges ('1-2'), or 'all'. Multiple allowed (default: 'grid').",
     )
     parser.add_argument(
         "-o",
         "--output-dir",
         default=DEFAULT_OUTPUT_DIR,
-        help=f"Output directory for generated handouts (default: current directory '{DEFAULT_OUTPUT_DIR}').",
+        help=f"Output directory for generated handouts (default: '{DEFAULT_OUTPUT_DIR}').",
     )
     parser.add_argument(
         "-p",
@@ -571,6 +615,112 @@ Examples:
         type=float,
         default=DEFAULT_STEP,
         help=f"Line or grid dot spacing in points (default: {DEFAULT_STEP}).",
+    )
+    parser.add_argument(
+        "--no-page-numbers",
+        dest="page_numbers",
+        action="store_false",
+        default=DEFAULT_PAGE_NUMBERS,
+        help="Disable centered page numbers in the footer (page numbers are ON by default).",
+    )
+    parser.add_argument(
+        "--page-numbers",
+        dest="page_numbers",
+        action="store_true",
+        default=DEFAULT_PAGE_NUMBERS,
+        help="Enable centered page numbers in the footer (default: ON).",
+    )
+    parser.add_argument(
+        "--page-format",
+        choices=["total", "simple"],
+        default="total",
+        help="Page number format: 'total' ('1 / 24') or 'simple' ('1') (default: total).",
+    )
+    parser.add_argument(
+        "--pages",
+        type=str,
+        default=None,
+        help="Specific slide numbers or ranges to include (e.g. '1-10, 15, 20-30').",
+    )
+    parser.add_argument(
+        "--study-header",
+        action="store_true",
+        default=False,
+        help="Include study header (Subject/Topic and Date lines) at the top of each sheet.",
+    )
+    parser.add_argument(
+        "--study-title",
+        type=str,
+        default=None,
+        help="Custom Subject or Topic name for the study header.",
+    )
+    parser.add_argument(
+        "--binder-margin",
+        "--gutter",
+        dest="gutter",
+        type=float,
+        nargs="?",
+        const=30.0,
+        default=0.0,
+        help="Add extra margin for ring binders or spiral binding (+30 pt / ~11 mm).",
+    )
+    parser.add_argument(
+        "--duplex",
+        action="store_true",
+        default=False,
+        help="Enable double-sided printing margin alternation (odd pages on left, even pages on right).",
+    )
+    parser.add_argument(
+        "--simplex",
+        dest="duplex",
+        action="store_false",
+        help="Single-sided printing: binding margin is always on the left edge (default).",
+    )
+    parser.add_argument(
+        "--clean-cover",
+        action="store_true",
+        default=False,
+        help="Use the first presentation slide as a clean cover without note lines or divider.",
+    )
+    parser.add_argument(
+        "--generate-cover",
+        action="store_true",
+        default=False,
+        help="Generate an elegant editorial cover page at the beginning of the handout.",
+    )
+    parser.add_argument(
+        "--cover-title",
+        type=str,
+        default=None,
+        help="Custom main title for the generated cover page.",
+    )
+    parser.add_argument(
+        "--cover-author",
+        type=str,
+        default=None,
+        help="Student, author, or presenter name for the generated cover page.",
+    )
+    parser.add_argument(
+        "--layout",
+        choices=["1-up", "2-up"],
+        default="1-up",
+        help="Handout layout: '1-up' (1 slide/sheet) or '2-up' (2 slides/sheet) (default: 1-up).",
+    )
+    parser.add_argument(
+        "-2",
+        "--two-up",
+        dest="layout",
+        action="store_const",
+        const="2-up",
+        help="Shortcut for --layout 2-up (2 slides per sheet).",
+    )
+    parser.add_argument(
+        "--grayscale",
+        "--eco",
+        dest="grayscale",
+        action="store_true",
+        default=False,
+        help="Eco-print mode: optimize tones for monochrome / black-and-white printing.",
     )
     parser.add_argument(
         "-O",
@@ -691,35 +841,36 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(red("Error: No valid PDF presentations specified."), file=sys.stderr)
         return 1
 
-    # Flatten and resolve styles
-    raw_styles: List[str] = []
-    for item in args.styles:
-        for part in item.replace(",", " ").split():
-            part_clean = part.strip().lower()
-            if part_clean:
-                raw_styles.append(part_clean)
+    # Resolve requested styles
+    try:
+        chosen_styles = parse_styles_arg(args.styles)
+    except ValueError as err:
+        print(red(f"Error: {err}"), file=sys.stderr)
+        return 1
 
-    if "all" in raw_styles:
-        chosen_styles = ["lines", "grid", "dots", "blank"]
-    else:
-        chosen_styles = []
-        for s in raw_styles:
-            try:
-                canonical = resolve_style(s)
-                if canonical not in chosen_styles:
-                    chosen_styles.append(canonical)
-            except ValueError as err:
-                print(red(f"Error: {err}"), file=sys.stderr)
-                return 1
-
-    if not chosen_styles:
-        chosen_styles = ["grid"]
+    cover_mode = "none"
+    if args.generate_cover:
+        cover_mode = "generate"
+    elif args.clean_cover:
+        cover_mode = "clean_first"
 
     printer = SlidePrinter(
         paper_size=args.paper_size,
         margin=args.margin,
         step=args.step,
         output_dir=args.output_dir,
+        page_numbers=args.page_numbers,
+        page_number_format=args.page_format,
+        study_header=args.study_header,
+        study_title=args.study_title,
+        gutter_margin=args.gutter,
+        duplex=args.duplex,
+        layout=args.layout,
+        page_ranges=args.pages,
+        grayscale=args.grayscale,
+        cover_mode=cover_mode,
+        cover_title=args.cover_title,
+        cover_author=args.cover_author,
     )
 
     t0 = time.time()
@@ -747,8 +898,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                     for st in chosen_styles:
                         code = STYLE_METADATA[st]["code"]
                         base = os.path.splitext(os.path.basename(cand))[0]
-                        dest_dir = args.output_dir if args.output_dir in (".", "") else os.path.join(args.output_dir, code)
-                        dest = os.path.join(dest_dir, f"{base}_{code}.pdf")
+                        dest = os.path.join(args.output_dir, code, f"{base}_{code}.pdf")
                         print(f"   ├─ {cyan(code):<7} ➜ {dest}")
                         total_files += 1
         print(bold(f"\nDry-run complete: Would generate {total_files} handouts ({total_slides} total slides)."))
@@ -762,14 +912,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             pages_text = f" ({pages} slides)" if pages else ""
             print(f"  {bold(src)}{dim(pages_text)}")
             for out in outputs:
-                base_out = os.path.basename(out)
-                matched_style = None
-                for st in chosen_styles:
-                    code = STYLE_METADATA[st]["code"]
-                    if base_out.endswith(f"_{code}.pdf"):
-                        matched_style = code
-                        break
-                style_name = matched_style or "handout"
+                style_name = os.path.basename(os.path.dirname(out))
                 print(f"   ├─ {cyan(style_name):<7} {green('✔')} {out}")
             summary_rows.append({
                 "name": src,

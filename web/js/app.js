@@ -58,6 +58,7 @@
       paperLetter: "US Letter (8.5 × 11 in)",
       paperLegal: "US Legal (8.5 × 14 in)",
       paperA3: "DIN A3 (297 × 420 mm)",
+      pageNumberLabel: "Page numbers in footer",
       tuningSummary: "Margins & Spacing",
       marginLabel: "Page Margin",
       densityLabel: "Line / Dot Spacing",
@@ -65,6 +66,16 @@
       restoreBtn: "Reset to Defaults",
       exportBtn: "Download PDF",
       archiveBtn: "Download All 4 (ZIP)",
+      archiveBtnCount: "Download Selected ({count} in ZIP)",
+      archiveBtnSingle: "Download Selected (ZIP)",
+      styleSelectionCount: "{count} styles selected",
+      styleSelectionSingle: "1 style selected",
+      quickAll: "All",
+      quickLinesGrid: "Lined + Grid",
+      quickOnlyCurrent: "Current only",
+      previewBadge: "Preview",
+      statusExporting: "In export",
+      statusNotExporting: "Not included",
       printBtn: "Print",
       folioLabel: "Slide",
       ofLabel: "of",
@@ -75,12 +86,32 @@
       readingMsg: "Reading PDF presentation...",
       generatingMsg: "Generating printable handout...",
       bundlingMsg: "Bundling all 4 note styles into ZIP...",
+      bundlingSelectedMsg: "Generating {count} selected styles in ZIP...",
       compressingMsg: "Compressing archive...",
       preparingPrintMsg: "Preparing print view...",
       invalidPdfMsg: "Please select a valid PDF presentation file.",
       pptxNotice: "PowerPoint file detected. Slide-Printer operates directly on PDF to guarantee 100% exact vector layout, fonts, and active hyperlinks.\n\nTo convert: In PowerPoint, choose File > Export > Create PDF, then drop the resulting PDF here!",
       slidesLabel: "slides",
       slideLabel: "slide",
+      layoutLabel: "Sheet Layout",
+      layout1Up: "1 Slide",
+      layout2Up: "2 Slides (Compact)",
+      coverLabel: "Document Cover",
+      optCoverNone: "Standard (No cover)",
+      optCoverCleanFirst: "1st slide as cover (No notes)",
+      optCoverGenerate: "Generate editorial cover",
+      coverTitlePlaceholder: "Cover title",
+      coverAuthorPlaceholder: "Author / Student / Subject",
+      pageRangeLabel: "Slide Range",
+      pageRangePlaceholder: "All (e.g. 1-10, 15)",
+      gutterLabel: "Binder / Ring margin (+11 mm)",
+      duplexSimplex: "Single-sided (Simplex)",
+      duplexDuplex: "Double-sided (Duplex)",
+      studyHeaderLabel: "Study Header (Subject & Date)",
+      studyTitlePlaceholder: "Subject or topic name (optional)",
+      pageFormatTotal: "Total (1 / N)",
+      pageFormatSimple: "Simple (1)",
+      ecoPrintLabel: "Ink-Saver Mode (Grayscale)",
     },
     es: {
       brandSubtitle: "Diapositivas con notas",
@@ -132,6 +163,7 @@
       paperLetter: "US Letter (8.5 × 11 in)",
       paperLegal: "US Legal (8.5 × 14 in)",
       paperA3: "DIN A3 (297 × 420 mm)",
+      pageNumberLabel: "Números de página al pie",
       tuningSummary: "Márgenes y espaciado",
       marginLabel: "Margen de página",
       densityLabel: "Espaciado de líneas / puntos",
@@ -139,6 +171,16 @@
       restoreBtn: "Restablecer valores",
       exportBtn: "Descargar PDF",
       archiveBtn: "Descargar los 4 (ZIP)",
+      archiveBtnCount: "Descargar seleccionados ({count} en ZIP)",
+      archiveBtnSingle: "Descargar seleccionado (ZIP)",
+      styleSelectionCount: "{count} pautas seleccionadas",
+      styleSelectionSingle: "1 pauta seleccionada",
+      quickAll: "Todas",
+      quickLinesGrid: "Líneas + Cuadrícula",
+      quickOnlyCurrent: "Solo actual",
+      previewBadge: "Vista previa",
+      statusExporting: "En exportación",
+      statusNotExporting: "No incluido",
       printBtn: "Imprimir",
       folioLabel: "Diapositiva",
       ofLabel: "de",
@@ -149,12 +191,32 @@
       readingMsg: "Cargando presentación...",
       generatingMsg: "Generando PDF...",
       bundlingMsg: "Generando los 4 estilos en ZIP...",
+      bundlingSelectedMsg: "Generando {count} estilos seleccionados en ZIP...",
       compressingMsg: "Comprimiendo archivo ZIP...",
       preparingPrintMsg: "Preparando vista de impresión...",
       invalidPdfMsg: "Por favor, selecciona un archivo PDF válido.",
       pptxNotice: "Has seleccionado un archivo de PowerPoint (.pptx).\n\nSlide-Printer procesa archivos PDF para mantener el diseño vectorial, las tipografías y los hipervínculos intactos.\n\nCómo convertirlo:\n1. En PowerPoint, ve a Archivo > Exportar > Crear documento PDF/XPS (o Imprimir > Microsoft Print to PDF).\n2. Arrastra aquí el PDF generado.",
       slidesLabel: "diapositivas",
       slideLabel: "diapositiva",
+      layoutLabel: "Distribución por folio",
+      layout1Up: "1 Diapositiva",
+      layout2Up: "2 Diapositivas (Compacto)",
+      coverLabel: "Portada del documento",
+      optCoverNone: "Sin portada especial",
+      optCoverCleanFirst: "1ª diapositiva como portada (sin notas)",
+      optCoverGenerate: "Generar portada nueva",
+      coverTitlePlaceholder: "Título para la portada",
+      coverAuthorPlaceholder: "Autor / Estudiante / Asignatura",
+      pageRangeLabel: "Rango de diapositivas",
+      pageRangePlaceholder: "Todas (ej. 1-10, 15)",
+      gutterLabel: "Margen para archivador / anillas (+11 mm)",
+      duplexSimplex: "Una cara (Simplex)",
+      duplexDuplex: "Doble cara (Dúplex)",
+      studyHeaderLabel: "Cabecera de estudio (Asignatura y fecha)",
+      studyTitlePlaceholder: "Nombre de asignatura o tema (opcional)",
+      pageFormatTotal: "Total (1 / N)",
+      pageFormatSimple: "Simple (1)",
+      ecoPrintLabel: "Modo ahorro de tinta (Escala de grises)",
     },
     gl: {
       brandSubtitle: "Diapositivas con notas",
@@ -206,6 +268,7 @@
       paperLetter: "US Letter (8.5 × 11 in)",
       paperLegal: "US Legal (8.5 × 14 in)",
       paperA3: "DIN A3 (297 × 420 mm)",
+      pageNumberLabel: "Números de páxina ao pé",
       tuningSummary: "Marxes e espazado",
       marginLabel: "Marxe de páxina",
       densityLabel: "Espazado de liñas / puntos",
@@ -213,6 +276,16 @@
       restoreBtn: "Restablecer valores",
       exportBtn: "Descargar PDF",
       archiveBtn: "Descargar os 4 estilos (ZIP)",
+      archiveBtnCount: "Descargar seleccionados ({count} en ZIP)",
+      archiveBtnSingle: "Descargar seleccionado (ZIP)",
+      styleSelectionCount: "{count} pautas seleccionadas",
+      styleSelectionSingle: "1 pauta seleccionada",
+      quickAll: "Todas",
+      quickLinesGrid: "Liñas + Cuadrícula",
+      quickOnlyCurrent: "Só actual",
+      previewBadge: "Vista previa",
+      statusExporting: "En exportación",
+      statusNotExporting: "Non incluído",
       printBtn: "Imprimir",
       folioLabel: "Diapositiva",
       ofLabel: "de",
@@ -223,12 +296,32 @@
       readingMsg: "Cargando presentación...",
       generatingMsg: "Xerando PDF...",
       bundlingMsg: "Xerando os 4 estilos en ZIP...",
+      bundlingSelectedMsg: "Xerando {count} estilos seleccionados en ZIP...",
       compressingMsg: "Comprimindo arquivo ZIP...",
       preparingPrintMsg: "Preparando vista de impresión...",
       invalidPdfMsg: "Por favor, selecciona un arquivo PDF válido.",
       pptxNotice: "Seleccionaches un arquivo de PowerPoint (.pptx).\n\nSlide-Printer procesa arquivos PDF para manter o deseño vectorial, as tipografías e os hiperenlaces intactos.\n\nComo convertelo:\n1. En PowerPoint, vai a Ficheiro > Exportar > Crear documento PDF/XPS (ou Imprimir > Gardar como PDF).\n2. Arrastra aquí o PDF xerado.",
       slidesLabel: "diapositivas",
       slideLabel: "diapositiva",
+      layoutLabel: "Distribución por folio",
+      layout1Up: "1 Diapositiva",
+      layout2Up: "2 Diapositivas (Compacto)",
+      coverLabel: "Portada do documento",
+      optCoverNone: "Sen portada especial",
+      optCoverCleanFirst: "1ª diapositiva como portada (sen notas)",
+      optCoverGenerate: "Xerar portada nova",
+      coverTitlePlaceholder: "Título para a portada",
+      coverAuthorPlaceholder: "Autor / Estudante / Materia",
+      pageRangeLabel: "Rango de diapositivas",
+      pageRangePlaceholder: "Todas (ex. 1-10, 15)",
+      gutterLabel: "Marxe para arquivador / anelas (+11 mm)",
+      duplexSimplex: "Unha cara (Simplex)",
+      duplexDuplex: "Dobre cara (Dúplex)",
+      studyHeaderLabel: "Cabeceira de estudo (Materia e data)",
+      studyTitlePlaceholder: "Nome da materia ou tema (opcional)",
+      pageFormatTotal: "Total (1 / N)",
+      pageFormatSimple: "Simple (1)",
+      ecoPrintLabel: "Modo aforro de tinta (Escala de grises)",
     }
   };
 
@@ -253,13 +346,155 @@
     numPages: 0,
     currentPage: 1,
     style: 'lines',
+    selectedStyles: ['lines', 'grid'],
     paperSize: 'a4',
     margin: 40,
     step: 14,
     separation: 10,
+    layout: '1-up',
+    coverMode: 'none',
+    coverTitle: '',
+    coverAuthor: '',
+    pageRanges: '',
+    gutter: 0,
+    hasGutter: false,
+    duplex: false,
+    studyHeader: false,
+    studyTitle: '',
+    pageNumbers: true,
+    pageNumberFormat: 'total',
+    ecoPrint: false,
     isProcessing: false,
     lang: 'en',
   };
+
+  // --- Presets & Persistent Settings Management ---
+  const PRESET_STORAGE_KEY = 'slide_printer_user_presets';
+
+  function savePresets() {
+    try {
+      const presetData = {
+        paperSize: state.paperSize,
+        margin: state.margin,
+        step: state.step,
+        separation: state.separation,
+        layout: state.layout,
+        coverMode: state.coverMode,
+        coverTitle: state.coverTitle,
+        coverAuthor: state.coverAuthor,
+        hasGutter: state.hasGutter,
+        duplex: state.duplex,
+        studyHeader: state.studyHeader,
+        studyTitle: state.studyTitle,
+        pageNumbers: state.pageNumbers,
+        pageNumberFormat: state.pageNumberFormat,
+        ecoPrint: state.ecoPrint,
+        selectedStyles: state.selectedStyles,
+      };
+      localStorage.setItem(PRESET_STORAGE_KEY, JSON.stringify(presetData));
+    } catch (e) {
+      // localStorage may fail in private mode
+    }
+  }
+
+  function loadPresets() {
+    try {
+      const raw = localStorage.getItem(PRESET_STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (data.paperSize) state.paperSize = data.paperSize;
+      if (typeof data.margin === 'number') state.margin = data.margin;
+      if (typeof data.step === 'number') state.step = data.step;
+      if (typeof data.separation === 'number') state.separation = data.separation;
+      if (data.layout) state.layout = data.layout;
+      if (data.coverMode) state.coverMode = data.coverMode;
+      if (typeof data.coverTitle === 'string') state.coverTitle = data.coverTitle;
+      if (typeof data.coverAuthor === 'string') state.coverAuthor = data.coverAuthor;
+      if (typeof data.hasGutter === 'boolean') {
+        state.hasGutter = data.hasGutter;
+        state.gutter = state.hasGutter ? 30 : 0;
+      }
+      if (typeof data.duplex === 'boolean') state.duplex = data.duplex;
+      if (typeof data.studyHeader === 'boolean') state.studyHeader = data.studyHeader;
+      if (typeof data.studyTitle === 'string') state.studyTitle = data.studyTitle;
+      if (typeof data.pageNumbers === 'boolean') state.pageNumbers = data.pageNumbers;
+      if (data.pageNumberFormat) state.pageNumberFormat = data.pageNumberFormat;
+      if (typeof data.ecoPrint === 'boolean') state.ecoPrint = data.ecoPrint;
+      if (Array.isArray(data.selectedStyles) && data.selectedStyles.length > 0) {
+        state.selectedStyles = data.selectedStyles;
+      }
+    } catch (e) {}
+  }
+
+  function applyStateToDOM() {
+    const paperSelect = document.getElementById('paperSelect');
+    const marginSlider = document.getElementById('marginSlider');
+    const marginValue = document.getElementById('marginValue');
+    const stepSlider = document.getElementById('stepSlider');
+    const stepValue = document.getElementById('stepValue');
+    const separationSlider = document.getElementById('separationSlider');
+    const separationValue = document.getElementById('separationValue');
+
+    if (paperSelect) paperSelect.value = state.paperSize;
+    if (marginSlider) marginSlider.value = state.margin;
+    if (marginValue) marginValue.textContent = `${state.margin} pt`;
+    if (stepSlider) stepSlider.value = state.step;
+    if (stepValue) stepValue.textContent = `${state.step} pt`;
+    if (separationSlider) separationSlider.value = state.separation;
+    if (separationValue) separationValue.textContent = `${state.separation} pt`;
+
+    // Layout
+    const layout1UpBtn = document.getElementById('layout1UpBtn');
+    const layout2UpBtn = document.getElementById('layout2UpBtn');
+    if (layout1UpBtn) layout1UpBtn.classList.toggle('active', state.layout === '1-up');
+    if (layout2UpBtn) layout2UpBtn.classList.toggle('active', state.layout === '2-up');
+
+    // Cover
+    const coverSelect = document.getElementById('coverSelect');
+    const coverMetaFields = document.getElementById('coverMetaFields');
+    const coverTitleInput = document.getElementById('coverTitleInput');
+    const coverAuthorInput = document.getElementById('coverAuthorInput');
+    if (coverSelect) coverSelect.value = state.coverMode;
+    if (coverMetaFields) coverMetaFields.classList.toggle('hidden', state.coverMode !== 'generate');
+    if (coverTitleInput) coverTitleInput.value = state.coverTitle;
+    if (coverAuthorInput) coverAuthorInput.value = state.coverAuthor;
+
+    // Slide range
+    const pageRangeInput = document.getElementById('pageRangeInput');
+    if (pageRangeInput) pageRangeInput.value = state.pageRanges;
+
+    // Gutter & Duplex
+    const gutterToggle = document.getElementById('gutterToggle');
+    const gutterDuplexOptions = document.getElementById('gutterDuplexOptions');
+    const duplexSimplexBtn = document.getElementById('duplexSimplexBtn');
+    const duplexDuplexBtn = document.getElementById('duplexDuplexBtn');
+    if (gutterToggle) gutterToggle.checked = state.hasGutter;
+    if (gutterDuplexOptions) gutterDuplexOptions.classList.toggle('hidden', !state.hasGutter);
+    if (duplexSimplexBtn) duplexSimplexBtn.classList.toggle('active', !state.duplex);
+    if (duplexDuplexBtn) duplexDuplexBtn.classList.toggle('active', state.duplex);
+
+    // Study Header
+    const studyHeaderToggle = document.getElementById('studyHeaderToggle');
+    const studyHeaderField = document.getElementById('studyHeaderField');
+    const studyTitleInput = document.getElementById('studyTitleInput');
+    if (studyHeaderToggle) studyHeaderToggle.checked = state.studyHeader;
+    if (studyHeaderField) studyHeaderField.classList.toggle('hidden', !state.studyHeader);
+    if (studyTitleInput) studyTitleInput.value = state.studyTitle;
+
+    // Page Numbers
+    const pageNumberToggle = document.getElementById('pageNumberToggle');
+    const pageNumberFormatGroup = document.getElementById('pageNumberFormatGroup');
+    const pageFormatTotalBtn = document.getElementById('pageFormatTotalBtn');
+    const pageFormatSimpleBtn = document.getElementById('pageFormatSimpleBtn');
+    if (pageNumberToggle) pageNumberToggle.checked = state.pageNumbers;
+    if (pageNumberFormatGroup) pageNumberFormatGroup.classList.toggle('hidden', !state.pageNumbers);
+    if (pageFormatTotalBtn) pageFormatTotalBtn.classList.toggle('active', state.pageNumberFormat === 'total');
+    if (pageFormatSimpleBtn) pageFormatSimpleBtn.classList.toggle('active', state.pageNumberFormat === 'simple');
+
+    // Eco Print
+    const ecoPrintToggle = document.getElementById('ecoPrintToggle');
+    if (ecoPrintToggle) ecoPrintToggle.checked = state.ecoPrint;
+  }
 
   // Global variables initialized safely
   const systemPrefersDark = (typeof window !== 'undefined' && window.matchMedia) 
@@ -376,6 +611,10 @@
     setText('styleBlankTitle', dict.styleBlankTitle);
     setText('styleBlankDesc', dict.styleBlankDesc);
 
+    setText('selectAllStylesBtn', dict.quickAll);
+    setText('selectLinesGridBtn', dict.quickLinesGrid);
+    setText('selectOnlyCurrentBtn', dict.quickOnlyCurrent);
+
     setText('paperSectionLabel', dict.paperLabel);
     setText('paperSectionSub', dict.section2);
     setText('paperSelectLabelText', dict.paperSelectLabel);
@@ -383,6 +622,44 @@
     setText('optLetter', dict.paperLetter);
     setText('optLegal', dict.paperLegal);
     setText('optA3', dict.paperA3);
+
+    // Layout
+    setText('layoutLabelText', dict.layoutLabel);
+    setText('layout1UpText', dict.layout1Up);
+    setText('layout2UpText', dict.layout2Up);
+
+    // Cover
+    setText('coverLabelText', dict.coverLabel);
+    setText('optCoverNone', dict.optCoverNone);
+    setText('optCoverCleanFirst', dict.optCoverCleanFirst);
+    setText('optCoverGenerate', dict.optCoverGenerate);
+    const coverTitleInput = document.getElementById('coverTitleInput');
+    if (coverTitleInput && dict.coverTitlePlaceholder) coverTitleInput.placeholder = dict.coverTitlePlaceholder;
+    const coverAuthorInput = document.getElementById('coverAuthorInput');
+    if (coverAuthorInput && dict.coverAuthorPlaceholder) coverAuthorInput.placeholder = dict.coverAuthorPlaceholder;
+
+    // Slide Range
+    setText('pageRangeLabelText', dict.pageRangeLabel);
+    const pageRangeInput = document.getElementById('pageRangeInput');
+    if (pageRangeInput && dict.pageRangePlaceholder) pageRangeInput.placeholder = dict.pageRangePlaceholder;
+
+    // Gutter / Duplex
+    setText('gutterLabelText', dict.gutterLabel);
+    setText('duplexSimplexText', dict.duplexSimplex);
+    setText('duplexDuplexText', dict.duplexDuplex);
+
+    // Study Header
+    setText('studyHeaderLabelText', dict.studyHeaderLabel);
+    const studyTitleInput = document.getElementById('studyTitleInput');
+    if (studyTitleInput && dict.studyTitlePlaceholder) studyTitleInput.placeholder = dict.studyTitlePlaceholder;
+
+    // Page Numbers & Format
+    setText('pageNumberLabelText', dict.pageNumberLabel);
+    setText('pageFormatTotalText', dict.pageFormatTotal);
+    setText('pageFormatSimpleText', dict.pageFormatSimple);
+
+    // Eco Print
+    setText('ecoPrintLabelText', dict.ecoPrintLabel);
 
     setText('tuningSummaryText', dict.tuningSummary);
     setText('marginLabelText', dict.marginLabel);
@@ -418,6 +695,8 @@
       const label = state.numPages === 1 ? dict.slideLabel : dict.slidesLabel;
       setText('metaPageCount', `${state.numPages} ${label}`);
     }
+
+    updateStyleSelectionUI();
   }
 
   function setupLanguage() {
@@ -871,6 +1150,57 @@
     });
   }
 
+  function updateStyleSelectionUI() {
+    const dict = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
+    const styleOptions = document.querySelectorAll('.style-card');
+
+    styleOptions.forEach(card => {
+      const s = card.getAttribute('data-style');
+      const isSelected = state.selectedStyles.includes(s);
+      const isPreview = state.style === s;
+
+      card.classList.toggle('is-selected', isSelected);
+      card.classList.toggle('active', isPreview);
+
+      const previewBadge = card.querySelector('.preview-badge');
+      if (previewBadge) {
+        previewBadge.classList.toggle('hidden', !isPreview);
+        previewBadge.textContent = dict.previewBadge || 'Vista previa';
+      }
+
+      const statusLabel = card.querySelector('.export-status-label');
+      if (statusLabel) {
+        statusLabel.textContent = isSelected
+          ? (dict.statusExporting || 'En exportación')
+          : (dict.statusNotExporting || 'No incluido');
+      }
+    });
+
+    // Update count pill
+    const countEl = document.getElementById('styleSelectionCountText');
+    if (countEl) {
+      const count = state.selectedStyles.length;
+      if (count === 1) {
+        countEl.textContent = dict.styleSelectionSingle || '1 pauta seleccionada';
+      } else {
+        countEl.textContent = (dict.styleSelectionCount || '{count} pautas seleccionadas').replace('{count}', count);
+      }
+    }
+
+    // Update ZIP export button text
+    const exportAllBtnText = document.getElementById('exportAllBtnText');
+    if (exportAllBtnText) {
+      const count = state.selectedStyles.length;
+      if (count === 4) {
+        exportAllBtnText.textContent = dict.archiveBtn || 'Descargar los 4 (ZIP)';
+      } else if (count === 1) {
+        exportAllBtnText.textContent = dict.archiveBtnSingle || 'Descargar seleccionado (ZIP)';
+      } else {
+        exportAllBtnText.textContent = (dict.archiveBtnCount || 'Descargar seleccionados ({count} en ZIP)').replace('{count}', count);
+      }
+    }
+  }
+
   // --- Controls & Options ---
   function setupControls() {
     const styleOptions = document.querySelectorAll('.style-card');
@@ -883,18 +1213,242 @@
     const separationValue = document.getElementById('separationValue');
     const resetSettingsBtn = document.getElementById('resetSettingsBtn');
 
+    // Style Selection UI Helper
+    updateStyleSelectionUI();
+
     styleOptions.forEach(card => {
-      card.addEventListener('click', () => {
-        styleOptions.forEach(c => c.classList.remove('active'));
-        card.classList.add('active');
-        state.style = card.getAttribute('data-style');
+      const s = card.getAttribute('data-style');
+
+      // Click on card body switches preview and selects this style if unselected
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('.style-checkbox-btn')) return;
+        state.style = s;
+        if (!state.selectedStyles.includes(s)) {
+          state.selectedStyles.push(s);
+        }
+        updateStyleSelectionUI();
         renderCurrentPreview();
       });
+
+      // Click on checkbox toggle
+      const checkBtn = card.querySelector('.style-checkbox-btn');
+      if (checkBtn) {
+        checkBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = state.selectedStyles.indexOf(s);
+          if (idx >= 0) {
+            // Keep at least one style selected
+            if (state.selectedStyles.length > 1) {
+              state.selectedStyles.splice(idx, 1);
+            }
+          } else {
+            state.selectedStyles.push(s);
+          }
+          updateStyleSelectionUI();
+        });
+      }
     });
+
+    // Toolbar Quick Action Buttons
+    const selectAllBtn = document.getElementById('selectAllStylesBtn');
+    if (selectAllBtn) {
+      selectAllBtn.addEventListener('click', () => {
+        state.selectedStyles = ['lines', 'grid', 'dots', 'blank'];
+        updateStyleSelectionUI();
+      });
+    }
+
+    const selectLinesGridBtn = document.getElementById('selectLinesGridBtn');
+    if (selectLinesGridBtn) {
+      selectLinesGridBtn.addEventListener('click', () => {
+        state.selectedStyles = ['lines', 'grid'];
+        updateStyleSelectionUI();
+      });
+    }
+
+    const selectOnlyCurrentBtn = document.getElementById('selectOnlyCurrentBtn');
+    if (selectOnlyCurrentBtn) {
+      selectOnlyCurrentBtn.addEventListener('click', () => {
+        state.selectedStyles = [state.style];
+        updateStyleSelectionUI();
+      });
+    }
 
     if (paperSelect) {
       paperSelect.addEventListener('change', (e) => {
         state.paperSize = e.target.value;
+        savePresets();
+        renderCurrentPreview();
+      });
+    }
+
+    // Layout (1-Up vs 2-Up)
+    const layout1UpBtn = document.getElementById('layout1UpBtn');
+    const layout2UpBtn = document.getElementById('layout2UpBtn');
+    if (layout1UpBtn) {
+      layout1UpBtn.addEventListener('click', () => {
+        state.layout = '1-up';
+        layout1UpBtn.classList.add('active');
+        if (layout2UpBtn) layout2UpBtn.classList.remove('active');
+        savePresets();
+        renderCurrentPreview();
+      });
+    }
+    if (layout2UpBtn) {
+      layout2UpBtn.addEventListener('click', () => {
+        state.layout = '2-up';
+        layout2UpBtn.classList.add('active');
+        if (layout1UpBtn) layout1UpBtn.classList.remove('active');
+        savePresets();
+        renderCurrentPreview();
+      });
+    }
+
+    // Cover Page
+    const coverSelect = document.getElementById('coverSelect');
+    const coverMetaFields = document.getElementById('coverMetaFields');
+    const coverTitleInput = document.getElementById('coverTitleInput');
+    const coverAuthorInput = document.getElementById('coverAuthorInput');
+
+    if (coverSelect) {
+      coverSelect.addEventListener('change', (e) => {
+        state.coverMode = e.target.value;
+        if (coverMetaFields) {
+          coverMetaFields.classList.toggle('hidden', state.coverMode !== 'generate');
+        }
+        savePresets();
+        renderCurrentPreview();
+      });
+    }
+    if (coverTitleInput) {
+      coverTitleInput.addEventListener('input', (e) => {
+        state.coverTitle = e.target.value;
+        savePresets();
+        if (state.coverMode === 'generate') {
+          renderCurrentPreview();
+        }
+      });
+    }
+    if (coverAuthorInput) {
+      coverAuthorInput.addEventListener('input', (e) => {
+        state.coverAuthor = e.target.value;
+        savePresets();
+        if (state.coverMode === 'generate') {
+          renderCurrentPreview();
+        }
+      });
+    }
+
+    // Slide Range Filtering
+    const pageRangeInput = document.getElementById('pageRangeInput');
+    if (pageRangeInput) {
+      pageRangeInput.addEventListener('input', (e) => {
+        state.pageRanges = e.target.value;
+      });
+    }
+
+    // Gutter Margin & Duplex
+    const gutterToggle = document.getElementById('gutterToggle');
+    const gutterDuplexOptions = document.getElementById('gutterDuplexOptions');
+    const duplexSimplexBtn = document.getElementById('duplexSimplexBtn');
+    const duplexDuplexBtn = document.getElementById('duplexDuplexBtn');
+
+    if (gutterToggle) {
+      gutterToggle.addEventListener('change', (e) => {
+        state.hasGutter = Boolean(e.target.checked);
+        state.gutter = state.hasGutter ? 30 : 0;
+        if (gutterDuplexOptions) {
+          gutterDuplexOptions.classList.toggle('hidden', !state.hasGutter);
+        }
+        savePresets();
+        renderCurrentPreview();
+      });
+    }
+    if (duplexSimplexBtn) {
+      duplexSimplexBtn.addEventListener('click', () => {
+        state.duplex = false;
+        duplexSimplexBtn.classList.add('active');
+        if (duplexDuplexBtn) duplexDuplexBtn.classList.remove('active');
+        savePresets();
+        renderCurrentPreview();
+      });
+    }
+    if (duplexDuplexBtn) {
+      duplexDuplexBtn.addEventListener('click', () => {
+        state.duplex = true;
+        duplexDuplexBtn.classList.add('active');
+        if (duplexSimplexBtn) duplexSimplexBtn.classList.remove('active');
+        savePresets();
+        renderCurrentPreview();
+      });
+    }
+
+    // Study Header
+    const studyHeaderToggle = document.getElementById('studyHeaderToggle');
+    const studyHeaderField = document.getElementById('studyHeaderField');
+    const studyTitleInput = document.getElementById('studyTitleInput');
+
+    if (studyHeaderToggle) {
+      studyHeaderToggle.addEventListener('change', (e) => {
+        state.studyHeader = Boolean(e.target.checked);
+        if (studyHeaderField) {
+          studyHeaderField.classList.toggle('hidden', !state.studyHeader);
+        }
+        savePresets();
+        renderCurrentPreview();
+      });
+    }
+    if (studyTitleInput) {
+      studyTitleInput.addEventListener('input', (e) => {
+        state.studyTitle = e.target.value;
+        savePresets();
+        if (state.studyHeader) {
+          renderCurrentPreview();
+        }
+      });
+    }
+
+    // Page Numbers & Format
+    const pageNumberToggle = document.getElementById('pageNumberToggle');
+    const pageNumberFormatGroup = document.getElementById('pageNumberFormatGroup');
+    const pageFormatTotalBtn = document.getElementById('pageFormatTotalBtn');
+    const pageFormatSimpleBtn = document.getElementById('pageFormatSimpleBtn');
+
+    if (pageNumberToggle) {
+      pageNumberToggle.addEventListener('change', (e) => {
+        state.pageNumbers = Boolean(e.target.checked);
+        if (pageNumberFormatGroup) {
+          pageNumberFormatGroup.classList.toggle('hidden', !state.pageNumbers);
+        }
+        savePresets();
+        renderCurrentPreview();
+      });
+    }
+    if (pageFormatTotalBtn) {
+      pageFormatTotalBtn.addEventListener('click', () => {
+        state.pageNumberFormat = 'total';
+        pageFormatTotalBtn.classList.add('active');
+        if (pageFormatSimpleBtn) pageFormatSimpleBtn.classList.remove('active');
+        savePresets();
+        renderCurrentPreview();
+      });
+    }
+    if (pageFormatSimpleBtn) {
+      pageFormatSimpleBtn.addEventListener('click', () => {
+        state.pageNumberFormat = 'simple';
+        pageFormatSimpleBtn.classList.add('active');
+        if (pageFormatTotalBtn) pageFormatTotalBtn.classList.remove('active');
+        savePresets();
+        renderCurrentPreview();
+      });
+    }
+
+    // Eco Print Mode
+    const ecoPrintToggle = document.getElementById('ecoPrintToggle');
+    if (ecoPrintToggle) {
+      ecoPrintToggle.addEventListener('change', (e) => {
+        state.ecoPrint = Boolean(e.target.checked);
+        savePresets();
         renderCurrentPreview();
       });
     }
@@ -903,6 +1457,7 @@
       marginSlider.addEventListener('input', (e) => {
         state.margin = Number(e.target.value);
         marginValue.textContent = `${state.margin} pt`;
+        savePresets();
         renderCurrentPreview();
       });
     }
@@ -911,6 +1466,7 @@
       stepSlider.addEventListener('input', (e) => {
         state.step = Number(e.target.value);
         stepValue.textContent = `${state.step} pt`;
+        savePresets();
         renderCurrentPreview();
       });
     }
@@ -919,21 +1475,35 @@
       separationSlider.addEventListener('input', (e) => {
         state.separation = Number(e.target.value);
         separationValue.textContent = `${state.separation} pt`;
+        savePresets();
         renderCurrentPreview();
       });
     }
 
     if (resetSettingsBtn) {
       resetSettingsBtn.addEventListener('click', () => {
-        if (marginSlider) marginSlider.value = 40;
-        if (stepSlider) stepSlider.value = 14;
-        if (separationSlider) separationSlider.value = 10;
+        state.paperSize = 'a4';
         state.margin = 40;
         state.step = 14;
         state.separation = 10;
-        if (marginValue) marginValue.textContent = '40 pt';
-        if (stepValue) stepValue.textContent = '14 pt';
-        if (separationValue) separationValue.textContent = '10 pt';
+        state.layout = '1-up';
+        state.coverMode = 'none';
+        state.coverTitle = '';
+        state.coverAuthor = '';
+        state.pageRanges = '';
+        state.hasGutter = false;
+        state.gutter = 0;
+        state.duplex = false;
+        state.studyHeader = false;
+        state.studyTitle = '';
+        state.pageNumbers = true;
+        state.pageNumberFormat = 'total';
+        state.ecoPrint = false;
+        state.selectedStyles = ['lines', 'grid'];
+
+        applyStateToDOM();
+        updateStyleSelectionUI();
+        savePresets();
         renderCurrentPreview();
       });
     }
@@ -1015,6 +1585,18 @@
         margin: state.margin,
         step: state.step,
         separation: state.separation,
+        pageNumbers: state.pageNumbers,
+        pageNumberFormat: state.pageNumberFormat,
+        totalPages: state.numPages,
+        layout: state.layout,
+        gutter: state.hasGutter ? 30 : 0,
+        duplex: state.duplex,
+        studyHeader: state.studyHeader,
+        studyTitle: state.studyTitle,
+        coverMode: state.coverMode,
+        coverTitle: state.coverTitle,
+        coverAuthor: state.coverAuthor,
+        ecoPrint: state.ecoPrint,
       }
     );
   }
@@ -1063,37 +1645,59 @@
 
     try {
       const zip = new JSZip();
-      const style = state.style;
-      const styleCode = SlidePrinterEngine.STYLES[style]?.code || style;
+      const styles = state.selectedStyles && state.selectedStyles.length > 0
+        ? state.selectedStyles
+        : [state.style];
       const totalFiles = state.files.length;
+      const totalSteps = totalFiles * styles.length;
+      let stepCount = 0;
 
       for (let fIdx = 0; fIdx < totalFiles; fIdx++) {
         const item = state.files[fIdx];
-        const outBytes = await SlidePrinterEngine.convertSlidesToHandout(
-          item.pdfBytes.slice(0),
-          {
-            style: state.style,
-            paperSize: state.paperSize,
-            margin: state.margin,
-            step: state.step,
-            separation: state.separation,
-            onProgress: (current, total) => {
-              const filePct = Math.round((fIdx / totalFiles) * 100 + (current / total) * (100 / totalFiles));
-              updateProgress(
-                filePct,
-                `[${fIdx + 1}/${totalFiles}] ${item.name} (${current}/${total} ${dict.slidesLabel})...`
-              );
-            },
-          }
-        );
-
         const baseName = item.name.replace(/\.[^/.]+$/, '');
-        zip.file(`${baseName}_${styleCode}.pdf`, outBytes);
+
+        for (let sIdx = 0; sIdx < styles.length; sIdx++) {
+          const s = styles[sIdx];
+          const styleCode = SlidePrinterEngine.STYLES[s]?.code || s;
+
+          const outBytes = await SlidePrinterEngine.convertSlidesToHandout(
+            item.pdfBytes.slice(0),
+            {
+              style: s,
+              paperSize: state.paperSize,
+              margin: state.margin,
+              step: state.step,
+              separation: state.separation,
+              pageNumbers: state.pageNumbers,
+              pageNumberFormat: state.pageNumberFormat,
+              layout: state.layout,
+              gutter: state.hasGutter ? 30 : 0,
+              duplex: state.duplex,
+              coverMode: state.coverMode,
+              coverTitle: state.coverTitle,
+              coverAuthor: state.coverAuthor,
+              pageRanges: state.pageRanges,
+              studyHeader: state.studyHeader,
+              studyTitle: state.studyTitle,
+              ecoPrint: state.ecoPrint,
+              onProgress: (current, total) => {
+                const filePct = Math.round((stepCount / totalSteps) * 100 + (current / total) * (100 / totalSteps));
+                updateProgress(
+                  filePct,
+                  `[${fIdx + 1}/${totalFiles}] ${item.name} · ${styleCode} (${current}/${total} ${dict.slidesLabel})...`
+                );
+              },
+            }
+          );
+          stepCount++;
+          zip.file(`${baseName}_${styleCode}.pdf`, outBytes);
+        }
       }
 
       updateProgress(98, dict.compressingMsg || 'Compressing ZIP archive...');
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      const zipFileName = `handouts_${styleCode}_${totalFiles}_presentations.zip`;
+      const styleSuffix = styles.length === 4 ? 'all_styles' : styles.join('_');
+      const zipFileName = `handouts_${styleSuffix}_${totalFiles}_presentations.zip`;
       triggerDownload(zipBlob, zipFileName);
     } catch (err) {
       console.error('Batch ZIP export failed:', err);
@@ -1120,6 +1724,18 @@
           margin: state.margin,
           step: state.step,
           separation: state.separation,
+          pageNumbers: state.pageNumbers,
+          pageNumberFormat: state.pageNumberFormat,
+          layout: state.layout,
+          gutter: state.hasGutter ? 30 : 0,
+          duplex: state.duplex,
+          coverMode: state.coverMode,
+          coverTitle: state.coverTitle,
+          coverAuthor: state.coverAuthor,
+          pageRanges: state.pageRanges,
+          studyHeader: state.studyHeader,
+          studyTitle: state.studyTitle,
+          ecoPrint: state.ecoPrint,
           onProgress: (current, total) => {
             const pct = Math.round((current / total) * 100);
             updateProgress(pct, `${dict.folioLabel} ${current} ${dict.ofLabel} ${total}...`);
@@ -1149,12 +1765,19 @@
     }
     const dict = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
 
+    // Only bundle the selected styles!
+    const styles = state.selectedStyles && state.selectedStyles.length > 0
+      ? state.selectedStyles
+      : [state.style];
+
     state.isProcessing = true;
-    showLoading(true, dict.bundlingMsg);
+    const countMsg = styles.length === 4
+      ? dict.bundlingMsg
+      : (dict.bundlingSelectedMsg || 'Generating {count} selected styles in ZIP...').replace('{count}', styles.length);
+    showLoading(true, countMsg);
 
     try {
       const zip = new JSZip();
-      const styles = ['blank', 'lines', 'grid', 'dots'];
       const totalSteps = styles.length * state.numPages;
       let completedSteps = 0;
 
@@ -1170,6 +1793,18 @@
             margin: state.margin,
             step: state.step,
             separation: state.separation,
+            pageNumbers: state.pageNumbers,
+            pageNumberFormat: state.pageNumberFormat,
+            layout: state.layout,
+            gutter: state.hasGutter ? 30 : 0,
+            duplex: state.duplex,
+            coverMode: state.coverMode,
+            coverTitle: state.coverTitle,
+            coverAuthor: state.coverAuthor,
+            pageRanges: state.pageRanges,
+            studyHeader: state.studyHeader,
+            studyTitle: state.studyTitle,
+            ecoPrint: state.ecoPrint,
             onProgress: (current, total) => {
               completedSteps++;
               const pct = Math.round((completedSteps / totalSteps) * 100);
@@ -1186,7 +1821,8 @@
 
       updateProgress(98, dict.compressingMsg);
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      const zipFileName = `${getBaseFileName()}_all_styles.zip`;
+      const styleSuffix = styles.length === 4 ? 'all_styles' : styles.join('_');
+      const zipFileName = `${getBaseFileName()}_${styleSuffix}.zip`;
       triggerDownload(zipBlob, zipFileName);
     } catch (err) {
       console.error('ZIP export failed:', err);
@@ -1264,6 +1900,18 @@
           margin: state.margin,
           step: state.step,
           separation: state.separation,
+          pageNumbers: state.pageNumbers,
+          pageNumberFormat: state.pageNumberFormat,
+          layout: state.layout,
+          gutter: state.hasGutter ? 30 : 0,
+          duplex: state.duplex,
+          coverMode: state.coverMode,
+          coverTitle: state.coverTitle,
+          coverAuthor: state.coverAuthor,
+          pageRanges: state.pageRanges,
+          studyHeader: state.studyHeader,
+          studyTitle: state.studyTitle,
+          ecoPrint: state.ecoPrint,
           onProgress: (current, total) => {
             const pct = Math.round((current / total) * 100);
             updateProgress(pct, `${dict.folioLabel || 'Folio'} ${current} ${dict.ofLabel || 'of'} ${total}...`);
@@ -1322,10 +1970,12 @@
 
   // --- Main Initialization (Called after all definitions) ---
   function init() {
+    loadPresets();
     setupLanguage();
     setupTheme();
     setupDropZone();
     setupControls();
+    applyStateToDOM();
     setupPageNavigation();
     setupActions();
     setupKeyboardNavigation();

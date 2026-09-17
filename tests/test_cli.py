@@ -1,4 +1,6 @@
+import os
 import pytest
+from pypdf import PdfReader
 from slide_printer.cli import (
     parse_args,
     main,
@@ -13,10 +15,11 @@ def test_cli_parse_args_defaults():
     assert args.input == ["file.pdf"]
     assert args.styles == ["grid"]
     assert args.paper_size == "a4"
-    assert args.output_dir == "."
+    assert args.output_dir == "handouts"
     assert args.margin == 40.0
     assert args.dry_run is False
     assert args.open is False
+    assert args.page_numbers is True
 
 
 def test_cli_parse_args_custom():
@@ -150,8 +153,8 @@ def test_interactive_wizard_defaults(monkeypatch, sample_slide_pdf, tmp_path):
         monkeypatch.setattr("builtins.input", lambda prompt="": next(inputs))
         res = interactive_wizard()
         assert res == 0
-        # Output should be generated in current directory with _grid suffix
-        assert (tmp_path / "test_presentation_grid.pdf").exists()
+        # Output should be generated in handouts/grid directory
+        assert (tmp_path / "handouts" / "grid" / "test_presentation_grid.pdf").exists()
     finally:
         os.chdir(old_cwd)
 
@@ -199,9 +202,173 @@ def test_interactive_wizard_range_selection(monkeypatch, sample_slide_pdf, tmp_p
         monkeypatch.setattr("builtins.input", lambda prompt="": next(inputs))
         res = interactive_wizard()
         assert res == 0
-        assert (tmp_path / "lecture1_grid.pdf").exists()
-        assert not (tmp_path / "lecture2_grid.pdf").exists()
-        assert (tmp_path / "lecture3_grid.pdf").exists()
+        assert (tmp_path / "handouts" / "grid" / "lecture1_grid.pdf").exists()
+        assert not (tmp_path / "handouts" / "grid" / "lecture2_grid.pdf").exists()
+        assert (tmp_path / "handouts" / "grid" / "lecture3_grid.pdf").exists()
     finally:
         os.chdir(old_cwd)
+
+
+def test_parse_styles_arg():
+    from slide_printer.cli import parse_styles_arg
+
+    # Default
+    assert parse_styles_arg(None) == ["grid"]
+    assert parse_styles_arg("") == ["grid"]
+
+    # Individual and combinations
+    assert parse_styles_arg("lines") == ["lines"]
+    assert parse_styles_arg("1") == ["grid"]
+    assert parse_styles_arg("2") == ["lines"]
+    assert parse_styles_arg("1, 2") == ["grid", "lines"]
+    assert parse_styles_arg("1-2") == ["grid", "lines"]
+    assert parse_styles_arg("2-3") == ["lines", "dots"]
+    assert parse_styles_arg(["lines", "grid"]) == ["lines", "grid"]
+    assert parse_styles_arg("lineas y cuadricula") == ["lines", "grid"]
+    assert parse_styles_arg("grid + lines") == ["grid", "lines"]
+
+    # All styles
+    assert parse_styles_arg("A") == ["grid", "lines", "dots", "blank"]
+    assert parse_styles_arg("all") == ["grid", "lines", "dots", "blank"]
+    assert parse_styles_arg("*") == ["grid", "lines", "dots", "blank"]
+
+    # Invalid style raises ValueError
+    with pytest.raises(ValueError, match="Unknown style"):
+        parse_styles_arg("invalid_style")
+
+
+def test_selective_styles_cli_execution(sample_slide_pdf, tmp_path):
+    # Process only lines and grid
+    out_dir = str(tmp_path / "custom_handouts")
+    code = main([
+        "-i", sample_slide_pdf,
+        "-s", "lines", "grid",
+        "-o", out_dir,
+        "-q"
+    ])
+    assert code == 0
+
+    base = os.path.splitext(os.path.basename(sample_slide_pdf))[0]
+    # Check that ONLY lines and grid are generated
+    assert (tmp_path / "custom_handouts" / "lines" / f"{base}_lines.pdf").exists()
+    assert (tmp_path / "custom_handouts" / "grid" / f"{base}_grid.pdf").exists()
+    # Ensure blank and dots were NOT compiled
+    assert not (tmp_path / "custom_handouts" / "blank").exists()
+    assert not (tmp_path / "custom_handouts" / "dots").exists()
+
+
+def test_interactive_wizard_selective_styles(monkeypatch, sample_slide_pdf, tmp_path):
+    import shutil
+    import os
+    from slide_printer.cli import interactive_wizard
+
+    shutil.copy(sample_slide_pdf, tmp_path / "presentation.pdf")
+    old_cwd = os.getcwd()
+    os.chdir(tmp_path)
+    try:
+        # Style: "1, 2" (Grid + Lines), Paper: 1 (a4), File: 1, Open: n
+        inputs = iter(["1, 2", "1", "1", "n"])
+        monkeypatch.setattr("builtins.input", lambda prompt="": next(inputs))
+        res = interactive_wizard()
+        assert res == 0
+        assert (tmp_path / "handouts" / "grid" / "presentation_grid.pdf").exists()
+        assert (tmp_path / "handouts" / "lines" / "presentation_lines.pdf").exists()
+        assert not (tmp_path / "handouts" / "blank").exists()
+        assert not (tmp_path / "handouts" / "dots").exists()
+    finally:
+        os.chdir(old_cwd)
+
+
+def test_cli_parse_args_page_numbers():
+    args_default = parse_args(["-i", "file.pdf"])
+    assert args_default.page_numbers is True
+
+    args_no = parse_args(["-i", "file.pdf", "--no-page-numbers"])
+    assert args_no.page_numbers is False
+
+    args_yes = parse_args(["-i", "file.pdf", "--page-numbers"])
+    assert args_yes.page_numbers is True
+
+
+def test_cli_page_numbers_execution(sample_slide_pdf, tmp_path):
+    # 1. Default (with page numbers)
+    out_dir_yes = str(tmp_path / "out_yes")
+    code_yes = main(["-i", sample_slide_pdf, "-s", "lines", "-o", out_dir_yes, "-q"])
+    assert code_yes == 0
+
+    base = os.path.splitext(os.path.basename(sample_slide_pdf))[0]
+    pdf_yes = tmp_path / "out_yes" / "lines" / f"{base}_lines.pdf"
+    reader_yes = PdfReader(str(pdf_yes))
+    lines_p0_yes = [l.strip() for l in reader_yes.pages[0].extract_text().splitlines()]
+    lines_p1_yes = [l.strip() for l in reader_yes.pages[1].extract_text().splitlines()]
+    assert "1 / 2" in lines_p0_yes
+    assert "2 / 2" in lines_p1_yes
+
+    # 2. Disabled via --no-page-numbers
+    out_dir_no = str(tmp_path / "out_no")
+    code_no = main(["-i", sample_slide_pdf, "-s", "lines", "--no-page-numbers", "-o", out_dir_no, "-q"])
+    assert code_no == 0
+
+    pdf_no = tmp_path / "out_no" / "lines" / f"{base}_lines.pdf"
+    reader_no = PdfReader(str(pdf_no))
+    lines_p0_no = [l.strip() for l in reader_no.pages[0].extract_text().splitlines()]
+    lines_p1_no = [l.strip() for l in reader_no.pages[1].extract_text().splitlines()]
+    # Footer should not contain standalone page numbers
+    assert "1" not in lines_p0_no
+    assert "2" not in lines_p1_no
+
+
+def test_cli_parse_args_extended_flags():
+    args = parse_args([
+        "-i", "file.pdf",
+        "--pages", "1-5, 8",
+        "--page-format", "simple",
+        "--study-header",
+        "--study-title", "Biología",
+        "--binder-margin",
+        "--duplex",
+        "--generate-cover",
+        "--cover-title", "Apuntes Biología",
+        "--cover-author", "Manuel",
+        "-2",
+        "--grayscale",
+    ])
+    assert args.pages == "1-5, 8"
+    assert args.page_format == "simple"
+    assert args.study_header is True
+    assert args.study_title == "Biología"
+    assert args.gutter == 30.0
+    assert args.duplex is True
+    assert args.generate_cover is True
+    assert args.cover_title == "Apuntes Biología"
+    assert args.cover_author == "Manuel"
+    assert args.layout == "2-up"
+    assert args.grayscale is True
+
+
+def test_cli_execution_extended_flags(sample_slide_pdf, tmp_path):
+    out_dir = str(tmp_path / "extended_out")
+    code = main([
+        "-i", sample_slide_pdf,
+        "-s", "grid",
+        "--pages", "1",
+        "--study-header",
+        "--study-title", "Física Cuántica",
+        "-2",
+        "-o", out_dir,
+        "-q",
+    ])
+    assert code == 0
+    base = os.path.splitext(os.path.basename(sample_slide_pdf))[0]
+    out_pdf = tmp_path / "extended_out" / "grid" / f"{base}_grid.pdf"
+    assert out_pdf.exists()
+    reader = PdfReader(str(out_pdf))
+    assert len(reader.pages) == 1
+    text = reader.pages[0].extract_text()
+    assert "Física Cuántica" in text
+    assert "Slide 1: Introduction" in text
+    assert "Slide 2: Details" not in text  # Page 2 was filtered out!
+
+
+
 

@@ -57,7 +57,17 @@ STYLE_KEY_MAP = {
 }
 
 DEFAULT_PAPER_SIZE = "a4"
-DEFAULT_OUTPUT_DIR = "."
+DEFAULT_OUTPUT_DIR = "handouts"
 DEFAULT_MARGIN = 40.0
 DEFAULT_STEP = 14.0  # ~4.94 mm
 DEFAULT_SEPARATION = 10.0
+DEFAULT_PAGE_NUMBERS = True
+DEFAULT_PAGE_NUMBER_FORMAT = "total"  # "total" (1 / N) or "simple" (1)
+DEFAULT_GUTTER_MARGIN = 0.0
+BINDER_GUTTER_POINTS = 30.0  # ~10.6 mm for ring binders / spiral
+DEFAULT_DUPLEX = False
+DEFAULT_STUDY_HEADER = False
+DEFAULT_LAYOUT = "1-up"  # "1-up" or "2-up"
+DEFAULT_GRAYSCALE = False
+DEFAULT_COVER_MODE = "none"  # "none", "clean_first", "generate"
+

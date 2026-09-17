@@ -164,44 +164,91 @@
               <span id="patternSectionLabel">Estilo de notas</span>
               <span class="section-label-sub" id="patternSectionSub">01</span>
             </div>
-            <div class="style-grid" role="radiogroup" aria-label="Estilo de notas">
+
+            <!-- Selective Styles Toolbar -->
+            <div class="style-selection-toolbar">
+              <span class="style-selection-pill" id="styleSelectionCountText">2 pautas seleccionadas</span>
+              <div class="style-quick-actions">
+                <button type="button" class="btn-chip" id="selectLinesGridBtn" title="Seleccionar Líneas y Cuadrícula">Líneas + Cuadrícula</button>
+                <button type="button" class="btn-chip" id="selectAllStylesBtn" title="Seleccionar las 4 pautas">Todas</button>
+                <button type="button" class="btn-chip" id="selectOnlyCurrentBtn" title="Seleccionar solo la pauta actual">Solo actual</button>
+              </div>
+            </div>
+
+            <div class="style-grid" role="group" aria-label="Estilos de notas">
             
-            <div class="style-card active" data-style="lines" role="radio" aria-checked="true" tabindex="0" id="styleCardLines">
+            <div class="style-card active is-selected" data-style="lines" tabindex="0" id="styleCardLines">
+              <div class="style-card-header">
+                <div class="style-card-title-group">
+                  <button type="button" class="style-checkbox-btn" data-style="lines" title="Incluir en exportación" aria-label="Incluir líneas de pauta">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </button>
+                  <div class="style-card-title" id="styleLinesTitle">Líneas de pauta</div>
+                </div>
+                <div class="style-num">01</div>
+              </div>
               <div class="style-swatch style-swatch-lines" aria-hidden="true">
                 <span></span><span></span><span></span><span></span>
               </div>
-              <div class="style-card-header">
-                <div class="style-card-title" id="styleLinesTitle">Líneas de pauta</div>
-                <div class="style-num">01</div>
-              </div>
               <div class="style-card-desc" id="styleLinesDesc">Líneas de ~5mm para escritura manual</div>
+              <div class="style-card-footer">
+                <span class="preview-badge" id="previewBadgeLines">Vista previa</span>
+                <span class="export-status-label" id="exportStatusLines">En exportación</span>
+              </div>
             </div>
 
-            <div class="style-card" data-style="grid" role="radio" aria-checked="false" tabindex="0" id="styleCardGrid">
-              <div class="style-swatch style-swatch-grid" aria-hidden="true"></div>
+            <div class="style-card is-selected" data-style="grid" tabindex="0" id="styleCardGrid">
               <div class="style-card-header">
-                <div class="style-card-title" id="styleGridTitle">Cuadrícula</div>
+                <div class="style-card-title-group">
+                  <button type="button" class="style-checkbox-btn" data-style="grid" title="Incluir en exportación" aria-label="Incluir cuadrícula">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </button>
+                  <div class="style-card-title" id="styleGridTitle">Cuadrícula</div>
+                </div>
                 <div class="style-num">02</div>
               </div>
+              <div class="style-swatch style-swatch-grid" aria-hidden="true"></div>
               <div class="style-card-desc" id="styleGridDesc">Cuadrícula técnica para diagramas</div>
+              <div class="style-card-footer">
+                <span class="preview-badge hidden" id="previewBadgeGrid">Vista previa</span>
+                <span class="export-status-label" id="exportStatusGrid">En exportación</span>
+              </div>
             </div>
 
-            <div class="style-card" data-style="dots" role="radio" aria-checked="false" tabindex="0" id="styleCardDots">
-              <div class="style-swatch style-swatch-dots" aria-hidden="true"></div>
+            <div class="style-card" data-style="dots" tabindex="0" id="styleCardDots">
               <div class="style-card-header">
-                <div class="style-card-title" id="styleDotsTitle">Bullet points</div>
+                <div class="style-card-title-group">
+                  <button type="button" class="style-checkbox-btn" data-style="dots" title="Incluir en exportación" aria-label="Incluir bullet points">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </button>
+                  <div class="style-card-title" id="styleDotsTitle">Bullet points</div>
+                </div>
                 <div class="style-num">03</div>
               </div>
+              <div class="style-swatch style-swatch-dots" aria-hidden="true"></div>
               <div class="style-card-desc" id="styleDotsDesc">Matriz de puntos guía</div>
+              <div class="style-card-footer">
+                <span class="preview-badge hidden" id="previewBadgeDots">Vista previa</span>
+                <span class="export-status-label" id="exportStatusDots">No incluido</span>
+              </div>
             </div>
 
-            <div class="style-card" data-style="blank" role="radio" aria-checked="false" tabindex="0" id="styleCardBlank">
-              <div class="style-swatch style-swatch-blank" aria-hidden="true"></div>
+            <div class="style-card" data-style="blank" tabindex="0" id="styleCardBlank">
               <div class="style-card-header">
-                <div class="style-card-title" id="styleBlankTitle">Blanco</div>
+                <div class="style-card-title-group">
+                  <button type="button" class="style-checkbox-btn" data-style="blank" title="Incluir en exportación" aria-label="Incluir blanco">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </button>
+                  <div class="style-card-title" id="styleBlankTitle">Blanco</div>
+                </div>
                 <div class="style-num">04</div>
               </div>
+              <div class="style-swatch style-swatch-blank" aria-hidden="true"></div>
               <div class="style-card-desc" id="styleBlankDesc">Espacio despejado con separador</div>
+              <div class="style-card-footer">
+                <span class="preview-badge hidden" id="previewBadgeBlank">Vista previa</span>
+                <span class="export-status-label" id="exportStatusBlank">No incluido</span>
+              </div>
             </div>
 
           </div>
@@ -224,6 +271,100 @@
               <option value="legal" id="optLegal">US Legal (8.5 × 14 in)</option>
               <option value="a3" id="optA3">DIN A3 (297 × 420 mm)</option>
             </select>
+          </div>
+
+          <!-- Layout Selection: 1-Up vs 2-Up -->
+          <div class="form-group" style="margin-top: 0.85rem; margin-bottom: 0.85rem;">
+            <label class="form-label"><span id="layoutLabelText">Distribución por folio</span></label>
+            <div class="segmented-control" role="group" aria-label="Distribución">
+              <button type="button" class="segmented-btn active" id="layout1UpBtn" data-layout="1-up">
+                <span id="layout1UpText">1 Diapositiva</span>
+              </button>
+              <button type="button" class="segmented-btn" id="layout2UpBtn" data-layout="2-up">
+                <span id="layout2UpText">2 Diapositivas (Compacto)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Cover System -->
+          <div class="form-group" style="margin-top: 0.85rem; margin-bottom: 0.85rem;">
+            <label for="coverSelect" class="form-label"><span id="coverLabelText">Portada del documento</span></label>
+            <select id="coverSelect" class="form-select">
+              <option value="none" id="optCoverNone" selected>Sin portada especial</option>
+              <option value="clean_first" id="optCoverCleanFirst">1ª diapositiva como portada (sin notas)</option>
+              <option value="generate" id="optCoverGenerate">Generar portada nueva</option>
+            </select>
+            <div id="coverMetaFields" class="sub-form-group hidden" style="margin-top: 0.5rem;">
+              <input type="text" id="coverTitleInput" class="form-input" placeholder="Título para la portada" style="margin-bottom: 0.35rem;">
+              <input type="text" id="coverAuthorInput" class="form-input" placeholder="Autor / Estudiante / Asignatura">
+            </div>
+          </div>
+
+          <!-- Slide Range Filtering -->
+          <div class="form-group" style="margin-top: 0.85rem; margin-bottom: 0.85rem;">
+            <label for="pageRangeInput" class="form-label">
+              <span id="pageRangeLabelText">Rango de diapositivas</span>
+            </label>
+            <input type="text" id="pageRangeInput" class="form-input" placeholder="Todas (ej. 1-10, 15)">
+          </div>
+
+          <!-- Binding Margin (Gutter) & Duplex -->
+          <div class="form-group" style="margin-top: 0.85rem; margin-bottom: 0.85rem;">
+            <label class="toggle-control" for="gutterToggle" title="Margen adicional para encuadernación con anillas o espiral">
+              <input type="checkbox" id="gutterToggle">
+              <span class="toggle-switch"></span>
+              <span class="toggle-label" id="gutterLabelText">Margen para archivador / anillas (+11 mm)</span>
+            </label>
+            <div id="gutterDuplexOptions" class="sub-toggle-group hidden" style="margin-top: 0.5rem; margin-left: 2.2rem;">
+              <div class="segmented-control segmented-control-sm">
+                <button type="button" class="segmented-btn active" id="duplexSimplexBtn" data-duplex="false">
+                  <span id="duplexSimplexText">Una cara (Simplex)</span>
+                </button>
+                <button type="button" class="segmented-btn" id="duplexDuplexBtn" data-duplex="true">
+                  <span id="duplexDuplexText">Doble cara (Dúplex)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Study Header -->
+          <div class="form-group" style="margin-top: 0.85rem; margin-bottom: 0.85rem;">
+            <label class="toggle-control" for="studyHeaderToggle" title="Añadir ficha de tema, asignatura y fecha en la parte superior">
+              <input type="checkbox" id="studyHeaderToggle">
+              <span class="toggle-switch"></span>
+              <span class="toggle-label" id="studyHeaderLabelText">Cabecera de estudio (Asignatura y fecha)</span>
+            </label>
+            <div id="studyHeaderField" class="sub-form-group hidden" style="margin-top: 0.5rem; margin-left: 2.2rem;">
+              <input type="text" id="studyTitleInput" class="form-input" placeholder="Nombre de asignatura o tema (opcional)">
+            </div>
+          </div>
+
+          <!-- Page Numbers Toggle & Format -->
+          <div class="form-group" style="margin-top: 0.85rem; margin-bottom: 0.85rem;">
+            <label class="toggle-control" for="pageNumberToggle" title="Activar o desactivar números de página centrados en el pie">
+              <input type="checkbox" id="pageNumberToggle" checked>
+              <span class="toggle-switch"></span>
+              <span class="toggle-label" id="pageNumberLabelText">Números de página al pie</span>
+            </label>
+            <div id="pageNumberFormatGroup" class="sub-toggle-group" style="margin-top: 0.5rem; margin-left: 2.2rem;">
+              <div class="segmented-control segmented-control-sm">
+                <button type="button" class="segmented-btn active" id="pageFormatTotalBtn" data-format="total">
+                  <span id="pageFormatTotalText">Total (1 / N)</span>
+                </button>
+                <button type="button" class="segmented-btn" id="pageFormatSimpleBtn" data-format="simple">
+                  <span id="pageFormatSimpleText">Simple (1)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Eco-Print / Grayscale Mode -->
+          <div class="form-group" style="margin-top: 0.85rem; margin-bottom: 0.85rem;">
+            <label class="toggle-control" for="ecoPrintToggle" title="Optimizar contraste y escala de grises para impresoras monocromo">
+              <input type="checkbox" id="ecoPrintToggle">
+              <span class="toggle-switch"></span>
+              <span class="toggle-label" id="ecoPrintLabelText">Modo ahorro de tinta (Escala de grises)</span>
+            </label>
           </div>
 
           <!-- Fine Tuning -->

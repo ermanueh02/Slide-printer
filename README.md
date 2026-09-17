@@ -3,7 +3,7 @@
 [![CI](https://github.com/ermanueh02/Slide-printer/actions/workflows/ci.yml/badge.svg)](https://github.com/ermanueh02/Slide-printer/actions/workflows/ci.yml)
 [![Python Version](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-18%20passing-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-36%20passing-brightgreen.svg)](tests/)
 [![Web App](https://img.shields.io/badge/Web%20Studio-Live-blueviolet.svg)](https://ermanueh02.github.io/Slide-printer/)
 
 **Slide-Printer** transforms digital presentation slides (16:9 widescreen or 4:3 standard) into clean, printable handouts on **DIN A4**, **US Letter**, **US Legal**, or **DIN A3** paper, adding dedicated note-taking space directly below each slide.
@@ -14,11 +14,12 @@ Whether you're attending a lecture, giving a seminar, or preparing study materia
 
 ## 📐 Layout Overview
 
-Each page of your presentation is placed at the top of the sheet, followed by a customizable notes section:
+Each page of your presentation is placed on the sheet, followed by a customizable notes section:
 
 ```text
 +---------------------------------------------------+
-|                     MARGIN                        |
+|  [TEMA: Machine Learning]    [FECHA: __/__/20__]  |  <-- Optional Study Header
+|                                                   |
 |   +-------------------------------------------+   |
 |   |                                           |   |
 |   |            PRESENTATION SLIDE             |   |
@@ -40,7 +41,7 @@ Each page of your presentation is placed at the top of the sheet, followed by a 
 |   |    4. Blank (clean open space)            |   |
 |   |                                           |   |
 |   +-------------------------------------------+   |
-|                     MARGIN                        |
+|                      1 / 24                       |  <-- Centered Page Number
 +---------------------------------------------------+
 ```
 
@@ -53,15 +54,32 @@ Each page of your presentation is placed at the top of the sheet, followed by a 
   - **Graph Grid (`grid`)**: Technical squared grid for math, diagrams, sketches, and charts.
   - **Dot Matrix (`dots`)**: Subtle bullet dot grid for flexible note-taking.
   - **Blank (`blank`)**: Clean open space with an elegant hairline divider.
+- **2 Layout Modes**:
+  - **1-Up Standard**: 1 slide per sheet with full-width note space.
+  - **2-Up Compact Handout (`-2`, `--layout 2-up`)**: 2 slides per sheet, each with compact notes and a middle hairline divider, halving paper usage.
+- **Smart Binding Gutter & Duplex Support**:
+  - Extra +11 mm (+30 pt) margin for ring binders or spiral binding (`--gutter` / `--binder-margin`).
+  - **Duplex Intelligence (`--duplex`)**: Shifts odd sheets (recto) to the right (left gutter) and even sheets (verso) to the left (right gutter) so punched holes never bite into content.
+- **Cover Page System**:
+  - **Clean 1st Slide (`--clean-cover`)**: Uses the first slide as the cover sheet without adding note lines or dividers.
+  - **Generated Title Cover (`--generate-cover`)**: Creates an elegant, minimalist editorial title page with document title, subject, author, slide count, and date.
+- **Study Header Metadata Bar (`--study-header`, `--study-title`)**:
+  - Adds a top study bar with topic/subject fill-in and date line (`FECHA: _____ / _____ / 20___`).
+- **Slide Range Filtering (`--pages`)**:
+  - Process only selected slides, e.g. `--pages "1-10, 15, 20-30"`.
+- **Eco-Print / Grayscale Mode (`--eco`, `--grayscale`)**:
+  - Monochromatic rendering optimized to save colored ink and toner on standard office printers.
+- **Advanced Page Numbering**:
+  - Centered footer numbering with total count format (`1 / 24`) or simple format (`1`). Enabled by default.
 - **Hyperlink & Annotation Preservation**:
-  - Standard transformation tools often break or misalign clickable links. Slide-Printer recalculates and transforms coordinate matrices (`/Annots` `/Rect`) so all hyperlinks remain clickable in the printed or digital handout.
+  - Standard transformation tools often break or misalign clickable links. Slide-Printer recalculates and transforms coordinate matrices (`/Annots` `/Rect`) so all hyperlinks remain clickable across 1-up and 2-up layouts.
 - **Multiple Paper Formats**: Supports **DIN A4**, **US Letter**, **US Legal**, and **DIN A3**.
 - **Smart PowerPoint Guidance**:
   - Slide-Printer operates directly on PDF to guarantee 100% vector accuracy and embedded font rendering.
   - If a `.pptx` or `.ppt` presentation is passed or dropped into either the CLI or the Web Studio, it provides instant instructions on exporting to PDF in 1 click (`File > Export > Create PDF`).
   - In the CLI, if a matching PDF already exists in the same folder, it automatically offers to process it!
 - **Multi-Modal Interface**:
-  - **Web Studio**: 100% in-browser, private, multilingual (EN, ES, GL), and instant without requiring Python or Git.
+  - **Web Studio**: 100% in-browser, private, multilingual (EN, ES, GL), instant, with automatic preset saving in `localStorage`.
   - **Command-Line Interface (CLI)**: Rich ANSI styling, live progress meters, run summary tables, simulation mode (`--dry-run`), and auto-open support (`-O`).
   - **Interactive Terminal Wizard**: Guided prompts with presentation discovery and drag-and-drop support.
 - **Python Library API**: Easily integrate into your own Python pipelines or scripts.
@@ -100,8 +118,9 @@ If you don't have Python installed or prefer a visual UI, open the web app in an
 - **Zero Installation**: Works instantly on desktop, tablets (iPad/Surface), and mobile phones.
 - **100% Private**: Your presentation never leaves your device — all transformations run client-side in your browser.
 - **Multilingual**: Switch seamlessly between **English**, **Español**, and **Galego**.
-- **Instant Live Preview**: Toggle between Ruled lines, Grid, Bullet points, and Blank with real-time visual feedback.
-- **1-Click Export & Print**: Download individual PDFs, export all 4 styles in a ZIP archive, or trigger browser printing directly.
+- **Instant Live Preview**: Toggle styles, 1-up vs 2-up, duplex binding margins, covers, headers, and grayscale with real-time canvas feedback.
+- **Auto-Saved Presets**: Remembers your preferred paper format, margins, styles, and options across sessions.
+- **1-Click Export & Print**: Download individual PDFs, export selected styles in a ZIP archive, or trigger browser printing directly.
 
 ---
 
@@ -116,14 +135,25 @@ slide-printer --web
 # Process a presentation with ruled lines on A4
 slide-printer -i presentation.pdf -s lines
 
+# Selective styles (e.g. ruled lines & graph grid only, skipping blank & dots)
+slide-printer -i presentation.pdf -s lines grid
+# Or using numbers / ranges:
+slide-printer -i presentation.pdf -s 1-2
+
 # Generate all 4 note styles at once
 slide-printer -i presentation.pdf -s all
 
-# Process multiple presentations or wildcards into a custom directory
-slide-printer -i "lectures/*.pdf" -s lines grid -o my_handouts/
+# Print 2 slides per sheet (compact 2-up handout) with binding gutter for ring binder
+slide-printer -i presentation.pdf -s lines -2 --gutter
 
-# Target US Letter paper size and open output folder when finished
-slide-printer -i presentation.pdf -p letter -s grid -O
+# Double-sided (duplex) printing with alternating margin and clean first slide cover
+slide-printer -i presentation.pdf -s grid --gutter --duplex --clean-cover
+
+# Generate new editorial title cover with study metadata header and slide range
+slide-printer -i presentation.pdf -s lines --generate-cover --cover-title "Machine Learning" --cover-author "Alex" --study-header --pages "1-15"
+
+# Eco-print / grayscale mode targeting US Letter
+slide-printer -i presentation.pdf -p letter -s grid --eco -O
 
 # Simulate execution (check slide count and output paths without modifying disk)
 slide-printer --dry-run -i presentation.pdf -s all
@@ -133,12 +163,25 @@ slide-printer --dry-run -i presentation.pdf -s all
 | Flag | Description | Default |
 |------|-------------|---------|
 | `-i`, `--input` | Input PDF presentation(s), folder, or wildcards | *(Interactive)* |
-| `-s`, `--styles` | Note style(s): `grid`, `lines`, `dots`, `blank`, or `all` (or numbers 1–4) | `grid` |
-| `-o`, `--output-dir`| Directory where output PDFs are organized | `.` *(current dir)* |
+| `-s`, `--styles` | Note style(s): `grid`, `lines`, `dots`, `blank`, numbers (1–4), ranges (`1-2`), or `all` | `grid` |
+| `-o`, `--output-dir`| Directory where output PDFs are organized | `handouts` |
 | `-p`, `--paper-size`| Target paper: `a4`, `letter`, `legal`, `a3` | `a4` |
 | `-m`, `--margin` | Page margin in points (1 pt = 1/72 in) | `40.0` |
 | `--step` | Distance between lines/dots in points | `14.0` |
-| `-O`, `--open` | Automatically open the output folder or generated PDF upon completion | — |
+| `--layout`, `-2`, `--two-up` | Layout: `1-up` (1 slide) or `2-up` (2 slides per sheet) | `1-up` |
+| `--gutter`, `--binder-margin` | Extra +11 mm (+30 pt) margin for ring binder punching | `0.0` |
+| `--duplex` / `--simplex` | Alternate gutter margin on odd/even sheets for 2-sided printing | `--simplex` |
+| `--clean-cover` | Use 1st slide as title cover without note lines or dividers | `False` |
+| `--generate-cover` | Generate a new editorial title cover page before slides | `False` |
+| `--cover-title` | Title for generated cover page | Presentation name |
+| `--cover-author` | Author/Student/Topic for generated cover page | — |
+| `--study-header` | Add top metadata bar with subject fill-in and date line | `False` |
+| `--study-title` | Optional subject/topic name pre-filled in study header | — |
+| `--pages` | Process specific slide range (e.g. `1-10, 15, 20-30` or `all`) | `all` |
+| `--page-numbers`, `--no-page-numbers` | Centered page numbers at the footer of each sheet | `Enabled` |
+| `--page-format` | Footer page number format: `total` (`1 / 24`) or `simple` (`1`) | `total` |
+| `--eco`, `--grayscale` | Grayscale / ink-saver mode for monochrome printers | `False` |
+| `-O`, `--open` | Automatically open output folder or generated PDF upon completion | — |
 | `--dry-run` | Simulate execution: inspect slide counts and output paths without writing to disk | — |
 | `--web` | Launch the local web studio in your default browser | — |
 | `--port` | Port for the local web server | `8000` |
@@ -156,57 +199,6 @@ Running `slide-printer` without arguments (or with `--interactive`) launches a g
 slide-printer
 ```
 
-```text
-╭────────────────────────────────────────────────────────────╮
-│  Slide-Printer v4.2.0 · Terminal Studio Wizard             │
-╰────────────────────────────────────────────────────────────╯
-
-1. Choose Note Style:
-  [1] Graph grid   (Technical grid for diagrams and notes) [default]
-  [2] Ruled lines  (~5mm handwriting lines for study notes)
-  [3] Dot matrix   (Subtle dot grid for flexible bullet notes)
-  [4] Blank        (Clean blank space with hairline divider)
-  [A] All 4 styles (Generate all 4 note variants at once)
-
-Enter choice [1, 2, 3, 4, or A] (default: 1): 1
-
-2. Target Paper Format:
-  [1] DIN A4      (210 × 297 mm) [default]
-  [2] US Letter   (8.5 × 11 in)
-  [3] US Legal    (8.5 × 14 in)
-  [4] DIN A3      (297 × 420 mm)
-
-Enter paper choice [1, 2, 3, 4] (default: 1): 1
-
-3. Select Presentation File(s):
-Found 2 presentation PDF(s) in current directory:
-  [1] lecture_week_01.pdf (34 slides · 3.2 MB)
-  [2] seminar_slides.pdf  (18 slides · 1.1 MB)
-
-  - Press Enter to process current directory '.' [default]
-  - Type a number (1-2), or '*' to process all above.
-
-Your choice (default: current directory '.'): 1
-
-🚀 Processing 1 presentation(s) into A4 with: Grid...
-
-[1/1] lecture_week_01.pdf (34 slides)
-   ├─ grid    ✔ lecture_week_01_grid.pdf
-
-╭─────────────────────────────────────────────────────────────────────────╮
-│                       Slide-Printer · Run Summary                       │
-├──────────────────────────────┬────────┬─────────────────────────────────┤
-│ Source Presentation          │ Slides │ Generated Output                │
-├──────────────────────────────┼────────┼─────────────────────────────────┤
-│ lecture_week_01.pdf          │ 34     │ 1 files (lines)                 │
-╰──────────────────────────────┴────────┴─────────────────────────────────╯
-
-✔ Successfully generated 1 handout(s) in 0.45s.
-   Paper: A4 · Output Directory: C:\...\handouts
-
-Open output folder now? [Y/n]: y
-```
-
 ---
 
 ### 🐍 4. Python API
@@ -216,40 +208,41 @@ You can also use `slide_printer` directly in your Python applications:
 ```python
 from slide_printer import SlidePrinter
 
-# Initialize printer with desired paper format and margins
-printer = SlidePrinter(paper_size="a4", margin=40.0)
+# Initialize printer with study header, duplex gutter, and 2-up layout
+printer = SlidePrinter(
+    paper_size="a4",
+    layout="2-up",
+    gutter_margin=30.0,
+    duplex=True,
+    study_header=True,
+    study_title="Algorithms & Data Structures",
+    cover_mode="clean_first",
+    page_number_format="total"
+)
 
 # Process a presentation PDF with ruled lines and graph grid notes
 output_files = printer.process_file(
     input_path="presentation.pdf",
     styles=["lines", "grid"],
-    output_dir="handouts/"
+    output_dir="handouts/",
+    page_ranges="1-20"
 )
 
 print(f"Generated handouts: {output_files}")
-```
-
-To process multiple paths or wildcards programmatically:
-```python
-output_files = printer.process_paths(
-    paths=["slides/*.pdf"],
-    styles=["lines", "dots", "blank"],
-    output_dir="handouts/"
-)
 ```
 
 ---
 
 ## 🧪 Testing
 
-Slide-Printer includes an automated test suite with `pytest` covering core transformation logic, pattern generators, link recalculations, CLI flags, PowerPoint detection, and dry-run simulation:
+Slide-Printer includes an automated test suite with `pytest` covering core transformation logic, 1-up and 2-up layouts, duplex binding margins, cover generation, study headers, pattern generators, link recalculations, CLI flags, PowerPoint detection, and dry-run simulation:
 
 ```bash
 pip install -r requirements-dev.txt
 pytest -v
 ```
 
-All 18 unit tests run in ~2 seconds.
+All 36 unit tests run in ~3 seconds.
 
 ---
 
