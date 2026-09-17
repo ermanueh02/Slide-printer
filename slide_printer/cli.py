@@ -240,30 +240,34 @@ def interactive_wizard() -> int:
 
     # 1. Note Style Selection
     print(bold("1. Choose Note Style:"))
-    print(f"  [{cyan('1')}] Ruled lines  (~5mm handwriting lines for study notes) {dim('[default]')}")
-    print(f"  [{cyan('2')}] Graph grid  (Technical grid for diagrams and equations)")
-    print(f"  [{cyan('3')}] Dot matrix  (Subtle dot grid for flexible bullet notes)")
-    print(f"  [{cyan('4')}] Blank       (Clean blank space with hairline divider)")
+    print(f"  [{cyan('1')}] Graph grid   (Technical grid for diagrams and notes) {dim('[default]')}")
+    print(f"  [{cyan('2')}] Ruled lines  (~5mm handwriting lines for study notes)")
+    print(f"  [{cyan('3')}] Dot matrix   (Subtle dot grid for flexible bullet notes)")
+    print(f"  [{cyan('4')}] Blank        (Clean blank space with hairline divider)")
     print(f"  [{cyan('A')}] All 4 styles (Generate all 4 note variants at once)")
 
     raw_selection = input(f"\nEnter choice [{bold('1')}, 2, 3, 4, or A] (default: 1): ").strip()
 
     wizard_style_map = {
-        "1": "lines",
-        "2": "grid",
+        "1": "grid",
+        "2": "lines",
         "3": "dots",
         "4": "blank",
-        "lines": "lines",
-        "ruled": "lines",
         "grid": "grid",
+        "cuadricula": "grid",
+        "lines": "lines",
+        "lineas": "lines",
+        "ruled": "lines",
         "dots": "dots",
+        "puntos": "dots",
         "blank": "blank",
+        "en_blanco": "blank",
     }
 
     if not raw_selection:
-        selected_styles = ["lines"]
+        selected_styles = ["grid"]
     elif raw_selection.upper() == "A":
-        selected_styles = ["lines", "grid", "dots", "blank"]
+        selected_styles = ["grid", "lines", "dots", "blank"]
     else:
         selected_styles = []
         # Support commas or spaces e.g. "1,2" or "1 3"
@@ -283,8 +287,8 @@ def interactive_wizard() -> int:
                     pass
 
     if not selected_styles:
-        print(yellow("⚠️  No recognized style selected. Defaulting to 'Ruled lines' (lines)."))
-        selected_styles = ["lines"]
+        print(yellow("⚠️  No recognized style selected. Defaulting to 'Graph grid' (grid)."))
+        selected_styles = ["grid"]
 
     # 2. Paper Size Selection
     print(bold("\n2. Target Paper Format:"))
@@ -298,7 +302,12 @@ def interactive_wizard() -> int:
     selected_paper = paper_map.get(paper_choice, "a4")
 
     # 3. Detect presentations in current directory
-    local_pdfs = sorted(glob.glob("*.pdf"))
+    all_pdfs = sorted(glob.glob("*.pdf"))
+    presentation_pdfs = [
+        f for f in all_pdfs
+        if not any(f.lower().endswith(f"_{s}.pdf") for s in ("grid", "lines", "dots", "blank"))
+    ]
+    local_pdfs = presentation_pdfs if presentation_pdfs else all_pdfs
     local_pdf_info: List[Tuple[str, Optional[int], int]] = []
     for f in local_pdfs:
         pgs = get_pdf_page_count(f)
@@ -307,23 +316,22 @@ def interactive_wizard() -> int:
 
     print(bold("\n3. Select Presentation File(s):"))
     if local_pdf_info:
-        print(dim(f"Found {len(local_pdf_info)} PDF presentation(s) in current directory:"))
+        print(dim(f"Found {len(local_pdf_info)} presentation PDF(s) in current directory:"))
         for i, (pdf_name, pgs, sz) in enumerate(local_pdf_info, 1):
             pgs_label = f"{pgs} slides" if pgs is not None else "PDF"
             sz_label = format_bytes(sz)
             print(f"  [{cyan(str(i))}] {pdf_name} {dim(f'({pgs_label} · {sz_label})')}")
-        print(dim(f"\n  - Type a number (1-{len(local_pdf_info)}), or '*' to process all above."))
+        print(dim(f"\n  - Press Enter to process current directory '.' {bold('[default]')}"))
+        print(dim(f"  - Type a number (1-{len(local_pdf_info)}), or '*' to process all above."))
     else:
-        print(dim("  No PDF files detected in current directory."))
+        print(dim("  No presentation PDF files detected in current directory."))
+        print(dim("  - Drag & drop any PDF or folder directly into this terminal."))
+        print(dim(f"  - Press Enter to scan current directory '.' {bold('[default]')}"))
 
-    print(dim("  - Drag & drop any PDF or folder directly into this terminal."))
-    print(dim("  - Type '.' to process current directory."))
-
-    entry = input(bold("\nYour choice: ")).strip()
+    entry = input(bold("\nYour choice (default: current directory '.'): ")).strip()
 
     if not entry:
-        print(red("❌ No file or selection entered. Exiting."))
-        return 1
+        entry = "."
 
     # Clean quotes from drag & drop
     entry = entry.strip("\"'")
@@ -418,7 +426,14 @@ def interactive_wizard() -> int:
             for gen in generated:
                 if not first_output:
                     first_output = gen
-                folder = os.path.basename(os.path.dirname(gen))
+                base_out = os.path.basename(gen)
+                matched_style = None
+                for st in selected_styles:
+                    code = STYLE_METADATA[st]["code"]
+                    if base_out.endswith(f"_{code}.pdf"):
+                        matched_style = code
+                        break
+                folder = matched_style or "handout"
                 print(f"   ├─ {cyan(folder):<7} {green('✔')} {gen}")
 
             summary_rows.append({
@@ -437,7 +452,7 @@ def interactive_wizard() -> int:
     if first_output and os.path.exists(first_output):
         open_choice = input(dim("Open output folder now? [Y/n]: ")).strip().lower()
         if open_choice in ("", "y", "yes"):
-            open_path_in_os(os.path.dirname(first_output))
+            open_path_in_os(os.path.dirname(first_output) or ".")
 
     return 0
 
@@ -470,14 +485,14 @@ Examples:
         "-s",
         "--styles",
         nargs="+",
-        default=["blank"],
-        help="Note styles: 'lines', 'grid', 'dots', 'blank', 'all' (or numbers 1-4). Multiple allowed.",
+        default=["grid"],
+        help="Note styles: 'grid', 'lines', 'dots', 'blank', 'all' (or numbers 1-4). Multiple allowed (default: 'grid').",
     )
     parser.add_argument(
         "-o",
         "--output-dir",
         default=DEFAULT_OUTPUT_DIR,
-        help=f"Output directory for generated handouts (default: '{DEFAULT_OUTPUT_DIR}').",
+        help=f"Output directory for generated handouts (default: current directory '{DEFAULT_OUTPUT_DIR}').",
     )
     parser.add_argument(
         "-p",
@@ -640,7 +655,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                 return 1
 
     if not chosen_styles:
-        chosen_styles = ["blank"]
+        chosen_styles = ["grid"]
 
     printer = SlidePrinter(
         paper_size=args.paper_size,
@@ -674,7 +689,8 @@ def main(argv: Optional[List[str]] = None) -> int:
                     for st in chosen_styles:
                         code = STYLE_METADATA[st]["code"]
                         base = os.path.splitext(os.path.basename(cand))[0]
-                        dest = os.path.join(args.output_dir, code, f"{base}_{code}.pdf")
+                        dest_dir = args.output_dir if args.output_dir in (".", "") else os.path.join(args.output_dir, code)
+                        dest = os.path.join(dest_dir, f"{base}_{code}.pdf")
                         print(f"   ├─ {cyan(code):<7} ➜ {dest}")
                         total_files += 1
         print(bold(f"\nDry-run complete: Would generate {total_files} handouts ({total_slides} total slides)."))
@@ -688,7 +704,14 @@ def main(argv: Optional[List[str]] = None) -> int:
             pages_text = f" ({pages} slides)" if pages else ""
             print(f"  {bold(src)}{dim(pages_text)}")
             for out in outputs:
-                style_name = os.path.basename(os.path.dirname(out))
+                base_out = os.path.basename(out)
+                matched_style = None
+                for st in chosen_styles:
+                    code = STYLE_METADATA[st]["code"]
+                    if base_out.endswith(f"_{code}.pdf"):
+                        matched_style = code
+                        break
+                style_name = matched_style or "handout"
                 print(f"   ├─ {cyan(style_name):<7} {green('✔')} {out}")
             summary_rows.append({
                 "name": src,

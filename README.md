@@ -133,8 +133,8 @@ slide-printer --dry-run -i presentation.pdf -s all
 | Flag | Description | Default |
 |------|-------------|---------|
 | `-i`, `--input` | Input PDF presentation(s), folder, or wildcards | *(Interactive)* |
-| `-s`, `--styles` | Note style(s): `lines`, `grid`, `dots`, `blank`, or `all` (or numbers 1–4) | `blank` |
-| `-o`, `--output-dir`| Directory where output PDFs are organized | `handouts` |
+| `-s`, `--styles` | Note style(s): `grid`, `lines`, `dots`, `blank`, or `all` (or numbers 1–4) | `grid` |
+| `-o`, `--output-dir`| Directory where output PDFs are organized | `.` *(current dir)* |
 | `-p`, `--paper-size`| Target paper: `a4`, `letter`, `legal`, `a3` | `a4` |
 | `-m`, `--margin` | Page margin in points (1 pt = 1/72 in) | `40.0` |
 | `--step` | Distance between lines/dots in points | `14.0` |
@@ -150,7 +150,7 @@ slide-printer --dry-run -i presentation.pdf -s all
 
 ### 🪄 3. Interactive Terminal Wizard
 
-Running `slide-printer` without arguments (or with `--interactive`) launches a guided terminal wizard:
+Running `slide-printer` without arguments (or with `--interactive`) launches a guided terminal wizard. Hitting `Enter` through all steps uses the instant defaults (**Graph grid**, **DIN A4**, and **current directory**):
 
 ```bash
 slide-printer
@@ -162,8 +162,8 @@ slide-printer
 ╰────────────────────────────────────────────────────────────╯
 
 1. Choose Note Style:
-  [1] Ruled lines  (~5mm handwriting lines for study notes) [default]
-  [2] Graph grid   (Technical grid for diagrams and equations)
+  [1] Graph grid   (Technical grid for diagrams and notes) [default]
+  [2] Ruled lines  (~5mm handwriting lines for study notes)
   [3] Dot matrix   (Subtle dot grid for flexible bullet notes)
   [4] Blank        (Clean blank space with hairline divider)
   [A] All 4 styles (Generate all 4 note variants at once)
@@ -179,20 +179,19 @@ Enter choice [1, 2, 3, 4, or A] (default: 1): 1
 Enter paper choice [1, 2, 3, 4] (default: 1): 1
 
 3. Select Presentation File(s):
-Found 2 PDF presentation(s) in current directory:
+Found 2 presentation PDF(s) in current directory:
   [1] lecture_week_01.pdf (34 slides · 3.2 MB)
   [2] seminar_slides.pdf  (18 slides · 1.1 MB)
 
+  - Press Enter to process current directory '.' [default]
   - Type a number (1-2), or '*' to process all above.
-  - Drag & drop any PDF or folder directly into this terminal.
-  - Type '.' to process current directory.
 
-Your choice: 1
+Your choice (default: current directory '.'): 1
 
-🚀 Processing 1 presentation(s) into A4 with: Lined...
+🚀 Processing 1 presentation(s) into A4 with: Grid...
 
 [1/1] lecture_week_01.pdf (34 slides)
-   ├─ lines   ✔ handouts/lines/lecture_week_01_lines.pdf
+   ├─ grid    ✔ lecture_week_01_grid.pdf
 
 ╭─────────────────────────────────────────────────────────────────────────╮
 │                       Slide-Printer · Run Summary                       │

@@ -11,8 +11,9 @@ from slide_printer.cli import (
 def test_cli_parse_args_defaults():
     args = parse_args(["-i", "file.pdf"])
     assert args.input == ["file.pdf"]
-    assert args.styles == ["blank"]
+    assert args.styles == ["grid"]
     assert args.paper_size == "a4"
+    assert args.output_dir == "."
     assert args.margin == 40.0
     assert args.dry_run is False
     assert args.open is False
@@ -131,3 +132,26 @@ def test_print_summary_table_perfect_alignment(capsys):
     plain_lines = [ansi_escape.sub('', l) for l in table_lines]
     lengths = [len(l) for l in plain_lines]
     assert len(set(lengths)) == 1, f"Table border misalignment detected: lengths={lengths}"
+
+
+def test_interactive_wizard_defaults(monkeypatch, sample_slide_pdf, tmp_path):
+    import shutil
+    import os
+    from slide_printer.cli import interactive_wizard
+
+    # Run in a temp directory with a copy of sample_slide_pdf
+    shutil.copy(sample_slide_pdf, tmp_path / "test_presentation.pdf")
+    old_cwd = os.getcwd()
+    os.chdir(tmp_path)
+    try:
+        # Simulate hitting Enter 3 times (style default: grid, paper default: a4, files default: .)
+        # and 'n' to open folder prompt
+        inputs = iter(["", "", "", "n"])
+        monkeypatch.setattr("builtins.input", lambda prompt="": next(inputs))
+        res = interactive_wizard()
+        assert res == 0
+        # Output should be generated in current directory with _grid suffix
+        assert (tmp_path / "test_presentation_grid.pdf").exists()
+    finally:
+        os.chdir(old_cwd)
+

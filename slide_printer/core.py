@@ -168,8 +168,9 @@ class SlidePrinter:
         for style in canonical_styles:
             style_meta = STYLE_METADATA[style]
             folder_name = style_meta["code"]
-            style_dir = os.path.join(out_root, folder_name)
-            os.makedirs(style_dir, exist_ok=True)
+            style_dir = out_root if out_root in (".", "") else os.path.join(out_root, folder_name)
+            if style_dir and style_dir != ".":
+                os.makedirs(style_dir, exist_ok=True)
 
             # Use clone_from to instantiate writer with pages attached directly
             writer = PdfWriter(clone_from=input_path)
@@ -203,7 +204,12 @@ class SlidePrinter:
             if not path_clean:
                 continue
             if os.path.isdir(path_clean):
-                resolved_files.extend(sorted(glob.glob(os.path.join(path_clean, "*.pdf"))))
+                candidates = sorted(glob.glob(os.path.join(path_clean, "*.pdf")))
+                filtered = [
+                    c for c in candidates
+                    if not any(c.lower().endswith(f"_{s}.pdf") for s in ("grid", "lines", "dots", "blank"))
+                ]
+                resolved_files.extend(filtered if filtered else candidates)
             elif "*" in path_clean or "?" in path_clean:
                 resolved_files.extend(sorted(glob.glob(path_clean)))
             else:
