@@ -115,29 +115,31 @@
     <!-- Workspace State (Appears when PDF is loaded) -->
     <section class="workspace-container hidden" id="workspace">
 
-      <!-- Left Column: Controls & Configuration -->
-      <aside class="controls-sidebar">
-
-        <!-- File Metadata Card -->
-        <div class="card file-info-bar">
-          <div class="file-meta-content">
-            <div class="file-name-text" id="metaFileName">presentacion.pdf</div>
-            <div class="file-pills">
-              <span class="pill" id="metaPageCount">0 diapositivas</span>
-              <span class="pill" id="metaAspectRatio">16:9</span>
-              <span class="pill" id="metaFileSize">0 MB</span>
-            </div>
+      <!-- File Metadata Card -->
+      <div class="card file-info-bar workspace-meta-bar">
+        <div class="file-meta-content">
+          <div class="file-name-text" id="metaFileName">presentacion.pdf</div>
+          <div class="file-pills">
+            <span class="pill" id="metaPageCount">0 diapositivas</span>
+            <span class="pill" id="metaAspectRatio">16:9</span>
+            <span class="pill" id="metaFileSize">0 MB</span>
           </div>
-          <button type="button" class="btn-secondary-sm" id="replaceFileBtn" title="Seleccionar otra presentación">Cambiar archivo</button>
         </div>
+        <button type="button" class="btn-secondary-sm" id="replaceFileBtn" title="Seleccionar otra presentación">Cambiar archivo</button>
+      </div>
 
-        <!-- Note Style Selection -->
-        <div class="card">
-          <div class="section-label">
-            <span id="patternSectionLabel">Estilo de notas</span>
-            <span class="section-label-sub" id="patternSectionSub">01</span>
-          </div>
-          <div class="style-grid" role="radiogroup" aria-label="Estilo de notas">
+      <div class="workspace-layout">
+
+        <!-- Controls Column -->
+        <aside class="controls-sidebar">
+
+          <!-- Note Style Selection -->
+          <div class="card">
+            <div class="section-label">
+              <span id="patternSectionLabel">Estilo de notas</span>
+              <span class="section-label-sub" id="patternSectionSub">01</span>
+            </div>
+            <div class="style-grid" role="radiogroup" aria-label="Estilo de notas">
             
             <div class="style-card active" data-style="lines" role="radio" aria-checked="true" tabindex="0" id="styleCardLines">
               <div class="style-swatch style-swatch-lines" aria-hidden="true">
@@ -284,6 +286,8 @@
         </div>
 
       </section>
+
+      </div><!-- /.workspace-layout -->
 
     </section>
 

@@ -55,15 +55,18 @@
 
     // Determine canvas logical display width
     const container = canvas.parentElement;
-    const maxDisplayWidth = container ? Math.min(container.clientWidth - 32, 680) : 560;
-    const displayWidth = Math.max(maxDisplayWidth, 320);
+    const containerWidth = container ? container.clientWidth : 560;
+    const padding = containerWidth < 480 ? 12 : 32;
+    const maxDisplayWidth = Math.min(containerWidth - padding, 680);
+    const displayWidth = Math.max(maxDisplayWidth, 180);
     const displayHeight = displayWidth * (paperHeight / paperWidth);
 
     // Set high-DPI buffer size
     canvas.width = Math.round(displayWidth * dpr);
     canvas.height = Math.round(displayHeight * dpr);
-    canvas.style.width = `${displayWidth}px`;
-    canvas.style.height = `${displayHeight}px`;
+    canvas.style.width = '100%';
+    canvas.style.maxWidth = `${displayWidth}px`;
+    canvas.style.height = 'auto';
 
     ctx.save();
     ctx.scale(canvas.width / paperWidth, canvas.height / paperHeight);

@@ -1,6 +1,7 @@
 /* ==========================================================================
    Slide-Printer — Editorial Mid-Century Modern Design System
    Flat, polished geometric forms inspired by Swiss Style & MCM Graphic Design.
+   Fully optimized for Mobile & Touch Devices.
    ========================================================================== */
 
 :root {
@@ -112,11 +113,17 @@
   }
 }
 
-/* Base Reset */
+/* Base Reset & Mobile-Friendly Constraints */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
 }
 
 body {
@@ -153,9 +160,10 @@ body {
 .brand-group {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
   text-decoration: none;
   color: inherit;
+  flex-shrink: 0;
 }
 
 .brand-insignia {
@@ -168,6 +176,7 @@ body {
   justify-content: center;
   background: var(--bg-surface);
   color: var(--text-primary);
+  flex-shrink: 0;
 }
 
 .brand-text-col {
@@ -183,6 +192,7 @@ body {
   text-transform: uppercase;
   color: var(--text-primary);
   line-height: 1.1;
+  white-space: nowrap;
 }
 
 .brand-subtitle {
@@ -191,19 +201,21 @@ body {
   letter-spacing: 0.04em;
   color: var(--text-muted);
   margin-top: 2px;
+  white-space: nowrap;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.85rem;
+  flex-shrink: 0;
 }
 
 /* Language Selector */
 .lang-selector-group {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   font-family: var(--font-mono);
   font-size: 0.72rem;
 }
@@ -216,7 +228,12 @@ body {
   font-size: inherit;
   font-weight: 600;
   cursor: pointer;
-  padding: 0.2rem 0.3rem;
+  padding: 0.25rem 0.35rem;
+  min-height: 28px;
+  min-width: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: color var(--transition-fast);
 }
 
@@ -245,6 +262,7 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius-xs);
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 .privacy-dot {
@@ -252,6 +270,7 @@ body {
   height: 6px;
   border-radius: 50%;
   background-color: #10b981;
+  flex-shrink: 0;
 }
 
 /* Theme Toggle Button */
@@ -267,6 +286,8 @@ body {
   padding: 0.3rem 0.7rem;
   border-radius: var(--radius-xs);
   cursor: pointer;
+  min-height: 30px;
+  white-space: nowrap;
   transition: all var(--transition-fast);
 }
 
@@ -288,6 +309,7 @@ body {
   cursor: pointer;
   transition: border-color var(--transition-fast);
   text-decoration: none;
+  flex-shrink: 0;
 }
 
 .icon-btn:hover {
@@ -427,13 +449,6 @@ body {
   padding-top: 2.5rem;
 }
 
-@media (max-width: 768px) {
-  .features-grid {
-    grid-template-columns: 1fr;
-    gap: 1.75rem;
-  }
-}
-
 .feature-item {
   text-align: left;
 }
@@ -463,23 +478,9 @@ body {
 
 /* Workspace Layout */
 .workspace-container {
-  display: grid;
-  grid-template-columns: 420px 1fr;
-  gap: 2.5rem;
-  align-items: start;
-}
-
-@media (max-width: 1080px) {
-  .workspace-container {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Sidebar Controls */
-.controls-sidebar {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
 }
 
 .card {
@@ -490,24 +491,24 @@ body {
   box-shadow: var(--shadow-flat);
 }
 
-/* File Info Bar */
-.file-info-bar {
+/* File Metadata Bar */
+.workspace-meta-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.85rem;
+  gap: 1rem;
   border-left: 3px solid var(--border-dark);
 }
 
 .file-name-text {
   font-family: var(--font-sans);
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 240px;
+  max-width: 380px;
 }
 
 .file-pills {
@@ -531,9 +532,9 @@ body {
   border: 1px solid var(--border);
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 600;
-  padding: 0.4rem 0.75rem;
+  padding: 0.45rem 0.85rem;
   border-radius: var(--radius-xs);
   cursor: pointer;
   white-space: nowrap;
@@ -542,6 +543,21 @@ body {
 
 .btn-secondary-sm:hover {
   border-color: var(--border-dark);
+}
+
+/* Workspace Two-Column Layout (Desktop) */
+.workspace-layout {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Sidebar Controls */
+.controls-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 /* Section Labels */
@@ -715,6 +731,7 @@ body {
 
 .range-slider {
   width: 100%;
+  height: 28px;
   accent-color: var(--border-dark);
   cursor: pointer;
 }
@@ -759,6 +776,7 @@ details.settings-details summary {
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
+  width: 100%;
   transition: all var(--transition-fast);
 }
 
@@ -801,6 +819,7 @@ details.settings-details summary {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  width: 100%;
 }
 
 .paper-container {
@@ -813,12 +832,14 @@ details.settings-details summary {
   flex-direction: column;
   align-items: center;
   max-width: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
 #previewCanvas {
   display: block;
   max-width: 100%;
-  height: auto;
+  height: auto !important;
   border: 1px solid var(--border-subtle);
 }
 
@@ -839,9 +860,9 @@ details.settings-details summary {
   border: none;
   color: var(--text-primary);
   font-family: var(--font-mono);
-  font-size: 1rem;
-  width: 28px;
-  height: 28px;
+  font-size: 1.1rem;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1012,4 +1033,270 @@ details.settings-details summary {
 /* Utility */
 .hidden {
   display: none !important;
+}
+
+/* ==========================================================================
+   RESPONSIVE MEDIA QUERIES (Mobile & Tablet Polish)
+   ========================================================================== */
+
+/* Tablet & Mobile Landscape (<= 960px) */
+@media (max-width: 960px) {
+  .workspace-layout {
+    display: flex;
+    flex-direction: column-reverse; /* Preview moves on top so user sees live slides! */
+    gap: 1.5rem;
+  }
+
+  .preview-pane {
+    position: static;
+    width: 100%;
+  }
+
+  .controls-sidebar {
+    width: 100%;
+  }
+
+  .paper-container {
+    padding: 1rem;
+  }
+}
+
+/* Mobile Devices (<= 768px) */
+@media (max-width: 768px) {
+  /* Prevent iOS auto-zoom on input focus */
+  input[type="number"],
+  input[type="text"],
+  select,
+  .form-select,
+  .page-number-input {
+    font-size: 16px !important;
+  }
+
+  /* Compact Header */
+  .app-header {
+    padding: 0.65rem 1rem;
+  }
+
+  .brand-insignia {
+    width: 28px;
+    height: 28px;
+  }
+
+  .brand-title {
+    font-size: 0.85rem;
+  }
+
+  .brand-subtitle {
+    display: none; /* Hide subtitle on mobile to avoid row-wrapping */
+  }
+
+  .privacy-badge {
+    display: none; /* Keep header clean; info is preserved in footer */
+  }
+
+  .header-actions {
+    gap: 0.45rem;
+  }
+
+  .theme-mode-btn span:last-child {
+    display: none; /* Only show icon on mobile */
+  }
+
+  .theme-mode-btn {
+    padding: 0.25rem 0.55rem;
+  }
+
+  /* Container & Hero */
+  .app-container {
+    padding: 1.5rem 1rem 3rem 1rem;
+  }
+
+  .hero-section {
+    padding: 0.5rem 0 2rem 0;
+  }
+
+  .hero-title {
+    font-size: clamp(1.75rem, 6.8vw, 2.4rem);
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 1.75rem;
+  }
+
+  /* Dropzone */
+  .drop-zone {
+    padding: 2.25rem 1.25rem;
+  }
+
+  .drop-zone-icon-box {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 1rem;
+  }
+
+  .drop-zone-text {
+    font-size: 1.15rem;
+    text-align: center;
+  }
+
+  .drop-zone-subtext {
+    font-size: 0.74rem;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+
+  .btn-primary {
+    width: 100%;
+    justify-content: center;
+    padding: 0.85rem 1.25rem;
+  }
+
+  /* Features Grid */
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-top: 2.5rem;
+    padding-top: 1.75rem;
+  }
+
+  .feature-item {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .feature-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  /* Footer */
+  .app-footer {
+    padding: 1.5rem 1rem;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+  }
+
+  .footer-col-main {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+}
+
+/* Small Mobile Screens (<= 480px) */
+@media (max-width: 480px) {
+  .app-container {
+    padding: 1rem 0.75rem 2.5rem 0.75rem;
+  }
+
+  .hero-supertitle {
+    font-size: 0.68rem;
+  }
+
+  .hero-title {
+    font-size: 1.65rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.88rem;
+  }
+
+  .workspace-meta-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .workspace-meta-bar .btn-secondary-sm {
+    width: 100%;
+    text-align: center;
+  }
+
+  .file-name-text {
+    max-width: 260px;
+  }
+
+  .file-pills {
+    flex-wrap: wrap;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  /* Style grid 2 columns on small mobile */
+  .style-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .style-card {
+    padding: 0.7rem 0.55rem;
+  }
+
+  .style-swatch {
+    height: 20px;
+    margin-bottom: 0.4rem;
+  }
+
+  .style-card-title {
+    font-size: 0.76rem;
+  }
+
+  .style-num {
+    font-size: 0.62rem;
+  }
+
+  .style-card-desc {
+    font-size: 0.66rem;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Button Stack */
+  .btn-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .btn-cta-lg {
+    padding: 0.85rem 1rem;
+    font-size: 0.82rem;
+  }
+
+  .btn-secondary {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.76rem;
+  }
+
+  .paper-container {
+    padding: 0.5rem;
+  }
+
+  .page-navigator {
+    padding: 0.35rem 0.5rem;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .progress-card {
+    padding: 1.5rem 1rem;
+    margin: 0.85rem;
+  }
 }
