@@ -1040,12 +1040,14 @@
     if (metaPageCount) metaPageCount.textContent = `${state.numPages} ${countLabel}`;
     if (metaFileSize) metaFileSize.textContent = item.sizeStr;
     if (metaAspectRatio) metaAspectRatio.textContent = item.ratioText;
-    if (totalPagesSpan) totalPagesSpan.textContent = state.numPages;
-    if (pageInput) {
-      pageInput.max = state.numPages;
-      pageInput.value = 1;
+
+    if (state.coverMode === 'generate' && !state.coverTitle) {
+      state.coverTitle = getBaseFileName();
+      const coverTitleInput = document.getElementById('coverTitleInput');
+      if (coverTitleInput) coverTitleInput.value = state.coverTitle;
     }
 
+    updatePageNavigatorUI();
     renderBatchTabs();
     requestAnimationFrame(() => {
       renderCurrentPreview();
@@ -1170,9 +1172,13 @@
 
       const statusLabel = card.querySelector('.export-status-label');
       if (statusLabel) {
-        statusLabel.textContent = isSelected
-          ? (dict.statusExporting || 'En exportación')
-          : (dict.statusNotExporting || 'No incluido');
+        if (isPreview) {
+          statusLabel.textContent = isSelected ? '✓ Exportando' : '';
+        } else {
+          statusLabel.textContent = isSelected
+            ? (dict.statusExporting || 'En exportación')
+            : (dict.statusNotExporting || 'No incluido');
+        }
       }
     });
 
@@ -1291,6 +1297,7 @@
         layout1UpBtn.classList.add('active');
         if (layout2UpBtn) layout2UpBtn.classList.remove('active');
         savePresets();
+        updatePageNavigatorUI();
         renderCurrentPreview();
       });
     }
@@ -1300,6 +1307,7 @@
         layout2UpBtn.classList.add('active');
         if (layout1UpBtn) layout1UpBtn.classList.remove('active');
         savePresets();
+        updatePageNavigatorUI();
         renderCurrentPreview();
       });
     }
@@ -1316,8 +1324,17 @@
         if (coverMetaFields) {
           coverMetaFields.classList.toggle('hidden', state.coverMode !== 'generate');
         }
+        if (state.coverMode === 'generate') {
+          if (!state.coverTitle) {
+            state.coverTitle = getBaseFileName();
+            if (coverTitleInput) coverTitleInput.value = state.coverTitle;
+          }
+          goToPage(1);
+        } else {
+          updatePageNavigatorUI();
+          renderCurrentPreview();
+        }
         savePresets();
-        renderCurrentPreview();
       });
     }
     if (coverTitleInput) {
@@ -1510,6 +1527,44 @@
   }
 
   // --- Page Navigation ---
+  function getTotalSheets() {
+    const n = state.numPages || 1;
+    const slideSheets = state.layout === '2-up' ? Math.ceil(n / 2) : n;
+    return state.coverMode === 'generate' ? slideSheets + 1 : slideSheets;
+  }
+
+  function updatePageNavigatorUI() {
+    const totalSheets = getTotalSheets();
+    const totalPagesSpan = document.getElementById('totalPagesSpan');
+    const pageInput = document.getElementById('pageInput');
+    const prevPageBtn = document.getElementById('prevPageBtn');
+    const nextPageBtn = document.getElementById('nextPageBtn');
+    const slideFolioText = document.getElementById('slideFolioText');
+
+    if (state.currentPage > totalSheets) {
+      state.currentPage = totalSheets;
+    }
+    if (state.currentPage < 1) {
+      state.currentPage = 1;
+    }
+
+    if (totalPagesSpan) totalPagesSpan.textContent = totalSheets;
+    if (pageInput) {
+      pageInput.max = totalSheets;
+      pageInput.value = state.currentPage;
+    }
+    if (prevPageBtn) prevPageBtn.disabled = state.currentPage <= 1;
+    if (nextPageBtn) nextPageBtn.disabled = state.currentPage >= totalSheets;
+
+    if (slideFolioText) {
+      if (state.coverMode === 'generate' && state.currentPage === 1) {
+        slideFolioText.textContent = (state.lang === 'en' ? 'Cover' : 'Portada');
+      } else {
+        slideFolioText.textContent = (state.lang === 'en' ? 'Page' : (state.lang === 'gl' ? 'Páxina' : 'Página'));
+      }
+    }
+  }
+
   function setupPageNavigation() {
     const prevPageBtn = document.getElementById('prevPageBtn');
     const nextPageBtn = document.getElementById('nextPageBtn');
@@ -1525,7 +1580,8 @@
 
     if (nextPageBtn) {
       nextPageBtn.addEventListener('click', () => {
-        if (state.currentPage < state.numPages) {
+        const totalSheets = getTotalSheets();
+        if (state.currentPage < totalSheets) {
           goToPage(state.currentPage + 1);
         }
       });
@@ -1535,7 +1591,6 @@
       pageInput.addEventListener('change', (e) => {
         let val = parseInt(e.target.value, 10);
         if (isNaN(val)) val = 1;
-        val = Math.max(1, Math.min(val, state.numPages));
         goToPage(val);
       });
     }
@@ -1546,23 +1601,19 @@
       if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
         return;
       }
+      const totalSheets = getTotalSheets();
       if (e.key === 'ArrowLeft' && state.currentPage > 1) {
         goToPage(state.currentPage - 1);
-      } else if (e.key === 'ArrowRight' && state.currentPage < state.numPages) {
+      } else if (e.key === 'ArrowRight' && state.currentPage < totalSheets) {
         goToPage(state.currentPage + 1);
       }
     });
   }
 
-  function goToPage(pageNum) {
-    state.currentPage = pageNum;
-    const pageInput = document.getElementById('pageInput');
-    const prevPageBtn = document.getElementById('prevPageBtn');
-    const nextPageBtn = document.getElementById('nextPageBtn');
-
-    if (pageInput) pageInput.value = pageNum;
-    if (prevPageBtn) prevPageBtn.disabled = state.currentPage <= 1;
-    if (nextPageBtn) nextPageBtn.disabled = state.currentPage >= state.numPages;
+  function goToPage(sheetNum) {
+    const totalSheets = getTotalSheets();
+    state.currentPage = Math.max(1, Math.min(sheetNum, totalSheets));
+    updatePageNavigatorUI();
     renderCurrentPreview();
   }
 
@@ -1573,6 +1624,7 @@
     if (!previewCanvas) return;
 
     const paperDims = SlidePrinterEngine.PAPER_SIZES[state.paperSize] || SlidePrinterEngine.PAPER_SIZES.a4;
+    const totalSheets = getTotalSheets();
 
     SlidePrinterPreview.renderPreview(
       previewCanvas,
@@ -1587,7 +1639,7 @@
         separation: state.separation,
         pageNumbers: state.pageNumbers,
         pageNumberFormat: state.pageNumberFormat,
-        totalPages: state.numPages,
+        totalPages: totalSheets,
         layout: state.layout,
         gutter: state.hasGutter ? 30 : 0,
         duplex: state.duplex,

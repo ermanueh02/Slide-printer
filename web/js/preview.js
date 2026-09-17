@@ -14,19 +14,75 @@
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
 
-  let currentRenderTask = null;
-  let cachedSlideCanvas = null;
-  let lastCachedPageIndex = -1;
+  let currentRenderTasks = [];
+  const slideCache = new Map();
 
   /**
-   * Clears any cached slide canvas when a new document is loaded.
+   * Clears cached slide canvases when a new document is loaded.
    */
   function resetCache() {
-    cachedSlideCanvas = null;
-    lastCachedPageIndex = -1;
-    if (currentRenderTask) {
-      currentRenderTask.cancel();
-      currentRenderTask = null;
+    slideCache.clear();
+    currentRenderTasks.forEach(task => {
+      try { task.cancel(); } catch (_) {}
+    });
+    currentRenderTasks = [];
+  }
+
+  /**
+   * Helper to retrieve or render a slide to an offscreen canvas.
+   */
+  async function getSlideCanvas(pdfjsDoc, slideNum, targetWidth, dpr) {
+    if (!pdfjsDoc || !slideNum || slideNum < 1 || slideNum > pdfjsDoc.numPages) {
+      return null;
+    }
+    const roundedW = Math.round(targetWidth);
+    const key = `${slideNum}_${roundedW}`;
+    if (slideCache.has(key)) {
+      return slideCache.get(key);
+    }
+
+    try {
+      const page = await pdfjsDoc.getPage(slideNum);
+      const unscaledViewport = page.getViewport({ scale: 1.0 });
+      const scale = targetWidth / unscaledViewport.width;
+      const scaledHeight = unscaledViewport.height * scale;
+
+      const offscreen = document.createElement('canvas');
+      const offscreenDpr = Math.max(dpr, 1.5);
+      const viewport = page.getViewport({ scale: scale * offscreenDpr });
+
+      offscreen.width = Math.round(viewport.width);
+      offscreen.height = Math.round(viewport.height);
+
+      const offCtx = offscreen.getContext('2d');
+      const renderTask = page.render({
+        canvasContext: offCtx,
+        viewport: viewport,
+      });
+
+      currentRenderTasks.push(renderTask);
+      await renderTask.promise;
+      const idx = currentRenderTasks.indexOf(renderTask);
+      if (idx !== -1) currentRenderTasks.splice(idx, 1);
+
+      const result = {
+        canvas: offscreen,
+        scaledWidth: targetWidth,
+        scaledHeight: scaledHeight,
+      };
+
+      if (slideCache.size > 24) {
+        const oldest = slideCache.keys().next().value;
+        slideCache.delete(oldest);
+      }
+      slideCache.set(key, result);
+      return result;
+    } catch (err) {
+      if (err && err.name === 'RenderingCancelledException') {
+        return null;
+      }
+      console.warn(`Could not render preview for slide ${slideNum}:`, err);
+      return null;
     }
   }
 
@@ -35,7 +91,7 @@
    * 
    * @param {HTMLCanvasElement} canvas Target canvas element.
    * @param {Object} pdfjsDoc PDF.js document instance.
-   * @param {number} pageNum 1-based slide page number.
+   * @param {number} pageNum 1-based sheet number.
    * @param {Object} options Handout layout options.
    */
   async function renderPreview(canvas, pdfjsDoc, pageNum, options = {}) {
@@ -62,7 +118,7 @@
     const studyTitle = options.studyTitle || '';
     const ecoPrint = Boolean(options.ecoPrint);
 
-    // High-resolution internal buffer representing the paper sheet (2x scale for Retina sharpness)
+    // High-resolution internal buffer representing the paper sheet (2x scale for sharpness)
     const scaleFactor = Math.max(dpr, 2);
     canvas.width = Math.round(paperWidth * scaleFactor);
     canvas.height = Math.round(paperHeight * scaleFactor);
@@ -89,68 +145,36 @@
     const xOffset = margin + leftGutter;
     const availableWidth = paperWidth - 2 * margin - gutterMargin;
 
-    // Handle Clean First Slide Cover
-    const isCleanCover = (pageNum === 1 && coverMode === 'clean_first');
-
-    // Handle Generated Cover Preview
-    if (coverMode === 'generate' && pageNum === 1 && options.isCoverView) {
+    // 1. Handle Generated Editorial Cover on Sheet 1
+    if (coverMode === 'generate' && pageNum === 1) {
       renderPreviewEditorialCover(ctx, paperWidth, paperHeight, options);
       ctx.restore();
       return;
     }
 
-    // Fetch and render slide via offscreen canvas if not already cached
-    const cacheKey = `${pageNum}_${availableWidth}_${layout}`;
-    if (lastCachedPageIndex !== cacheKey || !cachedSlideCanvas) {
-      try {
-        if (currentRenderTask) {
-          currentRenderTask.cancel();
-          currentRenderTask = null;
-        }
+    // 2. Determine Slide Mapping
+    const isCleanCover = (pageNum === 1 && coverMode === 'clean_first');
+    let slot1SlideNum = 1;
+    let slot2SlideNum = null;
 
-        const page = await pdfjsDoc.getPage(pageNum);
-        const unscaledViewport = page.getViewport({ scale: 1.0 });
-
-        const scale = availableWidth / unscaledViewport.width;
-        const scaledHeight = unscaledViewport.height * scale;
-
-        const offscreen = document.createElement('canvas');
-        const offscreenDpr = dpr * 1.5;
-        const viewport = page.getViewport({ scale: scale * offscreenDpr });
-
-        offscreen.width = viewport.width;
-        offscreen.height = viewport.height;
-
-        const offCtx = offscreen.getContext('2d');
-        currentRenderTask = page.render({
-          canvasContext: offCtx,
-          viewport: viewport,
-        });
-
-        await currentRenderTask.promise;
-        currentRenderTask = null;
-
-        cachedSlideCanvas = {
-          canvas: offscreen,
-          scaledWidth: availableWidth,
-          scaledHeight: scaledHeight,
-        };
-        lastCachedPageIndex = cacheKey;
-      } catch (err) {
-        if (err && err.name === 'RenderingCancelledException') {
-          ctx.restore();
-          return;
-        }
-        console.error('Error rendering slide for preview:', err);
+    if (coverMode === 'generate') {
+      // Sheet 1 was cover; Sheet 2 has slide 1, etc.
+      if (layout === '2-up') {
+        slot1SlideNum = (pageNum - 2) * 2 + 1;
+        slot2SlideNum = (pageNum - 2) * 2 + 2;
+      } else {
+        slot1SlideNum = pageNum - 1;
+      }
+    } else {
+      if (layout === '2-up') {
+        slot1SlideNum = (pageNum - 1) * 2 + 1;
+        slot2SlideNum = (pageNum - 1) * 2 + 2;
+      } else {
+        slot1SlideNum = pageNum;
       }
     }
 
-    let scaledHeight = (availableWidth * 9) / 16;
-    if (cachedSlideCanvas) {
-      scaledHeight = cachedSlideCanvas.scaledHeight;
-    }
-
-    // 1. Study Header
+    // 3. Study Header
     let headerHeight = 0;
     if (studyHeader && !isCleanCover) {
       headerHeight = 24;
@@ -174,22 +198,24 @@
       ctx.stroke();
     }
 
-    // 2. Render Slide(s) & Notes
+    // 4. Render Slide(s) & Notes
     if (layout === '2-up') {
       const halfH = paperHeight / 2;
       const slot1Top = margin + (studyHeader ? 22 : 0);
       const slot1Bottom = halfH - 6;
 
-      // Slot 1 Slide (scaled to fit slot 1)
+      // Slot 1 Slide
+      const slide1Data = await getSlideCanvas(pdfjsDoc, slot1SlideNum, availableWidth, dpr);
+      const s1Height = slide1Data ? slide1Data.scaledHeight : (availableWidth * 9) / 16;
       const maxH1 = (slot1Bottom - slot1Top) * 0.58;
-      const scale1 = Math.min(1, maxH1 / scaledHeight);
+      const scale1 = Math.min(1, maxH1 / s1Height);
       const drawW1 = availableWidth * scale1;
-      const drawH1 = scaledHeight * scale1;
+      const drawH1 = s1Height * scale1;
       const x1 = xOffset + (availableWidth - drawW1) / 2;
       const y1 = slot1Top;
 
-      if (cachedSlideCanvas) {
-        ctx.drawImage(cachedSlideCanvas.canvas, x1, y1, drawW1, drawH1);
+      if (slide1Data) {
+        ctx.drawImage(slide1Data.canvas, x1, y1, drawW1, drawH1);
       }
       ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
       ctx.lineWidth = 0.5;
@@ -209,56 +235,58 @@
       ctx.stroke();
       ctx.setLineDash([]); // reset
 
-      // Slot 2 (Second slide placeholder or image)
+      // Slot 2
       const slot2Top = halfH + 10;
       const slot2Bottom = paperHeight - margin;
-      const drawW2 = drawW1;
-      const drawH2 = drawH1;
-      const x2 = xOffset + (availableWidth - drawW2) / 2;
-      const y2 = slot2Top;
 
-      if (cachedSlideCanvas) {
-        ctx.save();
-        ctx.globalAlpha = 0.88;
-        ctx.drawImage(cachedSlideCanvas.canvas, x2, y2, drawW2, drawH2);
-        ctx.restore();
+      if (slot2SlideNum && slot2SlideNum <= pdfjsDoc.numPages) {
+        const slide2Data = await getSlideCanvas(pdfjsDoc, slot2SlideNum, availableWidth, dpr);
+        const s2Height = slide2Data ? slide2Data.scaledHeight : (availableWidth * 9) / 16;
+        const maxH2 = (slot2Bottom - slot2Top) * 0.58;
+        const scale2 = Math.min(1, maxH2 / s2Height);
+        const drawW2 = availableWidth * scale2;
+        const drawH2 = s2Height * scale2;
+        const x2 = xOffset + (availableWidth - drawW2) / 2;
+        const y2 = slot2Top;
+
+        if (slide2Data) {
+          ctx.drawImage(slide2Data.canvas, x2, y2, drawW2, drawH2);
+        }
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
+        ctx.lineWidth = 0.5;
+        ctx.strokeRect(x2, y2, drawW2, drawH2);
+
+        // Slot 2 Notes
+        const sepY2 = y2 + drawH2 + separation;
+        drawPreviewPattern(ctx, xOffset, availableWidth, sepY2, slot2Bottom - 6, style, step);
+      } else {
+        // Empty slot 2: clean note space
+        drawPreviewPattern(ctx, xOffset, availableWidth, slot2Top + 6, slot2Bottom - 6, style, step);
       }
-      ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
-      ctx.lineWidth = 0.5;
-      ctx.strokeRect(x2, y2, drawW2, drawH2);
-
-      // Slot 2 Notes
-      const sepY2 = y2 + drawH2 + separation;
-      drawPreviewPattern(ctx, xOffset, availableWidth, sepY2, slot2Bottom - 6, style, step);
     } else {
       // 1-Up layout
+      const slideData = await getSlideCanvas(pdfjsDoc, slot1SlideNum, availableWidth, dpr);
+      const sHeight = slideData ? slideData.scaledHeight : (availableWidth * 9) / 16;
+
       let slideTop = margin + (studyHeader && !isCleanCover ? headerHeight : 0);
       if (isCleanCover) {
-        slideTop = (paperHeight - scaledHeight) / 2;
+        slideTop = (paperHeight - sHeight) / 2;
       }
 
-      if (cachedSlideCanvas) {
-        ctx.drawImage(
-          cachedSlideCanvas.canvas,
-          xOffset,
-          slideTop,
-          availableWidth,
-          scaledHeight
-        );
+      if (slideData) {
+        ctx.drawImage(slideData.canvas, xOffset, slideTop, availableWidth, sHeight);
       }
-
       ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
       ctx.lineWidth = 0.5;
-      ctx.strokeRect(xOffset, slideTop, availableWidth, scaledHeight);
+      ctx.strokeRect(xOffset, slideTop, availableWidth, sHeight);
 
       if (!isCleanCover) {
-        // Separator line
-        const ySep = slideTop + scaledHeight + separation;
+        const ySep = slideTop + sHeight + separation;
         drawPreviewPattern(ctx, xOffset, availableWidth, ySep, paperHeight - margin, style, step);
       }
     }
 
-    // 3. Centered page number at footer
+    // 5. Centered page number at footer
     if (pageNumbers && !isCleanCover) {
       ctx.save();
       ctx.font = '500 9px system-ui, -apple-system, sans-serif';
@@ -329,51 +357,87 @@
     }
   }
 
+  function drawWrappedText(ctx, text, x, startY, maxWidth, lineHeight) {
+    const words = (text || '').trim().split(/\s+/);
+    let line = '';
+    let curY = startY;
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + (line ? ' ' : '') + words[n];
+      const metrics = ctx.measureText(testLine);
+      if (metrics.width > maxWidth && line !== '') {
+        ctx.fillText(line, x, curY);
+        line = words[n];
+        curY += lineHeight;
+      } else {
+        line = testLine;
+      }
+    }
+    if (line) {
+      ctx.fillText(line, x, curY);
+    }
+    return curY;
+  }
+
   function renderPreviewEditorialCover(ctx, pw, ph, options) {
-    const inset = 36;
-    ctx.strokeStyle = 'rgba(50, 50, 50, 0.25)';
-    ctx.lineWidth = 0.75;
+    const inset = 34;
+
+    // Double border
+    ctx.strokeStyle = 'rgba(40, 40, 40, 0.32)';
+    ctx.lineWidth = 1.0;
     ctx.strokeRect(inset, inset, pw - 2 * inset, ph - 2 * inset);
 
-    ctx.strokeStyle = 'rgba(50, 50, 50, 0.12)';
-    ctx.lineWidth = 0.4;
+    ctx.strokeStyle = 'rgba(40, 40, 40, 0.14)';
+    ctx.lineWidth = 0.5;
     ctx.strokeRect(inset + 4, inset + 4, pw - 2 * (inset + 4), ph - 2 * (inset + 4));
 
-    ctx.font = '700 8px system-ui, sans-serif';
-    ctx.fillStyle = 'rgba(80, 80, 80, 0.8)';
+    // Top Header
+    ctx.font = '700 8.5px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = 'rgba(70, 70, 70, 0.85)';
     ctx.textAlign = 'center';
-    ctx.fillText('SLIDE—PRINTER · CUADERNO DE APUNTES', pw / 2, 90);
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('SLIDE—PRINTER · CUADERNO DE APUNTES', pw / 2, inset + 45);
 
-    ctx.strokeStyle = 'rgba(80, 80, 80, 0.3)';
+    ctx.strokeStyle = 'rgba(70, 70, 70, 0.35)';
     ctx.lineWidth = 0.6;
     ctx.beginPath();
-    ctx.moveTo(pw / 2 - 40, 100);
-    ctx.lineTo(pw / 2 + 40, 100);
+    ctx.moveTo(pw / 2 - 45, inset + 54);
+    ctx.lineTo(pw / 2 + 45, inset + 54);
     ctx.stroke();
 
-    ctx.font = '700 22px system-ui, Georgia, serif';
-    ctx.fillStyle = '#1a2332';
-    ctx.fillText(options.coverTitle || 'Presentación', pw / 2, ph * 0.45);
+    // Presentation Title (with word-wrapping)
+    const titleText = options.coverTitle || 'Presentación';
+    ctx.font = '700 20px Georgia, "Newsreader", serif';
+    ctx.fillStyle = '#171717';
+    ctx.textAlign = 'center';
 
+    const maxTextW = pw - 2 * inset - 50;
+    const titleStartY = ph * 0.38;
+    const endTitleY = drawWrappedText(ctx, titleText, pw / 2, titleStartY, maxTextW, 27);
+
+    // Optional Subtitle / Subject
     if (options.studyTitle) {
-      ctx.font = '600 12px system-ui, sans-serif';
-      ctx.fillStyle = '#555555';
-      ctx.fillText(options.studyTitle, pw / 2, ph * 0.51);
+      ctx.font = '600 11px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#4b5563';
+      ctx.fillText(options.studyTitle, pw / 2, endTitleY + 26);
     }
 
-    let metaY = ph * 0.72;
+    // Author & Date Block
+    let metaY = ph * 0.70;
     if (options.coverAuthor) {
-      ctx.font = '400 10px system-ui, sans-serif';
-      ctx.fillStyle = '#444444';
+      ctx.font = '500 10px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#374151';
       ctx.fillText(`Autor / Estudiante: ${options.coverAuthor}`, pw / 2, metaY);
       metaY += 18;
     }
 
-    ctx.font = '400 9px system-ui, sans-serif';
-    ctx.fillStyle = '#777777';
-    ctx.fillText(new Date().toLocaleDateString(), pw / 2, metaY);
+    ctx.font = '400 9px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = '#6b7280';
+    ctx.fillText(new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }), pw / 2, metaY);
 
-    ctx.fillText('Slide—Printer · Handout Edition', pw / 2, ph - inset - 14);
+    // Bottom edition label
+    ctx.font = '500 8px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = '#9ca3af';
+    ctx.fillText('Slide—Printer · Handout Edition', pw / 2, ph - inset - 16);
   }
 
   return {
