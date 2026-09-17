@@ -224,14 +224,26 @@ def interactive_wizard() -> int:
     print(bold("╰────────────────────────────────────────────────────────────╯\n"))
 
     # 1. Note Style Selection
-    print(bold("1. Choose Note-Taking Style:"))
-    print(f"  [{cyan('1')}] Líneas de pauta  (~5mm handwriting lines for study notes) {dim('[default]')}")
-    print(f"  [{cyan('2')}] Cuadrícula       (Technical grid for diagrams and equations)")
-    print(f"  [{cyan('3')}] Bullet points    (Subtle dot matrix for flexible bullet points)")
-    print(f"  [{cyan('4')}] Blanco           (Clean open space with subtle divider)")
-    print(f"  [{cyan('A')}] All 4 styles     (Generate all note variants at once)")
+    print(bold("1. Choose Note Style:"))
+    print(f"  [{cyan('1')}] Ruled lines  (~5mm handwriting lines for study notes) {dim('[default]')}")
+    print(f"  [{cyan('2')}] Graph grid  (Technical grid for diagrams and equations)")
+    print(f"  [{cyan('3')}] Dot matrix  (Subtle dot grid for flexible bullet notes)")
+    print(f"  [{cyan('4')}] Blank       (Clean blank space with hairline divider)")
+    print(f"  [{cyan('A')}] All 4 styles (Generate all 4 note variants at once)")
 
     raw_selection = input(f"\nEnter choice [{bold('1')}, 2, 3, 4, or A] (default: 1): ").strip()
+
+    wizard_style_map = {
+        "1": "lines",
+        "2": "grid",
+        "3": "dots",
+        "4": "blank",
+        "lines": "lines",
+        "ruled": "lines",
+        "grid": "grid",
+        "dots": "dots",
+        "blank": "blank",
+    }
 
     if not raw_selection:
         selected_styles = ["lines"]
@@ -242,20 +254,21 @@ def interactive_wizard() -> int:
         # Support commas or spaces e.g. "1,2" or "1 3"
         parts = [p.strip() for p in raw_selection.replace(",", " ").split() if p.strip()]
         for part in parts:
-            if part in STYLE_KEY_MAP:
-                canonical = STYLE_KEY_MAP[part]
+            part_lower = part.lower()
+            if part_lower in wizard_style_map:
+                canonical = wizard_style_map[part_lower]
                 if canonical not in selected_styles:
                     selected_styles.append(canonical)
             else:
                 try:
-                    canonical = resolve_style(part)
+                    canonical = resolve_style(part_lower)
                     if canonical not in selected_styles:
                         selected_styles.append(canonical)
                 except ValueError:
                     pass
 
     if not selected_styles:
-        print(yellow("⚠️  No recognized style selected. Defaulting to 'Líneas de pauta' (lines)."))
+        print(yellow("⚠️  No recognized style selected. Defaulting to 'Ruled lines' (lines)."))
         selected_styles = ["lines"]
 
     # 2. Paper Size Selection
