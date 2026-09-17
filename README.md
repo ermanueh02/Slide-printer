@@ -4,6 +4,7 @@
 [![Python Version](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](tests/)
+[![Web App](https://img.shields.io/badge/Web%20App-Live%20Studio-blueviolet.svg)](https://ermanueh02.github.io/Slide-printer/)
 
 **Slide-Printer** transforms digital presentation slides (16:9 widescreen or 4:3 standard) into clean, printable handouts on **DIN A4** or **US Letter** paper, adding dedicated note-taking space directly below each slide.
 
@@ -56,7 +57,8 @@ Each page of your presentation is placed at the top of the sheet, followed by a 
   - Standard PDF transformation tools often break or misalign clickable links. Slide-Printer recalculates and transforms coordinate matrices (`/Annots` `/Rect`) so all hyperlinks remain clickable in the printed/digital handout.
 - **Multiple Paper Formats**: Supports **A4**, **US Letter**, **US Legal**, and **A3**.
 - **Flexible Batch Processing**: Accepts individual files, directory paths, or glob wildcards (`*.pdf`).
-- **Dual Interface**:
+- **Multi-Modal Interface**:
+  - **Web App Studio**: 100% in-browser, private, and instant for users without Python or Git.
   - **Command-Line Interface (CLI)**: For scripts, automation, and power users.
   - **Interactive Terminal Wizard**: Guided prompts for interactive use (100% backward compatible).
 - **Python Library API**: Easily integrate into your own Python tools or scripts.
@@ -86,11 +88,27 @@ pip install -r requirements.txt
 
 ## 🚀 Quick Start
 
-### 1. Command-Line Interface (CLI)
+### 🌐 1. Web Studio (No Python / Git Required)
 
-Once installed, use the `slide-printer` command:
+If you don't have Python or Git installed, simply open the web app in any browser:
+
+👉 **[Open Slide-Printer Web Studio](https://ermanueh02.github.io/Slide-printer/)**
+
+- **Zero Install**: Works instantly on laptops, tablets (iPad/Surface), and mobile.
+- **100% Private**: Your presentation never leaves your device — all transformations happen locally in your browser.
+- **Instant Live Preview**: Toggle between Blank, Lined, Grid, and Dot Grid with real-time visual feedback.
+- **1-Click Export & Print**: Download individual PDFs, export all 4 styles in a ZIP archive, or print directly.
+
+---
+
+### 💻 2. Command-Line Interface (CLI)
+
+For developers and power users, the offline Python CLI remains fully available:
 
 ```bash
+# Launch the web studio locally from the CLI
+slide-printer --web
+
 # Process a single presentation with default lined notes on A4
 slide-printer -i presentation.pdf -s lines
 
@@ -113,6 +131,8 @@ slide-printer -i presentation.pdf -p letter -m 30 -s dots
 | `-p`, `--paper-size`| Target paper: `a4`, `letter`, `legal`, `a3` | `a4` |
 | `-m`, `--margin` | Page margin in points (1 pt = 1/72 in) | `40.0` |
 | `--step` | Distance between lines/dots in points | `14.0` |
+| `--web` | Launch the local web studio in your browser | — |
+| `--port` | Port for the local web server | `8000` |
 | `--interactive` | Force interactive prompt wizard | — |
 | `-q`, `--quiet` | Suppress non-error output | — |
 | `-v`, `--version` | Display program version | — |

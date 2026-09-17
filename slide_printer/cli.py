@@ -148,6 +148,17 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
         help=f"Spacing between lines or grid points in pt (default: {DEFAULT_STEP}).",
     )
     parser.add_argument(
+        "--web",
+        action="store_true",
+        help="Launch the local web application studio in your browser.",
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=8000,
+        help="Port for local web server (default: 8000).",
+    )
+    parser.add_argument(
         "--interactive",
         action="store_true",
         help="Launch interactive prompt wizard.",
@@ -167,11 +178,50 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
     return parser.parse_args(args)
 
 
+def launch_web_ui(port: int = 8000) -> int:
+    """Launches local web server for the web app studio."""
+    import http.server
+    import socketserver
+    import webbrowser
+    from functools import partial
+
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    web_dir = os.path.join(base_dir, "web")
+    if not os.path.isdir(web_dir):
+        web_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "web")
+    if not os.path.isdir(web_dir):
+        print(f"Error: Web directory not found at '{web_dir}'.", file=sys.stderr)
+        return 1
+
+    handler = partial(http.server.SimpleHTTPRequestHandler, directory=web_dir)
+    socketserver.TCPServer.allow_reuse_address = True
+    try:
+        with socketserver.TCPServer(("127.0.0.1", port), handler) as httpd:
+            url = f"http://127.0.0.1:{port}"
+            print("=" * 60)
+            print(f"📄 Slide-Printer Web Studio running at {url}")
+            print("Press Ctrl+C to stop the server.")
+            print("=" * 60)
+            webbrowser.open(url)
+            try:
+                httpd.serve_forever()
+            except KeyboardInterrupt:
+                print("\nServer stopped.")
+                return 0
+    except OSError as e:
+        print(f"Could not bind to port {port}: {e}", file=sys.stderr)
+        return 1
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     """Main CLI entrypoint."""
     # Check if run with no args and in interactive terminal
     if argv is None:
         argv = sys.argv[1:]
+
+    if "--web" in argv:
+        args = parse_args(argv)
+        return launch_web_ui(port=args.port)
 
     # If no arguments provided or explicitly requested interactive
     if (len(argv) == 0 and sys.stdin.isatty()) or "--interactive" in argv:

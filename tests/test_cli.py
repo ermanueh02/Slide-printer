@@ -44,3 +44,9 @@ def test_cli_main_success(sample_slide_pdf, tmp_path):
         "-q"
     ])
     assert code == 0
+
+
+def test_cli_parse_web_args():
+    args = parse_args(["--web", "--port", "8080"])
+    assert args.web is True
+    assert args.port == 8080

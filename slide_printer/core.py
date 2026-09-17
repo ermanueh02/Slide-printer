@@ -4,7 +4,7 @@ import os
 import glob
 from typing import List, Optional, Tuple, Union, Callable
 from pypdf import PdfReader, PdfWriter, Transformation
-from pypdf.generic import RectangleObject, FloatObject, ArrayObject
+from pypdf.generic import RectangleObject, FloatObject, ArrayObject, NameObject
 from pypdf._page import PageObject
 
 from slide_printer.constants import (
@@ -41,7 +41,7 @@ def transform_annotations(page: PageObject, scale: float, tx: float, ty: float) 
                     new_y1 = y1 * scale + ty
                     new_x2 = x2 * scale + tx
                     new_y2 = y2 * scale + ty
-                    annot[RectangleObject("/Rect")] = ArrayObject([
+                    annot[NameObject("/Rect")] = ArrayObject([
                         FloatObject(new_x1),
                         FloatObject(new_y1),
                         FloatObject(new_x2),

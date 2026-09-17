@@ -52,10 +52,10 @@ def test_slide_printer_conversion(sample_slide_pdf, tmp_path):
         assert len(annots) >= 1
         annot_rect = [float(v) for v in annots[0].get_object()["/Rect"]]
         # Link rect coordinates should be scaled and translated
-        assert annot_rect[0] > 0
-        assert annot_rect[1] > 0
-        assert annot_rect[2] > annot_rect[0]
-        assert annot_rect[3] > annot_rect[1]
+        assert annot_rect[0] == pytest.approx(93.675, 0.01)
+        assert annot_rect[1] == pytest.approx(619.395, 0.01)
+        assert annot_rect[2] == pytest.approx(254.7, 0.01)
+        assert annot_rect[3] == pytest.approx(699.9075, 0.01)
 
 
 def test_slide_printer_letter_size(sample_slide_pdf, tmp_path):
