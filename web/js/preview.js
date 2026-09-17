@@ -53,30 +53,27 @@
     const separation = options.separation !== undefined ? Number(options.separation) : 10.0;
     const style = (options.style || 'lines').toLowerCase();
 
-    // Determine canvas logical display width
-    const container = canvas.parentElement;
-    const containerWidth = container ? container.clientWidth : 560;
-    const padding = containerWidth < 480 ? 12 : 32;
-    const maxDisplayWidth = Math.min(containerWidth - padding, 680);
-    const displayWidth = Math.max(maxDisplayWidth, 180);
-    const displayHeight = displayWidth * (paperHeight / paperWidth);
+    // High-resolution internal buffer representing the paper sheet (2x scale for Retina sharpness)
+    const scaleFactor = Math.max(dpr, 2);
+    canvas.width = Math.round(paperWidth * scaleFactor);
+    canvas.height = Math.round(paperHeight * scaleFactor);
 
-    // Set high-DPI buffer size
-    canvas.width = Math.round(displayWidth * dpr);
-    canvas.height = Math.round(displayHeight * dpr);
+    // CSS handles responsive display width cleanly without layout feedback loops
     canvas.style.width = '100%';
-    canvas.style.maxWidth = `${displayWidth}px`;
+    canvas.style.maxWidth = '580px';
     canvas.style.height = 'auto';
+    canvas.style.aspectRatio = `${paperWidth} / ${paperHeight}`;
 
     ctx.save();
-    ctx.scale(canvas.width / paperWidth, canvas.height / paperHeight);
+    ctx.scale(scaleFactor, scaleFactor);
 
     // Draw sheet background
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, paperWidth, paperHeight);
 
-    // Fetch and render slide via offscreen canvas if not already cached for this page
-    if (lastCachedPageIndex !== pageNum || !cachedSlideCanvas) {
+    // Fetch and render slide via offscreen canvas if not already cached for this page and layout
+    const cacheKey = `${pageNum}_${paperWidth}_${margin}`;
+    if (lastCachedPageIndex !== cacheKey || !cachedSlideCanvas) {
       try {
         if (currentRenderTask) {
           currentRenderTask.cancel();
@@ -113,7 +110,7 @@
           scaledWidth: availableWidth,
           scaledHeight: scaledHeight,
         };
-        lastCachedPageIndex = pageNum;
+        lastCachedPageIndex = cacheKey;
       } catch (err) {
         if (err && err.name === 'RenderingCancelledException') {
           ctx.restore();

@@ -600,7 +600,9 @@
       if (workspace) workspace.classList.remove('hidden');
 
       showLoading(false);
-      renderCurrentPreview();
+      requestAnimationFrame(() => {
+        renderCurrentPreview();
+      });
     } catch (err) {
       showLoading(false);
       console.error('Error loading PDF:', err);
