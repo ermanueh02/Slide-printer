@@ -334,10 +334,11 @@
    * Draws study header at the top of the page.
    */
   function drawStudyHeader(page, options, font) {
-    const { margin, width, title } = options;
+    const { margin, width, title, topMargin } = options;
     const x1 = margin;
     const x2 = margin + width;
-    const headerY = page.getHeight() - margin + 4;
+    const effectiveTopMargin = topMargin !== undefined ? topMargin : DEFAULT_MARGIN;
+    const headerY = page.getHeight() - effectiveTopMargin + 4;
 
     const leftText = title ? `TEMA / ASIGNATURA: ${title}` : 'TEMA / ASIGNATURA: _____________________________';
     const rightText = 'FECHA: _____ / _____ / 20___';
@@ -639,7 +640,7 @@
         }
 
         if (studyHeader) {
-          drawStudyHeader(newPage, { margin: xOffset, width: availableWidth, title: studyTitle }, helveticaFont);
+          drawStudyHeader(newPage, { margin: xOffset, topMargin: margin, width: availableWidth, title: studyTitle }, helveticaFont);
         }
 
         draw2UpNotesOverlay(newPage, {
@@ -706,7 +707,7 @@
 
         if (!isCleanCover) {
           if (studyHeader) {
-            drawStudyHeader(newPage, { margin: xOffset, width: availableWidth, title: studyTitle }, helveticaFont);
+            drawStudyHeader(newPage, { margin: xOffset, topMargin: margin, width: availableWidth, title: studyTitle }, helveticaFont);
           }
 
           const sepY = yTranslation - separation;
