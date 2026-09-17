@@ -52,6 +52,13 @@ def _enable_windows_ansi() -> bool:
 
 _enable_windows_ansi()
 
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 
 def _is_color_supported() -> bool:
     """Checks if the current terminal environment supports ANSI escape sequences."""
@@ -183,15 +190,18 @@ def print_summary_table(rows: List[Dict[str, Any]], elapsed: float, out_dir: str
     w_out = max(len("Generated Output"), max(len(str(r["output"])) for r in rows))
     w_out = min(max(w_out, 18), 35)
 
-    tot_w = w_name + w_pages + w_out + 12
+    d1 = w_name + 2
+    d2 = w_pages + 2
+    d3 = w_out + 2
+    total_inner = d1 + d2 + d3 + 2
 
-    top = f"╭{'─' * (tot_w - 2)}╮"
+    top = f"╭{'─' * total_inner}╮"
     hdr_title = "Slide-Printer · Run Summary"
-    title_line = f"│ {bold(hdr_title.center(tot_w - 4))} │"
-    mid = f"├{'─' * (w_name + 2)}┬{'─' * (w_pages + 2)}┬{'─' * (w_out + 2)}┤"
+    title_line = f"│ {bold(hdr_title.center(total_inner - 2))} │"
+    mid = f"├{'─' * d1}┬{'─' * d2}┬{'─' * d3}┤"
     header = f"│ {bold('Source Presentation'.ljust(w_name))} │ {bold('Slides'.rjust(w_pages))} │ {bold('Generated Output'.ljust(w_out))} │"
-    sep = f"├{'─' * (w_name + 2)}┼{'─' * (w_pages + 2)}┼{'─' * (w_out + 2)}┤"
-    bot = f"╰{'─' * (w_name + 2)}┴{'─' * (w_pages + 2)}┴{'─' * (w_out + 2)}╯"
+    sep = f"├{'─' * d1}┼{'─' * d2}┼{'─' * d3}┤"
+    bot = f"╰{'─' * d1}┴{'─' * d2}┴{'─' * d3}╯"
 
     print(top)
     print(title_line)
@@ -203,10 +213,13 @@ def print_summary_table(rows: List[Dict[str, Any]], elapsed: float, out_dir: str
     for r in rows:
         base = os.path.basename(r["name"])
         if len(base) > w_name:
-            base = base[: w_name - 1] + "…"
+            base = base[: w_name - 3] + "..."
         name_str = base.ljust(w_name)
         pages_str = str(r["slides"]).rjust(w_pages)
-        out_str = str(r["output"]).ljust(w_out)
+        out_raw = str(r["output"])
+        if len(out_raw) > w_out:
+            out_raw = out_raw[: w_out - 3] + "..."
+        out_str = out_raw.ljust(w_out)
         total_handouts += r.get("count", 1)
         print(f"│ {name_str} │ {pages_str} │ {green(out_str)} │")
 
@@ -219,9 +232,11 @@ def print_summary_table(rows: List[Dict[str, Any]], elapsed: float, out_dir: str
 
 def interactive_wizard() -> int:
     """Runs an interactive terminal wizard with presentation detection and drag-and-drop support."""
-    print(bold("\n╭────────────────────────────────────────────────────────────╮"))
-    print(bold(f"│  Slide-Printer v{__version__} · Terminal Studio Wizard          │"))
-    print(bold("╰────────────────────────────────────────────────────────────╯\n"))
+    wizard_hdr = f"Slide-Printer v{__version__} · Terminal Studio Wizard"
+    box_w = 60
+    print(bold(f"\n╭{'─' * box_w}╮"))
+    print(bold(f"│ {wizard_hdr.center(box_w - 2)} │"))
+    print(bold(f"╰{'─' * box_w}╯\n"))
 
     # 1. Note Style Selection
     print(bold("1. Choose Note Style:"))
@@ -546,9 +561,11 @@ def launch_web_ui(port: int = 8000) -> int:
     try:
         with socketserver.TCPServer(("127.0.0.1", port), handler) as httpd:
             url = f"http://127.0.0.1:{port}"
-            print(bold("\n╭────────────────────────────────────────────────────────────╮"))
-            print(bold(f"│  Slide-Printer Web Studio · {url:<29} │"))
-            print(bold("╰────────────────────────────────────────────────────────────╯"))
+            web_hdr = f"Slide-Printer Web Studio · {url}"
+            box_w = max(len(web_hdr) + 4, 60)
+            print(bold(f"\n╭{'─' * box_w}╮"))
+            print(bold(f"│ {web_hdr.center(box_w - 2)} │"))
+            print(bold(f"╰{'─' * box_w}╯"))
             print(dim("100% Private · Zero cloud uploads · Running locally."))
             print(dim("Press Ctrl+C to stop the server.\n"))
             webbrowser.open(url)

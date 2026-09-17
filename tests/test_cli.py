@@ -110,3 +110,24 @@ def test_format_bytes():
     assert format_bytes(500) == "500 B"
     assert "KB" in format_bytes(2048)
     assert "MB" in format_bytes(5 * 1024 * 1024)
+
+
+def test_print_summary_table_perfect_alignment(capsys):
+    import re
+    from slide_printer.cli import print_summary_table
+
+    rows = [
+        {"name": "Tema 0. Fundamentos de Instrumentación y Medida.pdf", "slides": 40, "output": "1 files (dots)"},
+        {"name": "Tema 1. Amplificación.pdf", "slides": 80, "output": "1 files (dots)"},
+        {"name": "Tema 2. Filtrado.pdf", "slides": 77, "output": "1 files (dots)"},
+        {"name": "Tema 3. Conversión de Datos.pdf", "slides": 103, "output": "1 files (dots)"},
+    ]
+    print_summary_table(rows, elapsed=1.23, out_dir="handouts", paper="a4")
+    captured = capsys.readouterr().out
+    table_lines = [line for line in captured.splitlines() if line.startswith(("╭", "│", "├", "╰"))]
+    assert len(table_lines) >= 8
+
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    plain_lines = [ansi_escape.sub('', l) for l in table_lines]
+    lengths = [len(l) for l in plain_lines]
+    assert len(set(lengths)) == 1, f"Table border misalignment detected: lengths={lengths}"
