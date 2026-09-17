@@ -97,28 +97,60 @@
     });
   }
 
-  // --- Theme Management ---
+  // --- Theme Management (Automatic / Light / Dark) ---
+  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+  let currentThemeMode = localStorage.getItem('slide_printer_theme_mode') || 'auto';
+
   function setupTheme() {
-    const savedTheme = localStorage.getItem('slide_printer_theme') || 'dark';
-    setTheme(savedTheme);
+    applyThemeMode(currentThemeMode);
+
+    // Real-time listener for OS dark/light mode changes when in Auto mode
+    systemPrefersDark.addEventListener('change', () => {
+      if (currentThemeMode === 'auto') {
+        applyThemeMode('auto');
+      }
+    });
 
     if (themeToggleBtn) {
       themeToggleBtn.addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme') || 'dark';
-        const next = current === 'dark' ? 'light' : 'dark';
-        setTheme(next);
+        // Cycle: auto -> light -> dark -> auto
+        if (currentThemeMode === 'auto') {
+          currentThemeMode = 'light';
+        } else if (currentThemeMode === 'light') {
+          currentThemeMode = 'dark';
+        } else {
+          currentThemeMode = 'auto';
+        }
+        localStorage.setItem('slide_printer_theme_mode', currentThemeMode);
+        applyThemeMode(currentThemeMode);
       });
     }
   }
 
-  function setTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('slide_printer_theme', theme);
-    if (themeToggleBtn) {
-      const icon = themeToggleBtn.querySelector('.theme-icon');
-      if (icon) {
-        icon.textContent = theme === 'dark' ? '☀️' : '🌙';
-      }
+  function applyThemeMode(mode) {
+    const iconEl = document.getElementById('themeModeIcon');
+    const textEl = document.getElementById('themeModeText');
+
+    if (mode === 'auto') {
+      const isDark = systemPrefersDark.matches;
+      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      if (iconEl) iconEl.textContent = '✦';
+      if (textEl) textEl.textContent = 'System';
+      if (themeToggleBtn) themeToggleBtn.title = `Theme: Auto (${isDark ? 'Dark' : 'Light'} System)`;
+    } else if (mode === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+      if (iconEl) iconEl.textContent = '☀️';
+      if (textEl) textEl.textContent = 'Light';
+      if (themeToggleBtn) themeToggleBtn.title = 'Theme: Light (Click to switch to Dark)';
+    } else if (mode === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      if (iconEl) iconEl.textContent = '🌙';
+      if (textEl) textEl.textContent = 'Dark';
+      if (themeToggleBtn) themeToggleBtn.title = 'Theme: Dark (Click to switch to Auto)';
+    }
+
+    if (state.pdfjsDoc) {
+      renderCurrentPreview();
     }
   }
 
