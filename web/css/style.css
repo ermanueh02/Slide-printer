@@ -402,6 +402,14 @@ body::before {
   opacity: 1;
 }
 
+.drop-zone * {
+  pointer-events: none;
+}
+
+.drop-zone button {
+  pointer-events: auto;
+}
+
 .drop-zone-icon-box {
   width: 64px;
   height: 64px;

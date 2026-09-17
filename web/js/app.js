@@ -156,32 +156,69 @@
 
   // --- Drag & Drop / File Loading ---
   function setupDropZone() {
-    ['dragenter', 'dragover'].forEach(eventName => {
-      dropZone.addEventListener(eventName, (e) => {
+    // 1. Prevent default file drop behavior on the entire window (prevents browser from navigating to/downloading the file)
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      window.addEventListener(eventName, (e) => {
         e.preventDefault();
-        e.stopPropagation();
-        dropZone.classList.add('drag-active');
       }, false);
     });
 
-    ['dragleave', 'drop'].forEach(eventName => {
-      dropZone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    let dragCounter = 0;
+
+    dropZone.addEventListener('dragenter', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dragCounter++;
+      dropZone.classList.add('drag-active');
+    }, false);
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.dataTransfer) {
+        e.dataTransfer.dropEffect = 'copy';
+      }
+      dropZone.classList.add('drag-active');
+    }, false);
+
+    dropZone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dragCounter--;
+      if (dragCounter <= 0) {
+        dragCounter = 0;
         dropZone.classList.remove('drag-active');
-      }, false);
-    });
+      }
+    }, false);
 
     dropZone.addEventListener('drop', (e) => {
-      const files = e.dataTransfer.files;
-      if (files && files.length > 0) {
-        handleFile(files[0]);
-      }
-    });
+      e.preventDefault();
+      e.stopPropagation();
+      dragCounter = 0;
+      dropZone.classList.remove('drag-active');
 
-    browseBtn.addEventListener('click', () => fileInput.click());
-    dropZone.addEventListener('click', (e) => {
-      if (e.target !== browseBtn) {
+      const dt = e.dataTransfer;
+      if (dt && dt.files && dt.files.length > 0) {
+        handleFile(dt.files[0]);
+      }
+    }, false);
+
+    // 2. Click-to-browse handling
+    function openFilePicker(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      fileInput.click();
+    }
+
+    browseBtn.addEventListener('click', openFilePicker);
+    dropZone.addEventListener('click', openFilePicker);
+
+    // Keyboard support (Enter / Space)
+    dropZone.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
         fileInput.click();
       }
     });
@@ -190,10 +227,12 @@
       if (e.target.files && e.target.files.length > 0) {
         handleFile(e.target.files[0]);
       }
+      // Reset so selecting the same file again triggers change
+      fileInput.value = '';
     });
 
     if (replaceFileBtn) {
-      replaceFileBtn.addEventListener('click', () => fileInput.click());
+      replaceFileBtn.addEventListener('click', openFilePicker);
     }
   }
 
@@ -206,22 +245,31 @@
   }
 
   async function handleFile(file) {
-    if (!file || !file.name.toLowerCase().endsWith('.pdf')) {
-      alert('Please select a valid PDF file.');
+    if (!file) return;
+
+    const isPdf = file.name.toLowerCase().endsWith('.pdf') || (file.type && file.type.includes('pdf'));
+    if (!isPdf) {
+      alert('Please select a valid PDF presentation file.');
       return;
     }
 
     try {
-      showLoading(true, 'Reading presentation PDF...');
+      showLoading(true, 'Reading presentation manuscript...');
       const arrayBuffer = await file.arrayBuffer();
       state.file = file;
       state.fileName = file.name;
       state.fileSizeStr = formatBytes(file.size);
       state.pdfBytes = arrayBuffer;
 
-      // Load with PDF.js for preview
+      // Pass typed Uint8Array to PDF.js
+      const uint8Data = new Uint8Array(arrayBuffer);
+
       SlidePrinterPreview.resetCache();
-      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer.slice(0) });
+      const loadingTask = pdfjsLib.getDocument({
+        data: uint8Data,
+        cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/',
+        cMapPacked: true,
+      });
       state.pdfjsDoc = await loadingTask.promise;
       state.numPages = state.pdfjsDoc.numPages;
       state.currentPage = 1;
@@ -259,7 +307,7 @@
     } catch (err) {
       showLoading(false);
       console.error('Error loading PDF:', err);
-      alert(`Could not load PDF: ${err.message || err}`);
+      alert(`Could not load presentation: ${err.message || err}`);
     }
   }
 
