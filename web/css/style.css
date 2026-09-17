@@ -156,6 +156,7 @@ body::before {
   height: 3px;
   background: linear-gradient(90deg, #8c6922 0%, #dfc282 30%, #c5a059 70%, #8c6922 100%);
   z-index: 1000;
+  pointer-events: none;
 }
 
 /* App Header */
@@ -254,6 +255,46 @@ body::before {
   border-radius: 50%;
   background-color: var(--gold-antique);
   box-shadow: 0 0 6px var(--gold-antique);
+}
+
+/* Language Selector */
+.lang-selector-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  padding: 0.1rem 0.2rem;
+  transition: all var(--transition-fast);
+}
+
+.lang-btn:hover {
+  color: var(--text-primary);
+}
+
+.lang-btn.active {
+  color: var(--text-serif-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.lang-divider {
+  color: var(--border-gold);
+  font-size: 0.75rem;
+  user-select: none;
 }
 
 .theme-mode-btn {

@@ -17,14 +17,23 @@
         <div class="brand-insignia">✦</div>
         <div class="brand-text-col">
           <span class="brand-title">Slide—Printer</span>
-          <span class="brand-subtitle">Atelier de Handouts · Est. 2026</span>
+          <span class="brand-subtitle" id="brandSubtitleText">Atelier de Handouts · Est. 2026</span>
         </div>
       </a>
 
       <div class="header-actions">
+        <!-- Language Selector -->
+        <div class="lang-selector-group" role="group" aria-label="Language Selector">
+          <button type="button" class="lang-btn active" data-lang="en" title="English">EN</button>
+          <span class="lang-divider">·</span>
+          <button type="button" class="lang-btn" data-lang="es" title="Español">ES</button>
+          <span class="lang-divider">·</span>
+          <button type="button" class="lang-btn" data-lang="gl" title="Galego">GL</button>
+        </div>
+
         <div class="privacy-badge" title="Files are processed entirely within your browser via WebAssembly. Nothing leaves your machine.">
           <span class="privacy-dot"></span>
-          <span>Archival Privacy · 100% In-Browser</span>
+          <span id="privacyBadgeText">Archival Privacy · 100% In-Browser</span>
         </div>
 
         <!-- Automatic / System / Light / Dark Theme Button -->
@@ -47,9 +56,9 @@
 
     <!-- Hero / Initial State -->
     <section class="hero-section" id="initialHero">
-      <div class="hero-supertitle">Handout Studio & Repositorium</div>
-      <h1 class="hero-title">The Art of the <em>Printed Handout</em></h1>
-      <p class="hero-subtitle">
+      <div class="hero-supertitle" id="heroSuperText">Handout Studio & Repositorium</div>
+      <h1 class="hero-title" id="heroTitleText">The Art of the <em>Printed Handout</em></h1>
+      <p class="hero-subtitle" id="heroSubText">
         Transform digital presentation slides into timeless, printable lecture folios.
         Preserve slide aspect ratios and interactive hyperlinks while adorning each sheet with bespoke note-taking space.
       </p>
@@ -57,10 +66,10 @@
       <!-- Dropzone: The Desk Folio -->
       <div class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Deposit presentation PDF here or click to browse">
         <div class="drop-zone-icon-box">📜</div>
-        <div class="drop-zone-text">Deposit Presentation Manuscript</div>
-        <div class="drop-zone-subtext">Drop any PDF presentation (16:9 widescreen or 4:3 standard)</div>
+        <div class="drop-zone-text" id="dropZoneTitleText">Deposit Presentation Manuscript</div>
+        <div class="drop-zone-subtext" id="dropZoneSubText">Drop any PDF presentation (16:9 widescreen or 4:3 standard)</div>
         <button type="button" class="btn-primary" id="browseBtn">
-          <span>Select Document</span>
+          <span id="browseBtnText">Select Document</span>
         </button>
         <input type="file" id="fileInput" accept=".pdf,application/pdf" style="position: fixed; top: -9999px; left: -9999px; opacity: 0;">
       </div>
@@ -68,19 +77,19 @@
       <!-- Features Strip -->
       <div class="features-grid">
         <div class="feature-item">
-          <div class="feature-item-num">I. HYPERLINKS</div>
-          <div class="feature-item-title">Coordinate Re-Alignment</div>
-          <div class="feature-item-desc">Clickable hyperlinks and digital references are mathematically translated to remain active on the scaled slide.</div>
+          <div class="feature-item-num" id="feat1NumText">I. HYPERLINKS</div>
+          <div class="feature-item-title" id="feat1TitleText">Coordinate Re-Alignment</div>
+          <div class="feature-item-desc" id="feat1DescText">Clickable hyperlinks and digital references are mathematically translated to remain active on the scaled slide.</div>
         </div>
         <div class="feature-item">
-          <div class="feature-item-num">II. ATELIER PATTERNS</div>
-          <div class="feature-item-title">Four Bespoke Styles</div>
-          <div class="feature-item-desc">Choice of ruled handwriting lines (~5mm), quadrille graph grid, stipple dot matrix, or unadorned vellum.</div>
+          <div class="feature-item-num" id="feat2NumText">II. ATELIER PATTERNS</div>
+          <div class="feature-item-title" id="feat2TitleText">Four Bespoke Styles</div>
+          <div class="feature-item-desc" id="feat2DescText">Choice of ruled handwriting lines (~5mm), quadrille graph grid, stipple dot matrix, or unadorned vellum.</div>
         </div>
         <div class="feature-item">
-          <div class="feature-item-num">III. CONFIDENTIALITY</div>
-          <div class="feature-item-title">Absolute Client Privacy</div>
-          <div class="feature-item-desc">All compilation occurs locally in your browser with WebAssembly. No manuscripts are ever uploaded to any server.</div>
+          <div class="feature-item-num" id="feat3NumText">III. CONFIDENTIALITY</div>
+          <div class="feature-item-title" id="feat3TitleText">Absolute Client Privacy</div>
+          <div class="feature-item-desc" id="feat3DescText">All compilation occurs locally in your browser with WebAssembly. No manuscripts are ever uploaded to any server.</div>
         </div>
       </div>
     </section>
@@ -107,33 +116,33 @@
         <!-- Note Style Selection -->
         <div class="card">
           <div class="section-label">
-            <span>Note Taking Pattern</span>
-            <span class="section-label-sub">Section I</span>
+            <span id="patternSectionLabel">Note Taking Pattern</span>
+            <span class="section-label-sub" id="patternSectionSub">Section I</span>
           </div>
           <div class="style-grid" role="radiogroup" aria-label="Note Taking Pattern">
             
             <div class="style-card active" data-style="lines" role="radio" aria-checked="true" tabindex="0" id="styleCardLines">
               <div class="style-num">I.</div>
-              <div class="style-card-title">Ruled Cadence</div>
-              <div class="style-card-desc">Feint handwriting lines (~5mm)</div>
+              <div class="style-card-title" id="styleLinesTitle">Ruled Cadence</div>
+              <div class="style-card-desc" id="styleLinesDesc">Feint handwriting lines (~5mm)</div>
             </div>
 
             <div class="style-card" data-style="grid" role="radio" aria-checked="false" tabindex="0" id="styleCardGrid">
               <div class="style-num">II.</div>
-              <div class="style-card-title">Quadrille Grid</div>
-              <div class="style-card-desc">Architectural graph paper</div>
+              <div class="style-card-title" id="styleGridTitle">Quadrille Grid</div>
+              <div class="style-card-desc" id="styleGridDesc">Architectural graph paper</div>
             </div>
 
             <div class="style-card" data-style="dots" role="radio" aria-checked="false" tabindex="0" id="styleCardDots">
               <div class="style-num">III.</div>
-              <div class="style-card-title">Stipple Point</div>
-              <div class="style-card-desc">Discreet bullet dot matrix</div>
+              <div class="style-card-title" id="styleDotsTitle">Stipple Point</div>
+              <div class="style-card-desc" id="styleDotsDesc">Discreet bullet dot matrix</div>
             </div>
 
             <div class="style-card" data-style="blank" role="radio" aria-checked="false" tabindex="0" id="styleCardBlank">
               <div class="style-num">IV.</div>
-              <div class="style-card-title">Pure Vellum</div>
-              <div class="style-card-desc">Open space & hairline rule</div>
+              <div class="style-card-title" id="styleBlankTitle">Pure Vellum</div>
+              <div class="style-card-desc" id="styleBlankDesc">Open space & hairline rule</div>
             </div>
 
           </div>
@@ -142,29 +151,29 @@
         <!-- Paper & Page Settings -->
         <div class="card">
           <div class="section-label">
-            <span>Paper Stock & Layout</span>
-            <span class="section-label-sub">Section II</span>
+            <span id="paperSectionLabel">Paper Stock & Layout</span>
+            <span class="section-label-sub" id="paperSectionSub">Section II</span>
           </div>
           
           <div class="form-group">
             <label for="paperSelect" class="form-label">
-              <span>Paper Standard</span>
+              <span id="paperSelectLabelText">Paper Standard</span>
             </label>
             <select id="paperSelect" class="form-select">
-              <option value="a4" selected>DIN A4 (210 × 297 mm)</option>
-              <option value="letter">US Letter (8.5 × 11 in)</option>
-              <option value="legal">US Legal (8.5 × 14 in)</option>
-              <option value="a3">DIN A3 (297 × 420 mm)</option>
+              <option value="a4" id="optA4" selected>DIN A4 (210 × 297 mm)</option>
+              <option value="letter" id="optLetter">US Letter (8.5 × 11 in)</option>
+              <option value="legal" id="optLegal">US Legal (8.5 × 14 in)</option>
+              <option value="a3" id="optA3">DIN A3 (297 × 420 mm)</option>
             </select>
           </div>
 
           <!-- Fine Tuning -->
           <details class="settings-details" id="advancedSettings">
-            <summary>✦ Typography & Margin Metrics</summary>
+            <summary id="tuningSummaryText">✦ Typography & Margin Metrics</summary>
             
             <div class="form-group">
               <div class="form-label">
-                <span>Page Margin</span>
+                <span id="marginLabelText">Page Margin</span>
                 <span id="marginValue">40 pt</span>
               </div>
               <input type="range" id="marginSlider" class="range-slider" min="20" max="60" value="40" step="2">
@@ -172,7 +181,7 @@
 
             <div class="form-group">
               <div class="form-label">
-                <span>Rule / Dot Density</span>
+                <span id="densityLabelText">Rule / Dot Density</span>
                 <span id="stepValue">14 pt</span>
               </div>
               <input type="range" id="stepSlider" class="range-slider" min="10" max="24" value="14" step="1">
@@ -180,7 +189,7 @@
 
             <div class="form-group">
               <div class="form-label">
-                <span>Slide Separation</span>
+                <span id="sepLabelText">Slide Separation</span>
                 <span id="separationValue">10 pt</span>
               </div>
               <input type="range" id="separationSlider" class="range-slider" min="4" max="24" value="10" step="1">
@@ -193,15 +202,15 @@
         <!-- Action Stack -->
         <div class="action-stack">
           <button type="button" class="btn-cta-lg" id="downloadBtn">
-            <span>Export Handout Manuscript (PDF)</span>
+            <span id="downloadBtnText">Export Handout Manuscript (PDF)</span>
           </button>
 
           <div class="btn-row">
             <button type="button" class="btn-secondary" id="exportAllBtn" title="Download ZIP archive with all 4 pattern styles">
-              <span>Archive All 4 (ZIP)</span>
+              <span id="exportAllBtnText">Archive All 4 (ZIP)</span>
             </button>
             <button type="button" class="btn-secondary" id="printBtn" title="Open print dialog formatted to target paper size">
-              <span>Print Folio</span>
+              <span id="printBtnText">Print Folio</span>
             </button>
           </div>
         </div>
@@ -215,9 +224,9 @@
         <div class="page-navigator" role="navigation" aria-label="Slide Page Navigation">
           <button type="button" class="nav-btn" id="prevPageBtn" title="Previous Slide (Left Arrow)" aria-label="Previous Slide">‹</button>
           <div class="page-display">
-            <span>Folio</span>
+            <span id="slideFolioText">Folio</span>
             <input type="number" id="pageInput" class="page-number-input" min="1" value="1" aria-label="Current slide number">
-            <span>of <span id="totalPagesSpan">1</span></span>
+            <span><span id="slideOfText">of</span> <span id="totalPagesSpan">1</span></span>
           </div>
           <button type="button" class="nav-btn" id="nextPageBtn" title="Next Slide (Right Arrow)" aria-label="Next Slide">›</button>
         </div>
@@ -247,14 +256,14 @@
 
   <!-- App Footer -->
   <footer class="app-footer">
-    <div class="footer-heritage-text">Slide—Printer Handout Atelier</div>
-    <div>Bespoke Handout Repositorium · Open Source Typography</div>
+    <div class="footer-heritage-text" id="footerTitleText">Slide—Printer Handout Atelier</div>
+    <div id="footerSubtitleText">Bespoke Handout Repositorium · Open Source Typography</div>
     <div class="footer-links">
       <a href="https://github.com/ermanueh02/Slide-printer" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
       <span>·</span>
       <a href="https://github.com/ermanueh02/Slide-printer/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
       <span>·</span>
-      <span>100% In-Browser Confidentiality</span>
+      <span id="footerPrivacyText">100% In-Browser Confidentiality</span>
     </div>
   </footer>
 
