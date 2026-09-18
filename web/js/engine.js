@@ -179,11 +179,16 @@
         currY -= step;
       }
     } else if (normStyle === 'grid') {
+      const numCols = Math.max(1, Math.floor(width / step));
+      const gridW = numCols * step;
+      const gridX1 = x1 + (width - gridW) / 2;
+      const gridX2 = gridX1 + gridW;
+
       let currY = yStart;
       while (currY >= bottomMargin) {
         page.drawLine({
-          start: { x: x1, y: currY },
-          end: { x: x2, y: currY },
+          start: { x: gridX1, y: currY },
+          end: { x: gridX2, y: currY },
           thickness: 0.35,
           color: rgb(0.4, 0.4, 0.4),
           opacity: 0.18,
@@ -192,30 +197,32 @@
       }
 
       const yMin = currY + step;
-      let currX = x1;
-      while (currX <= x2) {
+      for (let col = 0; col <= numCols; col++) {
+        const cx = gridX1 + col * step;
         page.drawLine({
-          start: { x: currX, y: yMin },
-          end: { x: currX, y: yStart },
+          start: { x: cx, y: yMin },
+          end: { x: cx, y: yStart },
           thickness: 0.35,
           color: rgb(0.4, 0.4, 0.4),
           opacity: 0.18,
         });
-        currX += step;
       }
     } else if (normStyle === 'dots') {
+      const numCols = Math.max(1, Math.floor(width / step));
+      const gridW = numCols * step;
+      const gridX1 = x1 + (width - gridW) / 2;
+
       let currY = yStart;
       while (currY >= bottomMargin) {
-        let currX = x1;
-        while (currX <= x2) {
+        for (let col = 0; col <= numCols; col++) {
+          const cx = gridX1 + col * step;
           page.drawCircle({
-            x: currX,
+            x: cx,
             y: currY,
             size: dotRadius,
             color: rgb(0.25, 0.25, 0.25),
             opacity: 0.35,
           });
-          currX += step;
         }
         currY -= step;
       }
@@ -270,11 +277,16 @@
           currY -= step;
         }
       } else if (normStyle === 'grid') {
+        const numCols = Math.max(1, Math.floor(width / step));
+        const gridW = numCols * step;
+        const gridX1 = x1 + (width - gridW) / 2;
+        const gridX2 = gridX1 + gridW;
+
         let currY = yStart;
         while (currY >= bottomLimit) {
           page.drawLine({
-            start: { x: x1, y: currY },
-            end: { x: x2, y: currY },
+            start: { x: gridX1, y: currY },
+            end: { x: gridX2, y: currY },
             thickness: 0.35,
             color: rgb(0.4, 0.4, 0.4),
             opacity: 0.18,
@@ -282,30 +294,32 @@
           currY -= step;
         }
         const yMin = currY + step;
-        let currX = x1;
-        while (currX <= x2) {
+        for (let col = 0; col <= numCols; col++) {
+          const cx = gridX1 + col * step;
           page.drawLine({
-            start: { x: currX, y: yMin },
-            end: { x: currX, y: yStart },
+            start: { x: cx, y: yMin },
+            end: { x: cx, y: yStart },
             thickness: 0.35,
             color: rgb(0.4, 0.4, 0.4),
             opacity: 0.18,
           });
-          currX += step;
         }
       } else if (normStyle === 'dots') {
+        const numCols = Math.max(1, Math.floor(width / step));
+        const gridW = numCols * step;
+        const gridX1 = x1 + (width - gridW) / 2;
+
         let currY = yStart;
         while (currY >= bottomLimit) {
-          let currX = x1;
-          while (currX <= x2) {
+          for (let col = 0; col <= numCols; col++) {
+            const cx = gridX1 + col * step;
             page.drawCircle({
-              x: currX,
+              x: cx,
               y: currY,
               size: dotRadius,
               color: rgb(0.25, 0.25, 0.25),
               opacity: 0.35,
             });
-            currX += step;
           }
           currY -= step;
         }
@@ -374,11 +388,15 @@
   }
 
   /**
-   * Generates a minimalist editorial cover page.
+   * Generates an elegant, timeless notebook cover page (Zara Home aesthetic).
    */
-  async function generateCoverPage(outDoc, options, font, boldFont) {
+  async function generateCoverPage(outDoc, options, fontMap) {
     const [pw, ph] = options.paperDimensions || PAPER_SIZES.a4;
     const page = outDoc.addPage([pw, ph]);
+
+    const timesFont = fontMap.timesFont || fontMap.helveticaFont;
+    const timesBold = fontMap.timesBold || fontMap.helveticaBold;
+    const timesItalic = fontMap.timesItalic || fontMap.helveticaFont;
 
     const inset = 36;
     page.drawRectangle({
@@ -386,125 +404,125 @@
       y: inset,
       width: pw - 2 * inset,
       height: ph - 2 * inset,
-      borderColor: rgb(0.2, 0.2, 0.2),
-      borderWidth: 0.75,
-      borderOpacity: 0.25,
+      borderColor: rgb(0.25, 0.25, 0.25),
+      borderWidth: 0.6,
+      borderOpacity: 0.22,
       color: rgb(1, 1, 1),
     });
 
-    const innerInset = 40;
+    const innerInset = 42;
     page.drawRectangle({
       x: innerInset,
       y: innerInset,
       width: pw - 2 * innerInset,
       height: ph - 2 * innerInset,
-      borderColor: rgb(0.2, 0.2, 0.2),
-      borderWidth: 0.4,
-      borderOpacity: 0.12,
+      borderColor: rgb(0.25, 0.25, 0.25),
+      borderWidth: 0.35,
+      borderOpacity: 0.10,
     });
 
-    if (boldFont) {
-      const superHdr = 'SLIDE—PRINTER · CUADERNO DE APUNTES';
-      const superW = boldFont.widthOfTextAtSize(superHdr, 8);
+    // Top Super-header (understated notebook label, no software branding)
+    if (timesFont) {
+      const superHdr = 'C U A D E R N O   D E   N O T A S';
+      const superW = timesFont.widthOfTextAtSize(superHdr, 7.5);
       page.drawText(superHdr, {
         x: (pw - superW) / 2,
-        y: ph - 90,
-        size: 8,
-        font: boldFont,
-        color: rgb(0.4, 0.4, 0.4),
-        opacity: 0.8,
+        y: ph - 95,
+        size: 7.5,
+        font: timesFont,
+        color: rgb(0.42, 0.42, 0.42),
+        opacity: 0.75,
       });
     }
 
     page.drawLine({
-      start: { x: pw / 2 - 40, y: ph - 100 },
-      end: { x: pw / 2 + 40, y: ph - 100 },
-      thickness: 0.6,
+      start: { x: pw / 2 - 24, y: ph - 105 },
+      end: { x: pw / 2 + 24, y: ph - 105 },
+      thickness: 0.4,
       color: rgb(0.3, 0.3, 0.3),
-      opacity: 0.3,
+      opacity: 0.20,
     });
 
-    // Title
+    // Title (classic serif, centered)
     const titleText = (options.title || 'Presentación').trim();
-    if (boldFont) {
-      const titleSize = 22;
-      const titleW = boldFont.widthOfTextAtSize(titleText, titleSize);
+    let endTitleY = ph * 0.58;
+    if (timesBold) {
+      const titleSize = 24;
+      const titleW = timesBold.widthOfTextAtSize(titleText, titleSize);
+      endTitleY = ph * 0.58;
       page.drawText(titleText, {
         x: (pw - Math.min(titleW, pw - 80)) / 2,
-        y: ph * 0.58,
+        y: endTitleY,
         size: titleSize,
-        font: boldFont,
-        color: rgb(0.12, 0.14, 0.18),
+        font: timesBold,
+        color: rgb(0.12, 0.12, 0.14),
       });
     }
 
-    // Subtitle / Subject
-    if (options.subtitle && boldFont) {
-      const subW = boldFont.widthOfTextAtSize(options.subtitle, 12);
+    // Subtitle / Subject (classic serif italic)
+    if (options.subtitle && timesItalic) {
+      const subW = timesItalic.widthOfTextAtSize(options.subtitle, 12.5);
       page.drawText(options.subtitle, {
         x: (pw - subW) / 2,
-        y: ph * 0.52,
-        size: 12,
-        font: boldFont,
-        color: rgb(0.3, 0.3, 0.3),
+        y: endTitleY - 26,
+        size: 12.5,
+        font: timesItalic,
+        color: rgb(0.32, 0.32, 0.34),
         opacity: 0.9,
       });
     }
 
-    // Metadata
-    let metaY = ph * 0.28;
-    if (options.author && font) {
-      const authStr = `Autor / Estudiante: ${options.author}`;
-      const authW = font.widthOfTextAtSize(authStr, 10);
+    // Delicate accent rule between title and metadata
+    const dividerY = endTitleY - (options.subtitle ? 44 : 26);
+    page.drawLine({
+      start: { x: pw / 2 - 32, y: dividerY },
+      end: { x: pw / 2 + 32, y: dividerY },
+      thickness: 0.4,
+      color: rgb(0.3, 0.3, 0.3),
+      opacity: 0.18,
+    });
+
+    // Metadata block (quiet, elegant typography)
+    let metaY = ph * 0.26;
+    if (options.author && timesFont) {
+      const authStr = options.author;
+      const authW = timesFont.widthOfTextAtSize(authStr, 10.5);
       page.drawText(authStr, {
         x: (pw - authW) / 2,
         y: metaY,
-        size: 10,
-        font: font,
-        color: rgb(0.25, 0.25, 0.25),
-        opacity: 0.85,
-      });
-      metaY -= 18;
-    }
-
-    if (options.numSlides && font) {
-      const numStr = `${options.numSlides} Diapositivas con pauta de notas`;
-      const numW = font.widthOfTextAtSize(numStr, 9);
-      page.drawText(numStr, {
-        x: (pw - numW) / 2,
-        y: metaY,
-        size: 9,
-        font: font,
-        color: rgb(0.4, 0.4, 0.4),
-        opacity: 0.8,
+        size: 10.5,
+        font: timesFont,
+        color: rgb(0.22, 0.22, 0.24),
+        opacity: 0.9,
       });
       metaY -= 18;
     }
 
     const todayStr = new Date().toLocaleDateString('es-ES');
-    if (font) {
+    if (timesItalic) {
       const dateStr = `Fecha: ${todayStr}`;
-      const dateW = font.widthOfTextAtSize(dateStr, 9);
+      const dateW = timesItalic.widthOfTextAtSize(dateStr, 9);
       page.drawText(dateStr, {
         x: (pw - dateW) / 2,
         y: metaY,
         size: 9,
-        font: font,
-        color: rgb(0.4, 0.4, 0.4),
+        font: timesItalic,
+        color: rgb(0.42, 0.42, 0.42),
         opacity: 0.8,
       });
+      metaY -= 16;
     }
 
-    if (font) {
-      const brandStr = 'Slide—Printer · Handout Edition';
-      const brandW = font.widthOfTextAtSize(brandStr, 8);
-      page.drawText(brandStr, {
-        x: (pw - brandW) / 2,
-        y: inset + 14,
-        size: 8,
-        font: font,
-        color: rgb(0.5, 0.5, 0.5),
-        opacity: 0.6,
+    if (options.numSlides && timesFont) {
+      const numStr = `${options.numSlides} diapositivas con pauta de notas`;
+      const numW = timesFont.widthOfTextAtSize(numStr, 8.5);
+      page.drawText(numStr, {
+        x: (pw - numW) / 2,
+        y: metaY,
+        size: 8.5,
+        font: timesFont,
+        color: rgb(0.48, 0.48, 0.48),
+        opacity: 0.75,
       });
     }
   }
@@ -535,10 +553,16 @@
     const pageNumbers = options.pageNumbers !== undefined ? Boolean(options.pageNumbers) : true;
     let helveticaFont = null;
     let helveticaBold = null;
+    let timesFont = null;
+    let timesBold = null;
+    let timesItalic = null;
     if (StandardFonts) {
       try {
         helveticaFont = await outDoc.embedFont(StandardFonts.Helvetica);
         helveticaBold = await outDoc.embedFont(StandardFonts.HelveticaBold);
+        timesFont = await outDoc.embedFont(StandardFonts.TimesRoman);
+        timesBold = await outDoc.embedFont(StandardFonts.TimesRomanBold);
+        timesItalic = await outDoc.embedFont(StandardFonts.TimesRomanItalic);
       } catch (e) {
         console.warn('Could not embed fonts:', e);
       }
@@ -564,8 +588,13 @@
           author: options.coverAuthor || '',
           numSlides: selectedIndices.length,
         },
-        helveticaFont,
-        helveticaBold
+        {
+          timesFont,
+          timesBold,
+          timesItalic,
+          helveticaFont,
+          helveticaBold,
+        }
       );
     }
 

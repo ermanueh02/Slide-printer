@@ -97,26 +97,33 @@ def create_notes_overlay(
         c.setStrokeColor(Color(0.4, 0.4, 0.4, alpha=0.18))
         c.setLineWidth(0.35)
 
+        num_cols = max(1, int(width // step))
+        grid_w = num_cols * step
+        grid_x1 = x1 + (width - grid_w) / 2.0
+        grid_x2 = grid_x1 + grid_w
+
         curr_y = y_start
         while curr_y >= bottom_margin:
-            c.line(x1, curr_y, x2, curr_y)
+            c.line(grid_x1, curr_y, grid_x2, curr_y)
             curr_y -= step
 
         y_min = curr_y + step
-        curr_x = x1
-        while curr_x <= x2:
-            c.line(curr_x, y_min, curr_x, y_start)
-            curr_x += step
+        for col in range(num_cols + 1):
+            cx = grid_x1 + col * step
+            c.line(cx, y_min, cx, y_start)
 
     elif norm_style in ("dots", "puntos", "dot"):
         c.setFillColor(Color(0.25, 0.25, 0.25, alpha=0.35))
 
+        num_cols = max(1, int(width // step))
+        grid_w = num_cols * step
+        grid_x1 = x1 + (width - grid_w) / 2.0
+
         curr_y = y_start
         while curr_y >= bottom_margin:
-            curr_x = x1
-            while curr_x <= x2:
-                c.circle(curr_x, curr_y, dot_radius, fill=1, stroke=0)
-                curr_x += step
+            for col in range(num_cols + 1):
+                cx = grid_x1 + col * step
+                c.circle(cx, curr_y, dot_radius, fill=1, stroke=0)
             curr_y -= step
 
     # Centered page number at footer
@@ -147,7 +154,7 @@ def generate_cover_page(
     num_slides: Optional[int] = None,
     grayscale: bool = False,
 ) -> PageObject:
-    """Generates an elegant, minimalist editorial cover page.
+    """Generates an elegant, timeless notebook cover page inspired by classic stationery (Zara Home style).
 
     Args:
         page_size: Target page dimensions (width, height) in points.
@@ -165,37 +172,37 @@ def generate_cover_page(
     c = canvas.Canvas(packet, pagesize=page_size)
     pw, ph = page_size
 
-    # Outer fine border (geometric mid-century frame)
+    # Refined double hairline frame (timeless bookplate border)
     inset = 36.0
-    c.setStrokeColor(Color(0.2, 0.2, 0.2, alpha=0.25))
-    c.setLineWidth(0.75)
+    c.setStrokeColor(Color(0.25, 0.25, 0.25, alpha=0.22))
+    c.setLineWidth(0.6)
     c.rect(inset, inset, pw - 2 * inset, ph - 2 * inset)
 
-    inner_inset = 40.0
-    c.setStrokeColor(Color(0.2, 0.2, 0.2, alpha=0.12))
-    c.setLineWidth(0.4)
+    inner_inset = 42.0
+    c.setStrokeColor(Color(0.25, 0.25, 0.25, alpha=0.10))
+    c.setLineWidth(0.35)
     c.rect(inner_inset, inner_inset, pw - 2 * inner_inset, ph - 2 * inner_inset)
 
-    # Top Super-header
-    c.setFont("Helvetica-Bold", 8)
-    c.setFillColor(Color(0.4, 0.4, 0.4, alpha=0.8))
-    c.drawCentredString(pw / 2.0, ph - 90.0, "SLIDE—PRINTER · CUADERNO DE APUNTES")
+    # Top Super-header (understated notebook label, no software branding)
+    c.setFont("Times-Roman", 8)
+    c.setFillColor(Color(0.42, 0.42, 0.42, alpha=0.75))
+    c.drawCentredString(pw / 2.0, ph - 95.0, "C U A D E R N O   D E   N O T A S")
 
-    # Separator ornament
-    c.setStrokeColor(Color(0.3, 0.3, 0.3, alpha=0.3))
-    c.setLineWidth(0.6)
-    c.line(pw / 2.0 - 40, ph - 100.0, pw / 2.0 + 40, ph - 100.0)
+    # Separator accent
+    c.setStrokeColor(Color(0.3, 0.3, 0.3, alpha=0.2))
+    c.setLineWidth(0.4)
+    c.line(pw / 2.0 - 24, ph - 105.0, pw / 2.0 + 24, ph - 105.0)
 
-    # Main Title (centered, auto-wrapping if long)
-    c.setFont("Helvetica-Bold", 24)
-    c.setFillColor(Color(0.12, 0.14, 0.18, alpha=1.0))
+    # Main Title (centered classic serif, elegant word-wrapping)
+    c.setFont("Times-Bold", 24)
+    c.setFillColor(Color(0.12, 0.12, 0.14, alpha=1.0))
     clean_title = (title or "Presentación").strip()
     words = clean_title.split()
     lines = []
     curr_line = ""
     for w in words:
         test_line = f"{curr_line} {w}".strip()
-        if c.stringWidth(test_line, "Helvetica-Bold", 24) < (pw - 2 * inset - 60):
+        if c.stringWidth(test_line, "Times-Bold", 24) < (pw - 2 * inset - 60):
             curr_line = test_line
         else:
             if curr_line:
@@ -209,36 +216,36 @@ def generate_cover_page(
         c.drawCentredString(pw / 2.0, title_y, line)
         title_y -= 32.0
 
-    # Subtitle / Subject
+    # Subtitle / Subject (classic serif italic)
     if subtitle:
-        c.setFont("Helvetica-Bold", 12)
-        c.setFillColor(Color(0.3, 0.3, 0.3, alpha=0.9))
-        c.drawCentredString(pw / 2.0, title_y - 10.0, subtitle)
-        title_y -= 25.0
+        c.setFont("Times-Italic", 12.5)
+        c.setFillColor(Color(0.32, 0.32, 0.34, alpha=0.9))
+        c.drawCentredString(pw / 2.0, title_y - 8.0, subtitle)
+        title_y -= 26.0
 
-    # Author / Metadata block
-    meta_y = ph * 0.28
+    # Delicate divider between title and metadata
+    c.setStrokeColor(Color(0.3, 0.3, 0.3, alpha=0.18))
+    c.setLineWidth(0.4)
+    c.line(pw / 2.0 - 32, title_y - 12.0, pw / 2.0 + 32, title_y - 12.0)
+
+    # Author / Metadata block (subtle, timeless typography)
+    meta_y = ph * 0.26
     if author:
-        c.setFont("Helvetica", 10)
-        c.setFillColor(Color(0.25, 0.25, 0.25, alpha=0.85))
-        c.drawCentredString(pw / 2.0, meta_y, f"Autor / Estudiante: {author}")
+        c.setFont("Times-Roman", 10.5)
+        c.setFillColor(Color(0.22, 0.22, 0.24, alpha=0.9))
+        c.drawCentredString(pw / 2.0, meta_y, author)
         meta_y -= 18.0
 
     if date_str:
-        c.setFont("Helvetica", 9)
-        c.setFillColor(Color(0.4, 0.4, 0.4, alpha=0.8))
+        c.setFont("Times-Italic", 9)
+        c.setFillColor(Color(0.42, 0.42, 0.42, alpha=0.8))
         c.drawCentredString(pw / 2.0, meta_y, f"Fecha: {date_str}")
-        meta_y -= 18.0
+        meta_y -= 16.0
 
     if num_slides is not None:
-        c.setFont("Helvetica", 9)
-        c.setFillColor(Color(0.4, 0.4, 0.4, alpha=0.8))
-        c.drawCentredString(pw / 2.0, meta_y, f"{num_slides} Diapositivas con pauta de notas")
-
-    # Bottom footer brand mark
-    c.setFont("Helvetica", 8)
-    c.setFillColor(Color(0.5, 0.5, 0.5, alpha=0.6))
-    c.drawCentredString(pw / 2.0, inset + 14.0, "Slide—Printer · Handout Edition")
+        c.setFont("Times-Roman", 8.5)
+        c.setFillColor(Color(0.48, 0.48, 0.48, alpha=0.75))
+        c.drawCentredString(pw / 2.0, meta_y, f"{num_slides} diapositivas con pauta de notas")
 
     c.save()
     packet.seek(0)
@@ -308,23 +315,32 @@ def create_2up_notes_overlay(
         elif norm_style in ("grid", "cuadricula"):
             c.setStrokeColor(Color(0.4, 0.4, 0.4, alpha=0.18))
             c.setLineWidth(0.35)
+
+            num_cols = max(1, int(width // step))
+            grid_w = num_cols * step
+            grid_x1 = x1 + (width - grid_w) / 2.0
+            grid_x2 = grid_x1 + grid_w
+
             curr_y = y_start
             while curr_y >= bottom_limit:
-                c.line(x1, curr_y, x2, curr_y)
+                c.line(grid_x1, curr_y, grid_x2, curr_y)
                 curr_y -= step
             y_min = curr_y + step
-            curr_x = x1
-            while curr_x <= x2:
-                c.line(curr_x, y_min, curr_x, y_start)
-                curr_x += step
+            for col in range(num_cols + 1):
+                cx = grid_x1 + col * step
+                c.line(cx, y_min, cx, y_start)
         elif norm_style in ("dots", "puntos", "dot"):
             c.setFillColor(Color(0.25, 0.25, 0.25, alpha=0.35))
+
+            num_cols = max(1, int(width // step))
+            grid_w = num_cols * step
+            grid_x1 = x1 + (width - grid_w) / 2.0
+
             curr_y = y_start
             while curr_y >= bottom_limit:
-                curr_x = x1
-                while curr_x <= x2:
-                    c.circle(curr_x, curr_y, dot_radius, fill=1, stroke=0)
-                    curr_x += step
+                for col in range(num_cols + 1):
+                    cx = grid_x1 + col * step
+                    c.circle(cx, curr_y, dot_radius, fill=1, stroke=0)
                 curr_y -= step
 
     # Draw Slot 1 pattern
