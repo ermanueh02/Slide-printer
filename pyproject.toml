@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "slide-printer"
-version = "4.2.0"
+version = "4.3.0"
 description = "Transform presentation slide PDFs into printable handouts with custom note-taking areas (A4/Letter, blank, lined, grid, dot grid)."
 readme = "README.md"
 requires-python = ">=3.9"

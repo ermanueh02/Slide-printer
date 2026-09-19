@@ -177,7 +177,7 @@
 
             <div class="style-grid" role="group" aria-label="Note styles">
             
-              <div class="style-card active is-selected" data-style="lines" tabindex="0" id="styleCardLines">
+              <div class="style-card is-selected" data-style="lines" tabindex="0" id="styleCardLines">
                 <div class="style-card-header">
                   <div class="style-card-title-group">
                     <button type="button" class="style-checkbox-btn" data-style="lines" title="Include in export" aria-label="Include ruled lines">
@@ -192,12 +192,12 @@
                 </div>
                 <div class="style-card-desc" id="styleLinesDesc">~5mm handwriting lines for notes</div>
                 <div class="style-card-footer">
-                  <span class="preview-badge" id="previewBadgeLines">Preview</span>
+                  <span class="preview-badge hidden" id="previewBadgeLines">Preview</span>
                   <span class="export-status-label" id="exportStatusLines">In export</span>
                 </div>
               </div>
 
-              <div class="style-card is-selected" data-style="grid" tabindex="0" id="styleCardGrid">
+              <div class="style-card active is-selected" data-style="grid" tabindex="0" id="styleCardGrid">
                 <div class="style-card-header">
                   <div class="style-card-title-group">
                     <button type="button" class="style-checkbox-btn" data-style="grid" title="Include in export" aria-label="Include grid">
@@ -210,7 +210,7 @@
                 <div class="style-swatch style-swatch-grid" aria-hidden="true"></div>
                 <div class="style-card-desc" id="styleGridDesc">Technical grid for diagrams and math</div>
                 <div class="style-card-footer">
-                  <span class="preview-badge hidden" id="previewBadgeGrid">Preview</span>
+                  <span class="preview-badge" id="previewBadgeGrid">Preview</span>
                   <span class="export-status-label" id="exportStatusGrid">In export</span>
                 </div>
               </div>
@@ -252,6 +252,7 @@
               </div>
 
             </div>
+            <button type="button" class="btn-secondary-sm" id="resetStylesBtn" style="margin-top: 0.85rem;">Reset to Defaults</button>
           </div>
 
           <!-- Section 02: Page & Layout -->
@@ -293,6 +294,7 @@
               </label>
               <input type="text" id="pageRangeInput" class="form-input" placeholder="All (e.g. 1-10, 2-, 15)">
             </div>
+            <button type="button" class="btn-secondary-sm" id="resetLayoutBtn" style="margin-top: 0.85rem;">Reset to Defaults</button>
           </div>
 
           <!-- Section 03: Cover & Header -->
@@ -334,6 +336,7 @@
                 <input type="text" id="studyTitleInput" class="form-input" placeholder="Subject or topic name (optional)">
               </div>
             </div>
+            <button type="button" class="btn-secondary-sm" id="resetCoverBtn" style="margin-top: 0.85rem;">Reset to Defaults</button>
           </div>
 
           <!-- Section 04: Print & Binding -->
@@ -389,6 +392,7 @@
                 <span class="toggle-label" id="ecoPrintLabelText">Ink-Saver Mode (Grayscale)</span>
               </label>
             </div>
+            <button type="button" class="btn-secondary-sm" id="resetPrintBtn" style="margin-top: 0.85rem;">Reset to Defaults</button>
           </div>
 
           <!-- Section 05: Margins & Spacing (Fine Tuning) -->

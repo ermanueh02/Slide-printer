@@ -364,8 +364,8 @@
     pdfjsDoc: null,
     numPages: 0,
     currentPage: 1,
-    style: 'lines',
-    selectedStyles: ['lines', 'grid'],
+    style: 'grid',
+    selectedStyles: ['grid', 'lines'],
     paperSize: 'a4',
     margin: 40,
     step: 14,
@@ -668,6 +668,10 @@
     setText('marginLabelText', dict.marginLabel);
     setText('densityLabelText', dict.densityLabel);
     setText('sepLabelText', dict.sepLabel);
+    setText('resetStylesBtn', dict.restoreBtn);
+    setText('resetLayoutBtn', dict.restoreBtn);
+    setText('resetCoverBtn', dict.restoreBtn);
+    setText('resetPrintBtn', dict.restoreBtn);
     setText('resetSettingsBtn', dict.restoreBtn);
 
     // Actions
@@ -1533,29 +1537,134 @@
       });
     }
 
-    if (resetSettingsBtn) {
-      resetSettingsBtn.addEventListener('click', () => {
+    // Section 01: Note Styles Reset
+    const resetStylesBtn = document.getElementById('resetStylesBtn');
+    if (resetStylesBtn) {
+      resetStylesBtn.addEventListener('click', () => {
+        state.style = 'grid';
+        state.selectedStyles = ['grid', 'lines'];
+        updateStyleSelectionUI();
+        savePresets();
+        renderCurrentPreview();
+      });
+    }
+
+    // Section 02: Page & Layout Reset
+    const resetLayoutBtn = document.getElementById('resetLayoutBtn');
+    if (resetLayoutBtn) {
+      resetLayoutBtn.addEventListener('click', () => {
         state.paperSize = 'a4';
-        state.margin = 40;
-        state.step = 14;
-        state.separation = 10;
         state.layout = '1-up';
+        state.pageRanges = '';
+
+        const paperSelect = document.getElementById('paperSelect');
+        const layout1UpBtn = document.getElementById('layout1UpBtn');
+        const layout2UpBtn = document.getElementById('layout2UpBtn');
+        const pageRangeInput = document.getElementById('pageRangeInput');
+
+        if (paperSelect) paperSelect.value = 'a4';
+        if (layout1UpBtn) layout1UpBtn.classList.add('active');
+        if (layout2UpBtn) layout2UpBtn.classList.remove('active');
+        if (pageRangeInput) pageRangeInput.value = '';
+
+        savePresets();
+        goToPage(1);
+        updatePageNavigatorUI();
+        renderCurrentPreview();
+      });
+    }
+
+    // Section 03: Cover & Header Reset
+    const resetCoverBtn = document.getElementById('resetCoverBtn');
+    if (resetCoverBtn) {
+      resetCoverBtn.addEventListener('click', () => {
         state.coverMode = 'none';
+        state.coverTemplate = 'atelier';
         state.coverTitle = '';
         state.coverAuthor = '';
-        state.pageRanges = '';
+        state.studyHeader = false;
+        state.studyTitle = '';
+
+        const coverSelect = document.getElementById('coverSelect');
+        const coverTemplateSelect = document.getElementById('coverTemplateSelect');
+        const coverMetaFields = document.getElementById('coverMetaFields');
+        const coverTitleInput = document.getElementById('coverTitleInput');
+        const coverAuthorInput = document.getElementById('coverAuthorInput');
+        const studyHeaderToggle = document.getElementById('studyHeaderToggle');
+        const studyHeaderField = document.getElementById('studyHeaderField');
+        const studyTitleInput = document.getElementById('studyTitleInput');
+
+        if (coverSelect) coverSelect.value = 'none';
+        if (coverTemplateSelect) coverTemplateSelect.value = 'atelier';
+        if (coverMetaFields) coverMetaFields.classList.add('hidden');
+        if (coverTitleInput) coverTitleInput.value = '';
+        if (coverAuthorInput) coverAuthorInput.value = '';
+        if (studyHeaderToggle) studyHeaderToggle.checked = false;
+        if (studyHeaderField) studyHeaderField.classList.add('hidden');
+        if (studyTitleInput) studyTitleInput.value = '';
+
+        updatePageNavigatorUI();
+        renderCurrentPreview();
+      });
+    }
+
+    // Section 04: Print & Binding Reset
+    const resetPrintBtn = document.getElementById('resetPrintBtn');
+    if (resetPrintBtn) {
+      resetPrintBtn.addEventListener('click', () => {
         state.hasGutter = false;
         state.gutter = 0;
         state.duplex = false;
-        state.studyHeader = false;
-        state.studyTitle = '';
         state.pageNumbers = true;
         state.pageNumberFormat = 'total';
         state.ecoPrint = false;
-        state.selectedStyles = ['lines', 'grid'];
 
-        applyStateToDOM();
-        updateStyleSelectionUI();
+        const gutterToggle = document.getElementById('gutterToggle');
+        const gutterDuplexOptions = document.getElementById('gutterDuplexOptions');
+        const duplexSimplexBtn = document.getElementById('duplexSimplexBtn');
+        const duplexDuplexBtn = document.getElementById('duplexDuplexBtn');
+        const pageNumberToggle = document.getElementById('pageNumberToggle');
+        const pageNumberFormatGroup = document.getElementById('pageNumberFormatGroup');
+        const pageFormatTotalBtn = document.getElementById('pageFormatTotalBtn');
+        const pageFormatSimpleBtn = document.getElementById('pageFormatSimpleBtn');
+        const ecoPrintToggle = document.getElementById('ecoPrintToggle');
+
+        if (gutterToggle) gutterToggle.checked = false;
+        if (gutterDuplexOptions) gutterDuplexOptions.classList.add('hidden');
+        if (duplexSimplexBtn) duplexSimplexBtn.classList.add('active');
+        if (duplexDuplexBtn) duplexDuplexBtn.classList.remove('active');
+        if (pageNumberToggle) pageNumberToggle.checked = true;
+        if (pageNumberFormatGroup) pageNumberFormatGroup.classList.remove('hidden');
+        if (pageFormatTotalBtn) pageFormatTotalBtn.classList.add('active');
+        if (pageFormatSimpleBtn) pageFormatSimpleBtn.classList.remove('active');
+        if (ecoPrintToggle) ecoPrintToggle.checked = false;
+
+        savePresets();
+        renderCurrentPreview();
+      });
+    }
+
+    // Section 05: Margins & Spacing Reset (ONLY margins & spacing)
+    if (resetSettingsBtn) {
+      resetSettingsBtn.addEventListener('click', () => {
+        state.margin = 40;
+        state.step = 14;
+        state.separation = 10;
+
+        const marginSlider = document.getElementById('marginSlider');
+        const marginValue = document.getElementById('marginValue');
+        const stepSlider = document.getElementById('stepSlider');
+        const stepValue = document.getElementById('stepValue');
+        const separationSlider = document.getElementById('separationSlider');
+        const separationValue = document.getElementById('separationValue');
+
+        if (marginSlider) marginSlider.value = 40;
+        if (marginValue) marginValue.textContent = '40 pt';
+        if (stepSlider) stepSlider.value = 14;
+        if (stepValue) stepValue.textContent = '14 pt';
+        if (separationSlider) separationSlider.value = 10;
+        if (separationValue) separationValue.textContent = '10 pt';
+
         savePresets();
         renderCurrentPreview();
       });

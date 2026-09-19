@@ -1,6 +1,6 @@
 """Slide-printer: Transform presentation slide PDFs into printable handouts with custom note sections."""
 
-__version__ = "4.2.0"
+__version__ = "4.3.0"
 
 from slide_printer.constants import PAPER_SIZES, STYLE_METADATA
 from slide_printer.core import SlidePrinter, resolve_style

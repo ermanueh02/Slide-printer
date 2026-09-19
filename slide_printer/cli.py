@@ -692,6 +692,12 @@ Examples:
         help="Generate an elegant editorial cover page at the beginning of the handout.",
     )
     parser.add_argument(
+        "--cover-template",
+        choices=["atelier", "george", "monograph", "bauhaus"],
+        default="atelier",
+        help="Editorial cover template: 'atelier' (Zara Home classic), 'george' (90s executive brief), 'monograph' (archival bookplate), 'bauhaus' (Swiss modernist) (default: atelier).",
+    )
+    parser.add_argument(
         "--cover-title",
         type=str,
         default=None,
@@ -872,6 +878,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         page_ranges=args.pages,
         grayscale=args.grayscale,
         cover_mode=cover_mode,
+        cover_template=getattr(args, "cover_template", "atelier"),
         cover_title=args.cover_title,
         cover_author=args.cover_author,
     )
