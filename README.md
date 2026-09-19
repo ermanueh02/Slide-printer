@@ -89,9 +89,11 @@ Each page of your presentation is placed on the sheet, followed by a customizabl
 ## 📦 Installation
 
 ### Prerequisites
+
 - Python 3.9 or newer.
 
 ### From Source
+
 Clone the repository and install in editable mode:
 
 ```bash
@@ -101,6 +103,7 @@ pip install -e .
 ```
 
 Or install dependencies directly:
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -159,13 +162,14 @@ slide-printer -i presentation.pdf -p letter -s grid --eco -O
 slide-printer --dry-run -i presentation.pdf -s all
 ```
 
-#### Available CLI Options:
+#### Available CLI Options
+
 | Flag | Description | Default |
-|------|-------------|---------|
+| ------ | ------------- | --------- |
 | `-i`, `--input` | Input PDF presentation(s), folder, or wildcards | *(Interactive)* |
 | `-s`, `--styles` | Note style(s): `grid`, `lines`, `dots`, `blank`, numbers (1–4), ranges (`1-2`), or `all` | `grid` |
-| `-o`, `--output-dir`| Directory where output PDFs are organized | `handouts` |
-| `-p`, `--paper-size`| Target paper: `a4`, `letter`, `legal`, `a3` | `a4` |
+| `-o`, `--output-dir` | Directory where output PDFs are organized | `handouts` |
+| `-p`, `--paper-size` | Target paper: `a4`, `letter`, `legal`, `a3` | `a4` |
 | `-m`, `--margin` | Page margin in points (1 pt = 1/72 in) | `40.0` |
 | `--step` | Distance between lines/dots in points | `14.0` |
 | `--layout`, `-2`, `--two-up` | Layout: `1-up` (1 slide) or `2-up` (2 slides per sheet) | `1-up` |

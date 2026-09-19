@@ -154,24 +154,38 @@
 
     // 2. Determine Slide Mapping
     const isCleanCover = (pageNum === 1 && coverMode === 'clean_first');
-    let slot1SlideNum = 1;
+    const selectedIndices = Array.isArray(options.selectedIndices) && options.selectedIndices.length > 0
+      ? options.selectedIndices
+      : Array.from({ length: pdfjsDoc.numPages }, (_, i) => i);
+
+    let slot1SlideNum = null;
     let slot2SlideNum = null;
+
+    let slideIndex1 = 0;
+    let slideIndex2 = null;
 
     if (coverMode === 'generate') {
       // Sheet 1 was cover; Sheet 2 has slide 1, etc.
       if (layout === '2-up') {
-        slot1SlideNum = (pageNum - 2) * 2 + 1;
-        slot2SlideNum = (pageNum - 2) * 2 + 2;
+        slideIndex1 = (pageNum - 2) * 2;
+        slideIndex2 = (pageNum - 2) * 2 + 1;
       } else {
-        slot1SlideNum = pageNum - 1;
+        slideIndex1 = pageNum - 2;
       }
     } else {
       if (layout === '2-up') {
-        slot1SlideNum = (pageNum - 1) * 2 + 1;
-        slot2SlideNum = (pageNum - 1) * 2 + 2;
+        slideIndex1 = (pageNum - 1) * 2;
+        slideIndex2 = (pageNum - 1) * 2 + 1;
       } else {
-        slot1SlideNum = pageNum;
+        slideIndex1 = pageNum - 1;
       }
+    }
+
+    if (slideIndex1 >= 0 && slideIndex1 < selectedIndices.length) {
+      slot1SlideNum = selectedIndices[slideIndex1] + 1;
+    }
+    if (slideIndex2 !== null && slideIndex2 >= 0 && slideIndex2 < selectedIndices.length) {
+      slot2SlideNum = selectedIndices[slideIndex2] + 1;
     }
 
     // 3. Study Header
@@ -183,12 +197,12 @@
       ctx.fillStyle = 'rgba(50, 50, 50, 0.85)';
       ctx.textAlign = 'left';
       ctx.textBaseline = 'alphabetic';
-      const label = studyTitle ? `TEMA / ASIGNATURA: ${studyTitle}` : 'TEMA / ASIGNATURA: _____________________________';
+      const label = studyTitle ? `SUBJECT / TOPIC: ${studyTitle}` : 'SUBJECT / TOPIC: _____________________________';
       ctx.fillText(label, xOffset, hY);
 
       ctx.font = '400 8px system-ui, -apple-system, sans-serif';
       ctx.textAlign = 'right';
-      ctx.fillText('FECHA: _____ / _____ / 20___', xOffset + availableWidth, hY);
+      ctx.fillText('DATE: _____ / _____ / 20___', xOffset + availableWidth, hY);
 
       ctx.strokeStyle = 'rgba(50, 50, 50, 0.25)';
       ctx.lineWidth = 0.5;
@@ -390,69 +404,259 @@
   }
 
   function renderPreviewEditorialCover(ctx, pw, ph, options) {
-    const inset = 36;
+    const tpl = (options.coverTemplate || 'atelier').toLowerCase();
+    const titleText = options.coverTitle || 'Presentation';
+    const dateFormatted = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-    // Refined double hairline frame (Zara Home timeless notebook style)
-    ctx.strokeStyle = 'rgba(40, 40, 40, 0.22)';
-    ctx.lineWidth = 0.6;
-    ctx.strokeRect(inset, inset, pw - 2 * inset, ph - 2 * inset);
+    if (tpl === 'george') {
+      // 1. George 90s Editorial / JFK Jr Executive Style
+      const m = 44;
+      ctx.strokeStyle = '#1e1e24';
+      ctx.lineWidth = 2.0;
+      ctx.beginPath();
+      ctx.moveTo(m, 58);
+      ctx.lineTo(pw - m, 58);
+      ctx.stroke();
 
-    ctx.strokeStyle = 'rgba(40, 40, 40, 0.10)';
-    ctx.lineWidth = 0.35;
-    ctx.strokeRect(inset + 6, inset + 6, pw - 2 * (inset + 6), ph - 2 * (inset + 6));
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(m, 63);
+      ctx.lineTo(pw - m, 63);
+      ctx.stroke();
 
-    // Top Header (understated notebook label, no software branding)
-    ctx.font = '500 7.5px "Times New Roman", Times, Georgia, serif';
-    ctx.fillStyle = 'rgba(80, 80, 80, 0.75)';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'alphabetic';
-    ctx.fillText('C U A D E R N O   D E   N O T A S', pw / 2, inset + 45);
+      // Header Folio
+      ctx.font = '700 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#1e1e24';
+      ctx.textAlign = 'left';
+      ctx.fillText('STUDY DOSSIER', m, 50);
 
-    ctx.strokeStyle = 'rgba(70, 70, 70, 0.20)';
-    ctx.lineWidth = 0.4;
-    ctx.beginPath();
-    ctx.moveTo(pw / 2 - 24, inset + 53);
-    ctx.lineTo(pw / 2 + 24, inset + 53);
-    ctx.stroke();
+      ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#6b7280';
+      ctx.textAlign = 'right';
+      ctx.fillText('EXECUTIVE BRIEF · 90S ARCHIVE', pw - m, 50);
 
-    // Presentation Title (classic serif, centered, word-wrapping)
-    const titleText = options.coverTitle || 'Presentación';
-    ctx.font = '700 24px "Times New Roman", Times, Georgia, "Newsreader", serif';
-    ctx.fillStyle = '#1c1917';
-    ctx.textAlign = 'center';
+      // Display Title (Authoritative, Left-aligned)
+      ctx.font = '700 28px "Times New Roman", Times, Georgia, "Newsreader", serif';
+      ctx.fillStyle = '#0f0f11';
+      ctx.textAlign = 'left';
+      const endTitleY = drawWrappedText(ctx, titleText, m, ph * 0.36, pw - 2 * m - 20, 36);
 
-    const maxTextW = pw - 2 * inset - 60;
-    const titleStartY = ph * 0.40;
-    const endTitleY = drawWrappedText(ctx, titleText, pw / 2, titleStartY, maxTextW, 31);
+      // Subtitle / Subject
+      let dividerY = endTitleY + 24;
+      if (options.studyTitle) {
+        ctx.font = 'italic 13.5px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#4b5563';
+        ctx.fillText(options.studyTitle, m, dividerY);
+        dividerY += 28;
+      }
 
-    // Optional Subtitle / Subject (classic serif italic)
-    if (options.studyTitle) {
-      ctx.font = 'italic 12.5px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = '#57534e';
-      ctx.fillText(options.studyTitle, pw / 2, endTitleY + 24);
-    }
+      // Sleek short divider rule
+      ctx.strokeStyle = 'rgba(30, 30, 36, 0.25)';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(m, dividerY);
+      ctx.lineTo(m + 80, dividerY);
+      ctx.stroke();
 
-    // Delicate accent rule between title and metadata
-    const dividerY = endTitleY + (options.studyTitle ? 44 : 28);
-    ctx.strokeStyle = 'rgba(70, 70, 70, 0.18)';
-    ctx.lineWidth = 0.4;
-    ctx.beginPath();
-    ctx.moveTo(pw / 2 - 32, dividerY);
-    ctx.lineTo(pw / 2 + 32, dividerY);
-    ctx.stroke();
+      // Structured metadata grid at bottom
+      const metaY = ph * 0.82;
+      ctx.strokeStyle = '#1e1e24';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(m, metaY - 32);
+      ctx.lineTo(pw - m, metaY - 32);
+      ctx.stroke();
 
-    // Author & Date Block (warm, quiet typography)
-    let metaY = ph * 0.72;
-    if (options.coverAuthor) {
+      ctx.font = '700 7.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#4b5563';
+      ctx.textAlign = 'left';
+      ctx.fillText('AUTHOR / STUDENT', m, metaY - 18);
+
       ctx.font = '500 10.5px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = '#292524';
-      ctx.fillText(options.coverAuthor, pw / 2, metaY);
-      metaY += 18;
-    }
+      ctx.fillStyle = '#111827';
+      ctx.fillText(options.coverAuthor || 'General Notes', m, metaY);
 
-    ctx.font = 'italic 9px "Times New Roman", Times, Georgia, serif';
-    ctx.fillStyle = '#78716c';
-    ctx.fillText(new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }), pw / 2, metaY);
+      const col2X = m + (pw - 2 * m) * 0.52;
+      ctx.font = '700 7.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#4b5563';
+      ctx.fillText('DATE / COMPILATION', col2X, metaY - 18);
+
+      ctx.font = '500 10.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#111827';
+      ctx.fillText(dateFormatted, col2X, metaY);
+
+    } else if (tpl === 'monograph') {
+      // 2. Archival Monograph (Heritage Stationery Bookplate)
+      const inset = 34;
+      ctx.strokeStyle = 'rgba(50, 50, 50, 0.18)';
+      ctx.lineWidth = 0.5;
+      ctx.strokeRect(inset, inset, pw - 2 * inset, ph - 2 * inset);
+
+      // Centered elegant cartouche
+      const boxW = pw - 2 * inset - 70;
+      const boxH = 190;
+      const boxX = (pw - boxW) / 2;
+      const boxY = ph * 0.36;
+
+      ctx.strokeStyle = 'rgba(40, 40, 44, 0.35)';
+      ctx.lineWidth = 0.75;
+      ctx.strokeRect(boxX, boxY, boxW, boxH);
+
+      ctx.strokeStyle = 'rgba(40, 40, 44, 0.14)';
+      ctx.lineWidth = 0.35;
+      ctx.strokeRect(boxX + 4.5, boxY + 4.5, boxW - 9, boxH - 9);
+
+      // Cartouche Header
+      ctx.font = '500 8px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = 'rgba(70, 70, 70, 0.85)';
+      ctx.textAlign = 'center';
+      ctx.fillText('M O N O G R A P H   ·   N O T E S', pw / 2, boxY + 28);
+
+      ctx.strokeStyle = 'rgba(80, 80, 80, 0.22)';
+      ctx.lineWidth = 0.35;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2 - 20, boxY + 35);
+      ctx.lineTo(pw / 2 + 20, boxY + 35);
+      ctx.stroke();
+
+      // Title inside cartouche
+      ctx.font = '700 22px "Times New Roman", Times, Georgia, "Newsreader", serif';
+      ctx.fillStyle = '#111827';
+      ctx.textAlign = 'center';
+      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, boxY + 80, boxW - 36, 28);
+
+      if (options.studyTitle) {
+        ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#4b5563';
+        ctx.fillText(options.studyTitle, pw / 2, Math.max(endTitleY + 22, boxY + 140));
+      }
+
+      // Bottom metadata
+      let metaY = ph * 0.78;
+      if (options.coverAuthor) {
+        ctx.font = '500 10.5px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#1f2937';
+        ctx.fillText(options.coverAuthor, pw / 2, metaY);
+        metaY += 18;
+      }
+      ctx.font = 'italic 9px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#6b7280';
+      ctx.fillText(`Date: ${dateFormatted}`, pw / 2, metaY);
+
+    } else if (tpl === 'bauhaus') {
+      // 3. Swiss Modernist Bauhaus Layout
+      const m = 48;
+      const vertX = m + 28;
+
+      ctx.strokeStyle = 'rgba(30, 30, 36, 0.18)';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(vertX, m);
+      ctx.lineTo(vertX, ph - m);
+      ctx.stroke();
+
+      const hdrY = m + 32;
+      ctx.beginPath();
+      ctx.moveTo(m, hdrY);
+      ctx.lineTo(pw - m, hdrY);
+      ctx.stroke();
+
+      ctx.font = '700 8px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#1f2937';
+      ctx.textAlign = 'left';
+      ctx.fillText('VOLUME I  ·  STUDY COMPENDIUM', vertX + 14, hdrY - 10);
+
+      // Large modern title
+      ctx.font = '700 26px "Times New Roman", Times, Georgia, "Newsreader", serif';
+      ctx.fillStyle = '#0f0f11';
+      ctx.textAlign = 'left';
+      const endTitleY = drawWrappedText(ctx, titleText, vertX + 14, ph * 0.38, pw - vertX - m - 20, 34);
+
+      if (options.studyTitle) {
+        ctx.font = 'italic 13px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#4b5563';
+        ctx.fillText(options.studyTitle, vertX + 14, endTitleY + 24);
+      }
+
+      // Structured metadata lines
+      const metaY = ph * 0.76;
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#6b7280';
+      ctx.fillText('STUDENT:', vertX + 14, metaY);
+      ctx.font = '500 10.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#111827';
+      ctx.fillText(options.coverAuthor || 'General Study Notes', vertX + 76, metaY);
+
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#6b7280';
+      ctx.fillText('DATE:', vertX + 14, metaY + 22);
+      ctx.font = '500 10.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#111827';
+      ctx.fillText(dateFormatted, vertX + 76, metaY + 22);
+
+    } else {
+      // Default: Atelier Notebook (Zara Home Classic)
+      const inset = 36;
+      ctx.strokeStyle = 'rgba(40, 40, 40, 0.22)';
+      ctx.lineWidth = 0.6;
+      ctx.strokeRect(inset, inset, pw - 2 * inset, ph - 2 * inset);
+
+      ctx.strokeStyle = 'rgba(40, 40, 40, 0.10)';
+      ctx.lineWidth = 0.35;
+      ctx.strokeRect(inset + 6, inset + 6, pw - 2 * (inset + 6), ph - 2 * (inset + 6));
+
+      // Top Header
+      ctx.font = '500 7.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = 'rgba(80, 80, 80, 0.75)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText('N O T E B O O K', pw / 2, inset + 45);
+
+      ctx.strokeStyle = 'rgba(70, 70, 70, 0.20)';
+      ctx.lineWidth = 0.4;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2 - 24, inset + 53);
+      ctx.lineTo(pw / 2 + 24, inset + 53);
+      ctx.stroke();
+
+      // Presentation Title
+      ctx.font = '700 24px "Times New Roman", Times, Georgia, "Newsreader", serif';
+      ctx.fillStyle = '#1c1917';
+      ctx.textAlign = 'center';
+
+      const maxTextW = pw - 2 * inset - 60;
+      const titleStartY = ph * 0.40;
+      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, titleStartY, maxTextW, 31);
+
+      // Optional Subtitle
+      if (options.studyTitle) {
+        ctx.font = 'italic 12.5px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#57534e';
+        ctx.fillText(options.studyTitle, pw / 2, endTitleY + 24);
+      }
+
+      // Delicate accent rule
+      const dividerY = endTitleY + (options.studyTitle ? 44 : 28);
+      ctx.strokeStyle = 'rgba(70, 70, 70, 0.18)';
+      ctx.lineWidth = 0.4;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2 - 32, dividerY);
+      ctx.lineTo(pw / 2 + 32, dividerY);
+      ctx.stroke();
+
+      // Author & Date Block
+      let metaY = ph * 0.72;
+      if (options.coverAuthor) {
+        ctx.font = '500 10.5px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#292524';
+        ctx.fillText(options.coverAuthor, pw / 2, metaY);
+        metaY += 18;
+      }
+
+      ctx.font = 'italic 9px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#78716c';
+      ctx.fillText(dateFormatted, pw / 2, metaY);
+    }
   }
 
   return {

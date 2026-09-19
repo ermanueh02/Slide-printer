@@ -121,7 +121,7 @@
 }
 
 html, body {
-  overflow-x: hidden;
+  overflow-x: clip;
   width: 100%;
   max-width: 100vw;
 }
@@ -727,7 +727,7 @@ body {
 /* Workspace Two-Column Layout (Desktop) */
 .workspace-layout {
   display: grid;
-  grid-template-columns: 400px 1fr;
+  grid-template-columns: 420px 1fr;
   gap: 2rem;
   align-items: start;
 }
@@ -737,6 +737,32 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+}
+
+@media (min-width: 961px) {
+  .controls-sidebar {
+    max-height: calc(100vh - 5.5rem);
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    overscroll-behavior: contain;
+  }
+}
+
+.controls-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.controls-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.controls-sidebar::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: var(--radius-full);
+}
+
+.controls-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }
 
 /* Section Labels */
@@ -1271,33 +1297,42 @@ details.settings-details summary {
 /* Preview Area */
 .preview-pane {
   position: sticky;
-  top: 4.5rem;
+  top: 4.75rem;
+  align-self: start;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   width: 100%;
+  max-height: calc(100vh - 5.5rem);
 }
 
 .paper-container {
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 1.5rem;
+  padding: 1rem;
   box-shadow: var(--shadow-paper);
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   max-width: 100%;
   width: 100%;
+  max-height: calc(100vh - 9rem);
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 #previewCanvas {
   display: block;
   max-width: 100%;
+  max-height: calc(100vh - 11.5rem);
+  width: auto !important;
   height: auto !important;
+  object-fit: contain;
   border: 1px solid var(--border-subtle);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 /* Page Navigator Bar */

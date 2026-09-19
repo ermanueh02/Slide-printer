@@ -51,8 +51,12 @@
       styleDotsDesc: "Subtle dot matrix for flexible notes",
       styleBlankTitle: "Blank",
       styleBlankDesc: "Clean open space with subtle divider",
-      paperLabel: "Page Format",
+      paperLabel: "Page & Layout",
       section2: "02",
+      coverSectionLabel: "Cover & Header",
+      section3: "03",
+      printSectionLabel: "Print & Binding",
+      section4: "04",
       paperSelectLabel: "Paper Size",
       paperA4: "DIN A4 (210 × 297 mm)",
       paperLetter: "US Letter (8.5 × 11 in)",
@@ -100,10 +104,15 @@
       optCoverNone: "Standard (No cover)",
       optCoverCleanFirst: "1st slide as cover (No notes)",
       optCoverGenerate: "Generate editorial cover",
+      coverTemplateLabel: "Cover Template Style",
+      optTemplateAtelier: "Atelier Notebook (Zara Home Classic)",
+      optTemplateGeorge: "George 90s (JFK Jr Executive)",
+      optTemplateMonograph: "Archival Monograph (Heritage Bookplate)",
+      optTemplateBauhaus: "Swiss Modernist (Mid-Century Editorial)",
       coverTitlePlaceholder: "Cover title",
       coverAuthorPlaceholder: "Author / Student / Subject",
       pageRangeLabel: "Slide Range",
-      pageRangePlaceholder: "All (e.g. 1-10, 15)",
+      pageRangePlaceholder: "All (e.g. 1-10, 2-, 15)",
       gutterLabel: "Binder / Ring margin (+11 mm)",
       duplexSimplex: "Single-sided (Simplex)",
       duplexDuplex: "Double-sided (Duplex)",
@@ -205,6 +214,11 @@
       optCoverNone: "Sin portada especial",
       optCoverCleanFirst: "1ª diapositiva como portada (sin notas)",
       optCoverGenerate: "Generar portada nueva",
+      coverTemplateLabel: "Estilo de portada editorial",
+      optTemplateAtelier: "Cuaderno Atelier (Zara Home / Clásico)",
+      optTemplateGeorge: "George años 90 (JFK Jr / Ejecutivo)",
+      optTemplateMonograph: "Monografía de archivo (Ex libris)",
+      optTemplateBauhaus: "Modernismo suizo (Editorial mid-century)",
       coverTitlePlaceholder: "Título para la portada",
       coverAuthorPlaceholder: "Autor / Estudiante / Asignatura",
       pageRangeLabel: "Rango de diapositivas",
@@ -310,6 +324,11 @@
       optCoverNone: "Sen portada especial",
       optCoverCleanFirst: "1ª diapositiva como portada (sen notas)",
       optCoverGenerate: "Xerar portada nova",
+      coverTemplateLabel: "Estilo de portada editorial",
+      optTemplateAtelier: "Caderno Atelier (Zara Home / Clásico)",
+      optTemplateGeorge: "George anos 90 (JFK Jr / Executivo)",
+      optTemplateMonograph: "Monografía de arquivo (Ex libris)",
+      optTemplateBauhaus: "Modernismo suízo (Editorial mid-century)",
       coverTitlePlaceholder: "Título para a portada",
       coverAuthorPlaceholder: "Autor / Estudante / Materia",
       pageRangeLabel: "Rango de diapositivas",
@@ -353,6 +372,7 @@
     separation: 10,
     layout: '1-up',
     coverMode: 'none',
+    coverTemplate: 'atelier',
     coverTitle: '',
     coverAuthor: '',
     pageRanges: '',
@@ -379,13 +399,9 @@
         step: state.step,
         separation: state.separation,
         layout: state.layout,
-        coverMode: state.coverMode,
-        coverTitle: state.coverTitle,
-        coverAuthor: state.coverAuthor,
+        coverTemplate: state.coverTemplate,
         hasGutter: state.hasGutter,
         duplex: state.duplex,
-        studyHeader: state.studyHeader,
-        studyTitle: state.studyTitle,
         pageNumbers: state.pageNumbers,
         pageNumberFormat: state.pageNumberFormat,
         ecoPrint: state.ecoPrint,
@@ -407,16 +423,12 @@
       if (typeof data.step === 'number') state.step = data.step;
       if (typeof data.separation === 'number') state.separation = data.separation;
       if (data.layout) state.layout = data.layout;
-      if (data.coverMode) state.coverMode = data.coverMode;
-      if (typeof data.coverTitle === 'string') state.coverTitle = data.coverTitle;
-      if (typeof data.coverAuthor === 'string') state.coverAuthor = data.coverAuthor;
+      if (data.coverTemplate) state.coverTemplate = data.coverTemplate;
       if (typeof data.hasGutter === 'boolean') {
         state.hasGutter = data.hasGutter;
         state.gutter = state.hasGutter ? 30 : 0;
       }
       if (typeof data.duplex === 'boolean') state.duplex = data.duplex;
-      if (typeof data.studyHeader === 'boolean') state.studyHeader = data.studyHeader;
-      if (typeof data.studyTitle === 'string') state.studyTitle = data.studyTitle;
       if (typeof data.pageNumbers === 'boolean') state.pageNumbers = data.pageNumbers;
       if (data.pageNumberFormat) state.pageNumberFormat = data.pageNumberFormat;
       if (typeof data.ecoPrint === 'boolean') state.ecoPrint = data.ecoPrint;
@@ -451,10 +463,12 @@
 
     // Cover
     const coverSelect = document.getElementById('coverSelect');
+    const coverTemplateSelect = document.getElementById('coverTemplateSelect');
     const coverMetaFields = document.getElementById('coverMetaFields');
     const coverTitleInput = document.getElementById('coverTitleInput');
     const coverAuthorInput = document.getElementById('coverAuthorInput');
     if (coverSelect) coverSelect.value = state.coverMode;
+    if (coverTemplateSelect) coverTemplateSelect.value = state.coverTemplate || 'atelier';
     if (coverMetaFields) coverMetaFields.classList.toggle('hidden', state.coverMode !== 'generate');
     if (coverTitleInput) coverTitleInput.value = state.coverTitle;
     if (coverAuthorInput) coverAuthorInput.value = state.coverAuthor;
@@ -515,27 +529,7 @@
       // localStorage may be restricted or unavailable
     }
 
-    // Inspect user and system language preferences
-    const candidates = [];
-    try {
-      if (Array.isArray(navigator.languages) && navigator.languages.length > 0) {
-        candidates.push(...navigator.languages);
-      }
-      if (navigator.language) candidates.push(navigator.language);
-      if (navigator.userLanguage) candidates.push(navigator.userLanguage);
-      if (navigator.browserLanguage) candidates.push(navigator.browserLanguage);
-    } catch (e) {
-      // Ignore navigator access issues
-    }
-
-    for (const raw of candidates) {
-      if (!raw || typeof raw !== 'string') continue;
-      const clean = raw.toLowerCase().trim();
-      if (clean.startsWith('gl') || clean === 'gl') return 'gl';
-      if (clean.startsWith('es') || clean === 'es') return 'es';
-    }
-
-    // If neither Spanish nor Galician, default to English
+    // Default to English as requested
     return 'en';
   }
 
@@ -615,8 +609,12 @@
     setText('selectLinesGridBtn', dict.quickLinesGrid);
     setText('selectOnlyCurrentBtn', dict.quickOnlyCurrent);
 
-    setText('paperSectionLabel', dict.paperLabel);
-    setText('paperSectionSub', dict.section2);
+    setText('paperSectionLabel', dict.paperLabel || "Page & Layout");
+    setText('paperSectionSub', dict.section2 || "02");
+    setText('coverSectionLabel', dict.coverSectionLabel || "Cover & Header");
+    setText('coverSectionSub', dict.section3 || "03");
+    setText('printSectionLabel', dict.printSectionLabel || "Print & Binding");
+    setText('printSectionSub', dict.section4 || "04");
     setText('paperSelectLabelText', dict.paperSelectLabel);
     setText('optA4', dict.paperA4);
     setText('optLetter', dict.paperLetter);
@@ -633,6 +631,11 @@
     setText('optCoverNone', dict.optCoverNone);
     setText('optCoverCleanFirst', dict.optCoverCleanFirst);
     setText('optCoverGenerate', dict.optCoverGenerate);
+    setText('coverTemplateLabelText', dict.coverTemplateLabel);
+    setText('optTemplateAtelier', dict.optTemplateAtelier);
+    setText('optTemplateGeorge', dict.optTemplateGeorge);
+    setText('optTemplateMonograph', dict.optTemplateMonograph);
+    setText('optTemplateBauhaus', dict.optTemplateBauhaus);
     const coverTitleInput = document.getElementById('coverTitleInput');
     if (coverTitleInput && dict.coverTitlePlaceholder) coverTitleInput.placeholder = dict.coverTitlePlaceholder;
     const coverAuthorInput = document.getElementById('coverAuthorInput');
@@ -1041,11 +1044,31 @@
     if (metaFileSize) metaFileSize.textContent = item.sizeStr;
     if (metaAspectRatio) metaAspectRatio.textContent = item.ratioText;
 
-    if (state.coverMode === 'generate' && !state.coverTitle) {
-      state.coverTitle = getBaseFileName();
-      const coverTitleInput = document.getElementById('coverTitleInput');
-      if (coverTitleInput) coverTitleInput.value = state.coverTitle;
-    }
+    // Reset document-specific fields so past notes/titles (like 'simulación') never pollute a new file
+    state.studyTitle = '';
+    state.coverTitle = '';
+    state.coverAuthor = '';
+    state.pageRanges = '';
+    state.coverMode = 'none';
+    state.studyHeader = false;
+
+    const coverSelect = document.getElementById('coverSelect');
+    const coverMetaFields = document.getElementById('coverMetaFields');
+    const coverTitleInput = document.getElementById('coverTitleInput');
+    const coverAuthorInput = document.getElementById('coverAuthorInput');
+    const studyHeaderToggle = document.getElementById('studyHeaderToggle');
+    const studyHeaderField = document.getElementById('studyHeaderField');
+    const studyTitleInput = document.getElementById('studyTitleInput');
+    const pageRangeInput = document.getElementById('pageRangeInput');
+
+    if (coverSelect) coverSelect.value = 'none';
+    if (coverMetaFields) coverMetaFields.classList.add('hidden');
+    if (coverTitleInput) coverTitleInput.value = '';
+    if (coverAuthorInput) coverAuthorInput.value = '';
+    if (studyHeaderToggle) studyHeaderToggle.checked = false;
+    if (studyHeaderField) studyHeaderField.classList.add('hidden');
+    if (studyTitleInput) studyTitleInput.value = '';
+    if (pageRangeInput) pageRangeInput.value = '';
 
     updatePageNavigatorUI();
     renderBatchTabs();
@@ -1314,6 +1337,7 @@
 
     // Cover Page
     const coverSelect = document.getElementById('coverSelect');
+    const coverTemplateSelect = document.getElementById('coverTemplateSelect');
     const coverMetaFields = document.getElementById('coverMetaFields');
     const coverTitleInput = document.getElementById('coverTitleInput');
     const coverAuthorInput = document.getElementById('coverAuthorInput');
@@ -1335,6 +1359,15 @@
           renderCurrentPreview();
         }
         savePresets();
+      });
+    }
+    if (coverTemplateSelect) {
+      coverTemplateSelect.addEventListener('change', (e) => {
+        state.coverTemplate = e.target.value;
+        savePresets();
+        if (state.coverMode === 'generate') {
+          renderCurrentPreview();
+        }
       });
     }
     if (coverTitleInput) {
@@ -1361,6 +1394,9 @@
     if (pageRangeInput) {
       pageRangeInput.addEventListener('input', (e) => {
         state.pageRanges = e.target.value;
+        state.currentPage = 1;
+        updatePageNavigatorUI();
+        renderCurrentPreview();
       });
     }
 
@@ -1527,8 +1563,14 @@
   }
 
   // --- Page Navigation ---
+  function getSelectedSlideIndices() {
+    if (!state.numPages) return [];
+    return SlidePrinterEngine.parsePageRanges(state.pageRanges, state.numPages);
+  }
+
   function getTotalSheets() {
-    const n = state.numPages || 1;
+    const indices = getSelectedSlideIndices();
+    const n = indices.length > 0 ? indices.length : (state.numPages || 1);
     const slideSheets = state.layout === '2-up' ? Math.ceil(n / 2) : n;
     return state.coverMode === 'generate' ? slideSheets + 1 : slideSheets;
   }
@@ -1626,6 +1668,7 @@
     const paperDims = SlidePrinterEngine.PAPER_SIZES[state.paperSize] || SlidePrinterEngine.PAPER_SIZES.a4;
     const totalSheets = getTotalSheets();
 
+    const selectedIndices = getSelectedSlideIndices();
     SlidePrinterPreview.renderPreview(
       previewCanvas,
       state.pdfjsDoc,
@@ -1646,9 +1689,11 @@
         studyHeader: state.studyHeader,
         studyTitle: state.studyTitle,
         coverMode: state.coverMode,
-        coverTitle: state.coverTitle,
+        coverTemplate: state.coverTemplate || 'atelier',
+        coverTitle: state.coverTitle || getBaseFileName(),
         coverAuthor: state.coverAuthor,
         ecoPrint: state.ecoPrint,
+        selectedIndices: selectedIndices,
       }
     );
   }
@@ -1726,6 +1771,7 @@
               gutter: state.hasGutter ? 30 : 0,
               duplex: state.duplex,
               coverMode: state.coverMode,
+              coverTemplate: state.coverTemplate || 'atelier',
               coverTitle: state.coverTitle,
               coverAuthor: state.coverAuthor,
               pageRanges: state.pageRanges,
@@ -1782,6 +1828,7 @@
           gutter: state.hasGutter ? 30 : 0,
           duplex: state.duplex,
           coverMode: state.coverMode,
+          coverTemplate: state.coverTemplate || 'atelier',
           coverTitle: state.coverTitle,
           coverAuthor: state.coverAuthor,
           pageRanges: state.pageRanges,
@@ -1851,6 +1898,7 @@
             gutter: state.hasGutter ? 30 : 0,
             duplex: state.duplex,
             coverMode: state.coverMode,
+            coverTemplate: state.coverTemplate || 'atelier',
             coverTitle: state.coverTitle,
             coverAuthor: state.coverAuthor,
             pageRanges: state.pageRanges,
@@ -1958,6 +2006,7 @@
           gutter: state.hasGutter ? 30 : 0,
           duplex: state.duplex,
           coverMode: state.coverMode,
+          coverTemplate: state.coverTemplate || 'atelier',
           coverTitle: state.coverTitle,
           coverAuthor: state.coverAuthor,
           pageRanges: state.pageRanges,

@@ -52,10 +52,13 @@ def parse_page_ranges(range_str: Optional[str], total_pages: int) -> List[int]:
             continue
         if "-" in clean:
             subparts = clean.split("-", 1)
+            start_str = subparts[0].strip()
+            end_str = subparts[1].strip()
             try:
-                start = int(subparts[0].strip())
-                end = int(subparts[1].strip())
-                for p in range(start, end + 1):
+                start = 1 if not start_str else int(start_str)
+                end = total_pages if not end_str else int(end_str)
+                step = 1 if start <= end else -1
+                for p in range(start, end + step, step):
                     idx = p - 1
                     if 0 <= idx < total_pages and idx not in indices:
                         indices.append(idx)
@@ -136,6 +139,7 @@ class SlidePrinter:
         cover_mode: str = DEFAULT_COVER_MODE,
         cover_title: Optional[str] = None,
         cover_author: Optional[str] = None,
+        cover_template: str = "atelier",
     ):
         if isinstance(paper_size, str):
             paper_norm = paper_size.lower()
@@ -165,6 +169,7 @@ class SlidePrinter:
         self.cover_mode = str(cover_mode).lower()
         self.cover_title = cover_title
         self.cover_author = cover_author
+        self.cover_template = str(cover_template).lower()
 
     def convert_slide_page(
         self,
@@ -405,7 +410,7 @@ class SlidePrinter:
 
             # 1. Prepend generated cover page if requested
             if has_gen_cover:
-                today_str = datetime.date.today().strftime("%d/%m/%Y")
+                today_str = datetime.date.today().strftime("%B %d, %Y")
                 cover_title = self.cover_title or base_name.replace("_", " ").title()
                 cover_page = generate_cover_page(
                     page_size=self.paper_dimensions,
@@ -415,6 +420,7 @@ class SlidePrinter:
                     date_str=today_str,
                     num_slides=len(selected_indices),
                     grayscale=self.grayscale,
+                    template=self.cover_template,
                 )
                 writer.add_page(cover_page)
 

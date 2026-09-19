@@ -208,8 +208,11 @@ def parse_index_ranges(expr: str, max_count: int) -> Optional[List[int]]:
     for part in parts:
         if "-" in part:
             sub = [s.strip() for s in part.split("-")]
-            if len(sub) == 2 and sub[0].isdigit() and sub[1].isdigit():
-                start, end = int(sub[0]), int(sub[1])
+            if len(sub) == 2 and (sub[0].isdigit() or sub[0] == "") and (sub[1].isdigit() or sub[1] == ""):
+                if not sub[0] and not sub[1]:
+                    return None
+                start = 1 if not sub[0] else int(sub[0])
+                end = max_count if not sub[1] else int(sub[1])
                 step = 1 if start <= end else -1
                 for val in range(start, end + step, step):
                     if 1 <= val <= max_count:

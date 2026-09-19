@@ -54,10 +54,15 @@
       if (!clean) continue;
       if (clean.includes('-')) {
         const sub = clean.split('-');
-        const start = parseInt(sub[0].trim(), 10);
-        const end = parseInt(sub[1].trim(), 10);
+        const startStr = sub[0].trim();
+        const endStr = sub[1] !== undefined ? sub[1].trim() : '';
+        const start = startStr === '' ? 1 : parseInt(startStr, 10);
+        const end = endStr === '' ? totalPages : parseInt(endStr, 10);
         if (!isNaN(start) && !isNaN(end)) {
-          for (let p = start; p <= end; p++) {
+          const s = Math.max(1, start);
+          const e = Math.min(totalPages, end);
+          const step = s <= e ? 1 : -1;
+          for (let p = s; step > 0 ? p <= e : p >= e; p += step) {
             const idx = p - 1;
             if (idx >= 0 && idx < totalPages && !indices.includes(idx)) {
               indices.push(idx);
@@ -354,8 +359,8 @@
     const effectiveTopMargin = topMargin !== undefined ? topMargin : DEFAULT_MARGIN;
     const headerY = page.getHeight() - effectiveTopMargin + 4;
 
-    const leftText = title ? `TEMA / ASIGNATURA: ${title}` : 'TEMA / ASIGNATURA: _____________________________';
-    const rightText = 'FECHA: _____ / _____ / 20___';
+    const leftText = title ? `SUBJECT / TOPIC: ${title}` : 'SUBJECT / TOPIC: _____________________________';
+    const rightText = 'DATE: _____ / _____ / 20___';
 
     if (font) {
       page.drawText(leftText, {
@@ -388,7 +393,7 @@
   }
 
   /**
-   * Generates an elegant, timeless notebook cover page (Zara Home aesthetic).
+   * Generates an editorial mid-century modern notebook cover page in English.
    */
   async function generateCoverPage(outDoc, options, fontMap) {
     const [pw, ph] = options.paperDimensions || PAPER_SIZES.a4;
@@ -398,132 +403,425 @@
     const timesBold = fontMap.timesBold || fontMap.helveticaBold;
     const timesItalic = fontMap.timesItalic || fontMap.helveticaFont;
 
-    const inset = 36;
-    page.drawRectangle({
-      x: inset,
-      y: inset,
-      width: pw - 2 * inset,
-      height: ph - 2 * inset,
-      borderColor: rgb(0.25, 0.25, 0.25),
-      borderWidth: 0.6,
-      borderOpacity: 0.22,
-      color: rgb(1, 1, 1),
-    });
+    const tpl = (options.coverTemplate || 'atelier').toLowerCase();
+    const titleText = (options.title || 'Presentation').trim();
+    const todayStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-    const innerInset = 42;
-    page.drawRectangle({
-      x: innerInset,
-      y: innerInset,
-      width: pw - 2 * innerInset,
-      height: ph - 2 * innerInset,
-      borderColor: rgb(0.25, 0.25, 0.25),
-      borderWidth: 0.35,
-      borderOpacity: 0.10,
-    });
-
-    // Top Super-header (understated notebook label, no software branding)
-    if (timesFont) {
-      const superHdr = 'C U A D E R N O   D E   N O T A S';
-      const superW = timesFont.widthOfTextAtSize(superHdr, 7.5);
-      page.drawText(superHdr, {
-        x: (pw - superW) / 2,
-        y: ph - 95,
-        size: 7.5,
-        font: timesFont,
-        color: rgb(0.42, 0.42, 0.42),
-        opacity: 0.75,
-      });
-    }
-
-    page.drawLine({
-      start: { x: pw / 2 - 24, y: ph - 105 },
-      end: { x: pw / 2 + 24, y: ph - 105 },
-      thickness: 0.4,
-      color: rgb(0.3, 0.3, 0.3),
-      opacity: 0.20,
-    });
-
-    // Title (classic serif, centered)
-    const titleText = (options.title || 'Presentación').trim();
-    let endTitleY = ph * 0.58;
-    if (timesBold) {
-      const titleSize = 24;
-      const titleW = timesBold.widthOfTextAtSize(titleText, titleSize);
-      endTitleY = ph * 0.58;
-      page.drawText(titleText, {
-        x: (pw - Math.min(titleW, pw - 80)) / 2,
-        y: endTitleY,
-        size: titleSize,
-        font: timesBold,
+    if (tpl === 'george') {
+      // 1. George 90s Editorial / JFK Jr Executive Style
+      const m = 44;
+      page.drawLine({
+        start: { x: m, y: ph - 58 },
+        end: { x: pw - m, y: ph - 58 },
+        thickness: 2.0,
         color: rgb(0.12, 0.12, 0.14),
       });
-    }
-
-    // Subtitle / Subject (classic serif italic)
-    if (options.subtitle && timesItalic) {
-      const subW = timesItalic.widthOfTextAtSize(options.subtitle, 12.5);
-      page.drawText(options.subtitle, {
-        x: (pw - subW) / 2,
-        y: endTitleY - 26,
-        size: 12.5,
-        font: timesItalic,
-        color: rgb(0.32, 0.32, 0.34),
-        opacity: 0.9,
+      page.drawLine({
+        start: { x: m, y: ph - 63 },
+        end: { x: pw - m, y: ph - 63 },
+        thickness: 0.5,
+        color: rgb(0.12, 0.12, 0.14),
       });
-    }
 
-    // Delicate accent rule between title and metadata
-    const dividerY = endTitleY - (options.subtitle ? 44 : 26);
-    page.drawLine({
-      start: { x: pw / 2 - 32, y: dividerY },
-      end: { x: pw / 2 + 32, y: dividerY },
-      thickness: 0.4,
-      color: rgb(0.3, 0.3, 0.3),
-      opacity: 0.18,
-    });
+      if (timesBold) {
+        page.drawText('STUDY DOSSIER', {
+          x: m,
+          y: ph - 50,
+          size: 8.5,
+          font: timesBold,
+          color: rgb(0.15, 0.15, 0.18),
+        });
+      }
+      if (timesItalic) {
+        const rightLabel = 'EXECUTIVE BRIEF · 90S ARCHIVE';
+        const rightW = timesItalic.widthOfTextAtSize(rightLabel, 8.0);
+        page.drawText(rightLabel, {
+          x: pw - m - rightW,
+          y: ph - 50,
+          size: 8.0,
+          font: timesItalic,
+          color: rgb(0.45, 0.45, 0.48),
+        });
+      }
 
-    // Metadata block (quiet, elegant typography)
-    let metaY = ph * 0.26;
-    if (options.author && timesFont) {
-      const authStr = options.author;
-      const authW = timesFont.widthOfTextAtSize(authStr, 10.5);
-      page.drawText(authStr, {
-        x: (pw - authW) / 2,
-        y: metaY,
-        size: 10.5,
-        font: timesFont,
-        color: rgb(0.22, 0.22, 0.24),
-        opacity: 0.9,
+      // Title (Authoritative, Left-aligned)
+      let endTitleY = ph * 0.64;
+      if (timesBold) {
+        const titleSize = 28;
+        const titleW = timesBold.widthOfTextAtSize(titleText, titleSize);
+        page.drawText(titleText, {
+          x: m,
+          y: endTitleY,
+          size: titleSize,
+          font: timesBold,
+          color: rgb(0.08, 0.08, 0.10),
+        });
+      }
+
+      if (options.subtitle && timesItalic) {
+        page.drawText(options.subtitle, {
+          x: m,
+          y: endTitleY - 28,
+          size: 13.5,
+          font: timesItalic,
+          color: rgb(0.35, 0.35, 0.38),
+        });
+        endTitleY -= 28;
+      }
+
+      page.drawLine({
+        start: { x: m, y: endTitleY - 14 },
+        end: { x: m + 80, y: endTitleY - 14 },
+        thickness: 0.6,
+        color: rgb(0.2, 0.2, 0.25),
+        opacity: 0.3,
       });
-      metaY -= 18;
-    }
 
-    const todayStr = new Date().toLocaleDateString('es-ES');
-    if (timesItalic) {
-      const dateStr = `Fecha: ${todayStr}`;
-      const dateW = timesItalic.widthOfTextAtSize(dateStr, 9);
-      page.drawText(dateStr, {
-        x: (pw - dateW) / 2,
-        y: metaY,
-        size: 9,
-        font: timesItalic,
-        color: rgb(0.42, 0.42, 0.42),
-        opacity: 0.8,
+      // Metadata at bottom
+      const metaY = ph * 0.18;
+      page.drawLine({
+        start: { x: m, y: metaY + 40 },
+        end: { x: pw - m, y: metaY + 40 },
+        thickness: 0.8,
+        color: rgb(0.12, 0.12, 0.14),
       });
-      metaY -= 16;
-    }
 
-    if (options.numSlides && timesFont) {
-      const numStr = `${options.numSlides} diapositivas con pauta de notas`;
-      const numW = timesFont.widthOfTextAtSize(numStr, 8.5);
-      page.drawText(numStr, {
-        x: (pw - numW) / 2,
-        y: metaY,
-        size: 8.5,
-        font: timesFont,
-        color: rgb(0.48, 0.48, 0.48),
-        opacity: 0.75,
+      if (timesBold) {
+        page.drawText('AUTHOR / STUDENT', { x: m, y: metaY + 26, size: 7.5, font: timesBold, color: rgb(0.35, 0.35, 0.38) });
+        page.drawText('DATE / COMPILATION', { x: m + (pw - 2 * m) * 0.52, y: metaY + 26, size: 7.5, font: timesBold, color: rgb(0.35, 0.35, 0.38) });
+      }
+      if (timesFont) {
+        page.drawText(options.author || 'General Notes', { x: m, y: metaY + 12, size: 10, font: timesFont, color: rgb(0.12, 0.12, 0.14) });
+        page.drawText(todayStr, { x: m + (pw - 2 * m) * 0.52, y: metaY + 12, size: 10, font: timesFont, color: rgb(0.12, 0.12, 0.14) });
+      }
+
+      if (options.numSlides && timesItalic) {
+        const slideWord = options.numSlides === 1 ? 'slide' : 'slides';
+        const numStr = `${options.numSlides} ${slideWord} with study notes`;
+        const numW = timesItalic.widthOfTextAtSize(numStr, 8.0);
+        page.drawText(numStr, {
+          x: pw - m - numW,
+          y: metaY - 10,
+          size: 8.0,
+          font: timesItalic,
+          color: rgb(0.48, 0.48, 0.50),
+        });
+      }
+
+    } else if (tpl === 'monograph') {
+      // 2. Archival Monograph (Heritage Stationery Bookplate)
+      const inset = 34;
+      page.drawRectangle({
+        x: inset,
+        y: inset,
+        width: pw - 2 * inset,
+        height: ph - 2 * inset,
+        borderColor: rgb(0.3, 0.3, 0.3),
+        borderWidth: 0.5,
+        borderOpacity: 0.18,
       });
+
+      const boxW = pw - 2 * inset - 70;
+      const boxH = 190;
+      const boxX = (pw - boxW) / 2;
+      const boxY = ph * 0.42;
+
+      page.drawRectangle({
+        x: boxX,
+        y: boxY,
+        width: boxW,
+        height: boxH,
+        borderColor: rgb(0.2, 0.2, 0.22),
+        borderWidth: 0.75,
+        borderOpacity: 0.35,
+      });
+      page.drawRectangle({
+        x: boxX + 4.5,
+        y: boxY + 4.5,
+        width: boxW - 9,
+        height: boxH - 9,
+        borderColor: rgb(0.2, 0.2, 0.22),
+        borderWidth: 0.35,
+        borderOpacity: 0.14,
+      });
+
+      if (timesFont) {
+        const monoHdr = 'M O N O G R A P H   ·   N O T E S';
+        const monoW = timesFont.widthOfTextAtSize(monoHdr, 8);
+        page.drawText(monoHdr, {
+          x: (pw - monoW) / 2,
+          y: boxY + boxH - 26,
+          size: 8,
+          font: timesFont,
+          color: rgb(0.45, 0.45, 0.45),
+        });
+      }
+
+      page.drawLine({
+        start: { x: pw / 2 - 20, y: boxY + boxH - 33 },
+        end: { x: pw / 2 + 20, y: boxY + boxH - 33 },
+        thickness: 0.35,
+        color: rgb(0.4, 0.4, 0.4),
+        opacity: 0.25,
+      });
+
+      if (timesBold) {
+        const titleSize = 22;
+        const titleW = timesBold.widthOfTextAtSize(titleText, titleSize);
+        page.drawText(titleText, {
+          x: (pw - Math.min(titleW, boxW - 20)) / 2,
+          y: boxY + boxH * 0.50,
+          size: titleSize,
+          font: timesBold,
+          color: rgb(0.12, 0.12, 0.14),
+        });
+      }
+
+      if (options.subtitle && timesItalic) {
+        const subW = timesItalic.widthOfTextAtSize(options.subtitle, 12);
+        page.drawText(options.subtitle, {
+          x: (pw - subW) / 2,
+          y: boxY + boxH * 0.30,
+          size: 12,
+          font: timesItalic,
+          color: rgb(0.35, 0.35, 0.38),
+        });
+      }
+
+      let metaY = ph * 0.22;
+      if (options.author && timesFont) {
+        const authW = timesFont.widthOfTextAtSize(options.author, 10.5);
+        page.drawText(options.author, {
+          x: (pw - authW) / 2,
+          y: metaY,
+          size: 10.5,
+          font: timesFont,
+          color: rgb(0.22, 0.22, 0.24),
+        });
+        metaY -= 18;
+      }
+      if (timesItalic) {
+        const dateStr = `Date: ${todayStr}`;
+        const dateW = timesItalic.widthOfTextAtSize(dateStr, 9);
+        page.drawText(dateStr, {
+          x: (pw - dateW) / 2,
+          y: metaY,
+          size: 9,
+          font: timesItalic,
+          color: rgb(0.42, 0.42, 0.42),
+        });
+        metaY -= 16;
+      }
+      if (options.numSlides && timesFont) {
+        const slideWord = options.numSlides === 1 ? 'slide' : 'slides';
+        const numStr = `${options.numSlides} ${slideWord} with dedicated notes`;
+        const numW = timesFont.widthOfTextAtSize(numStr, 8.5);
+        page.drawText(numStr, {
+          x: (pw - numW) / 2,
+          y: metaY,
+          size: 8.5,
+          font: timesFont,
+          color: rgb(0.48, 0.48, 0.48),
+        });
+      }
+
+    } else if (tpl === 'bauhaus') {
+      // 3. Swiss Modernist Bauhaus Layout
+      const m = 48;
+      const vertX = m + 28;
+      page.drawLine({
+        start: { x: vertX, y: m },
+        end: { x: vertX, y: ph - m },
+        thickness: 0.6,
+        color: rgb(0.15, 0.15, 0.18),
+        opacity: 0.2,
+      });
+
+      const hdrY = ph - m - 20;
+      page.drawLine({
+        start: { x: m, y: hdrY },
+        end: { x: pw - m, y: hdrY },
+        thickness: 0.6,
+        color: rgb(0.15, 0.15, 0.18),
+        opacity: 0.2,
+      });
+
+      if (timesBold) {
+        page.drawText('VOLUME I  ·  STUDY COMPENDIUM', {
+          x: vertX + 14,
+          y: hdrY + 8,
+          size: 8.0,
+          font: timesBold,
+          color: rgb(0.2, 0.2, 0.25),
+        });
+      }
+
+      if (timesBold) {
+        page.drawText(titleText, {
+          x: vertX + 14,
+          y: ph * 0.58,
+          size: 26,
+          font: timesBold,
+          color: rgb(0.08, 0.08, 0.10),
+        });
+      }
+
+      if (options.subtitle && timesItalic) {
+        page.drawText(options.subtitle, {
+          x: vertX + 14,
+          y: ph * 0.58 - 28,
+          size: 13,
+          font: timesItalic,
+          color: rgb(0.35, 0.35, 0.38),
+        });
+      }
+
+      const metaY = ph * 0.25;
+      if (timesBold) {
+        page.drawText('STUDENT:', { x: vertX + 14, y: metaY + 36, size: 7.0, font: timesBold, color: rgb(0.45, 0.45, 0.48) });
+        page.drawText('DATE:', { x: vertX + 14, y: metaY + 18, size: 7.0, font: timesBold, color: rgb(0.45, 0.45, 0.48) });
+      }
+      if (timesFont) {
+        page.drawText(options.author || 'General Study Notes', { x: vertX + 72, y: metaY + 36, size: 10, font: timesFont, color: rgb(0.12, 0.12, 0.14) });
+        page.drawText(todayStr, { x: vertX + 72, y: metaY + 18, size: 10, font: timesFont, color: rgb(0.12, 0.12, 0.14) });
+      }
+
+      if (options.numSlides && timesItalic) {
+        const slideWord = options.numSlides === 1 ? 'slide' : 'slides';
+        page.drawText(`${options.numSlides} ${slideWord} included`, {
+          x: vertX + 14,
+          y: metaY - 4,
+          size: 8.0,
+          font: timesItalic,
+          color: rgb(0.5, 0.5, 0.52),
+        });
+      }
+
+    } else {
+      // Default: Atelier Notebook (Zara Home Classic)
+      const inset = 36;
+      page.drawRectangle({
+        x: inset,
+        y: inset,
+        width: pw - 2 * inset,
+        height: ph - 2 * inset,
+        borderColor: rgb(0.25, 0.25, 0.25),
+        borderWidth: 0.6,
+        borderOpacity: 0.22,
+        color: rgb(1, 1, 1),
+      });
+
+      const innerInset = 42;
+      page.drawRectangle({
+        x: innerInset,
+        y: innerInset,
+        width: pw - 2 * innerInset,
+        height: ph - 2 * innerInset,
+        borderColor: rgb(0.25, 0.25, 0.25),
+        borderWidth: 0.35,
+        borderOpacity: 0.10,
+      });
+
+      // Top Super-header
+      if (timesFont) {
+        const superHdr = 'N O T E B O O K';
+        const superW = timesFont.widthOfTextAtSize(superHdr, 7.5);
+        page.drawText(superHdr, {
+          x: (pw - superW) / 2,
+          y: ph - 95,
+          size: 7.5,
+          font: timesFont,
+          color: rgb(0.42, 0.42, 0.42),
+          opacity: 0.75,
+        });
+      }
+
+      page.drawLine({
+        start: { x: pw / 2 - 24, y: ph - 105 },
+        end: { x: pw / 2 + 24, y: ph - 105 },
+        thickness: 0.4,
+        color: rgb(0.3, 0.3, 0.3),
+        opacity: 0.20,
+      });
+
+      // Title
+      let endTitleY = ph * 0.58;
+      if (timesBold) {
+        const titleSize = 24;
+        const titleW = timesBold.widthOfTextAtSize(titleText, titleSize);
+        endTitleY = ph * 0.58;
+        page.drawText(titleText, {
+          x: (pw - Math.min(titleW, pw - 80)) / 2,
+          y: endTitleY,
+          size: titleSize,
+          font: timesBold,
+          color: rgb(0.12, 0.12, 0.14),
+        });
+      }
+
+      if (options.subtitle && timesItalic) {
+        const subW = timesItalic.widthOfTextAtSize(options.subtitle, 12.5);
+        page.drawText(options.subtitle, {
+          x: (pw - subW) / 2,
+          y: endTitleY - 26,
+          size: 12.5,
+          font: timesItalic,
+          color: rgb(0.32, 0.32, 0.34),
+          opacity: 0.9,
+        });
+      }
+
+      const dividerY = endTitleY - (options.subtitle ? 44 : 26);
+      page.drawLine({
+        start: { x: pw / 2 - 32, y: dividerY },
+        end: { x: pw / 2 + 32, y: dividerY },
+        thickness: 0.4,
+        color: rgb(0.3, 0.3, 0.3),
+        opacity: 0.18,
+      });
+
+      let metaY = ph * 0.26;
+      if (options.author && timesFont) {
+        const authStr = options.author;
+        const authW = timesFont.widthOfTextAtSize(authStr, 10.5);
+        page.drawText(authStr, {
+          x: (pw - authW) / 2,
+          y: metaY,
+          size: 10.5,
+          font: timesFont,
+          color: rgb(0.22, 0.22, 0.24),
+          opacity: 0.9,
+        });
+        metaY -= 18;
+      }
+
+      if (timesItalic) {
+        const dateStr = `Date: ${todayStr}`;
+        const dateW = timesItalic.widthOfTextAtSize(dateStr, 9);
+        page.drawText(dateStr, {
+          x: (pw - dateW) / 2,
+          y: metaY,
+          size: 9,
+          font: timesItalic,
+          color: rgb(0.42, 0.42, 0.42),
+          opacity: 0.8,
+        });
+        metaY -= 16;
+      }
+
+      if (options.numSlides && timesFont) {
+        const slideWord = options.numSlides === 1 ? 'slide' : 'slides';
+        const numStr = `${options.numSlides} ${slideWord} with dedicated notes`;
+        const numW = timesFont.widthOfTextAtSize(numStr, 8.5);
+        page.drawText(numStr, {
+          x: (pw - numW) / 2,
+          y: metaY,
+          size: 8.5,
+          font: timesFont,
+          color: rgb(0.48, 0.48, 0.48),
+          opacity: 0.75,
+        });
+      }
     }
   }
 
@@ -583,9 +881,10 @@
         outDoc,
         {
           paperDimensions: [paperWidth, paperHeight],
-          title: options.coverTitle || 'Presentación',
+          title: options.coverTitle || 'Presentation',
           subtitle: studyTitle,
           author: options.coverAuthor || '',
+          coverTemplate: options.coverTemplate || 'atelier',
           numSlides: selectedIndices.length,
         },
         {

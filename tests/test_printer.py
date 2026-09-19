@@ -123,7 +123,8 @@ def test_study_header_and_gutter(sample_slide_pdf, tmp_path):
     reader = PdfReader(res[0])
     text_p0 = reader.pages[0].extract_text()
     assert "Matemáticas Avanzadas" in text_p0
-    assert "FECHA:" in text_p0
+    assert "DATE:" in text_p0
+    assert "SUBJECT / TOPIC:" in text_p0
 
 
 def test_layout_2up(sample_slide_pdf, tmp_path):
@@ -141,19 +142,23 @@ def test_layout_2up(sample_slide_pdf, tmp_path):
 
 def test_cover_modes(sample_slide_pdf, tmp_path):
     # 1. Generated editorial cover
-    printer_gen = SlidePrinter(
-        output_dir=str(tmp_path / "cov_gen"),
-        cover_mode="generate",
-        cover_title="Dossier de Cálculo",
-        cover_author="Manuel",
-    )
-    res_gen = printer_gen.process_file(sample_slide_pdf, styles=["lines"])
-    reader_gen = PdfReader(res_gen[0])
-    # 1 cover + 2 slides = 3 pages
-    assert len(reader_gen.pages) == 3
-    cover_text = reader_gen.pages[0].extract_text()
-    assert "Dossier de Cálculo" in cover_text
-    assert "Manuel" in cover_text
+    for tmpl in ["atelier", "george", "monograph", "bauhaus"]:
+        printer_gen = SlidePrinter(
+            output_dir=str(tmp_path / f"cov_gen_{tmpl}"),
+            cover_mode="generate",
+            cover_template=tmpl,
+            cover_title="Quantum Physics Dossier",
+            cover_author="JFK Jr.",
+        )
+        res_gen = printer_gen.process_file(sample_slide_pdf, styles=["lines"])
+        reader_gen = PdfReader(res_gen[0])
+        assert len(reader_gen.pages) == 3
+        cover_text = reader_gen.pages[0].extract_text()
+        assert "Quantum Physics Dossier" in cover_text
+        assert "JFK Jr." in cover_text
+        assert "CUADERNO" not in cover_text
+        assert "DE NOTAS" not in cover_text
+        assert "Fecha:" not in cover_text
 
     # 2. Clean first slide cover
     printer_clean = SlidePrinter(
@@ -181,5 +186,15 @@ def test_page_number_format_simple(sample_slide_pdf, tmp_path):
     p0_lines = [l.strip() for l in reader.pages[0].extract_text().splitlines()]
     assert "1" in p0_lines
     assert "1 / 2" not in p0_lines
+
+
+def test_parse_page_ranges():
+    from slide_printer.core import parse_page_ranges
+    assert parse_page_ranges("2-", 5) == [1, 2, 3, 4]
+    assert parse_page_ranges("-3", 5) == [0, 1, 2]
+    assert parse_page_ranges("1-2, 4-", 5) == [0, 1, 3, 4]
+    assert parse_page_ranges("all", 5) == [0, 1, 2, 3, 4]
+    assert parse_page_ranges(None, 5) == [0, 1, 2, 3, 4]
+
 
 
