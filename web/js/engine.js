@@ -393,6 +393,42 @@
   }
 
   /**
+   * Helper function to wrap text into multiple lines for PDF-Lib text drawing.
+   */
+  function wrapText(font, text, fontSize, maxWidth) {
+    if (!font || !text) return [text || ''];
+    const words = String(text).trim().split(/\s+/);
+    const lines = [];
+    let currentLine = '';
+
+    for (let i = 0; i < words.length; i++) {
+      const word = words[i];
+      const testLine = currentLine ? `${currentLine} ${word}` : word;
+      let width = 0;
+      try {
+        width = font.widthOfTextAtSize(testLine, fontSize);
+      } catch (e) {
+        width = testLine.length * fontSize * 0.55;
+      }
+      if (width <= maxWidth) {
+        currentLine = testLine;
+      } else {
+        if (currentLine) {
+          lines.push(currentLine);
+          currentLine = word;
+        } else {
+          lines.push(word);
+          currentLine = '';
+        }
+      }
+    }
+    if (currentLine) {
+      lines.push(currentLine);
+    }
+    return lines.length > 0 ? lines : [text];
+  }
+
+  /**
    * Generates an editorial mid-century modern notebook cover page in English.
    */
   async function generateCoverPage(outDoc, options, fontMap) {
@@ -444,34 +480,45 @@
         });
       }
 
-      // Title (Authoritative, Left-aligned)
-      let endTitleY = ph * 0.64;
+      // Title (Authoritative, Left-aligned with word wrap)
+      const titleSize = 28;
+      const titleLineHeight = 36;
+      const maxTitleW = pw - 2 * m - 20;
+      const titleLines = wrapText(timesBold, titleText, titleSize, maxTitleW);
+      let curTitleY = ph * 0.64;
+
       if (timesBold) {
-        const titleSize = 28;
-        const titleW = timesBold.widthOfTextAtSize(titleText, titleSize);
-        page.drawText(titleText, {
-          x: m,
-          y: endTitleY,
-          size: titleSize,
-          font: timesBold,
-          color: rgb(0.08, 0.08, 0.10),
-        });
+        for (const line of titleLines) {
+          page.drawText(line, {
+            x: m,
+            y: curTitleY,
+            size: titleSize,
+            font: timesBold,
+            color: rgb(0.08, 0.08, 0.10),
+          });
+          curTitleY -= titleLineHeight;
+        }
       }
 
+      // Subtitle / Subject
+      let dividerY = curTitleY + (titleLineHeight - 28);
       if (options.subtitle && timesItalic) {
-        page.drawText(options.subtitle, {
-          x: m,
-          y: endTitleY - 28,
-          size: 13.5,
-          font: timesItalic,
-          color: rgb(0.35, 0.35, 0.38),
-        });
-        endTitleY -= 28;
+        const subLines = wrapText(timesItalic, options.subtitle, 13.5, maxTitleW);
+        for (const subLine of subLines) {
+          page.drawText(subLine, {
+            x: m,
+            y: dividerY,
+            size: 13.5,
+            font: timesItalic,
+            color: rgb(0.35, 0.35, 0.38),
+          });
+          dividerY -= 20;
+        }
       }
 
       page.drawLine({
-        start: { x: m, y: endTitleY - 14 },
-        end: { x: m + 80, y: endTitleY - 14 },
+        start: { x: m, y: dividerY - 10 },
+        end: { x: m + 80, y: dividerY - 10 },
         thickness: 0.6,
         color: rgb(0.2, 0.2, 0.25),
         opacity: 0.3,
@@ -565,23 +612,31 @@
         opacity: 0.25,
       });
 
+      // Title inside cartouche with word wrap
+      const titleSize = 21;
+      const titleLineHeight = 27;
+      const titleLines = wrapText(timesBold, titleText, titleSize, boxW - 36);
+      let curTitleY = boxY + boxH * 0.52 + ((titleLines.length - 1) * titleLineHeight) / 2;
+
       if (timesBold) {
-        const titleSize = 22;
-        const titleW = timesBold.widthOfTextAtSize(titleText, titleSize);
-        page.drawText(titleText, {
-          x: (pw - Math.min(titleW, boxW - 20)) / 2,
-          y: boxY + boxH * 0.50,
-          size: titleSize,
-          font: timesBold,
-          color: rgb(0.12, 0.12, 0.14),
-        });
+        for (const line of titleLines) {
+          const lineW = timesBold.widthOfTextAtSize(line, titleSize);
+          page.drawText(line, {
+            x: (pw - lineW) / 2,
+            y: curTitleY,
+            size: titleSize,
+            font: timesBold,
+            color: rgb(0.12, 0.12, 0.14),
+          });
+          curTitleY -= titleLineHeight;
+        }
       }
 
       if (options.subtitle && timesItalic) {
         const subW = timesItalic.widthOfTextAtSize(options.subtitle, 12);
         page.drawText(options.subtitle, {
           x: (pw - subW) / 2,
-          y: boxY + boxH * 0.30,
+          y: Math.min(curTitleY - 6, boxY + boxH * 0.24),
           size: 12,
           font: timesItalic,
           color: rgb(0.35, 0.35, 0.38),
@@ -656,20 +711,30 @@
         });
       }
 
+      // Large modern title with word wrap
+      const titleSize = 26;
+      const titleLineHeight = 34;
+      const maxTitleW = pw - vertX - m - 20;
+      const titleLines = wrapText(timesBold, titleText, titleSize, maxTitleW);
+      let curTitleY = ph * 0.58;
+
       if (timesBold) {
-        page.drawText(titleText, {
-          x: vertX + 14,
-          y: ph * 0.58,
-          size: 26,
-          font: timesBold,
-          color: rgb(0.08, 0.08, 0.10),
-        });
+        for (const line of titleLines) {
+          page.drawText(line, {
+            x: vertX + 14,
+            y: curTitleY,
+            size: titleSize,
+            font: timesBold,
+            color: rgb(0.08, 0.08, 0.10),
+          });
+          curTitleY -= titleLineHeight;
+        }
       }
 
       if (options.subtitle && timesItalic) {
         page.drawText(options.subtitle, {
           x: vertX + 14,
-          y: ph * 0.58 - 28,
+          y: curTitleY - 8,
           size: 13,
           font: timesItalic,
           color: rgb(0.35, 0.35, 0.38),
@@ -744,37 +809,44 @@
         opacity: 0.20,
       });
 
-      // Title
-      let endTitleY = ph * 0.58;
+      // Title with word wrap
+      const titleSize = 24;
+      const titleLineHeight = 32;
+      const maxTitleW = pw - 2 * inset - 60;
+      const titleLines = wrapText(timesBold, titleText, titleSize, maxTitleW);
+      let curTitleY = ph * 0.58 + ((titleLines.length - 1) * titleLineHeight) / 2;
+
       if (timesBold) {
-        const titleSize = 24;
-        const titleW = timesBold.widthOfTextAtSize(titleText, titleSize);
-        endTitleY = ph * 0.58;
-        page.drawText(titleText, {
-          x: (pw - Math.min(titleW, pw - 80)) / 2,
-          y: endTitleY,
-          size: titleSize,
-          font: timesBold,
-          color: rgb(0.12, 0.12, 0.14),
-        });
+        for (const line of titleLines) {
+          const lineW = timesBold.widthOfTextAtSize(line, titleSize);
+          page.drawText(line, {
+            x: (pw - lineW) / 2,
+            y: curTitleY,
+            size: titleSize,
+            font: timesBold,
+            color: rgb(0.12, 0.12, 0.14),
+          });
+          curTitleY -= titleLineHeight;
+        }
       }
 
+      let divY = curTitleY - 8;
       if (options.subtitle && timesItalic) {
         const subW = timesItalic.widthOfTextAtSize(options.subtitle, 12.5);
         page.drawText(options.subtitle, {
           x: (pw - subW) / 2,
-          y: endTitleY - 26,
+          y: curTitleY - 4,
           size: 12.5,
           font: timesItalic,
           color: rgb(0.32, 0.32, 0.34),
           opacity: 0.9,
         });
+        divY -= 22;
       }
 
-      const dividerY = endTitleY - (options.subtitle ? 44 : 26);
       page.drawLine({
-        start: { x: pw / 2 - 32, y: dividerY },
-        end: { x: pw / 2 + 32, y: dividerY },
+        start: { x: pw / 2 - 32, y: divY },
+        end: { x: pw / 2 + 32, y: divY },
         thickness: 0.4,
         color: rgb(0.3, 0.3, 0.3),
         opacity: 0.18,

@@ -277,15 +277,33 @@ def generate_cover_page(
         c.setLineWidth(0.35)
         c.line(pw / 2.0 - 20.0, box_y + box_h - 33.0, pw / 2.0 + 20.0, box_y + box_h - 33.0)
 
-        # Title inside cartouche
-        c.setFont("Times-Bold", 22)
+        # Title inside cartouche (with word wrapping)
+        c.setFont("Times-Bold", 20)
         c.setFillColor(Color(0.12, 0.12, 0.14, alpha=1.0))
-        c.drawCentredString(pw / 2.0, box_y + box_h * 0.50, clean_title[:45])
+        max_box_text_w = box_w - 36.0
+        words = clean_title.split()
+        lines = []
+        curr_line = ""
+        for w in words:
+            test_line = f"{curr_line} {w}".strip()
+            if c.stringWidth(test_line, "Times-Bold", 20) <= max_box_text_w:
+                curr_line = test_line
+            else:
+                if curr_line:
+                    lines.append(curr_line)
+                curr_line = w
+        if curr_line:
+            lines.append(curr_line)
+
+        title_y = box_y + box_h * 0.54 + (len(lines) - 1) * 13.0
+        for line in lines:
+            c.drawCentredString(pw / 2.0, title_y, line)
+            title_y -= 26.0
 
         if subtitle:
-            c.setFont("Times-Italic", 12.0)
+            c.setFont("Times-Italic", 11.5)
             c.setFillColor(Color(0.35, 0.35, 0.38, alpha=0.9))
-            c.drawCentredString(pw / 2.0, box_y + box_h * 0.30, subtitle)
+            c.drawCentredString(pw / 2.0, title_y - 8.0, subtitle)
 
         # Bottom metadata
         meta_y = ph * 0.22
@@ -324,15 +342,33 @@ def generate_cover_page(
         c.setFillColor(Color(0.2, 0.2, 0.25, alpha=0.9))
         c.drawString(vert_x + 14.0, hdr_y + 8.0, "VOLUME I  ·  STUDY COMPENDIUM")
 
-        # Large modern title
-        c.setFont("Times-Bold", 26)
+        # Large modern title with word wrapping
+        c.setFont("Times-Bold", 24)
         c.setFillColor(Color(0.08, 0.08, 0.10, alpha=1.0))
-        c.drawString(vert_x + 14.0, ph * 0.58, clean_title[:40])
+        max_title_w = pw - (vert_x + 14.0) - m
+        words = clean_title.split()
+        lines = []
+        curr_line = ""
+        for w in words:
+            test_line = f"{curr_line} {w}".strip()
+            if c.stringWidth(test_line, "Times-Bold", 24) <= max_title_w:
+                curr_line = test_line
+            else:
+                if curr_line:
+                    lines.append(curr_line)
+                curr_line = w
+        if curr_line:
+            lines.append(curr_line)
+
+        title_y = ph * 0.58 + (len(lines) - 1) * 15.0
+        for line in lines:
+            c.drawString(vert_x + 14.0, title_y, line)
+            title_y -= 30.0
 
         if subtitle:
-            c.setFont("Times-Italic", 13.0)
+            c.setFont("Times-Italic", 12.5)
             c.setFillColor(Color(0.35, 0.35, 0.38, alpha=0.9))
-            c.drawString(vert_x + 14.0, ph * 0.58 - 28.0, subtitle)
+            c.drawString(vert_x + 14.0, title_y - 6.0, subtitle)
 
         # Structured metadata lines
         meta_y = ph * 0.25
