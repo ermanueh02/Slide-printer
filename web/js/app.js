@@ -17,6 +17,8 @@
       themeAutoTitle: "Theme: Auto (System preference)",
       themeLightTitle: "Theme: Light",
       themeDarkTitle: "Theme: Dark",
+      installApp: "Install",
+      installAppTitle: "Install Slide-Printer as App",
       heroSuper: "PDF Handout Generator",
       heroTitle: "Print slides with dedicated note space",
       heroSubtitle: "Transform any presentation into clean, printable study handouts. Adds note-taking area beneath each slide while preserving aspect ratios and clickable links.",
@@ -154,6 +156,8 @@
       themeAutoTitle: "Tema: Automático (Preferencia del sistema)",
       themeLightTitle: "Tema: Claro",
       themeDarkTitle: "Tema: Oscuro",
+      installApp: "Instalar",
+      installAppTitle: "Instalar Slide-Printer como aplicación",
       heroSuper: "Conversor de PDF a apuntes",
       heroTitle: "Imprime diapositivas con espacio para notas",
       heroSubtitle: "Convierte cualquier presentación en documentos listos para imprimir. Añade espacio para escribir debajo de cada diapositiva conservando proporciones e hiperenlaces.",
@@ -287,6 +291,8 @@
       themeAutoTitle: "Tema: Automático (Preferencia do sistema)",
       themeLightTitle: "Tema: Claro",
       themeDarkTitle: "Tema: Escuro",
+      installApp: "Instalar",
+      installAppTitle: "Instalar Slide-Printer como aplicación",
       heroSuper: "Conversor de PDF a apuntamentos",
       heroTitle: "Imprime diapositivas con espazo para notas",
       heroSubtitle: "Converte calquera presentación en documentos listos para imprimir. Engade espazo para escribir debaixo de cada diapositiva conservando proporcións e ligazóns.",
@@ -655,6 +661,11 @@
     // Header
     setText('brandSubtitleText', dict.brandSubtitle);
     setText('privacyBadgeText', dict.privacyBadge);
+    setText('installAppBtnText', dict.installApp || 'Install');
+    const installBtn = document.getElementById('installAppBtn');
+    if (installBtn && dict.installAppTitle) {
+      installBtn.title = dict.installAppTitle;
+    }
 
     // Theme Mode button text
     updateThemeButtonUI();
@@ -2370,6 +2381,68 @@
     }
   }
 
+  // --- PWA Installation & Service Worker ---
+  let deferredInstallPrompt = null;
+
+  function setupPWA() {
+    const installBtn = document.getElementById('installAppBtn');
+
+    // Register Service Worker for offline capability & Chrome PWA installability
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js', { scope: './' })
+          .then((reg) => {
+            reg.onupdatefound = () => {
+              const installingWorker = reg.installing;
+              if (installingWorker) {
+                installingWorker.onstatechange = () => {
+                  if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    console.log('Slide-Printer: New service worker version available.');
+                  }
+                };
+              }
+            };
+          })
+          .catch((err) => {
+            console.warn('Slide-Printer: ServiceWorker registration failed:', err);
+          });
+      });
+    }
+
+    // Capture beforeinstallprompt event (triggered by Chrome when install criteria are met)
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      if (installBtn) {
+        installBtn.classList.remove('hidden');
+      }
+    });
+
+    if (installBtn) {
+      installBtn.addEventListener('click', async () => {
+        if (!deferredInstallPrompt) return;
+        deferredInstallPrompt.prompt();
+        try {
+          const { outcome } = await deferredInstallPrompt.userChoice;
+          console.log('Slide-Printer install prompt outcome:', outcome);
+        } catch (err) {
+          console.warn('Slide-Printer install prompt error:', err);
+        }
+        deferredInstallPrompt = null;
+        installBtn.classList.add('hidden');
+      });
+    }
+
+    // App installed event
+    window.addEventListener('appinstalled', () => {
+      deferredInstallPrompt = null;
+      if (installBtn) {
+        installBtn.classList.add('hidden');
+      }
+      console.log('Slide-Printer PWA successfully installed');
+    });
+  }
+
   // --- Main Initialization (Called after all definitions) ---
   function init() {
     loadPresets();
@@ -2381,6 +2454,7 @@
     setupPageNavigation();
     setupActions();
     setupKeyboardNavigation();
+    setupPWA();
 
     let resizeTimer;
     window.addEventListener('resize', () => {

@@ -295,6 +295,33 @@ body {
   border-color: var(--border-dark);
 }
 
+/* PWA Install Button */
+.install-app-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  min-height: 30px;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.install-app-btn:hover {
+  background: var(--accent-color);
+  color: #ffffff;
+}
+
+.install-app-btn.hidden {
+  display: none !important;
+}
+
 /* Icon Button */
 .icon-btn {
   background: var(--bg-surface);
@@ -1595,6 +1622,10 @@ details.settings-details summary {
   }
 
   .theme-mode-btn {
+    padding: 0.25rem 0.55rem;
+  }
+
+  .install-app-btn {
     padding: 0.25rem 0.55rem;
   }
 

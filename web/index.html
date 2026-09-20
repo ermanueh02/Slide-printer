@@ -5,11 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Slide-Printer — Print slides with dedicated note space</title>
   <meta name="description" content="Convert PDF slide presentations into beautiful, printable study handouts with note-taking space: ruled lines, grid, bullet points, or blank.">
+  
+  <!-- PWA & Mobile Meta Tags -->
+  <meta name="theme-color" content="#141517" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Slide-Printer">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23c2410c%22 stroke-width=%222%22><rect x=%223%22 y=%223%22 width=%2218%22 height=%2218%22 rx=%222%22/><line x1=%223%22 y1=%2212%22 x2=%2221%22 y2=%2212%22/><line x1=%227%22 y1=%2216%22 x2=%2217%22 y2=%2216%22/></svg>">
 </head>
 <body>
 
@@ -49,6 +62,16 @@
         <button type="button" class="theme-mode-btn" id="themeToggleBtn" title="Theme: Auto (System preference)" aria-label="Toggle theme">
           <span id="themeModeIcon" aria-hidden="true">◐</span>
           <span id="themeModeText">System</span>
+        </button>
+
+        <!-- PWA Install Button (activated when installable) -->
+        <button type="button" class="install-app-btn hidden" id="installAppBtn" title="Install Slide-Printer as App" aria-label="Install App">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span id="installAppBtnText">Install</span>
         </button>
 
         <a href="https://github.com/ermanueh02/Slide-printer" target="_blank" rel="noopener noreferrer" class="icon-btn" id="githubLink" title="Source Code on GitHub" aria-label="GitHub Repository">

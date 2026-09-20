@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="96" fill="#141517"/>
+  <!-- Paper Sheet Outline -->
+  <rect x="106" y="76" width="300" height="360" rx="32" fill="#1c1e22" stroke="#ea580c" stroke-width="14"/>
+  <!-- Slide Viewport -->
+  <rect x="136" y="106" width="240" height="135" rx="12" fill="#282c34" stroke="#3e4451" stroke-width="4"/>
+  <!-- Slide Header & Chart elements -->
+  <rect x="156" y="126" width="80" height="10" rx="4" fill="#ea580c"/>
+  <rect x="326" y="180" width="10" height="42" rx="2" fill="#f7f5f0" opacity="0.9"/>
+  <rect x="306" y="165" width="10" height="57" rx="2" fill="#f7f5f0" opacity="0.9"/>
+  <rect x="286" y="195" width="10" height="27" rx="2" fill="#f7f5f0" opacity="0.9"/>
+  <!-- Divider -->
+  <line x1="126" y1="270" x2="386" y2="270" stroke="#ea580c" stroke-width="10" stroke-linecap="round"/>
+  <!-- Note Lines -->
+  <circle cx="146" cy="312" r="5" fill="#ea580c"/>
+  <line x1="164" y1="312" x2="368" y2="312" stroke="#b4b9c3" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="146" cy="352" r="5" fill="#ea580c"/>
+  <line x1="164" y1="352" x2="368" y2="352" stroke="#b4b9c3" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="146" cy="392" r="5" fill="#ea580c"/>
+  <line x1="164" y1="392" x2="300" y2="392" stroke="#b4b9c3" stroke-width="7" stroke-linecap="round"/>
+</svg>
