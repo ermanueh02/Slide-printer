@@ -1069,7 +1069,7 @@
       });
 
       page.drawRectangle({
-        x: pw - m - 110,
+        x: x2 - 110,
         y: ph - m - 45,
         width: 96,
         height: 26,
@@ -1081,14 +1081,14 @@
       if (edFont) {
         const stamp1 = 'REGISTRY NO. 1914-SP';
         const st1W = edFont.widthOfTextAtSize(stamp1, 6.5);
-        page.drawText(stamp1, { x: pw - m - 62 - st1W / 2, y: ph - m - 32, size: 6.5, font: edFont, color: navy });
+        page.drawText(stamp1, { x: x2 - 62 - st1W / 2, y: ph - m - 32, size: 6.5, font: edFont, color: navy });
       }
 
       if (timesBold) {
-        page.drawText('E D W A R D I A N   D O S S I E R   ·   1 9 1 0 s', { x: m + 16, y: ph - m - 28, size: 8.5, font: timesBold, color: navy });
+        page.drawText('E D W A R D I A N   D O S S I E R   ·   1 9 1 0 s', { x: x1 + 16, y: ph - m - 28, size: 8.5, font: timesBold, color: navy });
       }
       if (timesItalic) {
-        page.drawText('EARLY MODERNIST MONOGRAPH · AVIATION ERA', { x: m + 16, y: ph - m - 40, size: 7.5, font: timesItalic, color: goldMuted });
+        page.drawText('EARLY MODERNIST MONOGRAPH · AVIATION ERA', { x: x1 + 16, y: ph - m - 40, size: 7.5, font: timesItalic, color: goldMuted });
       }
 
       const titleSize = 26;
@@ -1099,7 +1099,7 @@
       if (timesBold) {
         for (const line of titleLines) {
           page.drawText(line, {
-            x: m + 16,
+            x: x1 + 16,
             y: curTitleY,
             size: titleSize,
             font: timesBold,
@@ -1110,24 +1110,24 @@
       }
 
       if (options.subtitle && timesItalic) {
-        page.drawText(options.subtitle, { x: m + 16, y: curTitleY - 6, size: 12.5, font: timesItalic, color: goldMuted });
+        page.drawText(options.subtitle, { x: x1 + 16, y: curTitleY - 6, size: 12.5, font: timesItalic, color: goldMuted });
         curTitleY -= 24;
       }
 
       page.drawLine({
-        start: { x: m + 16, y: curTitleY - 10 },
-        end: { x: m + 90, y: curTitleY - 10 },
+        start: { x: x1 + 16, y: curTitleY - 10 },
+        end: { x: x1 + 90, y: curTitleY - 10 },
         thickness: 1.0,
         color: navy,
       });
 
       const metaY = m + 36;
       if (timesBold) {
-        page.drawText('AUTHOR / CORRESPONDENT', { x: m + 16, y: metaY + 26, size: 7.0, font: timesBold, color: goldMuted });
-        page.drawText(options.author || 'Edwardian Edition', { x: m + 16, y: metaY + 12, size: 10.5, font: timesBold, color: navy });
+        page.drawText('AUTHOR / CORRESPONDENT', { x: x1 + 16, y: metaY + 26, size: 7.0, font: timesBold, color: goldMuted });
+        page.drawText(options.author || 'Edwardian Edition', { x: x1 + 16, y: metaY + 12, size: 10.5, font: timesBold, color: navy });
       }
       if (timesItalic) {
-        page.drawText(todayStr, { x: m + 16, y: metaY - 2, size: 8.5, font: timesItalic, color: goldMuted });
+        page.drawText(todayStr, { x: x1 + 16, y: metaY - 2, size: 8.5, font: timesItalic, color: goldMuted });
       }
 
     } else if (tpl === 'twenties' || tpl === '20s' || tpl === '1920s' || tpl === '1920' || tpl === 'artdeco' || tpl === 'gatsby') {
@@ -1230,16 +1230,16 @@
         borderWidth: 1.6,
       });
 
-      page.drawLine({ start: { x: m, y: ph - m - 45 }, end: { x: pw - m, y: ph - m - 45 }, thickness: 1.2, color: copper });
-      page.drawLine({ start: { x: m, y: ph - m - 49 }, end: { x: pw - m, y: ph - m - 49 }, thickness: 0.5, color: copper });
+      page.drawLine({ start: { x: x1, y: ph - m - 45 }, end: { x: x2, y: ph - m - 45 }, thickness: 1.2, color: copper });
+      page.drawLine({ start: { x: x1, y: ph - m - 49 }, end: { x: x2, y: ph - m - 49 }, thickness: 0.5, color: copper });
 
       if (timesBold) {
-        page.drawText('STREAMLINE MODERNE  ·  DOSSIER 1935', { x: m + 14, y: ph - m - 32, size: 8.5, font: timesBold, color: slate });
+        page.drawText('STREAMLINE MODERNE  ·  DOSSIER 1935', { x: x1 + 14, y: ph - m - 32, size: 8.5, font: timesBold, color: slate });
       }
       if (timesItalic) {
         const rightLabel = 'INDUSTRIAL DESIGN ARCHIVE';
         const rightW = timesItalic.widthOfTextAtSize(rightLabel, 7.5);
-        page.drawText(rightLabel, { x: pw - m - 14 - rightW, y: ph - m - 32, size: 7.5, font: timesItalic, color: copper });
+        page.drawText(rightLabel, { x: x2 - 14 - rightW, y: ph - m - 32, size: 7.5, font: timesItalic, color: copper });
       }
 
       const titleSize = 26;
@@ -1249,25 +1249,25 @@
 
       if (timesBold) {
         for (const line of titleLines) {
-          page.drawText(line, { x: m + 14, y: curTitleY, size: titleSize, font: timesBold, color: slate });
+          page.drawText(line, { x: x1 + 14, y: curTitleY, size: titleSize, font: timesBold, color: slate });
           curTitleY -= titleLineHeight;
         }
       }
 
       if (options.subtitle && timesItalic) {
-        page.drawText(options.subtitle, { x: m + 14, y: curTitleY - 6, size: 12.5, font: timesItalic, color: copper });
+        page.drawText(options.subtitle, { x: x1 + 14, y: curTitleY - 6, size: 12.5, font: timesItalic, color: copper });
         curTitleY -= 24;
       }
 
-      page.drawLine({ start: { x: m + 14, y: curTitleY - 12 }, end: { x: m + 100, y: curTitleY - 12 }, thickness: 1.5, color: copper });
+      page.drawLine({ start: { x: x1 + 14, y: curTitleY - 12 }, end: { x: x1 + 100, y: curTitleY - 12 }, thickness: 1.5, color: copper });
 
       const metaY = m + 36;
       if (timesBold) {
-        page.drawText('DESIGNER / AUTHOR', { x: m + 14, y: metaY + 26, size: 7.0, font: timesBold, color: copper });
-        page.drawText(options.author || 'Streamline Monograph', { x: m + 14, y: metaY + 12, size: 10.5, font: timesBold, color: slate });
+        page.drawText('DESIGNER / AUTHOR', { x: x1 + 14, y: metaY + 26, size: 7.0, font: timesBold, color: copper });
+        page.drawText(options.author || 'Streamline Monograph', { x: x1 + 14, y: metaY + 12, size: 10.5, font: timesBold, color: slate });
       }
       if (timesItalic) {
-        page.drawText(todayStr, { x: m + 14, y: metaY - 2, size: 8.5, font: timesItalic, color: copper });
+        page.drawText(todayStr, { x: x1 + 14, y: metaY - 2, size: 8.5, font: timesItalic, color: copper });
       }
 
     } else if (tpl === 'forties' || tpl === '40s' || tpl === '1940s' || tpl === '1940' || tpl === 'typewriter' || tpl === 'postwar') {
@@ -1286,7 +1286,7 @@
       });
 
       page.drawRectangle({
-        x: pw - m - 130,
+        x: x2 - 130,
         y: ph - m - 45,
         width: 116,
         height: 24,
@@ -1298,11 +1298,11 @@
       if (courFont) {
         const stampStr = 'CONFIDENTIAL STUDY FILE';
         const stampW = courFont.widthOfTextAtSize(stampStr, 7.0);
-        page.drawText(stampStr, { x: pw - m - 72 - stampW / 2, y: ph - m - 32, size: 7.0, font: courFont, color: stampRed });
+        page.drawText(stampStr, { x: x2 - 72 - stampW / 2, y: ph - m - 32, size: 7.0, font: courFont, color: stampRed });
       }
 
       if (courFont) {
-        page.drawText('[ DOSSIER 1944 ] :: OFFICIAL BRIEF', { x: m + 16, y: ph - m - 28, size: 8.0, font: courFont, color: inkBlack });
+        page.drawText('[ DOSSIER 1944 ] :: OFFICIAL BRIEF', { x: x1 + 16, y: ph - m - 28, size: 8.0, font: courFont, color: inkBlack });
       }
 
       const titleSize = 26;
@@ -1312,23 +1312,23 @@
 
       if (timesBold) {
         for (const line of titleLines) {
-          page.drawText(line, { x: m + 16, y: curTitleY, size: titleSize, font: timesBold, color: inkBlack });
+          page.drawText(line, { x: x1 + 16, y: curTitleY, size: titleSize, font: timesBold, color: inkBlack });
           curTitleY -= titleLineHeight;
         }
       }
 
       if (options.subtitle && timesItalic) {
-        page.drawText(options.subtitle, { x: m + 16, y: curTitleY - 6, size: 12.0, font: timesItalic, color: rgb(0.35, 0.35, 0.38) });
+        page.drawText(options.subtitle, { x: x1 + 16, y: curTitleY - 6, size: 12.0, font: timesItalic, color: rgb(0.35, 0.35, 0.38) });
         curTitleY -= 24;
       }
 
-      page.drawLine({ start: { x: m + 16, y: curTitleY - 10 }, end: { x: m + 110, y: curTitleY - 10 }, thickness: 1.0, color: inkBlack });
+      page.drawLine({ start: { x: x1 + 16, y: curTitleY - 10 }, end: { x: x1 + 110, y: curTitleY - 10 }, thickness: 1.0, color: inkBlack });
 
       const metaY = m + 28;
       if (courFont) {
-        page.drawText(`[ OPERATOR ] : ${options.author || 'Anonymous.44'}`, { x: m + 16, y: metaY + 44, size: 8.0, font: courFont, color: inkBlack });
-        page.drawText(`[ TIMESTAMP] : ${todayStr}`, { x: m + 16, y: metaY + 28, size: 8.0, font: courFont, color: inkBlack });
-        page.drawText(`[ DATASETS ] : ${options.numSlides || 0} Slides Compiled // Monograph`, { x: m + 16, y: metaY + 12, size: 8.0, font: courFont, color: inkBlack });
+        page.drawText(`[ OPERATOR ] : ${options.author || 'Anonymous.44'}`, { x: x1 + 16, y: metaY + 44, size: 8.0, font: courFont, color: inkBlack });
+        page.drawText(`[ TIMESTAMP] : ${todayStr}`, { x: x1 + 16, y: metaY + 28, size: 8.0, font: courFont, color: inkBlack });
+        page.drawText(`[ DATASETS ] : ${options.numSlides || 0} Slides Compiled // Monograph`, { x: x1 + 16, y: metaY + 12, size: 8.0, font: courFont, color: inkBlack });
       }
 
     } else if (tpl === 'fifties' || tpl === '50s') {
@@ -1489,7 +1489,7 @@
         const rightLabel = 'SWISS INT. 1968 · ZÜRICH';
         const rightW = swissRegular.widthOfTextAtSize(rightLabel, 8.0);
         page.drawText(rightLabel, {
-          x: pw - m - rightW,
+          x: x2 - rightW,
           y: ph - m - 24,
           size: 8.0,
           font: swissRegular,
@@ -1498,8 +1498,8 @@
       }
 
       page.drawLine({
-        start: { x: m, y: ph - m - 30 },
-        end: { x: pw - m, y: ph - m - 30 },
+        start: { x: x1, y: ph - m - 30 },
+        end: { x: x2, y: ph - m - 30 },
         thickness: 0.5,
         color: rgb(0, 0, 0),
       });
@@ -1537,8 +1537,8 @@
       }
 
       page.drawLine({
-        start: { x: m, y: midRuleY },
-        end: { x: pw - m, y: midRuleY },
+        start: { x: x1, y: midRuleY },
+        end: { x: x2, y: midRuleY },
         thickness: 1.0,
         color: rgb(0, 0, 0),
       });
@@ -1723,14 +1723,14 @@
       }
 
       page.drawLine({
-        start: { x: m, y: ph - m - 58 },
-        end: { x: pw - m, y: ph - m - 58 },
+        start: { x: x1, y: ph - m - 58 },
+        end: { x: x2, y: ph - m - 58 },
         thickness: 2.0,
         color: rgb(0.07, 0.09, 0.15),
       });
       page.drawLine({
-        start: { x: m, y: ph - m - 62 },
-        end: { x: m + 96, y: ph - m - 62 },
+        start: { x: x1, y: ph - m - 62 },
+        end: { x: x1 + 96, y: ph - m - 62 },
         thickness: 2.0,
         color: rgb(0.96, 0.25, 0.37),
       });
@@ -1767,7 +1767,7 @@
 
       // Floating Memphis shapes
       page.drawCircle({
-        x: pw - m - 20,
+        x: x2 - 20,
         y: ph * 0.64,
         size: 6,
         color: rgb(0.96, 0.62, 0.04),
@@ -1786,11 +1786,11 @@
       });
 
       if (techFont) {
-        page.drawText('OPERATOR / STUDENT:', { x: m + 14, y: bY + 36, size: 7.0, font: techFont, color: rgb(0.39, 0.45, 0.55) });
+        page.drawText('OPERATOR / STUDENT:', { x: x1 + 14, y: bY + 36, size: 7.0, font: techFont, color: rgb(0.39, 0.45, 0.55) });
         page.drawText('TIMESTAMP:', { x: m + (pw - 2 * m) * 0.52, y: bY + 36, size: 7.0, font: techFont, color: rgb(0.39, 0.45, 0.55) });
       }
       if (techBold) {
-        page.drawText(options.author || 'SYSTEM USER 01', { x: m + 14, y: bY + 18, size: 10.5, font: techBold, color: rgb(0.06, 0.09, 0.16) });
+        page.drawText(options.author || 'SYSTEM USER 01', { x: x1 + 14, y: bY + 18, size: 10.5, font: techBold, color: rgb(0.06, 0.09, 0.16) });
       }
       if (techFont) {
         page.drawText(todayStr, { x: m + (pw - 2 * m) * 0.52, y: bY + 18, size: 10.0, font: techFont, color: rgb(0.06, 0.09, 0.16) });
@@ -1828,7 +1828,7 @@
         const rightTag = 'REF: 1994-AUTUMN-WINTER';
         const rightW = zineFont.widthOfTextAtSize(rightTag, 7.5);
         page.drawText(rightTag, {
-          x: pw - m - rightW,
+          x: x2 - rightW,
           y: ph - 52,
           size: 7.5,
           font: zineFont,
@@ -1869,8 +1869,8 @@
       }
 
       page.drawLine({
-        start: { x: m, y: divY },
-        end: { x: pw - m, y: divY },
+        start: { x: x1, y: divY },
+        end: { x: x2, y: divY },
         thickness: 0.5,
         color: rgb(0, 0, 0),
         opacity: 0.20,
@@ -1897,7 +1897,7 @@
       page.drawRectangle({ x: x1, y: ph - m - 15, width: w, height: 3, color: cyanY2K });
 
       page.drawRectangle({
-        x: pw - m - 74,
+        x: x2 - 74,
         y: ph - m - 42,
         width: 60,
         height: 18,
@@ -1909,8 +1909,8 @@
       if (y2kFont) {
         const bStr = 'Y2K-2000';
         const bW = y2kFont.widthOfTextAtSize(bStr, 7.0);
-        page.drawText(bStr, { x: pw - m - 44 - bW / 2, y: ph - m - 34, size: 7.0, font: y2kFont, color: cobalt });
-        page.drawText('Y2K MILLENNIUM DOSSIER // DIGITAL ERA', { x: m, y: ph - m - 34, size: 8.5, font: y2kFont, color: cobalt });
+        page.drawText(bStr, { x: x2 - 44 - bW / 2, y: ph - m - 34, size: 7.0, font: y2kFont, color: cobalt });
+        page.drawText('Y2K MILLENNIUM DOSSIER // DIGITAL ERA', { x: x1, y: ph - m - 34, size: 8.5, font: y2kFont, color: cobalt });
       }
 
       const titleSize = 27;
@@ -1920,24 +1920,24 @@
 
       if (y2kFont) {
         for (const line of titleLines) {
-          page.drawText(line, { x: m, y: curTitleY, size: titleSize, font: y2kFont, color: rgb(0.08, 0.12, 0.18) });
+          page.drawText(line, { x: x1, y: curTitleY, size: titleSize, font: y2kFont, color: rgb(0.08, 0.12, 0.18) });
           curTitleY -= titleLineHeight;
         }
       }
 
       if (options.subtitle && y2kFont) {
-        page.drawText(options.subtitle, { x: m, y: curTitleY - 6, size: 12.0, font: y2kFont, color: cyanY2K });
+        page.drawText(options.subtitle, { x: x1, y: curTitleY - 6, size: 12.0, font: y2kFont, color: cyanY2K });
         curTitleY -= 24;
       }
 
-      page.drawLine({ start: { x: m, y: curTitleY - 12 }, end: { x: m + 100, y: curTitleY - 12 }, thickness: 1.2, color: cyanY2K });
+      page.drawLine({ start: { x: x1, y: curTitleY - 12 }, end: { x: x1 + 100, y: curTitleY - 12 }, thickness: 1.2, color: cyanY2K });
 
       const metaY = m + 28;
       const codeFont = fontMap.helveticaFont || timesFont;
       if (codeFont) {
-        page.drawText(`<AUTHOR>    ${options.author || 'Y2K.User'}`, { x: m, y: metaY + 44, size: 8.0, font: codeFont, color: cobalt });
-        page.drawText(`<TIMESTAMP> ${todayStr}`, { x: m, y: metaY + 28, size: 8.0, font: codeFont, color: cobalt });
-        page.drawText(`<FOLIOS>    ${options.numSlides || 0} Slides Processed`, { x: m, y: metaY + 12, size: 8.0, font: codeFont, color: cobalt });
+        page.drawText(`<AUTHOR>    ${options.author || 'Y2K.User'}`, { x: x1, y: metaY + 44, size: 8.0, font: codeFont, color: cobalt });
+        page.drawText(`<TIMESTAMP> ${todayStr}`, { x: x1, y: metaY + 28, size: 8.0, font: codeFont, color: cobalt });
+        page.drawText(`<FOLIOS>    ${options.numSlides || 0} Slides Processed`, { x: x1, y: metaY + 12, size: 8.0, font: codeFont, color: cobalt });
       }
 
     } else if (tpl === 'twenty10s' || tpl === '2010s' || tpl === '2010' || tpl === 'flatdesign' || tpl === 'startup') {
@@ -1955,7 +1955,7 @@
       if (sReg) {
         const rightTag = 'FLAT DESIGN ARCHIVE · VOL. 14';
         const rightW = sReg.widthOfTextAtSize(rightTag, 7.5);
-        page.drawText(rightTag, { x: pw - m - rightW, y: ph - m - 20, size: 7.5, font: sReg, color: rgb(0.5, 0.5, 0.55) });
+        page.drawText(rightTag, { x: x2 - rightW, y: ph - m - 20, size: 7.5, font: sReg, color: rgb(0.5, 0.5, 0.55) });
       }
 
       page.drawLine({ start: { x: x1, y: ph - m - 30 }, end: { x: x2, y: ph - m - 30 }, thickness: 0.5, color: rgb(0.15, 0.15, 0.18), opacity: 0.15 });
@@ -1967,13 +1967,13 @@
 
       if (sFont) {
         for (const line of titleLines) {
-          page.drawText(line, { x: m, y: curTitleY, size: titleSize, font: sFont, color: charcoal });
+          page.drawText(line, { x: x1, y: curTitleY, size: titleSize, font: sFont, color: charcoal });
           curTitleY -= titleLineHeight;
         }
       }
 
       if (options.subtitle && sReg) {
-        page.drawText(options.subtitle, { x: m, y: curTitleY - 6, size: 12.0, font: sReg, color: rgb(0.4, 0.4, 0.45) });
+        page.drawText(options.subtitle, { x: x1, y: curTitleY - 6, size: 12.0, font: sReg, color: rgb(0.4, 0.4, 0.45) });
         curTitleY -= 24;
       }
 
@@ -1981,11 +1981,11 @@
 
       const metaY = m + 36;
       if (sFont) {
-        page.drawText('AUTHOR', { x: m, y: metaY + 24, size: 7.0, font: sFont, color: indigo });
+        page.drawText('AUTHOR', { x: x1, y: metaY + 24, size: 7.0, font: sFont, color: indigo });
         page.drawText('DATE', { x: m + (pw - 2 * m) * 0.52, y: metaY + 24, size: 7.0, font: sFont, color: indigo });
       }
       if (sReg) {
-        page.drawText(options.author || 'Startup Notes', { x: m, y: metaY + 10, size: 10.0, font: sReg, color: charcoal });
+        page.drawText(options.author || 'Startup Notes', { x: x1, y: metaY + 10, size: 10.0, font: sReg, color: charcoal });
         page.drawText(todayStr, { x: m + (pw - 2 * m) * 0.52, y: metaY + 10, size: 10.0, font: sReg, color: charcoal });
       }
 
@@ -2008,15 +2008,15 @@
       const nReg = fontMap.helveticaFont || timesFont;
 
       if (nFont) {
-        page.drawText('[ 2020s // CONTEMPORARY STUDY FOLIO ]', { x: m + 16, y: ph - m - 24, size: 8.0, font: nFont, color: pitchBlack });
+        page.drawText('[ 2020s // CONTEMPORARY STUDY FOLIO ]', { x: x1 + 16, y: ph - m - 24, size: 8.0, font: nFont, color: pitchBlack });
       }
 
-      page.drawRectangle({ x: pw - m - 80, y: ph - m - 30, width: 64, height: 16, color: emerald });
+      page.drawRectangle({ x: x2 - 80, y: ph - m - 30, width: 64, height: 16, color: emerald });
 
       if (nFont) {
         const chipStr = '2026.AI';
         const chipW = nFont.widthOfTextAtSize(chipStr, 7.0);
-        page.drawText(chipStr, { x: pw - m - 48 - chipW / 2, y: ph - m - 22, size: 7.0, font: nFont, color: pitchBlack });
+        page.drawText(chipStr, { x: x2 - 48 - chipW / 2, y: ph - m - 22, size: 7.0, font: nFont, color: pitchBlack });
       }
 
       const titleSize = 27;
@@ -2026,17 +2026,17 @@
 
       if (nFont) {
         for (const line of titleLines) {
-          page.drawText(line, { x: m + 16, y: curTitleY, size: titleSize, font: nFont, color: pitchBlack });
+          page.drawText(line, { x: x1 + 16, y: curTitleY, size: titleSize, font: nFont, color: pitchBlack });
           curTitleY -= titleLineHeight;
         }
       }
 
       if (options.subtitle && nReg) {
-        page.drawText(options.subtitle, { x: m + 16, y: curTitleY - 6, size: 12.0, font: nReg, color: rgb(0.3, 0.3, 0.35) });
+        page.drawText(options.subtitle, { x: x1 + 16, y: curTitleY - 6, size: 12.0, font: nReg, color: rgb(0.3, 0.3, 0.35) });
         curTitleY -= 24;
       }
 
-      page.drawRectangle({ x: m + 16, y: curTitleY - 12, width: 120, height: 3, color: pitchBlack });
+      page.drawRectangle({ x: x1 + 16, y: curTitleY - 12, width: 120, height: 3, color: pitchBlack });
 
       const boxY = m + 24;
       const boxW = pw - 2 * m - 32;
@@ -2091,7 +2091,7 @@
       }
 
       page.drawRectangle({
-        x: m + 16,
+        x: x1 + 16,
         y: ph - m - 32,
         width: pw - 2 * m - 32,
         height: 24,
@@ -2116,7 +2116,7 @@
         const rightLabel = 'VOL. 01 · DEEP FOREST ARCHIVE';
         const rightW = natItalic.widthOfTextAtSize(rightLabel, 8.0);
         page.drawText(rightLabel, {
-          x: pw - m - 26 - rightW,
+          x: x2 - 26 - rightW,
           y: ph - m - 22,
           size: 8.0,
           font: natItalic,
@@ -2125,7 +2125,7 @@
       }
 
       page.drawRectangle({
-        x: m + 16,
+        x: x1 + 16,
         y: ph - m - 35,
         width: pw - 2 * m - 32,
         height: 1.0,
@@ -2189,7 +2189,7 @@
       });
       page.drawLine({
         start: { x: titleX + 72, y: ruleY },
-        end: { x: pw - m - 22, y: ruleY },
+        end: { x: x2 - 22, y: ruleY },
         thickness: 0.5,
         color: forestLight,
         opacity: 0.35,
@@ -2199,7 +2199,7 @@
       const colW = (pw - 2 * m - 44) / 2;
       page.drawLine({
         start: { x: titleX, y: gridY + 44 },
-        end: { x: pw - m - 22, y: gridY + 44 },
+        end: { x: x2 - 22, y: gridY + 44 },
         thickness: 0.8,
         color: forestDark,
       });
@@ -2357,12 +2357,12 @@
       const serifRoman = timesFont;
 
       if (sansBold) {
-        page.drawText('SOLSTICE COMPENDIUM · SUMMER FOLIO', { x: m, y: ph - 22, size: 8.5, font: sansBold, color: rgb(0.98, 0.98, 0.98) });
+        page.drawText('SOLSTICE COMPENDIUM · SUMMER FOLIO', { x: x1, y: ph - 22, size: 8.5, font: sansBold, color: rgb(0.98, 0.98, 0.98) });
       }
       if (sansRegular) {
         const rTag = 'MEDITERRANEAN ARCHIVE // 02';
         const rW = sansRegular.widthOfTextAtSize(rTag, 8.0);
-        page.drawText(rTag, { x: pw - m - rW, y: ph - 22, size: 8.0, font: sansRegular, color: rgb(0.98, 0.98, 0.98) });
+        page.drawText(rTag, { x: x2 - rW, y: ph - 22, size: 8.0, font: sansRegular, color: rgb(0.98, 0.98, 0.98) });
       }
 
       page.drawRectangle({
@@ -2379,30 +2379,30 @@
       let curY = ph * 0.58 + (titleLines.length - 1) * 16;
       for (const line of titleLines) {
         if (serifBold) {
-          page.drawText(line, { x: m + 18, y: curY, size: 27, font: serifBold, color: azureDeep });
+          page.drawText(line, { x: x1 + 18, y: curY, size: 27, font: serifBold, color: azureDeep });
         }
         curY -= 35;
       }
 
       if (options.subtitle && serifItalic) {
-        page.drawText(options.subtitle, { x: m + 18, y: curY - 6, size: 13, font: serifItalic, color: rgb(0.25, 0.40, 0.55) });
+        page.drawText(options.subtitle, { x: x1 + 18, y: curY - 6, size: 13, font: serifItalic, color: rgb(0.25, 0.40, 0.55) });
         curY -= 26;
       }
 
       const ruleY = curY - 14;
-      page.drawLine({ start: { x: m + 18, y: ruleY }, end: { x: m + 80, y: ruleY }, thickness: 1.0, color: azureDeep });
-      page.drawLine({ start: { x: m + 80, y: ruleY }, end: { x: m + 120, y: ruleY }, thickness: 1.0, color: solarGold });
+      page.drawLine({ start: { x: x1 + 18, y: ruleY }, end: { x: x1 + 80, y: ruleY }, thickness: 1.0, color: azureDeep });
+      page.drawLine({ start: { x: x1 + 80, y: ruleY }, end: { x: x1 + 120, y: ruleY }, thickness: 1.0, color: solarGold });
 
       const metaY = m + 32;
       if (sansBold) {
-        page.drawText('STUDY RESEARCHER', { x: m + 18, y: metaY + 36, size: 7.0, font: sansBold, color: solarGold });
-        page.drawText('CALENDAR REGISTRY', { x: m + 18, y: metaY + 6, size: 7.0, font: sansBold, color: solarGold });
+        page.drawText('STUDY RESEARCHER', { x: x1 + 18, y: metaY + 36, size: 7.0, font: sansBold, color: solarGold });
+        page.drawText('CALENDAR REGISTRY', { x: x1 + 18, y: metaY + 6, size: 7.0, font: sansBold, color: solarGold });
       }
       if (serifRoman) {
-        page.drawText(options.author || 'Summer Study Compendium', { x: m + 18, y: metaY + 22, size: 10, font: serifRoman, color: azureDeep });
+        page.drawText(options.author || 'Summer Study Compendium', { x: x1 + 18, y: metaY + 22, size: 10, font: serifRoman, color: azureDeep });
       }
       if (serifItalic) {
-        page.drawText(todayStr || 'Summer Solstice', { x: m + 18, y: metaY - 8, size: 9, font: serifItalic, color: azureDeep });
+        page.drawText(todayStr || 'Summer Solstice', { x: x1 + 18, y: metaY - 8, size: 9, font: serifItalic, color: azureDeep });
       }
 
     } else if (tpl === 'autumn' || tpl === 'otono' || tpl === 'otonno' || tpl === 'fall') {

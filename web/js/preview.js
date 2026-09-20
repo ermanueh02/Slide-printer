@@ -802,38 +802,38 @@
 
       ctx.strokeStyle = navy;
       ctx.lineWidth = 0.6;
-      ctx.strokeRect(pw - m - 110, m + 14, 96, 26);
+      ctx.strokeRect(x2 - 110, m + 14, 96, 26);
       ctx.font = '700 6.5px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = navy;
       ctx.textAlign = 'center';
-      ctx.fillText('REGISTRY NO. 1914-SP', pw - m - 62, m + 27);
+      ctx.fillText('REGISTRY NO. 1914-SP', x2 - 62, m + 27);
       ctx.font = '5.5px system-ui, -apple-system, sans-serif';
-      ctx.fillText('TELEGRAPH DOSSIER', pw - m - 62, m + 35);
+      ctx.fillText('TELEGRAPH DOSSIER', x2 - 62, m + 35);
 
       ctx.font = '700 8.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = navy;
       ctx.textAlign = 'left';
-      ctx.fillText('E D W A R D I A N   D O S S I E R   ·   1 9 1 0 s', m + 16, m + 26);
+      ctx.fillText('E D W A R D I A N   D O S S I E R   ·   1 9 1 0 s', x1 + 16, m + 26);
       ctx.font = 'italic 7.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = goldMuted;
-      ctx.fillText('EARLY MODERNIST MONOGRAPH · AVIATION ERA', m + 16, m + 38);
+      ctx.fillText('EARLY MODERNIST MONOGRAPH · AVIATION ERA', x1 + 16, m + 38);
 
       ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = navy;
-      const endTitleY = drawWrappedText(ctx, titleText, m + 16, ph * 0.38, pw - 2 * m - 50, 34);
+      const endTitleY = drawWrappedText(ctx, titleText, x1 + 16, ph * 0.38, w - 50, 34);
 
       let subY = endTitleY + 22;
       if (options.studyTitle) {
         ctx.font = 'italic 12.5px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = goldMuted;
-        ctx.fillText(options.studyTitle, m + 16, subY);
+        ctx.fillText(options.studyTitle, x1 + 16, subY);
         subY += 22;
       }
 
       ctx.strokeStyle = navy;
       ctx.lineWidth = 1.0;
       ctx.beginPath();
-      ctx.moveTo(m + 16, subY); ctx.lineTo(m + 90, subY);
+      ctx.moveTo(x1 + 16, subY); ctx.lineTo(x1 + 90, subY);
       ctx.stroke();
 
       const metaY = ph * 0.82;
@@ -934,39 +934,39 @@
       ctx.strokeStyle = copper;
       ctx.lineWidth = 1.2;
       ctx.beginPath();
-      ctx.moveTo(m, m + 45); ctx.lineTo(pw - m, m + 45);
+      ctx.moveTo(x1, m + 45); ctx.lineTo(x2, m + 45);
       ctx.stroke();
       ctx.lineWidth = 0.5;
       ctx.beginPath();
-      ctx.moveTo(m, m + 49); ctx.lineTo(pw - m, m + 49);
+      ctx.moveTo(x1, m + 49); ctx.lineTo(x2, m + 49);
       ctx.stroke();
 
       ctx.font = '700 8.5px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = slate;
       ctx.textAlign = 'left';
-      ctx.fillText('STREAMLINE MODERNE  ·  DOSSIER 1935', m + 14, m + 32);
+      ctx.fillText('STREAMLINE MODERNE  ·  DOSSIER 1935', x1 + 14, m + 32);
       ctx.font = 'italic 7.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = copper;
       ctx.textAlign = 'right';
-      ctx.fillText('INDUSTRIAL DESIGN ARCHIVE', pw - m - 14, m + 32);
+      ctx.fillText('INDUSTRIAL DESIGN ARCHIVE', x2 - 14, m + 32);
 
       ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = slate;
       ctx.textAlign = 'left';
-      const endTitleY = drawWrappedText(ctx, titleText, m + 14, ph * 0.38, pw - 2 * m - 50, 34);
+      const endTitleY = drawWrappedText(ctx, titleText, x1 + 14, ph * 0.38, w - 50, 34);
 
       let subY = endTitleY + 22;
       if (options.studyTitle) {
         ctx.font = 'italic 12.5px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = copper;
-        ctx.fillText(options.studyTitle, m + 14, subY);
+        ctx.fillText(options.studyTitle, x1 + 14, subY);
         subY += 22;
       }
 
       ctx.strokeStyle = copper;
       ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(m + 14, subY); ctx.lineTo(m + 100, subY);
+      ctx.moveTo(x1 + 14, subY); ctx.lineTo(x1 + 100, subY);
       ctx.stroke();
 
       const metaY = ph * 0.82;
@@ -995,43 +995,43 @@
 
       ctx.strokeStyle = stampRed;
       ctx.lineWidth = 0.8;
-      ctx.strokeRect(pw - m - 130, m + 14, 116, 24);
+      ctx.strokeRect(x2 - 130, m + 14, 116, 24);
       ctx.font = '700 7px monospace, monospace';
       ctx.fillStyle = stampRed;
       ctx.textAlign = 'center';
-      ctx.fillText('CONFIDENTIAL STUDY FILE', pw - m - 72, m + 26);
+      ctx.fillText('CONFIDENTIAL STUDY FILE', x2 - 72, m + 26);
       ctx.font = '5.5px monospace, monospace';
-      ctx.fillText('PRESS & RESEARCH DOSSIER', pw - m - 72, m + 34);
+      ctx.fillText('PRESS & RESEARCH DOSSIER', x2 - 72, m + 34);
 
       ctx.font = '700 8px monospace, monospace';
       ctx.fillStyle = inkBlack;
       ctx.textAlign = 'left';
-      ctx.fillText('[ DOSSIER 1944 ] :: OFFICIAL BRIEF', m + 16, m + 28);
+      ctx.fillText('[ DOSSIER 1944 ] :: OFFICIAL BRIEF', x1 + 16, m + 28);
 
       ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkBlack;
-      const endTitleY = drawWrappedText(ctx, titleText, m + 16, ph * 0.38, pw - 2 * m - 50, 34);
+      const endTitleY = drawWrappedText(ctx, titleText, x1 + 16, ph * 0.38, w - 50, 34);
 
       let subY = endTitleY + 22;
       if (options.studyTitle) {
         ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = '#555555';
-        ctx.fillText(options.studyTitle, m + 16, subY);
+        ctx.fillText(options.studyTitle, x1 + 16, subY);
         subY += 22;
       }
 
       ctx.strokeStyle = inkBlack;
       ctx.lineWidth = 1.0;
       ctx.beginPath();
-      ctx.moveTo(m + 16, subY); ctx.lineTo(m + 110, subY);
+      ctx.moveTo(x1 + 16, subY); ctx.lineTo(x1 + 110, subY);
       ctx.stroke();
 
       const metaY = ph * 0.78;
       ctx.font = '700 8px monospace, monospace';
       ctx.fillStyle = inkBlack;
-      ctx.fillText(`[ OPERATOR ] : ${options.coverAuthor || 'Anonymous.44'}`, m + 16, metaY);
-      ctx.fillText(`[ TIMESTAMP] : ${dateFormatted}`, m + 16, metaY + 16);
-      ctx.fillText(`[ DATASETS ] : ${options.totalPages || 0} Slides Compiled // Monograph`, m + 16, metaY + 32);
+      ctx.fillText(`[ OPERATOR ] : ${options.coverAuthor || 'Anonymous.44'}`, x1 + 16, metaY);
+      ctx.fillText(`[ TIMESTAMP] : ${dateFormatted}`, x1 + 16, metaY + 16);
+      ctx.fillText(`[ DATASETS ] : ${options.totalPages || 0} Slides Compiled // Monograph`, x1 + 16, metaY + 32);
 
     } else if (tpl === 'fifties' || tpl === '50s') {
       // 4. Fifties: Mid-Century Pelican / Penguin Tri-Band
@@ -1111,27 +1111,27 @@
       ctx.textAlign = 'left';
       ctx.fillText('01 / TYPOGRAFISCHE MONOGRAFIE', m, m + 26);
       ctx.textAlign = 'right';
-      ctx.fillText('SWISS INT. 1968 · ZÜRICH', pw - m, m + 26);
+      ctx.fillText('SWISS INT. 1968 · ZÜRICH', x2, m + 26);
 
       ctx.strokeStyle = '#000000';
       ctx.lineWidth = 0.5;
       ctx.beginPath();
-      ctx.moveTo(m, m + 32);
-      ctx.lineTo(pw - m, m + 32);
+      ctx.moveTo(x1, m + 32);
+      ctx.lineTo(x2, m + 32);
       ctx.stroke();
 
       // Bold Swiss title
       ctx.font = '700 30px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = '#000000';
       ctx.textAlign = 'left';
-      const endTitleY = drawWrappedText(ctx, titleText, m, ph * 0.36, pw - 2 * m, 38);
+      const endTitleY = drawWrappedText(ctx, titleText, x1, ph * 0.36, w, 38);
 
       // Subtitle
       let midRuleY = endTitleY + 24;
       if (options.studyTitle) {
         ctx.font = '500 13px system-ui, -apple-system, sans-serif';
         ctx.fillStyle = '#4b5563';
-        ctx.fillText(options.studyTitle, m, midRuleY);
+        ctx.fillText(options.studyTitle, x1, midRuleY);
         midRuleY += 24;
       }
 
@@ -1139,7 +1139,7 @@
       ctx.lineWidth = 1.0;
       ctx.beginPath();
       ctx.moveTo(m, midRuleY);
-      ctx.lineTo(pw - m, midRuleY);
+      ctx.lineTo(x2, midRuleY);
       ctx.stroke();
 
       // Bottom metadata
@@ -1147,13 +1147,13 @@
       ctx.font = '700 7.5px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = '#6b7280';
       ctx.textAlign = 'left';
-      ctx.fillText('AUTHOR / BEARBEITER', m, metaY);
-      ctx.fillText('DATUM / DATE', m + (pw - 2 * m) * 0.52, metaY);
+      ctx.fillText('AUTHOR / BEARBEITER', x1, metaY);
+      ctx.fillText('DATUM / DATE', x1 + w * 0.52, metaY);
 
       ctx.font = '600 11px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = '#000000';
-      ctx.fillText(options.coverAuthor || 'Allgemeine Notizen', m, metaY + 16);
-      ctx.fillText(dateFormatted, m + (pw - 2 * m) * 0.52, metaY + 16);
+      ctx.fillText(options.coverAuthor || 'Allgemeine Notizen', x1, metaY + 16);
+      ctx.fillText(dateFormatted, x1 + w * 0.52, metaY + 16);
 
     } else if (tpl === 'seventies' || tpl === '70s') {
       // 6. Seventies: Retro Warm Groove & Apollo Style
@@ -1239,7 +1239,7 @@
       // Diagonal hatch box
       ctx.strokeStyle = '#111827';
       ctx.lineWidth = 1.5;
-      ctx.strokeRect(m, m, 46, 46);
+      ctx.strokeRect(x1, m, 46, 46);
 
       ctx.lineWidth = 1.0;
       ctx.strokeStyle = '#0ea5e9';
@@ -1254,51 +1254,51 @@
       ctx.font = '800 9px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = '#111827';
       ctx.textAlign = 'left';
-      ctx.fillText('PERSONAL STUDY SYSTEM // 1984', m + 58, m + 18);
+      ctx.fillText('PERSONAL STUDY SYSTEM // 1984', x1 + 58, m + 18);
 
       ctx.font = '500 7.5px monospace, monospace';
       ctx.fillStyle = '#64748b';
-      ctx.fillText('REF. MODEL 84-MKII · MEMPHIS TECH EDITION', m + 58, m + 32);
+      ctx.fillText('REF. MODEL 84-MKII · MEMPHIS TECH EDITION', x1 + 58, m + 32);
 
       // Geometric rules
       ctx.strokeStyle = '#111827';
       ctx.lineWidth = 2.0;
       ctx.beginPath();
-      ctx.moveTo(m, m + 58);
-      ctx.lineTo(pw - m, m + 58);
+      ctx.moveTo(x1, m + 58);
+      ctx.lineTo(x2, m + 58);
       ctx.stroke();
 
       ctx.strokeStyle = '#f43f5e';
       ctx.lineWidth = 2.0;
       ctx.beginPath();
-      ctx.moveTo(m, m + 62);
-      ctx.lineTo(m + 96, m + 62);
+      ctx.moveTo(x1, m + 62);
+      ctx.lineTo(x1 + 96, m + 62);
       ctx.stroke();
 
       // Bold title
       ctx.font = '800 28px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = '#0f172a';
       ctx.textAlign = 'left';
-      const endTitleY = drawWrappedText(ctx, titleText, m, ph * 0.38, pw - 2 * m - 30, 36);
+      const endTitleY = drawWrappedText(ctx, titleText, x1, ph * 0.38, w - 30, 36);
 
       // Subtitle
       if (options.studyTitle) {
         ctx.font = '600 13px system-ui, -apple-system, sans-serif';
         ctx.fillStyle = '#0ea5e9';
-        ctx.fillText(options.studyTitle, m, endTitleY + 24);
+        ctx.fillText(options.studyTitle, x1, endTitleY + 24);
       }
 
       // Floating Memphis shapes
       ctx.fillStyle = '#f59e0b';
       ctx.beginPath();
-      ctx.arc(pw - m - 20, ph * 0.36, 6, 0, Math.PI * 2);
+      ctx.arc(x2 - 20, ph * 0.36, 6, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.fillStyle = '#0ea5e9';
       ctx.beginPath();
-      ctx.moveTo(pw - m - 30, ph * 0.39);
-      ctx.lineTo(pw - m - 20, ph * 0.41);
-      ctx.lineTo(pw - m - 40, ph * 0.41);
+      ctx.moveTo(x2 - 30, ph * 0.39);
+      ctx.lineTo(x2 - 20, ph * 0.41);
+      ctx.lineTo(x2 - 40, ph * 0.41);
       ctx.closePath();
       ctx.fill();
 
@@ -1321,7 +1321,7 @@
       ctx.fillText(options.coverAuthor || 'SYSTEM USER 01', m + 14, bY + 36);
 
       ctx.font = '600 10px monospace, monospace';
-      ctx.fillText(dateFormatted, m + (pw - 2 * m) * 0.52, bY + 36);
+      ctx.fillText(dateFormatted, x1 + w * 0.52, bY + 36);
 
     } else if (tpl === 'nineties' || tpl === '90s') {
       // 8. Nineties: Minimalist Editorial Lookbook / Indie Zine
@@ -1351,19 +1351,19 @@
       ctx.textAlign = 'left';
       ctx.fillText('[ ISSUE 09 // LOOKBOOK ARCHIVE ]', m, 52);
       ctx.textAlign = 'right';
-      ctx.fillText('REF: 1994-AUTUMN-WINTER', pw - m, 52);
+      ctx.fillText('REF: 1994-AUTUMN-WINTER', x2, 52);
 
       // Title
       ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#111111';
       ctx.textAlign = 'left';
-      const endTitleY = drawWrappedText(ctx, titleText, m, ph * 0.38, pw - 2 * m, 36);
+      const endTitleY = drawWrappedText(ctx, titleText, x1, ph * 0.38, w, 36);
 
       // Subtitle
       if (options.studyTitle) {
         ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = '#555555';
-        ctx.fillText(options.studyTitle, m, endTitleY + 22);
+        ctx.fillText(options.studyTitle, x1, endTitleY + 22);
       }
 
       // Subtle hairline divider
@@ -1371,8 +1371,8 @@
       ctx.strokeStyle = 'rgba(0, 0, 0, 0.20)';
       ctx.lineWidth = 0.5;
       ctx.beginPath();
-      ctx.moveTo(m, divY);
-      ctx.lineTo(pw - m, divY);
+      ctx.moveTo(x1, divY);
+      ctx.lineTo(x2, divY);
       ctx.stroke();
 
       // Bottom metadata
@@ -1380,13 +1380,13 @@
       ctx.font = '700 7px monospace, monospace';
       ctx.fillStyle = '#777777';
       ctx.textAlign = 'left';
-      ctx.fillText('DIRECTOR / STUDENT:', m, metaY);
-      ctx.fillText('COMPILATION DATE:', m + (pw - 2 * m) * 0.52, metaY);
+      ctx.fillText('DIRECTOR / STUDENT:', x1, metaY);
+      ctx.fillText('COMPILATION DATE:', x1 + w * 0.52, metaY);
 
       ctx.font = '500 10.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#111111';
-      ctx.fillText(options.coverAuthor || 'Studio Dossier', m, metaY + 16);
-      ctx.fillText(dateFormatted, m + (pw - 2 * m) * 0.52, metaY + 16);
+      ctx.fillText(options.coverAuthor || 'Studio Dossier', x1, metaY + 16);
+      ctx.fillText(dateFormatted, x1 + w * 0.52, metaY + 16);
 
     } else if (tpl === 'twothousands' || tpl === '2000s' || tpl === '2000' || tpl === 'y2k' || tpl === 'noughties') {
       // 2000s Y2K Millennium Tech & Dot-Com Era
@@ -1400,7 +1400,7 @@
       ctx.fillStyle = cobalt;
       ctx.fillRect(x1, m, w, 12);
       ctx.fillStyle = cyanY2K;
-      ctx.fillRect(m, m + 12, pw - 2 * m, 3);
+      ctx.fillRect(x1, m + 12, w, 3);
 
       ctx.strokeStyle = cobalt;
       ctx.lineWidth = 0.8;
@@ -1411,36 +1411,36 @@
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = cobalt;
       ctx.textAlign = 'center';
-      ctx.fillText('Y2K-2000', pw - m - 44, m + 36);
+      ctx.fillText('Y2K-2000', x2 - 44, m + 36);
 
       ctx.font = '700 8.5px system-ui, -apple-system, sans-serif';
       ctx.textAlign = 'left';
-      ctx.fillText('Y2K MILLENNIUM DOSSIER // DIGITAL ERA', m, m + 34);
+      ctx.fillText('Y2K MILLENNIUM DOSSIER // DIGITAL ERA', x1, m + 34);
 
       ctx.font = '700 27px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = '#141e2e';
-      const endTitleY = drawWrappedText(ctx, titleText, m, ph * 0.38, pw - 2 * m - 50, 35);
+      const endTitleY = drawWrappedText(ctx, titleText, x1, ph * 0.38, w - 50, 35);
 
       let subY = endTitleY + 22;
       if (options.studyTitle) {
         ctx.font = '12px system-ui, -apple-system, sans-serif';
         ctx.fillStyle = cyanY2K;
-        ctx.fillText(options.studyTitle, m, subY);
+        ctx.fillText(options.studyTitle, x1, subY);
         subY += 22;
       }
 
       ctx.strokeStyle = cyanY2K;
       ctx.lineWidth = 1.2;
       ctx.beginPath();
-      ctx.moveTo(m, subY); ctx.lineTo(m + 100, subY);
+      ctx.moveTo(x1, subY); ctx.lineTo(x1 + 100, subY);
       ctx.stroke();
 
       const metaY = ph * 0.80;
       ctx.font = '700 8px monospace, monospace';
       ctx.fillStyle = cobalt;
-      ctx.fillText(`<AUTHOR>    ${options.coverAuthor || 'Y2K.User'}`, m, metaY);
-      ctx.fillText(`<TIMESTAMP> ${dateFormatted}`, m, metaY + 16);
-      ctx.fillText(`<FOLIOS>    ${options.totalPages || 0} Slides Processed`, m, metaY + 32);
+      ctx.fillText(`<AUTHOR>    ${options.coverAuthor || 'Y2K.User'}`, x1, metaY);
+      ctx.fillText(`<TIMESTAMP> ${dateFormatted}`, x1, metaY + 16);
+      ctx.fillText(`<FOLIOS>    ${options.totalPages || 0} Slides Processed`, x1, metaY + 32);
 
     } else if (tpl === 'twenty10s' || tpl === '2010s' || tpl === '2010' || tpl === 'flatdesign' || tpl === 'startup') {
       // 2010s Flat Design & Startup Minimalist
@@ -1454,29 +1454,29 @@
       ctx.font = '700 8px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = indigo;
       ctx.textAlign = 'left';
-      ctx.fillText('2010s MINIMALIST // STARTUP EDITION', m, m + 20);
+      ctx.fillText('2010s MINIMALIST // STARTUP EDITION', x1, m + 20);
 
       ctx.font = '7.5px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = '#80808d';
       ctx.textAlign = 'right';
-      ctx.fillText('FLAT DESIGN ARCHIVE · VOL. 14', pw - m, m + 20);
+      ctx.fillText('FLAT DESIGN ARCHIVE · VOL. 14', x2, m + 20);
 
       ctx.strokeStyle = 'rgba(30, 30, 40, 0.15)';
       ctx.lineWidth = 0.5;
       ctx.beginPath();
-      ctx.moveTo(m, m + 30); ctx.lineTo(pw - m, m + 30);
+      ctx.moveTo(x1, m + 30); ctx.lineTo(x2, m + 30);
       ctx.stroke();
 
       ctx.font = '700 27px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = charcoal;
       ctx.textAlign = 'left';
-      const endTitleY = drawWrappedText(ctx, titleText, m, ph * 0.38, pw - 2 * m - 40, 35);
+      const endTitleY = drawWrappedText(ctx, titleText, x1, ph * 0.38, w - 40, 35);
 
       let subY = endTitleY + 22;
       if (options.studyTitle) {
         ctx.font = '12px system-ui, -apple-system, sans-serif';
         ctx.fillStyle = '#666675';
-        ctx.fillText(options.studyTitle, m, subY);
+        ctx.fillText(options.studyTitle, x1, subY);
         subY += 22;
       }
 
@@ -1488,17 +1488,17 @@
       const metaY = ph * 0.82;
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = indigo;
-      ctx.fillText('AUTHOR', m, metaY);
+      ctx.fillText('AUTHOR', x1, metaY);
       ctx.font = '10px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = charcoal;
-      ctx.fillText(options.coverAuthor || 'Startup Notes', m, metaY + 14);
+      ctx.fillText(options.coverAuthor || 'Startup Notes', x1, metaY + 14);
 
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = indigo;
-      ctx.fillText('DATE', m + (pw - 2 * m) * 0.52, metaY);
+      ctx.fillText('DATE', x1 + w * 0.52, metaY);
       ctx.font = '10px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = charcoal;
-      ctx.fillText(dateFormatted || '2015 Edition', m + (pw - 2 * m) * 0.52, metaY + 14);
+      ctx.fillText(dateFormatted || '2015 Edition', x1 + w * 0.52, metaY + 14);
 
     } else if (tpl === 'twentytwenties' || tpl === '2020s' || tpl === '2020' || tpl === 'neubrutalism' || tpl === 'contemporary' || tpl === 'ai_era') {
       // 2020s Modern Neubrutalism & Contemporary AI Era
@@ -1516,25 +1516,25 @@
       ctx.font = '700 8px monospace, monospace';
       ctx.fillStyle = pitchBlack;
       ctx.textAlign = 'left';
-      ctx.fillText('[ 2020s // CONTEMPORARY STUDY FOLIO ]', m + 16, m + 24);
+      ctx.fillText('[ 2020s // CONTEMPORARY STUDY FOLIO ]', x1 + 16, m + 24);
 
       ctx.fillStyle = emerald;
-      ctx.fillRect(pw - m - 80, m + 14, 64, 16);
+      ctx.fillRect(x2 - 80, m + 14, 64, 16);
       ctx.font = '700 7px monospace, monospace';
       ctx.fillStyle = pitchBlack;
       ctx.textAlign = 'center';
-      ctx.fillText('2026.AI', pw - m - 48, m + 25);
+      ctx.fillText('2026.AI', x2 - 48, m + 25);
 
       ctx.font = '700 27px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = pitchBlack;
       ctx.textAlign = 'left';
-      const endTitleY = drawWrappedText(ctx, titleText, m + 16, ph * 0.38, pw - 2 * m - 50, 35);
+      const endTitleY = drawWrappedText(ctx, titleText, x1 + 16, ph * 0.38, w - 50, 35);
 
       let subY = endTitleY + 22;
       if (options.studyTitle) {
         ctx.font = '12px system-ui, -apple-system, sans-serif';
         ctx.fillStyle = '#4a4a55';
-        ctx.fillText(options.studyTitle, m + 16, subY);
+        ctx.fillText(options.studyTitle, x1 + 16, subY);
         subY += 22;
       }
 
