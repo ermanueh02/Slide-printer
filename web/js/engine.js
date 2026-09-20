@@ -534,15 +534,16 @@
     const isVerso = false; // Cover page on Sheet 1 is odd/recto
     const leftGutter = isVerso ? 0 : gutterMargin;
     const rightGutter = isVerso ? gutterMargin : 0;
-    const availW = pw - leftGutter - rightGutter;
-    const centerX = leftGutter + availW / 2;
+
+    const userMargin = typeof options.margin === 'number' ? options.margin : 40.0;
+    const m = Math.max(userMargin, 20.0);
+    const x1 = leftGutter + m;
+    const x2 = pw - rightGutter - m;
+    const w = x2 - x1;
+    const centerX = x1 + w / 2;
 
     if (tpl === 'george') {
       // 1. George 90s Editorial / JFK Jr Executive Style
-      const m = 44;
-      const x1 = leftGutter + m;
-      const x2 = pw - rightGutter - m;
-      const w = x2 - x1;
 
       page.drawLine({
         start: { x: x1, y: ph - 58 },
@@ -1052,17 +1053,17 @@
       const goldMuted = rgb(0.70, 0.58, 0.36);
 
       page.drawRectangle({
-        x: m,
+        x: x1,
         y: m,
-        width: pw - 2 * m,
+        width: w,
         height: ph - 2 * m,
         borderColor: navy,
         borderWidth: 1.8,
       });
       page.drawRectangle({
-        x: m + 4.0,
+        x: x1 + 4.0,
         y: m + 4.0,
-        width: pw - 2 * (m + 4.0),
+        width: w - 8.0,
         height: ph - 2 * (m + 4.0),
         borderColor: goldMuted,
         borderWidth: 0.5,
@@ -1137,17 +1138,17 @@
       const decoGold = rgb(0.82, 0.65, 0.28);
 
       page.drawRectangle({
-        x: m,
+        x: x1,
         y: m,
-        width: pw - 2 * m,
+        width: w,
         height: ph - 2 * m,
         borderColor: decoBlack,
         borderWidth: 2.0,
       });
       page.drawRectangle({
-        x: m + 4.5,
+        x: x1 + 4.5,
         y: m + 4.5,
-        width: pw - 2 * (m + 4.5),
+        width: w - 9.0,
         height: ph - 2 * (m + 4.5),
         borderColor: decoGold,
         borderWidth: 0.8,
@@ -1162,7 +1163,7 @@
       });
 
       if (timesBold) {
-        const topStr = '★   A R T   D E C O   C O M P E N D I U M   ·   1 9 2 0 s   ★';
+        const topStr = '·   A R T   D E C O   C O M P E N D I U M   ·   1 9 2 0 s   ·';
         const topW = timesBold.widthOfTextAtSize(topStr, 8.0);
         page.drawText(topStr, { x: (pw - topW) / 2, y: ph - m - 28, size: 8.0, font: timesBold, color: decoGold });
       }
@@ -1787,13 +1788,13 @@
 
       if (techFont) {
         page.drawText('OPERATOR / STUDENT:', { x: x1 + 14, y: bY + 36, size: 7.0, font: techFont, color: rgb(0.39, 0.45, 0.55) });
-        page.drawText('TIMESTAMP:', { x: m + (pw - 2 * m) * 0.52, y: bY + 36, size: 7.0, font: techFont, color: rgb(0.39, 0.45, 0.55) });
+        page.drawText('TIMESTAMP:', { x: x1 + w * 0.52, y: bY + 36, size: 7.0, font: techFont, color: rgb(0.39, 0.45, 0.55) });
       }
       if (techBold) {
         page.drawText(options.author || 'SYSTEM USER 01', { x: x1 + 14, y: bY + 18, size: 10.5, font: techBold, color: rgb(0.06, 0.09, 0.16) });
       }
       if (techFont) {
-        page.drawText(todayStr, { x: m + (pw - 2 * m) * 0.52, y: bY + 18, size: 10.0, font: techFont, color: rgb(0.06, 0.09, 0.16) });
+        page.drawText(todayStr, { x: x1 + w * 0.52, y: bY + 18, size: 10.0, font: techFont, color: rgb(0.06, 0.09, 0.16) });
       }
 
     } else if (tpl === 'nineties' || tpl === '90s') {
@@ -1982,11 +1983,11 @@
       const metaY = m + 36;
       if (sFont) {
         page.drawText('AUTHOR', { x: x1, y: metaY + 24, size: 7.0, font: sFont, color: indigo });
-        page.drawText('DATE', { x: m + (pw - 2 * m) * 0.52, y: metaY + 24, size: 7.0, font: sFont, color: indigo });
+        page.drawText('DATE', { x: x1 + w * 0.52, y: metaY + 24, size: 7.0, font: sFont, color: indigo });
       }
       if (sReg) {
         page.drawText(options.author || 'Startup Notes', { x: x1, y: metaY + 10, size: 10.0, font: sReg, color: charcoal });
-        page.drawText(todayStr, { x: m + (pw - 2 * m) * 0.52, y: metaY + 10, size: 10.0, font: sReg, color: charcoal });
+        page.drawText(todayStr, { x: x1 + w * 0.52, y: metaY + 10, size: 10.0, font: sReg, color: charcoal });
       }
 
     } else if (tpl === 'twentytwenties' || tpl === '2020s' || tpl === '2020' || tpl === 'neubrutalism' || tpl === 'contemporary' || tpl === 'ai_era') {
@@ -2946,11 +2947,12 @@
         outDoc,
         {
           paperDimensions: [paperWidth, paperHeight],
-          title: options.coverTitle || 'Presentation',
+          title: options.coverTitle || options.title || 'Presentation',
           subtitle: studyTitle,
-          author: options.coverAuthor || '',
+          author: options.coverAuthor || options.author || '',
           coverTemplate: options.coverTemplate || 'atelier',
           numSlides: selectedIndices.length,
+          margin: margin,
           binding: binding,
           gutterMargin: gutterMargin,
           duplex: duplex,

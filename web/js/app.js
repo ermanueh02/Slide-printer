@@ -2206,69 +2206,82 @@
     let printWindow = null;
     const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark' || 
       (!document.documentElement.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const bgCol = isDarkTheme ? '#141517' : '#fdfbf7';
+    const textCol = isDarkTheme ? '#f4f1ea' : '#1a2332';
+    const textSubCol = isDarkTheme ? '#a39f97' : '#5a6578';
+    const spinTrack = isDarkTheme ? 'rgba(234, 88, 12, 0.2)' : 'rgba(197, 160, 89, 0.2)';
+    const spinAccent = isDarkTheme ? '#ea580c' : '#c5a059';
 
     try {
       printWindow = window.open('', '_blank');
       if (printWindow) {
-        printWindow.document.write(`
-          <!DOCTYPE html>
-          <html ${isDarkTheme ? 'data-theme="dark"' : ''}>
-            <head>
-              <meta charset="utf-8">
-              <title>${dict.printBtn || 'Print Folio'} · Slide-Printer</title>
-              <style>
-                :root {
-                  --bg: #fdfbf7;
-                  --text: #1a2332;
-                  --text-sub: #5a6578;
-                  --spinner-track: rgba(197, 160, 89, 0.2);
-                  --spinner-accent: #c5a059;
-                }
-                html[data-theme="dark"],
-                @media (prefers-color-scheme: dark) {
-                  :root:not([data-theme="light"]) {
-                    --bg: #141517;
-                    --text: #f4f1ea;
-                    --text-sub: #a39f97;
-                    --spinner-track: rgba(234, 88, 12, 0.2);
-                    --spinner-accent: #ea580c;
-                  }
-                }
-                body {
-                  margin: 0;
-                  padding: 40px;
-                  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-                  background: var(--bg);
-                  color: var(--text);
-                  display: flex;
-                  flex-direction: column;
-                  align-items: center;
-                  justify-content: center;
-                  min-height: 75vh;
-                  text-align: center;
-                  transition: background 0.3s ease, color 0.3s ease;
-                }
-                .spinner {
-                  width: 38px;
-                  height: 38px;
-                  border: 3px solid var(--spinner-track);
-                  border-top-color: var(--spinner-accent);
-                  border-radius: 50%;
-                  animation: spin 0.9s linear infinite;
-                  margin-bottom: 1.5rem;
-                }
-                @keyframes spin { to { transform: rotate(360deg); } }
-                h2 { font-weight: 600; font-size: 1.25rem; margin: 0 0 0.5rem; color: var(--text); }
-                p { color: var(--text-sub); font-size: 0.95rem; margin: 0; }
-              </style>
-            </head>
-            <body>
-              <div class="spinner"></div>
-              <h2>${dict.preparingPrintMsg || 'Preparing handout...'}</h2>
-              <p>Your high-resolution folio is being compiled for printing.</p>
-            </body>
-          </html>
-        `);
+        printWindow.document.write(`<!DOCTYPE html>
+<html lang="${state.lang}" ${isDarkTheme ? 'data-theme="dark"' : ''} style="background-color: ${bgCol}; color: ${textCol};">
+<head>
+  <meta charset="utf-8">
+  <title>${dict.printBtn || 'Print Folio'} · Slide-Printer</title>
+  <style>
+    :root {
+      --bg: ${bgCol};
+      --text: ${textCol};
+      --text-sub: ${textSubCol};
+      --spinner-track: ${spinTrack};
+      --spinner-accent: ${spinAccent};
+    }
+    html[data-theme="dark"] {
+      --bg: #141517;
+      --text: #f4f1ea;
+      --text-sub: #a39f97;
+      --spinner-track: rgba(234, 88, 12, 0.2);
+      --spinner-accent: #ea580c;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #141517;
+        --text: #f4f1ea;
+        --text-sub: #a39f97;
+        --spinner-track: rgba(234, 88, 12, 0.2);
+        --spinner-accent: #ea580c;
+      }
+    }
+    html, body {
+      background-color: var(--bg) !important;
+      color: var(--text) !important;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+    body {
+      padding: 40px;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .spinner {
+      width: 38px;
+      height: 38px;
+      border: 3px solid var(--spinner-track);
+      border-top-color: var(--spinner-accent);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin-bottom: 1.5rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    h2 { font-weight: 600; font-size: 1.25rem; margin: 0 0 0.5rem; color: var(--text); }
+    p { color: var(--text-sub); font-size: 0.95rem; margin: 0; }
+  </style>
+</head>
+<body style="background-color: ${bgCol}; color: ${textCol};">
+  <div class="spinner"></div>
+  <h2>${dict.preparingPrintMsg || 'Preparing handout...'}</h2>
+  <p>Your high-resolution folio is being compiled for printing.</p>
+</body>
+</html>`);
       }
     } catch (e) {
       console.warn('Could not pre-open window:', e);
@@ -2289,7 +2302,9 @@
           pageNumbers: state.pageNumbers,
           pageNumberFormat: state.pageNumberFormat,
           layout: state.layout,
-          gutter: state.hasGutter ? 30 : 0,
+          binding: state.binding,
+          gutter: state.gutter,
+          holeGuides: state.holeGuides,
           duplex: state.duplex,
           coverMode: state.coverMode,
           coverTemplate: state.coverTemplate || 'atelier',

@@ -839,13 +839,13 @@
       const metaY = ph * 0.82;
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = goldMuted;
-      ctx.fillText('AUTHOR / CORRESPONDENT', m + 16, metaY);
+      ctx.fillText('AUTHOR / CORRESPONDENT', x1 + 16, metaY);
       ctx.font = '700 10.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = navy;
-      ctx.fillText(options.coverAuthor || 'Edwardian Edition', m + 16, metaY + 14);
+      ctx.fillText(options.coverAuthor || 'Edwardian Edition', x1 + 16, metaY + 14);
       ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = goldMuted;
-      ctx.fillText(dateFormatted || 'Archival Record 1910', m + 16, metaY + 28);
+      ctx.fillText(dateFormatted || 'Archival Record 1910', x1 + 16, metaY + 28);
 
     } else if (tpl === 'twenties' || tpl === '20s' || tpl === '1920s' || tpl === '1920' || tpl === 'artdeco' || tpl === 'gatsby') {
       // 1920s Art Deco & Roaring Twenties
@@ -972,13 +972,13 @@
       const metaY = ph * 0.82;
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = copper;
-      ctx.fillText('DESIGNER / AUTHOR', m + 14, metaY);
+      ctx.fillText('DESIGNER / AUTHOR', x1 + 14, metaY);
       ctx.font = '700 10.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = slate;
-      ctx.fillText(options.coverAuthor || 'Streamline Monograph', m + 14, metaY + 14);
+      ctx.fillText(options.coverAuthor || 'Streamline Monograph', x1 + 14, metaY + 14);
       ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = copper;
-      ctx.fillText(dateFormatted || '1930s Edition', m + 14, metaY + 28);
+      ctx.fillText(dateFormatted || '1930s Edition', x1 + 14, metaY + 28);
 
     } else if (tpl === 'forties' || tpl === '40s' || tpl === '1940s' || tpl === '1940' || tpl === 'typewriter' || tpl === 'postwar') {
       // 1940s Typewriter Dossier & Post-War Press Release
@@ -1109,7 +1109,7 @@
       ctx.font = '700 8px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = '#000000';
       ctx.textAlign = 'left';
-      ctx.fillText('01 / TYPOGRAFISCHE MONOGRAFIE', m, m + 26);
+      ctx.fillText('01 / TYPOGRAFISCHE MONOGRAFIE', x1, m + 26);
       ctx.textAlign = 'right';
       ctx.fillText('SWISS INT. 1968 · ZÜRICH', x2, m + 26);
 
@@ -1138,7 +1138,7 @@
       ctx.strokeStyle = '#000000';
       ctx.lineWidth = 1.0;
       ctx.beginPath();
-      ctx.moveTo(m, midRuleY);
+      ctx.moveTo(x1, midRuleY);
       ctx.lineTo(x2, midRuleY);
       ctx.stroke();
 
@@ -1313,12 +1313,12 @@
       ctx.font = '700 7px monospace, monospace';
       ctx.fillStyle = '#64748b';
       ctx.textAlign = 'left';
-      ctx.fillText('OPERATOR / STUDENT:', m + 14, bY + 18);
-      ctx.fillText('TIMESTAMP:', m + (pw - 2 * m) * 0.52, bY + 18);
+      ctx.fillText('OPERATOR / STUDENT:', x1 + 14, bY + 18);
+      ctx.fillText('TIMESTAMP:', x1 + w * 0.52, bY + 18);
 
       ctx.font = '700 11px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = '#0f172a';
-      ctx.fillText(options.coverAuthor || 'SYSTEM USER 01', m + 14, bY + 36);
+      ctx.fillText(options.coverAuthor || 'SYSTEM USER 01', x1 + 14, bY + 36);
 
       ctx.font = '600 10px monospace, monospace';
       ctx.fillText(dateFormatted, x1 + w * 0.52, bY + 36);
@@ -1349,7 +1349,7 @@
       ctx.font = '400 7.5px monospace, monospace';
       ctx.fillStyle = '#111111';
       ctx.textAlign = 'left';
-      ctx.fillText('[ ISSUE 09 // LOOKBOOK ARCHIVE ]', m, 52);
+      ctx.fillText('[ ISSUE 09 // LOOKBOOK ARCHIVE ]', x1, 52);
       ctx.textAlign = 'right';
       ctx.fillText('REF: 1994-AUTUMN-WINTER', x2, 52);
 
@@ -1631,7 +1631,7 @@
       ctx.lineWidth = 0.5;
       ctx.beginPath();
       ctx.moveTo(titleX + 72, ruleY);
-      ctx.lineTo(pw - m - 22, ruleY);
+      ctx.lineTo(x2 - 22, ruleY);
       ctx.stroke();
 
       const gridY = ph * 0.80;
