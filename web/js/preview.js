@@ -701,6 +701,38 @@
       ctx.font = '700 7px "Inter", "Helvetica Neue", Arial, sans-serif';
       ctx.fillStyle = '#6b7280';
       ctx.fillText('STUDENT:', vertX + 14, metaY);
+
+      ctx.font = '500 10.5px "Inter", "Helvetica Neue", Arial, sans-serif';
+      ctx.fillStyle = '#111827';
+      ctx.fillText(options.coverAuthor || 'General Notes', vertX + 14, metaY + 16);
+
+      ctx.font = '700 7px "Inter", "Helvetica Neue", Arial, sans-serif';
+      ctx.fillStyle = '#6b7280';
+      ctx.fillText('DATE:', vertX + 14, metaY + 36);
+
+      ctx.font = '500 10.5px "Inter", "Helvetica Neue", Arial, sans-serif';
+      ctx.fillStyle = '#111827';
+      ctx.fillText(dateFormatted, vertX + 14, metaY + 52);
+
+    } else if (tpl === 'nineteen00s' || tpl === '1900s' || tpl === '1900' || tpl === '00s') {
+      // 1900s Art Nouveau & Belle Époque
+      const m = 40;
+      const bordeaux = '#4a1525';
+      const gold = '#c5a059';
+
+      ctx.fillStyle = '#fdfbf7';
+      ctx.fillRect(0, 0, pw, ph);
+
+      ctx.strokeStyle = bordeaux;
+      ctx.lineWidth = 1.2;
+      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeStyle = gold;
+      ctx.lineWidth = 0.5;
+      ctx.strokeRect(m + 4, m + 4, pw - 2 * (m + 4), ph - 2 * (m + 4));
+
+      ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = bordeaux;
+      ctx.textAlign = 'center';
       ctx.fillText('ART NOUVEAU ARCHIVE · TURN OF THE CENTURY', pw / 2, m + 42);
 
       const lozY = ph * 0.35;
