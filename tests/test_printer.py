@@ -197,4 +197,54 @@ def test_parse_page_ranges():
     assert parse_page_ranges(None, 5) == [0, 1, 2, 3, 4]
 
 
+def test_slide_printer_binding_spiral(sample_slide_pdf, tmp_path):
+    out_dir = str(tmp_path / "spiral")
+    printer = SlidePrinter(
+        output_dir=out_dir,
+        binding="spiral",
+        hole_guides=True,
+        duplex=True,
+    )
+    assert printer.binding == "spiral"
+    assert printer.gutter_margin == pytest.approx(22.0, 0.1)
+    assert printer.hole_guides is True
+
+    res = printer.process_file(sample_slide_pdf, styles=["lines"])
+    assert len(res) == 1
+    reader = PdfReader(res[0])
+    assert len(reader.pages) == 2
+
+
+def test_slide_printer_binding_binder(sample_slide_pdf, tmp_path):
+    out_dir = str(tmp_path / "binder")
+    printer = SlidePrinter(
+        output_dir=out_dir,
+        binding="binder",
+        hole_guides=True,
+    )
+    assert printer.binding == "binder"
+    assert printer.gutter_margin == pytest.approx(30.0, 0.1)
+
+    res = printer.process_file(sample_slide_pdf, styles=["grid"])
+    assert len(res) == 1
+    assert os.path.exists(res[0])
+
+
+def test_decade_cover_templates(sample_slide_pdf, tmp_path):
+    templates = ["fifties", "sixties", "seventies", "eighties", "nineties"]
+    for tpl in templates:
+        out_dir = str(tmp_path / f"cover_{tpl}")
+        printer = SlidePrinter(
+            output_dir=out_dir,
+            cover_mode="generate",
+            cover_template=tpl,
+            cover_title=f"Test {tpl.title()}",
+            cover_author="Researcher",
+        )
+        res = printer.process_file(sample_slide_pdf, styles=["blank"])
+        assert len(res) == 1
+        reader = PdfReader(res[0])
+        assert len(reader.pages) == 3  # 1 cover + 2 slides
+
+
 

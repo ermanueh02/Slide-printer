@@ -21,6 +21,13 @@ from slide_printer.constants import (
     DEFAULT_PAGE_NUMBER_FORMAT,
     DEFAULT_GUTTER_MARGIN,
     BINDER_GUTTER_POINTS,
+    SPIRAL_GUTTER_POINTS,
+    DEFAULT_BINDING,
+    DEFAULT_HOLE_GUIDES,
+    BINDING_GUTTER_MAP,
+    BINDING_ALIASES,
+    COVER_TEMPLATES,
+    COVER_TEMPLATE_ALIASES,
     DEFAULT_DUPLEX,
     DEFAULT_STUDY_HEADER,
     DEFAULT_LAYOUT,
@@ -131,7 +138,9 @@ class SlidePrinter:
         page_number_format: str = DEFAULT_PAGE_NUMBER_FORMAT,
         study_header: bool = DEFAULT_STUDY_HEADER,
         study_title: Optional[str] = None,
-        gutter_margin: float = DEFAULT_GUTTER_MARGIN,
+        gutter_margin: Optional[float] = None,
+        binding: str = DEFAULT_BINDING,
+        hole_guides: bool = DEFAULT_HOLE_GUIDES,
         duplex: bool = DEFAULT_DUPLEX,
         layout: str = DEFAULT_LAYOUT,
         page_ranges: Optional[str] = None,
@@ -161,7 +170,22 @@ class SlidePrinter:
         self.page_number_format = str(page_number_format)
         self.study_header = bool(study_header)
         self.study_title = study_title
-        self.gutter_margin = float(gutter_margin)
+
+        # Resolve binding type and gutter margin
+        raw_b = str(binding or "none").strip().lower()
+        self.binding = BINDING_ALIASES.get(raw_b, raw_b)
+        self.hole_guides = bool(hole_guides)
+
+        if gutter_margin is not None and float(gutter_margin) != DEFAULT_GUTTER_MARGIN:
+            self.gutter_margin = float(gutter_margin)
+            if self.binding == "none":
+                if abs(self.gutter_margin - SPIRAL_GUTTER_POINTS) < 1.0:
+                    self.binding = "spiral"
+                elif self.gutter_margin > 0.0:
+                    self.binding = "binder"
+        else:
+            self.gutter_margin = BINDING_GUTTER_MAP.get(self.binding, DEFAULT_GUTTER_MARGIN)
+
         self.duplex = bool(duplex)
         self.layout = str(layout).lower()
         self.page_ranges = page_ranges
@@ -169,7 +193,8 @@ class SlidePrinter:
         self.cover_mode = str(cover_mode).lower()
         self.cover_title = cover_title
         self.cover_author = cover_author
-        self.cover_template = str(cover_template).lower()
+        raw_tpl = str(cover_template).lower().strip()
+        self.cover_template = COVER_TEMPLATE_ALIASES.get(raw_tpl, raw_tpl)
 
     def convert_slide_page(
         self,
@@ -187,11 +212,13 @@ class SlidePrinter:
         paper_width, paper_height = self.paper_dimensions
 
         # Gutter calculation based on duplex and sheet_idx
+        is_verso = False
         if self.duplex:
             if sheet_idx % 2 == 1:
                 left_gutter = self.gutter_margin
             else:
                 left_gutter = 0.0
+                is_verso = True
         else:
             left_gutter = self.gutter_margin
 
@@ -244,6 +271,10 @@ class SlidePrinter:
                 study_title=self.study_title,
                 header_y=header_y,
                 grayscale=self.grayscale,
+                binding=self.binding,
+                hole_guides=self.hole_guides,
+                is_verso=is_verso,
+                gutter_margin=self.gutter_margin,
             )
             page.merge_page(overlay)
 
@@ -268,11 +299,13 @@ class SlidePrinter:
         paper_width, paper_height = self.paper_dimensions
 
         # Gutter calculation based on duplex and sheet_idx
+        is_verso = False
         if self.duplex:
             if sheet_idx % 2 == 1:
                 left_gutter = self.gutter_margin
             else:
                 left_gutter = 0.0
+                is_verso = True
         else:
             left_gutter = self.gutter_margin
 
@@ -357,9 +390,14 @@ class SlidePrinter:
             study_title=self.study_title,
             header_y=header_y,
             grayscale=self.grayscale,
+            binding=self.binding,
+            hole_guides=self.hole_guides,
+            is_verso=is_verso,
+            gutter_margin=self.gutter_margin,
         )
         new_page.merge_page(overlay)
         return new_page
+
 
     def process_file(
         self,

@@ -50,3 +50,11 @@ include = ["slide_printer*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
+
+[tool.pyright]
+include = ["slide_printer", "tests"]
+extraPaths = [
+    ".",
+    "C:/Users/manue/venv/Lib/site-packages",
+    "C:/Users/manue/AppData/Local/Python/pythoncore-3.14-64/Lib/site-packages",
+]

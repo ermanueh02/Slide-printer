@@ -147,9 +147,9 @@ def test_interactive_wizard_defaults(monkeypatch, sample_slide_pdf, tmp_path):
     old_cwd = os.getcwd()
     os.chdir(tmp_path)
     try:
-        # Simulate hitting Enter 3 times (style default: grid, paper default: a4, files default: .)
+        # Simulate hitting Enter 4 times (style default: grid, paper default: a4, binding default: none, files default: .)
         # and 'n' to open folder prompt
-        inputs = iter(["", "", "", "n"])
+        inputs = iter(["", "", "", "", "n"])
         monkeypatch.setattr("builtins.input", lambda prompt="": next(inputs))
         res = interactive_wizard()
         assert res == 0
@@ -197,8 +197,8 @@ def test_interactive_wizard_range_selection(monkeypatch, sample_slide_pdf, tmp_p
     old_cwd = os.getcwd()
     os.chdir(tmp_path)
     try:
-        # Style: 1 (grid), Paper: 1 (a4), Selection: "1, 3" (lecture1 and lecture3, skip lecture2), Open: n
-        inputs = iter(["1", "1", "1, 3", "n"])
+        # Style: 1 (grid), Paper: 1 (a4), Binding: 1 (none), Selection: "1, 3" (lecture1 and lecture3, skip lecture2), Open: n
+        inputs = iter(["1", "1", "1", "1, 3", "n"])
         monkeypatch.setattr("builtins.input", lambda prompt="": next(inputs))
         res = interactive_wizard()
         assert res == 0
@@ -266,8 +266,8 @@ def test_interactive_wizard_selective_styles(monkeypatch, sample_slide_pdf, tmp_
     old_cwd = os.getcwd()
     os.chdir(tmp_path)
     try:
-        # Style: "1, 2" (Grid + Lines), Paper: 1 (a4), File: 1, Open: n
-        inputs = iter(["1, 2", "1", "1", "n"])
+        # Style: "1, 2" (Grid + Lines), Paper: 1 (a4), Binding: 1 (none), File: 1, Open: n
+        inputs = iter(["1, 2", "1", "1", "1", "n"])
         monkeypatch.setattr("builtins.input", lambda prompt="": next(inputs))
         res = interactive_wizard()
         assert res == 0
@@ -277,6 +277,7 @@ def test_interactive_wizard_selective_styles(monkeypatch, sample_slide_pdf, tmp_
         assert not (tmp_path / "handouts" / "dots").exists()
     finally:
         os.chdir(old_cwd)
+
 
 
 def test_cli_parse_args_page_numbers():
@@ -376,3 +377,39 @@ def test_cli_version():
     with pytest.raises(SystemExit) as exc:
         parse_args(["-v"])
     assert exc.value.code == 0
+
+
+def test_cli_binding_and_spiral_flags(sample_slide_pdf, tmp_path):
+    out_dir = str(tmp_path / "cli_spiral")
+    code = main([
+        "-i", sample_slide_pdf,
+        "-s", "lines",
+        "--spiral",
+        "--hole-guides",
+        "--duplex",
+        "-o", out_dir,
+        "-q",
+    ])
+    assert code == 0
+    base = os.path.splitext(os.path.basename(sample_slide_pdf))[0]
+    out_pdf = tmp_path / "cli_spiral" / "lines" / f"{base}_lines.pdf"
+    assert out_pdf.exists()
+
+
+def test_cli_decade_cover_template_flag(sample_slide_pdf, tmp_path):
+    out_dir = str(tmp_path / "cli_fifties")
+    code = main([
+        "-i", sample_slide_pdf,
+        "-s", "blank",
+        "--generate-cover",
+        "--cover-template", "fifties",
+        "--cover-title", "Quantum Mechanics 1950",
+        "-o", out_dir,
+        "-q",
+    ])
+    assert code == 0
+    base = os.path.splitext(os.path.basename(sample_slide_pdf))[0]
+    out_pdf = tmp_path / "cli_fifties" / "blank" / f"{base}_blank.pdf"
+    assert out_pdf.exists()
+    reader = PdfReader(str(out_pdf))
+    assert len(reader.pages) == 3

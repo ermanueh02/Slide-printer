@@ -319,6 +319,11 @@
                   <option value="george" id="optTemplateGeorge">George 90s (JFK Jr Executive)</option>
                   <option value="monograph" id="optTemplateMonograph">Archival Monograph (Heritage Bookplate)</option>
                   <option value="bauhaus" id="optTemplateBauhaus">Swiss Modernist (Mid-Century Editorial)</option>
+                  <option value="fifties" id="optTemplateFifties">Fifties (Mid-Century Pelican 1950s)</option>
+                  <option value="sixties" id="optTemplateSixties">Sixties (Swiss International 1960s)</option>
+                  <option value="seventies" id="optTemplateSeventies">Seventies (Retro Warm Groove 1970s)</option>
+                  <option value="eighties" id="optTemplateEighties">Eighties (Memphis Tech 1980s)</option>
+                  <option value="nineties" id="optTemplateNineties">Nineties (Minimalist Lookbook 1990s)</option>
                 </select>
                 <input type="text" id="coverTitleInput" class="form-input" placeholder="Cover title" style="margin-bottom: 0.35rem;">
                 <input type="text" id="coverAuthorInput" class="form-input" placeholder="Author / Course / Subject">
@@ -346,15 +351,29 @@
               <span class="section-label-sub" id="printSectionSub">04</span>
             </div>
 
-            <!-- Binding Margin (Gutter) & Duplex -->
+            <!-- Binding Type (None, Binder, Spiral) & Duplex -->
             <div class="form-group" style="margin-bottom: 0.85rem;">
-              <label class="toggle-control" for="gutterToggle" title="Extra margin for ring binders or spiral binding">
-                <input type="checkbox" id="gutterToggle">
-                <span class="toggle-switch"></span>
-                <span class="toggle-label" id="gutterLabelText">Binder margin (+11 mm)</span>
+              <label class="form-label" style="font-size: 0.78rem; margin-bottom: 0.35rem;">
+                <span id="bindingLabelText">Binding</span>
               </label>
-              <div id="gutterDuplexOptions" class="sub-toggle-group hidden" style="margin-top: 0.5rem; margin-left: 2.2rem;">
-                <div class="segmented-control segmented-control-sm">
+              <div class="segmented-control" role="group" aria-label="Binding">
+                <button type="button" class="segmented-btn active" id="bindingNoneBtn" data-binding="none">
+                  <span id="bindingNoneText">None</span>
+                </button>
+                <button type="button" class="segmented-btn" id="bindingBinderBtn" data-binding="binder">
+                  <span id="bindingBinderText">Ring Binder (+11mm)</span>
+                </button>
+                <button type="button" class="segmented-btn" id="bindingSpiralBtn" data-binding="spiral">
+                  <span id="bindingSpiralText">Spiral (+8mm)</span>
+                </button>
+              </div>
+
+              <!-- Sub-options when binding is selected (Binder or Spiral) -->
+              <div id="bindingOptionsGroup" class="sub-toggle-group hidden" style="margin-top: 0.6rem;">
+                <label class="form-label" style="font-size: 0.72rem; margin-bottom: 0.25rem;">
+                  <span id="bindingPrintSideLabel">Print Sides &amp; Guides</span>
+                </label>
+                <div class="segmented-control segmented-control-sm" style="margin-bottom: 0.45rem;">
                   <button type="button" class="segmented-btn active" id="duplexSimplexBtn" data-duplex="false">
                     <span id="duplexSimplexText">Single-sided (Simplex)</span>
                   </button>
@@ -362,6 +381,11 @@
                     <span id="duplexDuplexText">Double-sided (Duplex)</span>
                   </button>
                 </div>
+                <label class="toggle-control" for="holeGuidesToggle" title="Print subtle punch hole targets or spiral guide marks" style="margin-top: 0.35rem;">
+                  <input type="checkbox" id="holeGuidesToggle">
+                  <span class="toggle-switch"></span>
+                  <span class="toggle-label" id="holeGuidesLabelText" style="font-size: 0.78rem;">Punch / Spiral guides</span>
+                </label>
               </div>
             </div>
 

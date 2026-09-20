@@ -111,7 +111,11 @@
     const pageNumberFormat = options.pageNumberFormat || 'total';
     const totalPages = options.totalPages || pdfjsDoc.numPages || 1;
     const layout = (options.layout || '1-up').toLowerCase();
-    const gutterMargin = options.gutter !== undefined ? Number(options.gutter) : 0.0;
+    const binding = (options.binding || (options.gutter > 0 ? 'binder' : 'none')).toLowerCase();
+    const holeGuides = Boolean(options.holeGuides);
+    const gutterMargin = options.gutter !== undefined
+      ? Number(options.gutter)
+      : (binding === 'binder' ? 30.0 : (binding === 'spiral' ? 22.0 : 0.0));
     const duplex = Boolean(options.duplex);
     const coverMode = (options.coverMode || 'none').toLowerCase();
     const studyHeader = Boolean(options.studyHeader);
@@ -148,6 +152,7 @@
     // 1. Handle Generated Editorial Cover on Sheet 1
     if (coverMode === 'generate' && pageNum === 1) {
       renderPreviewEditorialCover(ctx, paperWidth, paperHeight, options);
+      drawPreviewBindingGuides(ctx, paperWidth, paperHeight, binding, duplex, isOddSheet, holeGuides);
       ctx.restore();
       return;
     }
@@ -311,6 +316,102 @@
       const numStr = pageNumberFormat === 'total' ? `${pageNum} / ${totalPages}` : String(pageNum);
       ctx.fillText(numStr, paperWidth / 2, footerY);
       ctx.restore();
+    }
+
+    // 6. Binding & Hole Guides Overlay
+    drawPreviewBindingGuides(ctx, paperWidth, paperHeight, binding, duplex, isOddSheet, holeGuides);
+
+    ctx.restore();
+  }
+
+  function drawPreviewBindingGuides(ctx, pw, ph, binding, duplex, isOddSheet, holeGuides) {
+    if (!binding || binding === 'none') return;
+
+    ctx.save();
+    const isVerso = duplex && !isOddSheet;
+
+    if (binding === 'binder') {
+      // 4 ISO 838 punch hole targets: 42mm, 122mm, 202mm, 282mm from bottom on A4 (or proportional)
+      const holeX = isVerso ? (pw - 34.0) : 34.0;
+      const mmToPt = 72.0 / 25.4;
+      const hRatio = ph / 841.89;
+      const holeYList = [
+        42.0 * mmToPt * hRatio,
+        122.0 * mmToPt * hRatio,
+        202.0 * mmToPt * hRatio,
+        282.0 * mmToPt * hRatio,
+      ];
+
+      for (const yFromBottom of holeYList) {
+        const cy = ph - yFromBottom;
+        // Punch hole target circle
+        ctx.strokeStyle = holeGuides ? 'rgba(60, 60, 60, 0.70)' : 'rgba(160, 160, 160, 0.35)';
+        ctx.fillStyle = holeGuides ? 'rgba(230, 230, 230, 0.50)' : 'rgba(245, 245, 245, 0.35)';
+        ctx.lineWidth = 0.75;
+        ctx.beginPath();
+        ctx.arc(holeX, cy, 8.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Crosshairs
+        ctx.lineWidth = 0.5;
+        ctx.strokeStyle = holeGuides ? 'rgba(50, 50, 50, 0.75)' : 'rgba(140, 140, 140, 0.30)';
+        ctx.beginPath();
+        ctx.moveTo(holeX - 11, cy);
+        ctx.lineTo(holeX + 11, cy);
+        ctx.moveTo(holeX, cy - 11);
+        ctx.lineTo(holeX, cy + 11);
+        ctx.stroke();
+      }
+
+      // Vertical guide line if holeGuides is active
+      if (holeGuides) {
+        ctx.strokeStyle = 'rgba(90, 90, 90, 0.35)';
+        ctx.lineWidth = 0.5;
+        ctx.setLineDash([3, 4]);
+        ctx.beginPath();
+        ctx.moveTo(holeX, 28);
+        ctx.lineTo(holeX, ph - 28);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    } else if (binding === 'spiral') {
+      const guideX = isVerso ? (pw - 22.0) : 22.0;
+      const coilPitch = 14.17; // ~5mm pitch
+
+      // Spiral clearance guide line
+      ctx.strokeStyle = holeGuides ? 'rgba(80, 80, 80, 0.50)' : 'rgba(180, 180, 180, 0.25)';
+      ctx.lineWidth = 0.6;
+      ctx.setLineDash([2, 3]);
+      ctx.beginPath();
+      ctx.moveTo(guideX, 24);
+      ctx.lineTo(guideX, ph - 24);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Spiral wire loops or punch ticks along margin
+      const holeCenter = isVerso ? (pw - 11.0) : 11.0;
+
+      for (let y = 32; y <= ph - 32; y += coilPitch) {
+        if (holeGuides) {
+          // Cross ticks on clearance line
+          ctx.strokeStyle = 'rgba(70, 70, 70, 0.6)';
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(guideX - 3, y);
+          ctx.lineTo(guideX + 3, y);
+          ctx.stroke();
+        }
+
+        // Realistic spiral coil wire loop in preview
+        ctx.strokeStyle = 'rgba(110, 115, 125, 0.40)';
+        ctx.fillStyle = 'rgba(235, 238, 242, 0.60)';
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.ellipse(holeCenter, y, 4.0, 2.5, isVerso ? 0.3 : -0.3, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fill();
+      }
     }
 
     ctx.restore();
@@ -593,6 +694,361 @@
       ctx.font = '500 10.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#111827';
       ctx.fillText(dateFormatted, vertX + 76, metaY + 22);
+
+    } else if (tpl === 'fifties' || tpl === '50s') {
+      // 4. Fifties: Mid-Century Pelican / Penguin Tri-Band
+      const band1H = ph * 0.32;
+      const band2H = ph * 0.38;
+      const band3H = ph * 0.30;
+
+      // Top color band
+      ctx.fillStyle = '#d9653b';
+      ctx.fillRect(0, 0, pw, band1H);
+
+      ctx.font = '700 9px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText('P E L I C A N   C O M P E N D I U M', pw / 2, band1H * 0.52);
+
+      ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+      ctx.fillText('SERIES IN STUDY & SCHOLARSHIP · NO. 52', pw / 2, band1H * 0.68);
+
+      // Middle white band
+      ctx.fillStyle = '#fdfbf7';
+      ctx.fillRect(0, band1H, pw, band2H);
+
+      // Diamond emblem
+      const emblemY = band1H + 34;
+      ctx.strokeStyle = '#d9653b';
+      ctx.lineWidth = 1.0;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2, emblemY - 10);
+      ctx.lineTo(pw / 2 + 10, emblemY);
+      ctx.lineTo(pw / 2, emblemY + 10);
+      ctx.lineTo(pw / 2 - 10, emblemY);
+      ctx.closePath();
+      ctx.stroke();
+
+      // Title
+      ctx.font = '700 24px "Times New Roman", Times, Georgia, "Newsreader", serif';
+      ctx.fillStyle = '#1c1917';
+      ctx.textAlign = 'center';
+      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, band1H + 78, pw - 80, 31);
+
+      // Optional Subtitle
+      if (options.studyTitle) {
+        ctx.font = 'italic 12.5px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#57534e';
+        ctx.fillText(options.studyTitle, pw / 2, endTitleY + 22);
+      }
+
+      // Bottom color band
+      ctx.fillStyle = '#d9653b';
+      ctx.fillRect(0, band1H + band2H, pw, band3H);
+
+      ctx.font = '700 11px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      const authorText = (options.coverAuthor || 'STUDENT COMPOSITION').toUpperCase();
+      ctx.fillText(authorText, pw / 2, band1H + band2H + band3H * 0.38);
+
+      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
+      ctx.fillText(`${dateFormatted} · MID-CENTURY EDITION`, pw / 2, band1H + band2H + band3H * 0.52);
+
+    } else if (tpl === 'sixties' || tpl === '60s') {
+      // 5. Sixties: Swiss International Typography (Müller-Brockmann Style)
+      const m = 44;
+      ctx.fillStyle = '#f8f9fa';
+      ctx.fillRect(0, 0, pw, ph);
+
+      // Heavy black bar across top
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(m, m, pw - 2 * m, 8);
+
+      // Grid folio
+      ctx.font = '700 8px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#000000';
+      ctx.textAlign = 'left';
+      ctx.fillText('01 / TYPOGRAFISCHE MONOGRAFIE', m, m + 26);
+      ctx.textAlign = 'right';
+      ctx.fillText('SWISS INT. 1968 · ZÜRICH', pw - m, m + 26);
+
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(m, m + 32);
+      ctx.lineTo(pw - m, m + 32);
+      ctx.stroke();
+
+      // Bold Swiss title
+      ctx.font = '700 30px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#000000';
+      ctx.textAlign = 'left';
+      const endTitleY = drawWrappedText(ctx, titleText, m, ph * 0.36, pw - 2 * m, 38);
+
+      // Subtitle
+      let midRuleY = endTitleY + 24;
+      if (options.studyTitle) {
+        ctx.font = '500 13px system-ui, -apple-system, sans-serif';
+        ctx.fillStyle = '#4b5563';
+        ctx.fillText(options.studyTitle, m, midRuleY);
+        midRuleY += 24;
+      }
+
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 1.0;
+      ctx.beginPath();
+      ctx.moveTo(m, midRuleY);
+      ctx.lineTo(pw - m, midRuleY);
+      ctx.stroke();
+
+      // Bottom metadata
+      const metaY = ph * 0.82;
+      ctx.font = '700 7.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#6b7280';
+      ctx.textAlign = 'left';
+      ctx.fillText('AUTHOR / BEARBEITER', m, metaY);
+      ctx.fillText('DATUM / DATE', m + (pw - 2 * m) * 0.52, metaY);
+
+      ctx.font = '600 11px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#000000';
+      ctx.fillText(options.coverAuthor || 'Allgemeine Notizen', m, metaY + 16);
+      ctx.fillText(dateFormatted, m + (pw - 2 * m) * 0.52, metaY + 16);
+
+    } else if (tpl === 'seventies' || tpl === '70s') {
+      // 6. Seventies: Retro Warm Groove & Apollo Style
+      ctx.fillStyle = '#fcf9f2';
+      ctx.fillRect(0, 0, pw, ph);
+
+      // Triple concentric rounded borders
+      function roundRect(x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+      }
+
+      ctx.strokeStyle = '#d35400';
+      ctx.lineWidth = 2.2;
+      roundRect(32, 32, pw - 64, ph - 64, 14);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#e67e22';
+      ctx.lineWidth = 2.0;
+      roundRect(39, 39, pw - 78, ph - 78, 11);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#5d4037';
+      ctx.lineWidth = 1.8;
+      roundRect(46, 46, pw - 92, ph - 92, 8);
+      ctx.stroke();
+
+      // Top banner
+      ctx.font = '700 8px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#d35400';
+      ctx.textAlign = 'center';
+      ctx.fillText('✦   V I N T A G E   D O S S I E R   ·   1 9 7 4   ✦', pw / 2, 76);
+
+      // Title in warm espresso
+      ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#3e2213';
+      ctx.textAlign = 'center';
+      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, ph * 0.40, pw - 120, 34);
+
+      // Subtitle
+      if (options.studyTitle) {
+        ctx.font = 'italic 13px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#b3541e';
+        ctx.fillText(options.studyTitle, pw / 2, endTitleY + 24);
+      }
+
+      // Decorative triple groove lines
+      const grooveY = endTitleY + (options.studyTitle ? 44 : 26);
+      const gColors = ['#d35400', '#e67e22', '#5d4037'];
+      for (let gi = 0; gi < 3; gi++) {
+        ctx.strokeStyle = gColors[gi];
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(pw / 2 - 40, grooveY + gi * 4);
+        ctx.lineTo(pw / 2 + 40, grooveY + gi * 4);
+        ctx.stroke();
+      }
+
+      // Bottom metadata
+      const metaY = ph * 0.80;
+      ctx.font = '700 10.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#3e2213';
+      ctx.textAlign = 'center';
+      ctx.fillText(options.coverAuthor || 'Apollo Edition', pw / 2, metaY);
+
+      ctx.font = 'italic 9px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#7a5230';
+      ctx.fillText(dateFormatted, pw / 2, metaY + 16);
+
+    } else if (tpl === 'eighties' || tpl === '80s') {
+      // 7. Eighties: Memphis Design & 1984 Technical Manual
+      const m = 44;
+
+      // Diagonal hatch box
+      ctx.strokeStyle = '#111827';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(m, m, 46, 46);
+
+      ctx.lineWidth = 1.0;
+      ctx.strokeStyle = '#0ea5e9';
+      for (let d = -46; d <= 46; d += 8) {
+        ctx.beginPath();
+        ctx.moveTo(Math.max(m, m + d), m + Math.max(0, -d));
+        ctx.lineTo(Math.min(m + 46, m + 46 + d), m + Math.min(46, 46 - d));
+        ctx.stroke();
+      }
+
+      // Header text
+      ctx.font = '800 9px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#111827';
+      ctx.textAlign = 'left';
+      ctx.fillText('PERSONAL STUDY SYSTEM // 1984', m + 58, m + 18);
+
+      ctx.font = '500 7.5px monospace, monospace';
+      ctx.fillStyle = '#64748b';
+      ctx.fillText('REF. MODEL 84-MKII · MEMPHIS TECH EDITION', m + 58, m + 32);
+
+      // Geometric rules
+      ctx.strokeStyle = '#111827';
+      ctx.lineWidth = 2.0;
+      ctx.beginPath();
+      ctx.moveTo(m, m + 58);
+      ctx.lineTo(pw - m, m + 58);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 2.0;
+      ctx.beginPath();
+      ctx.moveTo(m, m + 62);
+      ctx.lineTo(m + 96, m + 62);
+      ctx.stroke();
+
+      // Bold title
+      ctx.font = '800 28px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#0f172a';
+      ctx.textAlign = 'left';
+      const endTitleY = drawWrappedText(ctx, titleText, m, ph * 0.38, pw - 2 * m - 30, 36);
+
+      // Subtitle
+      if (options.studyTitle) {
+        ctx.font = '600 13px system-ui, -apple-system, sans-serif';
+        ctx.fillStyle = '#0ea5e9';
+        ctx.fillText(options.studyTitle, m, endTitleY + 24);
+      }
+
+      // Floating Memphis shapes
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath();
+      ctx.arc(pw - m - 20, ph * 0.36, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#0ea5e9';
+      ctx.beginPath();
+      ctx.moveTo(pw - m - 30, ph * 0.39);
+      ctx.lineTo(pw - m - 20, ph * 0.41);
+      ctx.lineTo(pw - m - 40, ph * 0.41);
+      ctx.closePath();
+      ctx.fill();
+
+      // Bottom operator card
+      const bY = ph * 0.78;
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillRect(m, bY, pw - 2 * m, 54);
+      ctx.strokeStyle = '#111827';
+      ctx.lineWidth = 1.0;
+      ctx.strokeRect(m, bY, pw - 2 * m, 54);
+
+      ctx.font = '700 7px monospace, monospace';
+      ctx.fillStyle = '#64748b';
+      ctx.textAlign = 'left';
+      ctx.fillText('OPERATOR / STUDENT:', m + 14, bY + 18);
+      ctx.fillText('TIMESTAMP:', m + (pw - 2 * m) * 0.52, bY + 18);
+
+      ctx.font = '700 11px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#0f172a';
+      ctx.fillText(options.coverAuthor || 'SYSTEM USER 01', m + 14, bY + 36);
+
+      ctx.font = '600 10px monospace, monospace';
+      ctx.fillText(dateFormatted, m + (pw - 2 * m) * 0.52, bY + 36);
+
+    } else if (tpl === 'nineties' || tpl === '90s') {
+      // 8. Nineties: Minimalist Editorial Lookbook / Indie Zine
+      const m = 54;
+
+      // Crop / registration marks at corners
+      const corners = [[30, 30], [pw - 30, 30], [30, ph - 30], [pw - 30, ph - 30]];
+      ctx.strokeStyle = 'rgba(30, 30, 30, 0.40)';
+      ctx.lineWidth = 0.5;
+      for (const [cx, cy] of corners) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(cx - 7, cy);
+        ctx.lineTo(cx + 7, cy);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - 7);
+        ctx.lineTo(cx, cy + 7);
+        ctx.stroke();
+      }
+
+      // Top metadata
+      ctx.font = '400 7.5px monospace, monospace';
+      ctx.fillStyle = '#111111';
+      ctx.textAlign = 'left';
+      ctx.fillText('[ ISSUE 09 // LOOKBOOK ARCHIVE ]', m, 52);
+      ctx.textAlign = 'right';
+      ctx.fillText('REF: 1994-AUTUMN-WINTER', pw - m, 52);
+
+      // Title
+      ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#111111';
+      ctx.textAlign = 'left';
+      const endTitleY = drawWrappedText(ctx, titleText, m, ph * 0.38, pw - 2 * m, 36);
+
+      // Subtitle
+      if (options.studyTitle) {
+        ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#555555';
+        ctx.fillText(options.studyTitle, m, endTitleY + 22);
+      }
+
+      // Subtle hairline divider
+      const divY = endTitleY + (options.studyTitle ? 40 : 26);
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.20)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(m, divY);
+      ctx.lineTo(pw - m, divY);
+      ctx.stroke();
+
+      // Bottom metadata
+      const metaY = ph * 0.82;
+      ctx.font = '700 7px monospace, monospace';
+      ctx.fillStyle = '#777777';
+      ctx.textAlign = 'left';
+      ctx.fillText('DIRECTOR / STUDENT:', m, metaY);
+      ctx.fillText('COMPILATION DATE:', m + (pw - 2 * m) * 0.52, metaY);
+
+      ctx.font = '500 10.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#111111';
+      ctx.fillText(options.coverAuthor || 'Studio Dossier', m, metaY + 16);
+      ctx.fillText(dateFormatted, m + (pw - 2 * m) * 0.52, metaY + 16);
 
     } else {
       // Default: Atelier Notebook (Zara Home Classic)

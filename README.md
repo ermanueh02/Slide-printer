@@ -58,11 +58,20 @@ Each page of your presentation is placed on the sheet, followed by a customizabl
   - **1-Up Standard**: 1 slide per sheet with full-width note space.
   - **2-Up Compact Handout (`-2`, `--layout 2-up`)**: 2 slides per sheet, each with compact notes and a middle hairline divider, halving paper usage.
 - **Smart Binding Gutter & Duplex Support**:
-  - Extra +11 mm (+30 pt) margin for ring binders or spiral binding (`--gutter` / `--binder-margin`).
+  - **Ring Binder (`--binding binder` / `--gutter` / `--binder-margin`)**: +11 mm (+30 pt) margin safe for ISO 838 4-hole / 2-hole punches.
+  - **Spiral / Coil Binding (`--binding spiral` / `--spiral`)**: +8 mm (+22 pt) margin optimized for spiral wire-o and coil combs, saving 3 mm of slide space.
+  - **Hole & Spiral Guides (`--hole-guides`)**: Prints subtle punch targets (crosshair circles at ISO 838 centers) or spiral coil clearance ticks.
   - **Duplex Intelligence (`--duplex`)**: Shifts odd sheets (recto) to the right (left gutter) and even sheets (verso) to the left (right gutter) so punched holes never bite into content.
-- **Cover Page System**:
-  - **Clean 1st Slide (`--clean-cover`)**: Uses the first slide as the cover sheet without adding note lines or dividers.
-  - **Generated Title Cover (`--generate-cover`)**: Creates an elegant, minimalist editorial title page with document title, subject, author, slide count, and date.
+- **9 Editorial Cover Templates (`--generate-cover`, `--cover-template`)**:
+  - **Atelier (`atelier`)**: Clean linen notebook style with dual fine hairlines.
+  - **George 90s (`george` / `90s_executive`)**: Executive editorial format with bold top header rule.
+  - **Archival Monograph (`monograph` / `bookplate`)**: Heritage library bookplate frame.
+  - **Swiss Modernist (`bauhaus` / `swiss`)**: Müller-Brockmann asymmetrical grid layout.
+  - **Fifties (`fifties` / `50s`)**: Mid-century Pelican / Penguin classic tri-band color blocking with diamond emblem.
+  - **Sixties (`sixties` / `60s`)**: Swiss International typography with heavy black header and coordinate folios.
+  - **Seventies (`seventies` / `70s`)**: Retro warm groove & Apollo badge with concentric rounded frames in burnt orange and espresso.
+  - **Eighties (`eighties` / `80s`)**: Memphis tech & Mac 1984 workshop manual with diagonal hatch pattern and geometric shapes.
+  - **Nineties (`nineties` / `90s`)**: Minimalist indie zine lookbook with corner crop marks, registration targets, and monospace index tags.
 - **Study Header Metadata Bar (`--study-header`, `--study-title`)**:
   - Adds a top study bar with topic/subject fill-in and date line (`FECHA: _____ / _____ / 20___`).
 - **Slide Range Filtering (`--pages`)**:
@@ -173,10 +182,14 @@ slide-printer --dry-run -i presentation.pdf -s all
 | `-m`, `--margin` | Page margin in points (1 pt = 1/72 in) | `40.0` |
 | `--step` | Distance between lines/dots in points | `14.0` |
 | `--layout`, `-2`, `--two-up` | Layout: `1-up` (1 slide) or `2-up` (2 slides per sheet) | `1-up` |
-| `--gutter`, `--binder-margin` | Extra +11 mm (+30 pt) margin for ring binder punching | `0.0` |
+| `--binding` | Binding type: `none`, `binder` (+11mm / 30pt), `spiral` (+8mm / 22pt) | `none` |
+| `--spiral` | Shortcut for spiral / coil binding (`--binding spiral`, +8mm margin) | `False` |
+| `--gutter`, `--binder-margin` | Margin for ring binders (`--binding binder`, +11mm / 30pt) | `0.0` |
+| `--hole-guides` | Print subtle punch hole targets or spiral coil clearance marks | `False` |
 | `--duplex` / `--simplex` | Alternate gutter margin on odd/even sheets for 2-sided printing | `--simplex` |
 | `--clean-cover` | Use 1st slide as title cover without note lines or dividers | `False` |
-| `--generate-cover` | Generate a new editorial title cover page before slides | `False` |
+| `--generate-cover` | Generate an editorial title cover page before slides | `False` |
+| `--cover-template` | Cover design: `atelier`, `george`, `monograph`, `bauhaus`, `fifties`, `sixties`, `seventies`, `eighties`, `nineties` | `atelier` |
 | `--cover-title` | Title for generated cover page | Presentation name |
 | `--cover-author` | Author/Student/Topic for generated cover page | — |
 | `--study-header` | Add top metadata bar with subject fill-in and date line | `False` |

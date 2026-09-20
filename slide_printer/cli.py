@@ -25,6 +25,12 @@ from slide_printer.constants import (
     DEFAULT_MARGIN,
     DEFAULT_STEP,
     DEFAULT_PAGE_NUMBERS,
+    SPIRAL_GUTTER_POINTS,
+    BINDER_GUTTER_POINTS,
+    DEFAULT_BINDING,
+    DEFAULT_HOLE_GUIDES,
+    COVER_TEMPLATES,
+    COVER_TEMPLATE_ALIASES,
 )
 from slide_printer.core import SlidePrinter, resolve_style
 
@@ -409,7 +415,25 @@ def interactive_wizard() -> int:
     paper_map = {"1": "a4", "2": "letter", "3": "legal", "4": "a3"}
     selected_paper = paper_map.get(paper_choice, "a4")
 
-    # 3. Detect presentations in current directory
+    # 3. Binding & Gutter Margin
+    print(bold("\n3. Binding & Gutter Margin:"))
+    print(f"  [{cyan('1')}] None         (Clean standard margin, no gutter) {dim('[default]')}")
+    print(f"  [{cyan('2')}] Ring Binder (Archivador de 2 o 4 anillas, +11 mm margin)")
+    print(f"  [{cyan('3')}] Spiral Coil (Encuadernación tipo espiral / wire-o, +8 mm margin)")
+
+    binding_choice = input(f"\nEnter choice [{bold('1')}, 2, 3] (default: 1): ").strip()
+    binding_map = {"1": "none", "2": "binder", "3": "spiral"}
+    selected_binding = binding_map.get(binding_choice, "none")
+
+    selected_duplex = False
+    selected_hole_guides = False
+    if selected_binding != "none":
+        dup_choice = input(dim("Enable double-sided printing (Duplex) margin alternation? [y/N]: ")).strip().lower()
+        selected_duplex = dup_choice in ("y", "yes")
+        guide_choice = input(dim("Print subtle hole punch / spiral guides on sheets? [y/N]: ")).strip().lower()
+        selected_hole_guides = guide_choice in ("y", "yes")
+
+    # 4. Detect presentations in current directory
     all_pdfs = sorted(glob.glob("*.pdf"))
     presentation_pdfs = [
         f for f in all_pdfs
@@ -422,7 +446,7 @@ def interactive_wizard() -> int:
         size = os.path.getsize(f) if os.path.isfile(f) else 0
         local_pdf_info.append((f, pgs, size))
 
-    print(bold("\n3. Select Presentation File(s):"))
+    print(bold("\n4. Select Presentation File(s):"))
     if local_pdf_info:
         print(dim(f"Found {len(local_pdf_info)} presentation PDF(s) in current directory:"))
         for i, (pdf_name, pgs, sz) in enumerate(local_pdf_info, 1):
@@ -504,6 +528,9 @@ def interactive_wizard() -> int:
         margin=DEFAULT_MARGIN,
         step=DEFAULT_STEP,
         output_dir=DEFAULT_OUTPUT_DIR,
+        binding=selected_binding,
+        duplex=selected_duplex,
+        hole_guides=selected_hole_guides,
     )
 
     t0 = time.time()
@@ -668,6 +695,27 @@ Examples:
         help="Add extra margin for ring binders or spiral binding (+30 pt / ~11 mm).",
     )
     parser.add_argument(
+        "--binding",
+        type=str,
+        default="none",
+        help="Binding type: 'none', 'binder' (+11 mm for 2/4 rings), 'spiral' (+8 mm for coil/wire-o).",
+    )
+    parser.add_argument(
+        "--spiral",
+        "--spiral-margin",
+        dest="spiral",
+        action="store_true",
+        default=False,
+        help="Shortcut to enable spiral/wire-o binding (+22 pt / ~8 mm gutter margin).",
+    )
+    parser.add_argument(
+        "--hole-guides",
+        "--punch-marks",
+        action="store_true",
+        default=False,
+        help="Render subtle punch hole targets (ISO 838 for binders) or spiral guide marks.",
+    )
+    parser.add_argument(
         "--duplex",
         action="store_true",
         default=False,
@@ -693,9 +741,9 @@ Examples:
     )
     parser.add_argument(
         "--cover-template",
-        choices=["atelier", "george", "monograph", "bauhaus"],
+        choices=COVER_TEMPLATES + list(COVER_TEMPLATE_ALIASES.keys()),
         default="atelier",
-        help="Editorial cover template: 'atelier' (Zara Home classic), 'george' (90s executive brief), 'monograph' (archival bookplate), 'bauhaus' (Swiss modernist) (default: atelier).",
+        help="Editorial cover template: 'atelier', 'george', 'monograph', 'bauhaus', 'fifties' (50s), 'sixties' (60s), 'seventies' (70s), 'eighties' (80s), 'nineties' (90s) (default: atelier).",
     )
     parser.add_argument(
         "--cover-title",
@@ -863,6 +911,15 @@ def main(argv: Optional[List[str]] = None) -> int:
     elif args.clean_cover:
         cover_mode = "clean_first"
 
+    binding_mode = (args.binding or "none").lower()
+    if args.spiral:
+        binding_mode = "spiral"
+    elif getattr(args, "gutter", 0.0) > 0 and binding_mode == "none":
+        if abs(args.gutter - SPIRAL_GUTTER_POINTS) < 1.0:
+            binding_mode = "spiral"
+        else:
+            binding_mode = "binder"
+
     printer = SlidePrinter(
         paper_size=args.paper_size,
         margin=args.margin,
@@ -872,7 +929,9 @@ def main(argv: Optional[List[str]] = None) -> int:
         page_number_format=args.page_format,
         study_header=args.study_header,
         study_title=args.study_title,
-        gutter_margin=args.gutter,
+        gutter_margin=args.gutter if getattr(args, "gutter", 0.0) > 0 else None,
+        binding=binding_mode,
+        hole_guides=args.hole_guides,
         duplex=args.duplex,
         layout=args.layout,
         page_ranges=args.pages,

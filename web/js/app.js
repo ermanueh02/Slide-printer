@@ -109,11 +109,22 @@
       optTemplateGeorge: "George 90s (JFK Jr Executive)",
       optTemplateMonograph: "Archival Monograph (Heritage Bookplate)",
       optTemplateBauhaus: "Swiss Modernist (Mid-Century Editorial)",
+      optTemplateFifties: "Fifties (Mid-Century Pelican 1950s)",
+      optTemplateSixties: "Sixties (Swiss International 1960s)",
+      optTemplateSeventies: "Seventies (Retro Warm Groove 1970s)",
+      optTemplateEighties: "Eighties (Memphis Tech 1980s)",
+      optTemplateNineties: "Nineties (Minimalist Lookbook 1990s)",
       coverTitlePlaceholder: "Cover title",
       coverAuthorPlaceholder: "Author / Student / Subject",
       pageRangeLabel: "Slide Range",
       pageRangePlaceholder: "All (e.g. 1-10, 2-, 15)",
       gutterLabel: "Binder / Ring margin (+11 mm)",
+      bindingLabel: "Binding",
+      bindingNone: "None",
+      bindingBinder: "Ring Binder (+11mm)",
+      bindingSpiral: "Spiral (+8mm)",
+      bindingPrintSideLabel: "Print Sides & Guides",
+      holeGuidesLabel: "Punch / Spiral guides",
       duplexSimplex: "Single-sided (Simplex)",
       duplexDuplex: "Double-sided (Duplex)",
       studyHeaderLabel: "Study Header (Subject & Date)",
@@ -219,11 +230,22 @@
       optTemplateGeorge: "George años 90 (JFK Jr / Ejecutivo)",
       optTemplateMonograph: "Monografía de archivo (Ex libris)",
       optTemplateBauhaus: "Modernismo suizo (Editorial mid-century)",
+      optTemplateFifties: "Años 50 (Pelican / Mid-century 1950s)",
+      optTemplateSixties: "Años 60 (Estilo suizo internacional 1960s)",
+      optTemplateSeventies: "Años 70 (Retro warm groove 1970s)",
+      optTemplateEighties: "Años 80 (Memphis tech 1980s)",
+      optTemplateNineties: "Años 90 (Minimal lookbook editorial 1990s)",
       coverTitlePlaceholder: "Título para la portada",
       coverAuthorPlaceholder: "Autor / Estudiante / Asignatura",
       pageRangeLabel: "Rango de diapositivas",
       pageRangePlaceholder: "Todas (ej. 1-10, 15)",
       gutterLabel: "Margen para archivador / anillas (+11 mm)",
+      bindingLabel: "Encuadernación",
+      bindingNone: "Ninguna",
+      bindingBinder: "Archivador (+11mm)",
+      bindingSpiral: "Espiral (+8mm)",
+      bindingPrintSideLabel: "Caras de impresión y guías",
+      holeGuidesLabel: "Guías de perforación / espiral",
       duplexSimplex: "Una cara (Simplex)",
       duplexDuplex: "Doble cara (Dúplex)",
       studyHeaderLabel: "Cabecera de estudio (Asignatura y fecha)",
@@ -329,11 +351,22 @@
       optTemplateGeorge: "George anos 90 (JFK Jr / Executivo)",
       optTemplateMonograph: "Monografía de arquivo (Ex libris)",
       optTemplateBauhaus: "Modernismo suízo (Editorial mid-century)",
+      optTemplateFifties: "Anos 50 (Pelican / Mid-century 1950s)",
+      optTemplateSixties: "Anos 60 (Estilo suízo internacional 1960s)",
+      optTemplateSeventies: "Anos 70 (Retro warm groove 1970s)",
+      optTemplateEighties: "Anos 80 (Memphis tech 1980s)",
+      optTemplateNineties: "Anos 90 (Minimal lookbook editorial 1990s)",
       coverTitlePlaceholder: "Título para a portada",
       coverAuthorPlaceholder: "Autor / Estudante / Materia",
       pageRangeLabel: "Rango de diapositivas",
       pageRangePlaceholder: "Todas (ex. 1-10, 15)",
       gutterLabel: "Marxe para arquivador / anelas (+11 mm)",
+      bindingLabel: "Encuadernación",
+      bindingNone: "Ningunha",
+      bindingBinder: "Arquivador (+11mm)",
+      bindingSpiral: "Espiral (+8mm)",
+      bindingPrintSideLabel: "Caras de impresión e guías",
+      holeGuidesLabel: "Guías de perforación / espiral",
       duplexSimplex: "Unha cara (Simplex)",
       duplexDuplex: "Dobre cara (Dúplex)",
       studyHeaderLabel: "Cabeceira de estudo (Materia e data)",
@@ -376,8 +409,10 @@
     coverTitle: '',
     coverAuthor: '',
     pageRanges: '',
+    binding: 'none',
     gutter: 0,
     hasGutter: false,
+    holeGuides: false,
     duplex: false,
     studyHeader: false,
     studyTitle: '',
@@ -400,7 +435,9 @@
         separation: state.separation,
         layout: state.layout,
         coverTemplate: state.coverTemplate,
+        binding: state.binding,
         hasGutter: state.hasGutter,
+        holeGuides: state.holeGuides,
         duplex: state.duplex,
         pageNumbers: state.pageNumbers,
         pageNumberFormat: state.pageNumberFormat,
@@ -424,10 +461,16 @@
       if (typeof data.separation === 'number') state.separation = data.separation;
       if (data.layout) state.layout = data.layout;
       if (data.coverTemplate) state.coverTemplate = data.coverTemplate;
-      if (typeof data.hasGutter === 'boolean') {
+      if (data.binding && ['none', 'binder', 'spiral'].includes(data.binding)) {
+        state.binding = data.binding;
+        state.hasGutter = data.binding !== 'none';
+        state.gutter = data.binding === 'binder' ? 30 : (data.binding === 'spiral' ? 22 : 0);
+      } else if (typeof data.hasGutter === 'boolean') {
         state.hasGutter = data.hasGutter;
+        state.binding = data.hasGutter ? 'binder' : 'none';
         state.gutter = state.hasGutter ? 30 : 0;
       }
+      if (typeof data.holeGuides === 'boolean') state.holeGuides = data.holeGuides;
       if (typeof data.duplex === 'boolean') state.duplex = data.duplex;
       if (typeof data.pageNumbers === 'boolean') state.pageNumbers = data.pageNumbers;
       if (data.pageNumberFormat) state.pageNumberFormat = data.pageNumberFormat;
@@ -477,13 +520,20 @@
     const pageRangeInput = document.getElementById('pageRangeInput');
     if (pageRangeInput) pageRangeInput.value = state.pageRanges;
 
-    // Gutter & Duplex
-    const gutterToggle = document.getElementById('gutterToggle');
-    const gutterDuplexOptions = document.getElementById('gutterDuplexOptions');
+    // Binding & Duplex & Hole Guides
+    const bindingNoneBtn = document.getElementById('bindingNoneBtn');
+    const bindingBinderBtn = document.getElementById('bindingBinderBtn');
+    const bindingSpiralBtn = document.getElementById('bindingSpiralBtn');
+    const bindingOptionsGroup = document.getElementById('bindingOptionsGroup');
+    const holeGuidesToggle = document.getElementById('holeGuidesToggle');
     const duplexSimplexBtn = document.getElementById('duplexSimplexBtn');
     const duplexDuplexBtn = document.getElementById('duplexDuplexBtn');
-    if (gutterToggle) gutterToggle.checked = state.hasGutter;
-    if (gutterDuplexOptions) gutterDuplexOptions.classList.toggle('hidden', !state.hasGutter);
+
+    if (bindingNoneBtn) bindingNoneBtn.classList.toggle('active', state.binding === 'none');
+    if (bindingBinderBtn) bindingBinderBtn.classList.toggle('active', state.binding === 'binder');
+    if (bindingSpiralBtn) bindingSpiralBtn.classList.toggle('active', state.binding === 'spiral');
+    if (bindingOptionsGroup) bindingOptionsGroup.classList.toggle('hidden', state.binding === 'none');
+    if (holeGuidesToggle) holeGuidesToggle.checked = state.holeGuides;
     if (duplexSimplexBtn) duplexSimplexBtn.classList.toggle('active', !state.duplex);
     if (duplexDuplexBtn) duplexDuplexBtn.classList.toggle('active', state.duplex);
 
@@ -636,6 +686,11 @@
     setText('optTemplateGeorge', dict.optTemplateGeorge);
     setText('optTemplateMonograph', dict.optTemplateMonograph);
     setText('optTemplateBauhaus', dict.optTemplateBauhaus);
+    setText('optTemplateFifties', dict.optTemplateFifties);
+    setText('optTemplateSixties', dict.optTemplateSixties);
+    setText('optTemplateSeventies', dict.optTemplateSeventies);
+    setText('optTemplateEighties', dict.optTemplateEighties);
+    setText('optTemplateNineties', dict.optTemplateNineties);
     const coverTitleInput = document.getElementById('coverTitleInput');
     if (coverTitleInput && dict.coverTitlePlaceholder) coverTitleInput.placeholder = dict.coverTitlePlaceholder;
     const coverAuthorInput = document.getElementById('coverAuthorInput');
@@ -646,8 +701,13 @@
     const pageRangeInput = document.getElementById('pageRangeInput');
     if (pageRangeInput && dict.pageRangePlaceholder) pageRangeInput.placeholder = dict.pageRangePlaceholder;
 
-    // Gutter / Duplex
-    setText('gutterLabelText', dict.gutterLabel);
+    // Binding & Duplex
+    setText('bindingLabelText', dict.bindingLabel || "Binding");
+    setText('bindingNoneText', dict.bindingNone || "None");
+    setText('bindingBinderText', dict.bindingBinder || "Ring Binder (+11mm)");
+    setText('bindingSpiralText', dict.bindingSpiral || "Spiral (+8mm)");
+    setText('bindingPrintSideLabel', dict.bindingPrintSideLabel || "Print Sides & Guides");
+    setText('holeGuidesLabelText', dict.holeGuidesLabel || "Punch / Spiral guides");
     setText('duplexSimplexText', dict.duplexSimplex);
     setText('duplexDuplexText', dict.duplexDuplex);
 
@@ -1404,23 +1464,47 @@
       });
     }
 
-    // Gutter Margin & Duplex
-    const gutterToggle = document.getElementById('gutterToggle');
-    const gutterDuplexOptions = document.getElementById('gutterDuplexOptions');
+    // Binding Type (None, Binder, Spiral) & Duplex & Hole Guides
+    const bindingNoneBtn = document.getElementById('bindingNoneBtn');
+    const bindingBinderBtn = document.getElementById('bindingBinderBtn');
+    const bindingSpiralBtn = document.getElementById('bindingSpiralBtn');
+    const bindingOptionsGroup = document.getElementById('bindingOptionsGroup');
+    const holeGuidesToggle = document.getElementById('holeGuidesToggle');
     const duplexSimplexBtn = document.getElementById('duplexSimplexBtn');
     const duplexDuplexBtn = document.getElementById('duplexDuplexBtn');
 
-    if (gutterToggle) {
-      gutterToggle.addEventListener('change', (e) => {
-        state.hasGutter = Boolean(e.target.checked);
-        state.gutter = state.hasGutter ? 30 : 0;
-        if (gutterDuplexOptions) {
-          gutterDuplexOptions.classList.toggle('hidden', !state.hasGutter);
-        }
+    function setBindingMode(mode) {
+      state.binding = mode;
+      state.hasGutter = (mode !== 'none');
+      state.gutter = (mode === 'binder') ? 30 : ((mode === 'spiral') ? 22 : 0);
+
+      if (bindingNoneBtn) bindingNoneBtn.classList.toggle('active', mode === 'none');
+      if (bindingBinderBtn) bindingBinderBtn.classList.toggle('active', mode === 'binder');
+      if (bindingSpiralBtn) bindingSpiralBtn.classList.toggle('active', mode === 'spiral');
+      if (bindingOptionsGroup) bindingOptionsGroup.classList.toggle('hidden', mode === 'none');
+
+      savePresets();
+      renderCurrentPreview();
+    }
+
+    if (bindingNoneBtn) {
+      bindingNoneBtn.addEventListener('click', () => setBindingMode('none'));
+    }
+    if (bindingBinderBtn) {
+      bindingBinderBtn.addEventListener('click', () => setBindingMode('binder'));
+    }
+    if (bindingSpiralBtn) {
+      bindingSpiralBtn.addEventListener('click', () => setBindingMode('spiral'));
+    }
+
+    if (holeGuidesToggle) {
+      holeGuidesToggle.addEventListener('change', (e) => {
+        state.holeGuides = Boolean(e.target.checked);
         savePresets();
         renderCurrentPreview();
       });
     }
+
     if (duplexSimplexBtn) {
       duplexSimplexBtn.addEventListener('click', () => {
         state.duplex = false;
@@ -1612,15 +1696,20 @@
     const resetPrintBtn = document.getElementById('resetPrintBtn');
     if (resetPrintBtn) {
       resetPrintBtn.addEventListener('click', () => {
+        state.binding = 'none';
         state.hasGutter = false;
         state.gutter = 0;
+        state.holeGuides = false;
         state.duplex = false;
         state.pageNumbers = true;
         state.pageNumberFormat = 'total';
         state.ecoPrint = false;
 
-        const gutterToggle = document.getElementById('gutterToggle');
-        const gutterDuplexOptions = document.getElementById('gutterDuplexOptions');
+        const bindingNoneBtn = document.getElementById('bindingNoneBtn');
+        const bindingBinderBtn = document.getElementById('bindingBinderBtn');
+        const bindingSpiralBtn = document.getElementById('bindingSpiralBtn');
+        const bindingOptionsGroup = document.getElementById('bindingOptionsGroup');
+        const holeGuidesToggle = document.getElementById('holeGuidesToggle');
         const duplexSimplexBtn = document.getElementById('duplexSimplexBtn');
         const duplexDuplexBtn = document.getElementById('duplexDuplexBtn');
         const pageNumberToggle = document.getElementById('pageNumberToggle');
@@ -1629,8 +1718,11 @@
         const pageFormatSimpleBtn = document.getElementById('pageFormatSimpleBtn');
         const ecoPrintToggle = document.getElementById('ecoPrintToggle');
 
-        if (gutterToggle) gutterToggle.checked = false;
-        if (gutterDuplexOptions) gutterDuplexOptions.classList.add('hidden');
+        if (bindingNoneBtn) bindingNoneBtn.classList.add('active');
+        if (bindingBinderBtn) bindingBinderBtn.classList.remove('active');
+        if (bindingSpiralBtn) bindingSpiralBtn.classList.remove('active');
+        if (bindingOptionsGroup) bindingOptionsGroup.classList.add('hidden');
+        if (holeGuidesToggle) holeGuidesToggle.checked = false;
         if (duplexSimplexBtn) duplexSimplexBtn.classList.add('active');
         if (duplexDuplexBtn) duplexDuplexBtn.classList.remove('active');
         if (pageNumberToggle) pageNumberToggle.checked = true;
@@ -1793,7 +1885,9 @@
         pageNumberFormat: state.pageNumberFormat,
         totalPages: totalSheets,
         layout: state.layout,
-        gutter: state.hasGutter ? 30 : 0,
+        binding: state.binding,
+        gutter: state.gutter,
+        holeGuides: state.holeGuides,
         duplex: state.duplex,
         studyHeader: state.studyHeader,
         studyTitle: state.studyTitle,
@@ -1877,7 +1971,9 @@
               pageNumbers: state.pageNumbers,
               pageNumberFormat: state.pageNumberFormat,
               layout: state.layout,
-              gutter: state.hasGutter ? 30 : 0,
+              binding: state.binding,
+              gutter: state.gutter,
+              holeGuides: state.holeGuides,
               duplex: state.duplex,
               coverMode: state.coverMode,
               coverTemplate: state.coverTemplate || 'atelier',
@@ -1934,7 +2030,9 @@
           pageNumbers: state.pageNumbers,
           pageNumberFormat: state.pageNumberFormat,
           layout: state.layout,
-          gutter: state.hasGutter ? 30 : 0,
+          binding: state.binding,
+          gutter: state.gutter,
+          holeGuides: state.holeGuides,
           duplex: state.duplex,
           coverMode: state.coverMode,
           coverTemplate: state.coverTemplate || 'atelier',
@@ -2004,7 +2102,9 @@
             pageNumbers: state.pageNumbers,
             pageNumberFormat: state.pageNumberFormat,
             layout: state.layout,
-            gutter: state.hasGutter ? 30 : 0,
+            binding: state.binding,
+            gutter: state.gutter,
+            holeGuides: state.holeGuides,
             duplex: state.duplex,
             coverMode: state.coverMode,
             coverTemplate: state.coverTemplate || 'atelier',
