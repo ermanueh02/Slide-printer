@@ -2204,41 +2204,62 @@
 
     // Pre-open a blank tab synchronously to preserve user gesture and avoid popup blocker interception
     let printWindow = null;
+    const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark' || 
+      (!document.documentElement.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
     try {
       printWindow = window.open('', '_blank');
       if (printWindow) {
         printWindow.document.write(`
           <!DOCTYPE html>
-          <html>
+          <html ${isDarkTheme ? 'data-theme="dark"' : ''}>
             <head>
               <meta charset="utf-8">
               <title>${dict.printBtn || 'Print Folio'} · Slide-Printer</title>
               <style>
+                :root {
+                  --bg: #fdfbf7;
+                  --text: #1a2332;
+                  --text-sub: #5a6578;
+                  --spinner-track: rgba(197, 160, 89, 0.2);
+                  --spinner-accent: #c5a059;
+                }
+                html[data-theme="dark"],
+                @media (prefers-color-scheme: dark) {
+                  :root:not([data-theme="light"]) {
+                    --bg: #141517;
+                    --text: #f4f1ea;
+                    --text-sub: #a39f97;
+                    --spinner-track: rgba(234, 88, 12, 0.2);
+                    --spinner-accent: #ea580c;
+                  }
+                }
                 body {
                   margin: 0;
                   padding: 40px;
-                  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-                  background: #fdfbf7;
-                  color: #1a2332;
+                  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                  background: var(--bg);
+                  color: var(--text);
                   display: flex;
                   flex-direction: column;
                   align-items: center;
                   justify-content: center;
-                  min-height: 70vh;
+                  min-height: 75vh;
                   text-align: center;
+                  transition: background 0.3s ease, color 0.3s ease;
                 }
                 .spinner {
-                  width: 36px;
-                  height: 36px;
-                  border: 3px solid rgba(197, 160, 89, 0.2);
-                  border-top-color: #c5a059;
+                  width: 38px;
+                  height: 38px;
+                  border: 3px solid var(--spinner-track);
+                  border-top-color: var(--spinner-accent);
                   border-radius: 50%;
                   animation: spin 0.9s linear infinite;
                   margin-bottom: 1.5rem;
                 }
                 @keyframes spin { to { transform: rotate(360deg); } }
-                h2 { font-weight: 500; font-family: "Playfair Display", Georgia, serif; margin: 0 0 0.5rem; color: #1a2332; }
-                p { color: #5a6578; font-size: 0.95rem; margin: 0; }
+                h2 { font-weight: 600; font-size: 1.25rem; margin: 0 0 0.5rem; color: var(--text); }
+                p { color: var(--text-sub); font-size: 0.95rem; margin: 0; }
               </style>
             </head>
             <body>

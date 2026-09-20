@@ -1546,12 +1546,12 @@
       // Bottom metadata
       const metaY = ph * 0.16;
       if (swissFont) {
-        page.drawText('AUTHOR / BEARBEITER', { x: m, y: metaY + 16, size: 7.5, font: swissFont, color: rgb(0.42, 0.45, 0.5) });
-        page.drawText('DATUM / DATE', { x: m + (pw - 2 * m) * 0.52, y: metaY + 16, size: 7.5, font: swissFont, color: rgb(0.42, 0.45, 0.5) });
+        page.drawText('AUTHOR / BEARBEITER', { x: x1, y: metaY + 16, size: 7.5, font: swissFont, color: rgb(0.42, 0.45, 0.5) });
+        page.drawText('DATUM / DATE', { x: x1 + w * 0.52, y: metaY + 16, size: 7.5, font: swissFont, color: rgb(0.42, 0.45, 0.5) });
       }
       if (swissFont) {
-        page.drawText(options.author || 'Allgemeine Notizen', { x: m, y: metaY, size: 10.5, font: swissFont, color: rgb(0, 0, 0) });
-        page.drawText(todayStr, { x: m + (pw - 2 * m) * 0.52, y: metaY, size: 10.5, font: swissFont, color: rgb(0, 0, 0) });
+        page.drawText(options.author || 'Allgemeine Notizen', { x: x1, y: metaY, size: 10.5, font: swissFont, color: rgb(0, 0, 0) });
+        page.drawText(todayStr, { x: x1 + w * 0.52, y: metaY, size: 10.5, font: swissFont, color: rgb(0, 0, 0) });
       }
 
     } else if (tpl === 'seventies' || tpl === '70s') {
@@ -1879,12 +1879,12 @@
       // Bottom metadata
       const metaY = ph * 0.18;
       if (zineFont) {
-        page.drawText('DIRECTOR / STUDENT:', { x: m, y: metaY + 16, size: 7.0, font: zineFont, color: rgb(0.47, 0.47, 0.47) });
-        page.drawText('COMPILATION DATE:', { x: m + (pw - 2 * m) * 0.52, y: metaY + 16, size: 7.0, font: zineFont, color: rgb(0.47, 0.47, 0.47) });
+        page.drawText('DIRECTOR / STUDENT:', { x: x1, y: metaY + 16, size: 7.0, font: zineFont, color: rgb(0.47, 0.47, 0.47) });
+        page.drawText('COMPILATION DATE:', { x: x1 + w * 0.52, y: metaY + 16, size: 7.0, font: zineFont, color: rgb(0.47, 0.47, 0.47) });
       }
       if (timesFont) {
-        page.drawText(options.author || 'Studio Dossier', { x: m, y: metaY, size: 10.5, font: timesFont, color: rgb(0.07, 0.07, 0.07) });
-        page.drawText(todayStr, { x: m + (pw - 2 * m) * 0.52, y: metaY, size: 10.5, font: timesFont, color: rgb(0.07, 0.07, 0.07) });
+        page.drawText(options.author || 'Studio Dossier', { x: x1, y: metaY, size: 10.5, font: timesFont, color: rgb(0.07, 0.07, 0.07) });
+        page.drawText(todayStr, { x: x1 + w * 0.52, y: metaY, size: 10.5, font: timesFont, color: rgb(0.07, 0.07, 0.07) });
       }
 
     } else if (tpl === 'twothousands' || tpl === '2000s' || tpl === '2000' || tpl === 'y2k' || tpl === 'noughties') {
@@ -1893,8 +1893,8 @@
       const cobalt = rgb(0.06, 0.30, 0.62);
       const cyanY2K = rgb(0.10, 0.60, 0.82);
 
-      page.drawRectangle({ x: m, y: ph - m - 12, width: pw - 2 * m, height: 12, color: cobalt });
-      page.drawRectangle({ x: m, y: ph - m - 15, width: pw - 2 * m, height: 3, color: cyanY2K });
+      page.drawRectangle({ x: x1, y: ph - m - 12, width: w, height: 12, color: cobalt });
+      page.drawRectangle({ x: x1, y: ph - m - 15, width: w, height: 3, color: cyanY2K });
 
       page.drawRectangle({
         x: pw - m - 74,
@@ -1950,7 +1950,7 @@
       const sReg = fontMap.helveticaFont || timesFont;
 
       if (sFont) {
-        page.drawText('2010s MINIMALIST // STARTUP EDITION', { x: m, y: ph - m - 20, size: 8.0, font: sFont, color: indigo });
+        page.drawText('2010s MINIMALIST // STARTUP EDITION', { x: x1, y: ph - m - 20, size: 8.0, font: sFont, color: indigo });
       }
       if (sReg) {
         const rightTag = 'FLAT DESIGN ARCHIVE · VOL. 14';
@@ -1958,7 +1958,7 @@
         page.drawText(rightTag, { x: pw - m - rightW, y: ph - m - 20, size: 7.5, font: sReg, color: rgb(0.5, 0.5, 0.55) });
       }
 
-      page.drawLine({ start: { x: m, y: ph - m - 30 }, end: { x: pw - m, y: ph - m - 30 }, thickness: 0.5, color: rgb(0.15, 0.15, 0.18), opacity: 0.15 });
+      page.drawLine({ start: { x: x1, y: ph - m - 30 }, end: { x: x2, y: ph - m - 30 }, thickness: 0.5, color: rgb(0.15, 0.15, 0.18), opacity: 0.15 });
 
       const titleSize = 27;
       const titleLineHeight = 35;
@@ -2520,9 +2520,9 @@
       const midnight = rgb(0.08, 0.14, 0.24);
       const slateBlue = rgb(0.32, 0.46, 0.60);
 
-      page.drawRectangle({ x: m, y: m, width: pw - 2 * m, height: ph - 2 * m, borderColor: slateBlue, borderWidth: 0.8 });
-      page.drawRectangle({ x: m + 4, y: m + 4, width: pw - 2 * (m + 4), height: ph - 2 * (m + 4), borderColor: slateBlue, borderWidth: 0.35, borderOpacity: 0.25 });
-      page.drawRectangle({ x: m + 7, y: m + 7, width: pw - 2 * (m + 7), height: ph - 2 * (m + 7), borderColor: slateBlue, borderWidth: 0.35, borderOpacity: 0.25 });
+      page.drawRectangle({ x: x1, y: m, width: w, height: ph - 2 * m, borderColor: slateBlue, borderWidth: 0.8 });
+      page.drawRectangle({ x: x1 + 4, y: m + 4, width: w - 8, height: ph - 2 * (m + 4), borderColor: slateBlue, borderWidth: 0.35, borderOpacity: 0.25 });
+      page.drawRectangle({ x: x1 + 7, y: m + 7, width: w - 14, height: ph - 2 * (m + 7), borderColor: slateBlue, borderWidth: 0.35, borderOpacity: 0.25 });
 
       const starY = ph * 0.68;
       page.drawCircle({ x: pw / 2, y: starY, size: 13, borderColor: slateBlue, borderWidth: 0.7 });
@@ -2598,9 +2598,9 @@
       const rlGreen = rgb(0.08, 0.22, 0.14);
       const rlGold = rgb(0.76, 0.60, 0.32);
 
-      page.drawRectangle({ x: m, y: m, width: pw - 2 * m, height: ph - 2 * m, borderColor: rlNavy, borderWidth: 2.5 });
-      page.drawRectangle({ x: m + 4.5, y: m + 4.5, width: pw - 2 * (m + 4.5), height: ph - 2 * (m + 4.5), borderColor: rlGold, borderWidth: 0.6 });
-      page.drawRectangle({ x: m + 8.0, y: m + 8.0, width: pw - 2 * (m + 8.0), height: ph - 2 * (m + 8.0), borderColor: rlNavy, borderWidth: 0.4 });
+      page.drawRectangle({ x: x1, y: m, width: w, height: ph - 2 * m, borderColor: rlNavy, borderWidth: 2.5 });
+      page.drawRectangle({ x: x1 + 4.5, y: m + 4.5, width: w - 9, height: ph - 2 * (m + 4.5), borderColor: rlGold, borderWidth: 0.6 });
+      page.drawRectangle({ x: x1 + 8, y: m + 8, width: w - 16, height: ph - 2 * (m + 8.0), borderColor: rlNavy, borderWidth: 0.4 });
 
       const serifBold = timesBold;
       const serifItalic = fontMap.timesItalic || timesFont;
@@ -2680,9 +2680,9 @@
       const saddleTan = rgb(0.55, 0.30, 0.14);
       const brass = rgb(0.74, 0.58, 0.30);
 
-      page.drawRectangle({ x: m, y: m, width: pw - 2 * m, height: ph - 2 * m, borderColor: hunterGreen, borderWidth: 1.6 });
-      page.drawRectangle({ x: m + 4, y: m + 4, width: pw - 2 * (m + 4), height: ph - 2 * (m + 4), borderColor: brass, borderWidth: 0.6 });
-      page.drawRectangle({ x: m + 7.5, y: m + 7.5, width: pw - 2 * (m + 7.5), height: ph - 2 * (m + 7.5), borderColor: saddleTan, borderWidth: 0.4, borderDashArray: [4, 3] });
+      page.drawRectangle({ x: x1, y: m, width: w, height: ph - 2 * m, borderColor: hunterGreen, borderWidth: 1.6 });
+      page.drawRectangle({ x: x1 + 4, y: m + 4, width: w - 8, height: ph - 2 * (m + 4), borderColor: brass, borderWidth: 0.6 });
+      page.drawRectangle({ x: x1 + 7.5, y: m + 7.5, width: w - 15, height: ph - 2 * (m + 7.5), borderColor: saddleTan, borderWidth: 0.4, borderDashArray: [4, 3] });
 
       const serifBold = timesBold;
       const serifItalic = fontMap.timesItalic || timesFont;

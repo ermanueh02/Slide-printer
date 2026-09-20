@@ -463,6 +463,7 @@ class SlidePrinter:
                     hole_guides=self.hole_guides,
                     is_verso=False,
                     gutter_margin=self.gutter_margin,
+                    margin=self.margin,
                 )
                 writer.add_page(cover_page)
 

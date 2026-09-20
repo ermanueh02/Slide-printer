@@ -511,14 +511,21 @@
 
     const gutterMap = { binder: 30.0, ring: 30.0, rings: 30.0, spiral: 22.0, espiral: 22.0, coil: 22.0, none: 0.0 };
     const binding = (options.binding || 'none').toLowerCase();
-    const gutterMargin = typeof options.gutterMargin === 'number' ? options.gutterMargin : (gutterMap[binding] || 0.0);
+    const gutterMargin = typeof options.gutterMargin === 'number'
+      ? options.gutterMargin
+      : (options.gutter !== undefined ? Number(options.gutter) : (gutterMap[binding] || 0.0));
     const pageNum = options.pageNum || 1;
     const isOddSheet = (pageNum % 2 !== 0);
     const isVerso = options.duplex ? !isOddSheet : false;
     const leftGutter = isVerso ? 0 : gutterMargin;
     const rightGutter = isVerso ? gutterMargin : 0;
-    const availW = pw - leftGutter - rightGutter;
-    const centerX = leftGutter + availW / 2;
+
+    const userMargin = options.margin !== undefined ? Number(options.margin) : 40.0;
+    const m = Math.max(userMargin, 20.0);
+    const x1 = leftGutter + m;
+    const x2 = pw - rightGutter - m;
+    const w = x2 - x1;
+    const centerX = x1 + w / 2;
 
     if (tpl === 'george') {
       // 1. George 90s Editorial / JFK Jr Executive Style
@@ -726,10 +733,10 @@
 
       ctx.strokeStyle = bordeaux;
       ctx.lineWidth = 1.2;
-      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
       ctx.strokeStyle = gold;
       ctx.lineWidth = 0.5;
-      ctx.strokeRect(m + 4, m + 4, pw - 2 * (m + 4), ph - 2 * (m + 4));
+      ctx.strokeRect(x1 + 4, m + 4, w - 8, ph - 2 * (m + 4));
 
       ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = bordeaux;
@@ -750,7 +757,7 @@
 
       ctx.font = '700 25px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#241a1c';
-      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, lozY + 40, pw - 2 * m - 60, 33);
+      const endTitleY = drawWrappedText(ctx, titleText, centerX, lozY + 40, w - 60, 33);
 
       let subY = endTitleY + 22;
       if (options.studyTitle) {
@@ -788,10 +795,10 @@
 
       ctx.strokeStyle = navy;
       ctx.lineWidth = 1.8;
-      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
       ctx.strokeStyle = goldMuted;
       ctx.lineWidth = 0.5;
-      ctx.strokeRect(m + 4, m + 4, pw - 2 * (m + 4), ph - 2 * (m + 4));
+      ctx.strokeRect(x1 + 4, m + 4, w - 8, ph - 2 * (m + 4));
 
       ctx.strokeStyle = navy;
       ctx.lineWidth = 0.6;
@@ -851,12 +858,12 @@
 
       ctx.strokeStyle = decoBlack;
       ctx.lineWidth = 2.0;
-      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
       ctx.strokeStyle = decoGold;
       ctx.lineWidth = 0.8;
-      ctx.strokeRect(m + 4.5, m + 4.5, pw - 2 * (m + 4.5), ph - 2 * (m + 4.5));
+      ctx.strokeRect(x1 + 4.5, m + 4.5, w - 9, ph - 2 * (m + 4.5));
       ctx.lineWidth = 0.4;
-      ctx.strokeRect(m + 8.0, m + 8.0, pw - 2 * (m + 8.0), ph - 2 * (m + 8.0));
+      ctx.strokeRect(x1 + 8, m + 8, w - 16, ph - 2 * (m + 8.0));
 
       ctx.font = '700 8px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = decoGold;
@@ -884,7 +891,7 @@
 
       ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = decoBlack;
-      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, lozY + 42, pw - 2 * m - 60, 34);
+      const endTitleY = drawWrappedText(ctx, titleText, centerX, lozY + 42, w - 60, 34);
 
       let subY = endTitleY + 22;
       if (options.studyTitle) {
@@ -922,7 +929,7 @@
 
       ctx.strokeStyle = slate;
       ctx.lineWidth = 1.6;
-      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
 
       ctx.strokeStyle = copper;
       ctx.lineWidth = 1.2;
@@ -984,7 +991,7 @@
 
       ctx.strokeStyle = inkBlack;
       ctx.lineWidth = 1.2;
-      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
 
       ctx.strokeStyle = stampRed;
       ctx.lineWidth = 0.8;
@@ -1096,7 +1103,7 @@
 
       // Heavy black bar across top
       ctx.fillStyle = '#000000';
-      ctx.fillRect(m, m, pw - 2 * m, 8);
+      ctx.fillRect(x1, m, w, 8);
 
       // Grid folio
       ctx.font = '700 8px system-ui, -apple-system, sans-serif';
@@ -1298,10 +1305,10 @@
       // Bottom operator card
       const bY = ph * 0.78;
       ctx.fillStyle = '#f8fafc';
-      ctx.fillRect(m, bY, pw - 2 * m, 54);
+      ctx.fillRect(x1, bY, w, 54);
       ctx.strokeStyle = '#111827';
       ctx.lineWidth = 1.0;
-      ctx.strokeRect(m, bY, pw - 2 * m, 54);
+      ctx.strokeRect(x1, bY, w, 54);
 
       ctx.font = '700 7px monospace, monospace';
       ctx.fillStyle = '#64748b';
@@ -1391,7 +1398,7 @@
       ctx.fillRect(0, 0, pw, ph);
 
       ctx.fillStyle = cobalt;
-      ctx.fillRect(m, m, pw - 2 * m, 12);
+      ctx.fillRect(x1, m, w, 12);
       ctx.fillStyle = cyanY2K;
       ctx.fillRect(m, m + 12, pw - 2 * m, 3);
 
@@ -1504,7 +1511,7 @@
 
       ctx.strokeStyle = pitchBlack;
       ctx.lineWidth = 2.5;
-      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
 
       ctx.font = '700 8px monospace, monospace';
       ctx.fillStyle = pitchBlack;
@@ -1532,7 +1539,7 @@
       }
 
       ctx.fillStyle = pitchBlack;
-      ctx.fillRect(m + 16, subY + 4, 120, 3);
+      ctx.fillRect(x1 + 16, subY + 4, 120, 3);
 
       const boxY = ph * 0.80;
       const boxW = pw - 2 * m - 32;
@@ -1561,15 +1568,15 @@
 
       ctx.strokeStyle = forestDark;
       ctx.lineWidth = 1.4;
-      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
 
       ctx.strokeStyle = forestLight;
       ctx.lineWidth = 0.4;
-      ctx.strokeRect(m + 4.5, m + 4.5, pw - 2 * (m + 4.5), ph - 2 * (m + 4.5));
+      ctx.strokeRect(x1 + 4.5, m + 4.5, w - 9, ph - 2 * (m + 4.5));
 
       ctx.strokeStyle = brassGold;
       ctx.lineWidth = 0.6;
-      for (const [cx, cy] of [[m, m], [pw - m, m], [m, ph - m], [pw - m, ph - m]]) {
+      for (const [cx, cy] of [[x1, m], [x2, m], [x1, ph - m], [x2, ph - m]]) {
         ctx.beginPath();
         ctx.moveTo(cx - 5, cy); ctx.lineTo(cx + 5, cy);
         ctx.moveTo(cx, cy - 5); ctx.lineTo(cx, cy + 5);
@@ -1577,22 +1584,22 @@
       }
 
       ctx.fillStyle = forestDark;
-      ctx.fillRect(m + 16, m + 14, pw - 2 * m - 32, 24);
+      ctx.fillRect(x1 + 16, m + 14, w - 32, 24);
 
       ctx.font = '700 8px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = '#f8f9fa';
       ctx.textAlign = 'left';
-      ctx.fillText('NATURAL COMPENDIUM // EDITORIAL STUDY FOLIO', m + 26, m + 29);
+      ctx.fillText('NATURAL COMPENDIUM // EDITORIAL STUDY FOLIO', x1 + 26, m + 29);
 
       ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = brassGold;
       ctx.textAlign = 'right';
-      ctx.fillText('VOL. 01 · DEEP FOREST ARCHIVE', pw - m - 26, m + 29);
+      ctx.fillText('VOL. 01 · DEEP FOREST ARCHIVE', x2 - 26, m + 29);
 
       ctx.fillStyle = brassGold;
-      ctx.fillRect(m + 16, m + 38, pw - 2 * m - 32, 1.2);
+      ctx.fillRect(x1 + 16, m + 38, w - 32, 1.2);
 
-      const titleX = m + 22;
+      const titleX = x1 + 22;
       ctx.font = '700 8px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = forestMid;
       ctx.textAlign = 'left';
@@ -1600,7 +1607,7 @@
 
       ctx.font = '700 27px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = forestDark;
-      const endTitleY = drawWrappedText(ctx, titleText, titleX, ph * 0.39, pw - 2 * m - 60, 35);
+      const endTitleY = drawWrappedText(ctx, titleText, titleX, ph * 0.39, w - 60, 35);
 
       let ruleY = endTitleY + 22;
       if (options.studyTitle) {
@@ -1628,13 +1635,13 @@
       ctx.stroke();
 
       const gridY = ph * 0.80;
-      const colW = (pw - 2 * m - 44) / 2;
+      const colW = (w - 44) / 2;
 
       ctx.strokeStyle = forestDark;
       ctx.lineWidth = 0.8;
       ctx.beginPath();
       ctx.moveTo(titleX, gridY);
-      ctx.lineTo(pw - m - 22, gridY);
+      ctx.lineTo(x2 - 22, gridY);
       ctx.stroke();
 
       ctx.strokeStyle = forestLight;
@@ -1678,11 +1685,11 @@
 
       ctx.strokeStyle = sageSoft;
       ctx.lineWidth = 0.8;
-      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
 
       ctx.strokeStyle = 'rgba(85, 130, 101, 0.18)';
       ctx.lineWidth = 0.4;
-      ctx.strokeRect(m + 4, m + 4, pw - 2 * (m + 4), ph - 2 * (m + 4));
+      ctx.strokeRect(x1 + 4, m + 4, w - 8, ph - 2 * (m + 4));
 
       const lozY = ph * 0.32;
       ctx.strokeStyle = sageDeep;
@@ -1700,15 +1707,15 @@
       ctx.font = '700 8px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = sageDeep;
       ctx.textAlign = 'center';
-      ctx.fillText('V E R N A L   C O M P E N D I U M', pw / 2, m + 28);
+      ctx.fillText('V E R N A L   C O M P E N D I U M', centerX, m + 28);
 
       ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = sageSoft;
-      ctx.fillText('SPRING SERIES · NEW CYCLE · VOL. I', pw / 2, m + 42);
+      ctx.fillText('SPRING SERIES · NEW CYCLE · VOL. I', centerX, m + 42);
 
       ctx.font = '700 25px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#1c3022';
-      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, lozY + 42, pw - 2 * m - 60, 33);
+      const endTitleY = drawWrappedText(ctx, titleText, centerX, lozY + 42, w - 60, 33);
 
       let subY = endTitleY + 22;
       if (options.studyTitle) {
@@ -1755,51 +1762,51 @@
       ctx.font = '700 8.5px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'left';
-      ctx.fillText('SOLSTICE COMPENDIUM · SUMMER FOLIO', m, 22);
+      ctx.fillText('SOLSTICE COMPENDIUM · SUMMER FOLIO', x1, 22);
       ctx.textAlign = 'right';
-      ctx.fillText('MEDITERRANEAN ARCHIVE // 02', pw - m, 22);
+      ctx.fillText('MEDITERRANEAN ARCHIVE // 02', x2, 22);
 
       ctx.strokeStyle = 'rgba(15, 58, 99, 0.25)';
       ctx.lineWidth = 0.6;
-      ctx.strokeRect(m, barH + 16, pw - 2 * m, ph - barH - m - 16);
+      ctx.strokeRect(x1, barH + 16, w, ph - barH - m - 16);
 
       ctx.font = '700 27px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = azureDeep;
       ctx.textAlign = 'left';
-      const endTitleY = drawWrappedText(ctx, titleText, m + 18, ph * 0.38, pw - 2 * m - 50, 35);
+      const endTitleY = drawWrappedText(ctx, titleText, x1 + 18, ph * 0.38, w - 50, 35);
 
       let subY = endTitleY + 22;
       if (options.studyTitle) {
         ctx.font = 'italic 13px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = '#3a668f';
-        ctx.fillText(options.studyTitle, m + 18, subY);
+        ctx.fillText(options.studyTitle, x1 + 18, subY);
         subY += 22;
       }
 
       ctx.strokeStyle = azureDeep;
       ctx.lineWidth = 1.0;
       ctx.beginPath();
-      ctx.moveTo(m + 18, subY); ctx.lineTo(m + 80, subY);
+      ctx.moveTo(x1 + 18, subY); ctx.lineTo(x1 + 80, subY);
       ctx.stroke();
       ctx.strokeStyle = solarGold;
       ctx.beginPath();
-      ctx.moveTo(m + 80, subY); ctx.lineTo(m + 120, subY);
+      ctx.moveTo(x1 + 80, subY); ctx.lineTo(x1 + 120, subY);
       ctx.stroke();
 
       const metaY = ph * 0.82;
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = solarGold;
-      ctx.fillText('STUDY RESEARCHER', m + 18, metaY);
+      ctx.fillText('STUDY RESEARCHER', x1 + 18, metaY);
       ctx.font = '10px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = azureDeep;
-      ctx.fillText(options.coverAuthor || 'Summer Study Compendium', m + 18, metaY + 14);
+      ctx.fillText(options.coverAuthor || 'Summer Study Compendium', x1 + 18, metaY + 14);
 
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = solarGold;
-      ctx.fillText('CALENDAR REGISTRY', m + 18, metaY + 28);
+      ctx.fillText('CALENDAR REGISTRY', x1 + 18, metaY + 28);
       ctx.font = 'italic 9px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = azureDeep;
-      ctx.fillText(dateFormatted || 'Summer Solstice', m + 18, metaY + 40);
+      ctx.fillText(dateFormatted || 'Summer Solstice', x1 + 18, metaY + 40);
 
     } else if (tpl === 'autumn' || tpl === 'otono' || tpl === 'otonno' || tpl === 'fall') {
       // 13. Autumn / Equinox Editorial (Burnt Terracotta & Amber Warmth)
@@ -1813,20 +1820,20 @@
 
       ctx.strokeStyle = amber;
       ctx.lineWidth = 0.5;
-      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
 
       ctx.strokeStyle = terracotta;
       ctx.lineWidth = 1.4;
-      ctx.strokeRect(m + 4, m + 4, pw - 2 * (m + 4), ph - 2 * (m + 4));
+      ctx.strokeRect(x1 + 4, m + 4, w - 8, ph - 2 * (m + 4));
 
       ctx.font = '700 8px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = terracotta;
       ctx.textAlign = 'center';
-      ctx.fillText('E Q U I N O X   D O S S I E R', pw / 2, m + 28);
+      ctx.fillText('E Q U I N O X   D O S S I E R', centerX, m + 28);
 
       ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = amber;
-      ctx.fillText('AUTUMNAL COMPENDIUM · OCTOBER ARCHIVE', pw / 2, m + 42);
+      ctx.fillText('AUTUMNAL COMPENDIUM · OCTOBER ARCHIVE', centerX, m + 42);
 
       const lozY = ph * 0.35;
       ctx.strokeStyle = terracotta;
@@ -1846,7 +1853,7 @@
 
       ctx.font = '700 25px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = espresso;
-      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, lozY + 40, pw - 2 * m - 60, 32);
+      const endTitleY = drawWrappedText(ctx, titleText, centerX, lozY + 40, w - 60, 32);
 
       let subY = endTitleY + 22;
       if (options.studyTitle) {
@@ -1903,11 +1910,11 @@
 
       ctx.strokeStyle = slateBlue;
       ctx.lineWidth = 0.8;
-      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
       ctx.strokeStyle = 'rgba(82, 117, 153, 0.25)';
       ctx.lineWidth = 0.35;
-      ctx.strokeRect(m + 4, m + 4, pw - 2 * (m + 4), ph - 2 * (m + 4));
-      ctx.strokeRect(m + 7, m + 7, pw - 2 * (m + 7), ph - 2 * (m + 7));
+      ctx.strokeRect(x1 + 4, m + 4, w - 8, ph - 2 * (m + 4));
+      ctx.strokeRect(x1 + 7, m + 7, w - 14, ph - 2 * (m + 7));
 
       const starY = ph * 0.32;
       ctx.strokeStyle = slateBlue;
@@ -1927,14 +1934,14 @@
       ctx.font = '700 8px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = midnight;
       ctx.textAlign = 'center';
-      ctx.fillText('HIEMAL COMPENDIUM · ARCTIC ARCHIVE', pw / 2, m + 28);
+      ctx.fillText('HIEMAL COMPENDIUM · ARCTIC ARCHIVE', centerX, m + 28);
       ctx.font = '7px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = slateBlue;
-      ctx.fillText('NORDIC ALPINE EDITION · NO. 04', pw / 2, m + 42);
+      ctx.fillText('NORDIC ALPINE EDITION · NO. 04', centerX, m + 42);
 
       ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = midnight;
-      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, starY + 44, pw - 2 * m - 60, 34);
+      const endTitleY = drawWrappedText(ctx, titleText, centerX, starY + 44, w - 60, 34);
 
       let subY = endTitleY + 22;
       if (options.studyTitle) {
@@ -1973,21 +1980,21 @@
 
       ctx.strokeStyle = rlNavy;
       ctx.lineWidth = 2.5;
-      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
       ctx.strokeStyle = rlGold;
       ctx.lineWidth = 0.6;
-      ctx.strokeRect(m + 4.5, m + 4.5, pw - 2 * (m + 4.5), ph - 2 * (m + 4.5));
+      ctx.strokeRect(x1 + 4.5, m + 4.5, w - 9, ph - 2 * (m + 4.5));
       ctx.strokeStyle = rlNavy;
       ctx.lineWidth = 0.4;
-      ctx.strokeRect(m + 8.0, m + 8.0, pw - 2 * (m + 8.0), ph - 2 * (m + 8.0));
+      ctx.strokeRect(x1 + 8, m + 8, w - 16, ph - 2 * (m + 8.0));
 
       ctx.font = '700 8.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = rlNavy;
       ctx.textAlign = 'center';
-      ctx.fillText('P O L O   S T U D Y   C O M P E N D I U M', pw / 2, m + 28);
+      ctx.fillText('P O L O   S T U D Y   C O M P E N D I U M', centerX, m + 28);
       ctx.font = 'italic 7.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = rlGreen;
-      ctx.fillText('HERITAGE COLLEGIATE ARCHIVE · EST. 1967', pw / 2, m + 42);
+      ctx.fillText('HERITAGE COLLEGIATE ARCHIVE · EST. 1967', centerX, m + 42);
 
       const shieldY = ph * 0.34;
       ctx.strokeStyle = rlNavy;
@@ -2016,7 +2023,7 @@
 
       ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = rlNavy;
-      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, shieldY + 44, pw - 2 * m - 60, 34);
+      const endTitleY = drawWrappedText(ctx, titleText, centerX, shieldY + 44, w - 60, 34);
 
       let subY = endTitleY + 20;
       if (options.studyTitle) {
@@ -2060,24 +2067,24 @@
 
       ctx.strokeStyle = hunterGreen;
       ctx.lineWidth = 1.6;
-      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
       ctx.strokeStyle = brass;
       ctx.lineWidth = 0.6;
-      ctx.strokeRect(m + 4, m + 4, pw - 2 * (m + 4), ph - 2 * (m + 4));
+      ctx.strokeRect(x1 + 4, m + 4, w - 8, ph - 2 * (m + 4));
 
       ctx.strokeStyle = saddleTan;
       ctx.lineWidth = 0.4;
       ctx.setLineDash([4, 3]);
-      ctx.strokeRect(m + 7.5, m + 7.5, pw - 2 * (m + 7.5), ph - 2 * (m + 7.5));
+      ctx.strokeRect(x1 + 7.5, m + 7.5, w - 15, ph - 2 * (m + 7.5));
       ctx.setLineDash([]);
 
       ctx.font = '700 8.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = hunterGreen;
       ctx.textAlign = 'center';
-      ctx.fillText('E Q U E S T R I A N   &   F I E L D', pw / 2, m + 28);
+      ctx.fillText('E Q U E S T R I A N   &   F I E L D', centerX, m + 28);
       ctx.font = 'italic 7.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = saddleTan;
-      ctx.fillText('COUNTRY ESTATE ARCHIVE · SERIES IX', pw / 2, m + 42);
+      ctx.fillText('COUNTRY ESTATE ARCHIVE · SERIES IX', centerX, m + 42);
 
       const stirrupY = ph * 0.34;
       ctx.strokeStyle = brass;
@@ -2096,7 +2103,7 @@
 
       ctx.font = '700 25px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = hunterGreen;
-      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, stirrupY + 38, pw - 2 * m - 60, 33);
+      const endTitleY = drawWrappedText(ctx, titleText, centerX, stirrupY + 38, w - 60, 33);
 
       let subY = endTitleY + 20;
       if (options.studyTitle) {

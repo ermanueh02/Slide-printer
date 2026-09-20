@@ -258,6 +258,7 @@ def generate_cover_page(
     hole_guides: bool = False,
     is_verso: bool = False,
     gutter_margin: float = 0.0,
+    margin: float = 40.0,
 ) -> PageObject:
     """Generates an editorial notebook cover page inspired by vintage and modernist designs.
 
@@ -272,8 +273,12 @@ def generate_cover_page(
 
     left_gutter = 0.0 if is_verso else gutter_margin
     right_gutter = gutter_margin if is_verso else 0.0
-    avail_w = pw - left_gutter - right_gutter
-    center_x = left_gutter + avail_w / 2.0
+    effective_m = max(margin, 20.0)
+    x1 = left_gutter + effective_m
+    x2 = pw - right_gutter - effective_m
+    w = x2 - x1
+    avail_w = w
+    center_x = x1 + w / 2.0
 
     if tpl == "george":
         # 1. George 90s Editorial / JFK Jr Executive Style
