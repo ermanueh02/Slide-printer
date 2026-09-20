@@ -509,8 +509,9 @@
     const titleText = options.coverTitle || 'Presentation';
     const dateFormatted = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
+    const gutterMap = { binder: 30.0, ring: 30.0, rings: 30.0, spiral: 22.0, espiral: 22.0, coil: 22.0, none: 0.0 };
     const binding = (options.binding || 'none').toLowerCase();
-    const gutterMargin = typeof options.gutterMargin === 'number' ? options.gutterMargin : (BINDING_GUTTER_MAP[binding] || 0);
+    const gutterMargin = typeof options.gutterMargin === 'number' ? options.gutterMargin : (gutterMap[binding] || 0.0);
     const pageNum = options.pageNum || 1;
     const isOddSheet = (pageNum % 2 !== 0);
     const isVerso = options.duplex ? !isOddSheet : false;
