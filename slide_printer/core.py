@@ -459,6 +459,10 @@ class SlidePrinter:
                     num_slides=len(selected_indices),
                     grayscale=self.grayscale,
                     template=self.cover_template,
+                    binding=self.binding,
+                    hole_guides=self.hole_guides,
+                    is_verso=False,
+                    gutter_margin=self.gutter_margin,
                 )
                 writer.add_page(cover_page)
 

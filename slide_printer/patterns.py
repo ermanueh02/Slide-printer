@@ -254,31 +254,14 @@ def generate_cover_page(
     num_slides: Optional[int] = None,
     grayscale: bool = False,
     template: str = "atelier",
+    binding: str = "none",
+    hole_guides: bool = False,
+    is_verso: bool = False,
+    gutter_margin: float = 0.0,
 ) -> PageObject:
     """Generates an editorial notebook cover page inspired by vintage and modernist designs.
 
-    Templates:
-      Classics / Zara:
-        - 'atelier': Zara Home timeless notebook with double hairline borders and quiet serif typography.
-        - 'george': JFK Jr 90s executive brief with architectural header rules and authoritative hierarchy.
-        - 'monograph': Archival heritage stationery with a centered bordered cartouche/bookplate.
-        - 'bauhaus': Swiss modernist layout with asymmetric cross-rules and modernist composition.
-      Decades:
-        - 'fifties': Mid-century 1950s Pelican/Penguin tri-band classic with geometric diamond emblem.
-        - 'sixties': 1960s Swiss International Typographic Style (Müller-Brockmann / Helvetica grid).
-        - 'seventies': 1970s warm retro groove & Apollo flight checklist with triple rounded frames.
-        - 'eighties': 1980s Memphis design & early Macintosh 1984 manual with diagonal hatch accents.
-        - 'nineties': 1990s minimalist lookbook & indie zine with corner registration marks & monospace specs.
-      Seasons:
-        - 'spring': Vernal sage & fresh linen with delicate solar crosshair and airy typography.
-        - 'summer': Mediterranean azure horizon & solar ochre bar with marine precision.
-        - 'autumn': Burnt terracotta & harvest amber with diamond lozenge and warm archival cartouche.
-        - 'winter': Nordic alpine midnight blue & crystalline slate with hexagonal ice compass.
-      Ralph Lauren:
-        - 'polo': Collegiate navy pinstripe & antique gold shield emblem with Ivy League typography.
-        - 'equestrian': Hunter green & saddle leather tan with equestrian stirrup crest & dashed rule.
-      Nature:
-        - 'natural': Deep forest green architectural dossier on unbleached linen with brass accents.
+    Supports binding margin offsets and hole guides.
     """
     packet = io.BytesIO()
     c = canvas.Canvas(packet, pagesize=page_size)
@@ -287,53 +270,62 @@ def generate_cover_page(
     raw_tpl = (template or "atelier").lower().strip()
     tpl = COVER_TEMPLATE_ALIASES.get(raw_tpl, raw_tpl)
 
+    left_gutter = 0.0 if is_verso else gutter_margin
+    right_gutter = gutter_margin if is_verso else 0.0
+    avail_w = pw - left_gutter - right_gutter
+    center_x = left_gutter + avail_w / 2.0
+
     if tpl == "george":
         # 1. George 90s Editorial / JFK Jr Executive Style
-        margin = 44.0
+        m = 44.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
         c.setStrokeColor(Color(0.12, 0.12, 0.14, alpha=1.0))
         c.setLineWidth(2.0)
-        c.line(margin, ph - 58.0, pw - margin, ph - 58.0)
+        c.line(x1, ph - 58.0, x2, ph - 58.0)
         c.setLineWidth(0.5)
-        c.line(margin, ph - 63.0, pw - margin, ph - 63.0)
+        c.line(x1, ph - 63.0, x2, ph - 63.0)
 
         c.setFont("Times-Bold", 8.5)
         c.setFillColor(Color(0.15, 0.15, 0.18, alpha=0.9))
-        c.drawString(margin, ph - 50.0, "STUDY DOSSIER")
+        c.drawString(x1, ph - 50.0, "STUDY DOSSIER")
         c.setFont("Times-Italic", 8.0)
         c.setFillColor(Color(0.45, 0.45, 0.48, alpha=0.85))
-        c.drawRightString(pw - margin, ph - 50.0, "EXECUTIVE BRIEF · 90S ARCHIVE")
+        c.drawRightString(x2, ph - 50.0, "EXECUTIVE BRIEF · 90S ARCHIVE")
 
         c.setFont("Times-Bold", 28)
         c.setFillColor(Color(0.08, 0.08, 0.10, alpha=1.0))
-        lines = wrap_text_lines(clean_title, "Times-Bold", 28, pw - 2 * margin - 20, c)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 28, w - 20.0, c)
         title_y = ph * 0.64
         for line in lines:
-            c.drawString(margin, title_y, line)
+            c.drawString(x1, title_y, line)
             title_y -= 36.0
 
         if subtitle:
             c.setFont("Times-Italic", 13.5)
             c.setFillColor(Color(0.35, 0.35, 0.38, alpha=0.95))
-            c.drawString(margin, title_y - 6.0, subtitle)
+            c.drawString(x1, title_y - 6.0, subtitle)
             title_y -= 28.0
 
         c.setStrokeColor(Color(0.2, 0.2, 0.25, alpha=0.25))
         c.setLineWidth(0.6)
-        c.line(margin, title_y - 14.0, margin + 80.0, title_y - 14.0)
+        c.line(x1, title_y - 14.0, x1 + 80.0, title_y - 14.0)
 
         meta_y = ph * 0.18
         c.setStrokeColor(Color(0.12, 0.12, 0.14, alpha=1.0))
         c.setLineWidth(0.8)
-        c.line(margin, meta_y + 40.0, pw - margin, meta_y + 40.0)
+        c.line(x1, meta_y + 40.0, x2, meta_y + 40.0)
 
         c.setFont("Times-Bold", 7.5)
         c.setFillColor(Color(0.35, 0.35, 0.38, alpha=0.8))
-        c.drawString(margin, meta_y + 26.0, "AUTHOR / STUDENT")
+        c.drawString(x1, meta_y + 26.0, "AUTHOR / STUDENT")
         c.setFont("Times-Roman", 10.0)
         c.setFillColor(Color(0.12, 0.12, 0.14, alpha=1.0))
-        c.drawString(margin, meta_y + 12.0, author or "General Notes")
+        c.drawString(x1, meta_y + 12.0, author or "General Notes")
 
-        col2_x = margin + (pw - 2 * margin) * 0.52
+        col2_x = x1 + w * 0.52
         c.setFont("Times-Bold", 7.5)
         c.setFillColor(Color(0.35, 0.35, 0.38, alpha=0.8))
         c.drawString(col2_x, meta_y + 26.0, "DATE / COMPILATION")
@@ -345,18 +337,22 @@ def generate_cover_page(
             c.setFont("Times-Italic", 8.0)
             c.setFillColor(Color(0.48, 0.48, 0.50, alpha=0.75))
             s_word = "slide" if num_slides == 1 else "slides"
-            c.drawRightString(pw - margin, meta_y - 8.0, f"{num_slides} {s_word} with study notes")
+            c.drawRightString(x2, meta_y - 8.0, f"{num_slides} {s_word} with study notes")
 
     elif tpl == "monograph":
         # 2. Archival Monograph (Heritage Stationery Bookplate)
         inset = 34.0
+        x1 = left_gutter + inset
+        x2 = pw - right_gutter - inset
+        w = x2 - x1
+
         c.setStrokeColor(Color(0.3, 0.3, 0.3, alpha=0.18))
         c.setLineWidth(0.5)
-        c.rect(inset, inset, pw - 2 * inset, ph - 2 * inset)
+        c.rect(x1, inset, w, ph - 2 * inset)
 
-        box_w = pw - 2 * inset - 70.0
+        box_w = min(w - 70.0, 420.0)
         box_h = 190.0
-        box_x = (pw - box_w) / 2.0
+        box_x = center_x - box_w / 2.0
         box_y = ph * 0.42
 
         c.setStrokeColor(Color(0.2, 0.2, 0.22, alpha=0.35))
@@ -368,236 +364,566 @@ def generate_cover_page(
 
         c.setFont("Times-Roman", 8)
         c.setFillColor(Color(0.45, 0.45, 0.45, alpha=0.85))
-        c.drawCentredString(pw / 2.0, box_y + box_h - 26.0, "M O N O G R A P H   ·   N O T E S")
+        c.drawCentredString(center_x, box_y + box_h - 26.0, "M O N O G R A P H   ·   N O T E S")
 
         c.setStrokeColor(Color(0.4, 0.4, 0.4, alpha=0.22))
         c.setLineWidth(0.35)
-        c.line(pw / 2.0 - 20.0, box_y + box_h - 33.0, pw / 2.0 + 20.0, box_y + box_h - 33.0)
+        c.line(center_x - 20.0, box_y + box_h - 33.0, center_x + 20.0, box_y + box_h - 33.0)
 
         c.setFont("Times-Bold", 20)
         c.setFillColor(Color(0.12, 0.12, 0.14, alpha=1.0))
         lines = wrap_text_lines(clean_title, "Times-Bold", 20, box_w - 36.0, c)
         title_y = box_y + box_h * 0.54 + (len(lines) - 1) * 13.0
         for line in lines:
-            c.drawCentredString(pw / 2.0, title_y, line)
+            c.drawCentredString(center_x, title_y, line)
             title_y -= 26.0
 
         if subtitle:
             c.setFont("Times-Italic", 11.5)
             c.setFillColor(Color(0.35, 0.35, 0.38, alpha=0.9))
-            c.drawCentredString(pw / 2.0, title_y - 8.0, subtitle)
+            c.drawCentredString(center_x, title_y - 8.0, subtitle)
 
         meta_y = ph * 0.22
         if author:
             c.setFont("Times-Roman", 10.5)
             c.setFillColor(Color(0.22, 0.22, 0.24, alpha=0.9))
-            c.drawCentredString(pw / 2.0, meta_y, author)
+            c.drawCentredString(center_x, meta_y, author)
             meta_y -= 18.0
 
         if date_str:
             c.setFont("Times-Italic", 9.0)
             c.setFillColor(Color(0.42, 0.42, 0.42, alpha=0.8))
-            c.drawCentredString(pw / 2.0, meta_y, f"Date: {date_str}")
+            c.drawCentredString(center_x, meta_y, f"Date: {date_str}")
             meta_y -= 16.0
 
         if num_slides is not None:
             c.setFont("Times-Roman", 8.5)
             c.setFillColor(Color(0.48, 0.48, 0.48, alpha=0.75))
             s_word = "slide" if num_slides == 1 else "slides"
-            c.drawCentredString(pw / 2.0, meta_y, f"{num_slides} {s_word} with dedicated notes")
+            c.drawCentredString(center_x, meta_y, f"{num_slides} {s_word} with dedicated notes")
 
     elif tpl == "bauhaus":
         # 3. Swiss Modernist Bauhaus Layout
         m = 48.0
-        vert_x = m + 28.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        vert_x = x1 + 28.0
+
         c.setStrokeColor(Color(0.15, 0.15, 0.18, alpha=0.18))
         c.setLineWidth(0.6)
         c.line(vert_x, m, vert_x, ph - m)
 
         hdr_y = ph - m - 20.0
-        c.line(m, hdr_y, pw - m, hdr_y)
+        c.line(x1, hdr_y, x2, hdr_y)
 
-        c.setFont("Helvetica-Bold" if not grayscale else "Times-Bold", 8.0)
+        c.setFont("Helvetica-Bold", 8.0)
         c.setFillColor(Color(0.2, 0.2, 0.25, alpha=0.9))
         c.drawString(vert_x + 14.0, hdr_y + 8.0, "VOLUME I  ·  STUDY COMPENDIUM")
 
-        c.setFont("Times-Bold", 24)
+        c.setFont("Helvetica-Bold", 24)
         c.setFillColor(Color(0.08, 0.08, 0.10, alpha=1.0))
-        lines = wrap_text_lines(clean_title, "Times-Bold", 24, pw - (vert_x + 14.0) - m, c)
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 24, x2 - (vert_x + 14.0), c)
         title_y = ph * 0.58 + (len(lines) - 1) * 15.0
         for line in lines:
             c.drawString(vert_x + 14.0, title_y, line)
             title_y -= 30.0
 
         if subtitle:
-            c.setFont("Times-Italic", 12.5)
+            c.setFont("Helvetica-Oblique", 12.5)
             c.setFillColor(Color(0.35, 0.35, 0.38, alpha=0.9))
             c.drawString(vert_x + 14.0, title_y - 6.0, subtitle)
 
         meta_y = ph * 0.25
-        c.setFont("Helvetica-Bold" if not grayscale else "Times-Bold", 7.0)
+        c.setFont("Helvetica-Bold", 7.0)
         c.setFillColor(Color(0.45, 0.45, 0.48, alpha=0.85))
         c.drawString(vert_x + 14.0, meta_y + 36.0, "STUDENT:")
-        c.setFont("Times-Roman", 10.0)
+        c.setFont("Helvetica", 10.0)
         c.setFillColor(Color(0.12, 0.12, 0.14, alpha=1.0))
         c.drawString(vert_x + 72.0, meta_y + 36.0, author or "Study Notes")
 
-        c.setFont("Helvetica-Bold" if not grayscale else "Times-Bold", 7.0)
+        c.setFont("Helvetica-Bold", 7.0)
         c.setFillColor(Color(0.45, 0.45, 0.48, alpha=0.85))
         c.drawString(vert_x + 14.0, meta_y + 18.0, "DATE:")
-        c.setFont("Times-Roman", 10.0)
+        c.setFont("Helvetica", 10.0)
         c.setFillColor(Color(0.12, 0.12, 0.14, alpha=1.0))
         c.drawString(vert_x + 72.0, meta_y + 18.0, date_str or "Archival")
 
         if num_slides is not None:
             s_word = "slide" if num_slides == 1 else "slides"
-            c.setFont("Times-Italic", 8.0)
+            c.setFont("Helvetica-Oblique", 8.0)
             c.setFillColor(Color(0.5, 0.5, 0.52, alpha=0.75))
             c.drawString(vert_x + 14.0, meta_y - 4.0, f"{num_slides} {s_word} included")
 
-    elif tpl == "fifties":
+    elif tpl in ("nineteen00s", "1900s", "1900", "00s"):
+        # 4a. 1900s Art Nouveau & Belle Époque Classic
+        m = 42.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
+        bordeaux = Color(0.42, 0.12, 0.15, alpha=1.0)
+        gold = Color(0.72, 0.58, 0.32, alpha=1.0)
+        c.setStrokeColor(bordeaux)
+        c.setLineWidth(1.4)
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
+        c.setStrokeColor(gold)
+        c.setLineWidth(0.5)
+        c.rect(x1 + 4.5, m + 4.5, w - 9.0, ph - 2 * (m + 4.5), stroke=1, fill=0)
+
+        c.setFont("Times-Bold", 8.5)
+        c.setFillColor(bordeaux)
+        c.drawCentredString(center_x, ph - m - 28.0, "B E L L E   É P O Q U E   ·   1 9 0 0 s")
+        c.setFont("Times-Italic", 7.5)
+        c.setFillColor(gold)
+        c.drawCentredString(center_x, ph - m - 42.0, "ART NOUVEAU ARCHIVE · TURN OF THE CENTURY")
+
+        loz_y = ph * 0.65
+        c.setStrokeColor(bordeaux)
+        c.setLineWidth(0.8)
+        c.circle(center_x, loz_y, 14.0, stroke=1, fill=0)
+        c.setStrokeColor(gold)
+        c.setLineWidth(0.5)
+        c.circle(center_x, loz_y, 9.0, stroke=1, fill=0)
+
+        c.setFont("Times-Bold", 25)
+        c.setFillColor(Color(0.14, 0.10, 0.12, alpha=1.0))
+        lines = wrap_text_lines(clean_title, "Times-Bold", 25, w - 60.0, c)
+        cur_y = loz_y - 40.0
+        for line in lines:
+            c.drawCentredString(center_x, cur_y, line)
+            cur_y -= 33.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 12.0)
+            c.setFillColor(bordeaux)
+            c.drawCentredString(center_x, cur_y - 8.0, subtitle)
+            cur_y -= 24.0
+
+        c.setStrokeColor(gold)
+        c.setLineWidth(0.6)
+        c.line(center_x - 45.0, cur_y - 10.0, center_x + 45.0, cur_y - 10.0)
+
+        meta_y = m + 36.0
+        c.setFont("Times-Bold", 7.5)
+        c.setFillColor(gold)
+        c.drawCentredString(center_x, meta_y + 26.0, "STUDENT / AUTHOR")
+        c.setFont("Times-Bold", 10.5)
+        c.setFillColor(bordeaux)
+        c.drawCentredString(center_x, meta_y + 12.0, author or "Belle Époque Edition")
+        c.setFont("Times-Italic", 8.5)
+        c.setFillColor(gold)
+        c.drawCentredString(center_x, meta_y - 2.0, date_str or "Turn of the Century")
+        if num_slides is not None:
+            s_word = "slide" if num_slides == 1 else "slides"
+            c.setFont("Times-Roman", 8.0)
+            c.setFillColor(Color(0.4, 0.4, 0.4, alpha=0.8))
+            c.drawCentredString(center_x, meta_y - 16.0, f"{num_slides} {s_word} compiled")
+
+    elif tpl in ("nineteen10s", "1910s", "1910", "10s"):
+        # 4b. 1910s Edwardian & Aviation Monograph
+        m = 42.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
+        navy = Color(0.10, 0.16, 0.28, alpha=1.0)
+        gold_muted = Color(0.70, 0.58, 0.36, alpha=1.0)
+        c.setStrokeColor(navy)
+        c.setLineWidth(1.8)
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
+        c.setStrokeColor(gold_muted)
+        c.setLineWidth(0.5)
+        c.rect(x1 + 4.0, m + 4.0, w - 8.0, ph - 2 * (m + 4.0), stroke=1, fill=0)
+
+        c.setStrokeColor(navy)
+        c.setLineWidth(0.6)
+        c.rect(x2 - 110.0, ph - m - 45.0, 96.0, 26.0, stroke=1, fill=0)
+        c.setFont("Helvetica-Bold", 6.5)
+        c.setFillColor(navy)
+        c.drawCentredString(x2 - 62.0, ph - m - 32.0, "REGISTRY NO. 1914-SP")
+        c.setFont("Helvetica", 5.5)
+        c.drawCentredString(x2 - 62.0, ph - m - 40.0, "TELEGRAPH DOSSIER")
+
+        c.setFont("Times-Bold", 8.5)
+        c.setFillColor(navy)
+        c.drawString(x1 + 16.0, ph - m - 28.0, "E D W A R D I A N   D O S S I E R   ·   1 9 1 0 s")
+        c.setFont("Times-Italic", 7.5)
+        c.setFillColor(gold_muted)
+        c.drawString(x1 + 16.0, ph - m - 40.0, "EARLY MODERNIST MONOGRAPH · AVIATION ERA")
+
+        c.setFont("Times-Bold", 26)
+        c.setFillColor(navy)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 26, w - 50.0, c)
+        cur_y = ph * 0.58 + (len(lines) - 1) * 16.0
+        for line in lines:
+            c.drawString(x1 + 16.0, cur_y, line)
+            cur_y -= 34.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 12.5)
+            c.setFillColor(gold_muted)
+            c.drawString(x1 + 16.0, cur_y - 6.0, subtitle)
+            cur_y -= 24.0
+
+        c.setStrokeColor(navy)
+        c.setLineWidth(1.0)
+        c.line(x1 + 16.0, cur_y - 10.0, x1 + 90.0, cur_y - 10.0)
+
+        meta_y = m + 36.0
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(gold_muted)
+        c.drawString(x1 + 16.0, meta_y + 26.0, "AUTHOR / CORRESPONDENT")
+        c.setFont("Times-Bold", 10.5)
+        c.setFillColor(navy)
+        c.drawString(x1 + 16.0, meta_y + 12.0, author or "Edwardian Edition")
+        c.setFont("Times-Italic", 8.5)
+        c.setFillColor(gold_muted)
+        c.drawString(x1 + 16.0, meta_y - 2.0, date_str or "Archival Record 1910")
+        if num_slides is not None:
+            s_word = "slide" if num_slides == 1 else "slides"
+            c.setFont("Times-Roman", 8.0)
+            c.setFillColor(navy)
+            c.drawRightString(x2 - 16.0, meta_y + 12.0, f"{num_slides} {s_word} registered")
+
+    elif tpl in ("twenties", "20s", "1920s", "1920", "artdeco", "gatsby"):
+        # 4c. 1920s Art Deco & Roaring Twenties
+        m = 40.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
+        deco_black = Color(0.10, 0.10, 0.12, alpha=1.0)
+        deco_gold = Color(0.82, 0.65, 0.28, alpha=1.0)
+
+        c.setStrokeColor(deco_black)
+        c.setLineWidth(2.0)
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
+
+        c.setStrokeColor(deco_gold)
+        c.setLineWidth(0.8)
+        c.rect(x1 + 4.5, m + 4.5, w - 9.0, ph - 2 * (m + 4.5), stroke=1, fill=0)
+        c.setLineWidth(0.4)
+        c.rect(x1 + 8.0, m + 8.0, w - 16.0, ph - 2 * (m + 8.0), stroke=1, fill=0)
+
+        c.setFont("Helvetica-Bold", 8.0)
+        c.setFillColor(deco_gold)
+        c.drawCentredString(center_x, ph - m - 28.0, "★   A R T   D E C O   C O M P E N D I U M   ·   1 9 2 0 s   ★")
+        c.setFont("Times-Italic", 7.5)
+        c.setFillColor(deco_black)
+        c.drawCentredString(center_x, ph - m - 42.0, "ROARING TWENTIES EDITORIAL · GATSBY ARCHIVE")
+
+        loz_y = ph * 0.65
+        c.setStrokeColor(deco_black)
+        c.setLineWidth(1.2)
+        p = c.beginPath()
+        p.moveTo(center_x, loz_y + 15.0)
+        p.lineTo(center_x + 15.0, loz_y)
+        p.lineTo(center_x, loz_y - 15.0)
+        p.lineTo(center_x - 15.0, loz_y)
+        p.close()
+        c.drawPath(p, stroke=1, fill=0)
+
+        c.setFillColor(deco_gold)
+        c.circle(center_x, loz_y, 4.0, fill=1, stroke=0)
+
+        c.setFont("Times-Bold", 26)
+        c.setFillColor(deco_black)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 26, w - 60.0, c)
+        cur_y = loz_y - 42.0
+        for line in lines:
+            c.drawCentredString(center_x, cur_y, line)
+            cur_y -= 34.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 12.5)
+            c.setFillColor(deco_gold)
+            c.drawCentredString(center_x, cur_y - 6.0, subtitle)
+            cur_y -= 24.0
+
+        c.setStrokeColor(deco_gold)
+        c.setLineWidth(1.0)
+        c.line(center_x - 45.0, cur_y - 10.0, center_x + 45.0, cur_y - 10.0)
+
+        meta_y = m + 36.0
+        c.setFont("Helvetica-Bold", 7.5)
+        c.setFillColor(deco_gold)
+        c.drawCentredString(center_x, meta_y + 26.0, "CURATOR / STUDENT")
+        c.setFont("Times-Bold", 10.5)
+        c.setFillColor(deco_black)
+        c.drawCentredString(center_x, meta_y + 12.0, author or "Gatsby Edition")
+        c.setFont("Times-Italic", 8.5)
+        c.setFillColor(deco_gold)
+        c.drawCentredString(center_x, meta_y - 2.0, date_str or "1920s Archive")
+        if num_slides is not None:
+            s_word = "slide" if num_slides == 1 else "slides"
+            c.setFont("Times-Roman", 8.0)
+            c.setFillColor(deco_black)
+            c.drawCentredString(center_x, meta_y - 16.0, f"{num_slides} {s_word} bound")
+
+    elif tpl in ("thirties", "30s", "1930s", "1930", "streamline"):
+        # 4d. 1930s Streamline Moderne & Constructivism
+        m = 42.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
+        copper = Color(0.60, 0.28, 0.16, alpha=1.0)
+        slate = Color(0.22, 0.26, 0.32, alpha=1.0)
+
+        c.setStrokeColor(slate)
+        c.setLineWidth(1.6)
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
+
+        c.setStrokeColor(copper)
+        c.setLineWidth(1.2)
+        c.line(x1, ph - m - 45.0, x2, ph - m - 45.0)
+        c.setLineWidth(0.5)
+        c.line(x1, ph - m - 49.0, x2, ph - m - 49.0)
+
+        c.setFont("Helvetica-Bold", 8.5)
+        c.setFillColor(slate)
+        c.drawString(x1 + 14.0, ph - m - 32.0, "STREAMLINE MODERNE  ·  DOSSIER 1935")
+        c.setFont("Times-Italic", 7.5)
+        c.setFillColor(copper)
+        c.drawRightString(x2 - 14.0, ph - m - 32.0, "INDUSTRIAL DESIGN ARCHIVE")
+
+        c.setFont("Helvetica-Bold", 26)
+        c.setFillColor(slate)
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 26, w - 50.0, c)
+        cur_y = ph * 0.58 + (len(lines) - 1) * 16.0
+        for line in lines:
+            c.drawString(x1 + 14.0, cur_y, line)
+            cur_y -= 34.0
+
+        if subtitle:
+            c.setFont("Helvetica-Oblique", 12.5)
+            c.setFillColor(copper)
+            c.drawString(x1 + 14.0, cur_y - 6.0, subtitle)
+            cur_y -= 24.0
+
+        c.setStrokeColor(copper)
+        c.setLineWidth(1.5)
+        c.line(x1 + 14.0, cur_y - 12.0, x1 + 100.0, cur_y - 12.0)
+
+        meta_y = m + 36.0
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(copper)
+        c.drawString(x1 + 14.0, meta_y + 26.0, "DESIGNER / AUTHOR")
+        c.setFont("Helvetica-Bold", 10.5)
+        c.setFillColor(slate)
+        c.drawString(x1 + 14.0, meta_y + 12.0, author or "Streamline Monograph")
+        c.setFont("Helvetica-Oblique", 8.5)
+        c.setFillColor(copper)
+        c.drawString(x1 + 14.0, meta_y - 2.0, date_str or "1930s Edition")
+        if num_slides is not None:
+            s_word = "slide" if num_slides == 1 else "slides"
+            c.setFont("Helvetica", 8.0)
+            c.setFillColor(slate)
+            c.drawRightString(x2 - 14.0, meta_y + 12.0, f"{num_slides} {s_word} compiled")
+
+    elif tpl in ("forties", "40s", "1940s", "1940", "typewriter", "postwar"):
+        # 4e. 1940s Typewriter Dossier & Post-War Press Release
+        m = 40.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
+        ink_black = Color(0.12, 0.12, 0.14, alpha=1.0)
+        stamp_red = Color(0.70, 0.15, 0.15, alpha=1.0)
+
+        c.setStrokeColor(ink_black)
+        c.setLineWidth(1.2)
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
+
+        c.setStrokeColor(stamp_red)
+        c.setLineWidth(0.8)
+        c.rect(x2 - 130.0, ph - m - 45.0, 116.0, 24.0, stroke=1, fill=0)
+        c.setFont("Courier-Bold", 7.0)
+        c.setFillColor(stamp_red)
+        c.drawCentredString(x2 - 72.0, ph - m - 32.0, "CONFIDENTIAL STUDY FILE")
+        c.setFont("Courier", 5.5)
+        c.drawCentredString(x2 - 72.0, ph - m - 40.0, "PRESS & RESEARCH DOSSIER")
+
+        c.setFont("Courier-Bold", 8.0)
+        c.setFillColor(ink_black)
+        c.drawString(x1 + 16.0, ph - m - 28.0, "[ DOSSIER 1944 ] :: OFFICIAL BRIEF")
+
+        c.setFont("Courier-Bold", 24)
+        c.setFillColor(ink_black)
+        lines = wrap_text_lines(clean_title, "Courier-Bold", 24, w - 50.0, c)
+        cur_y = ph * 0.58 + (len(lines) - 1) * 16.0
+        for line in lines:
+            c.drawString(x1 + 16.0, cur_y, line)
+            cur_y -= 32.0
+
+        if subtitle:
+            c.setFont("Courier-Oblique", 12.0)
+            c.setFillColor(Color(0.35, 0.35, 0.38, alpha=0.9))
+            c.drawString(x1 + 16.0, cur_y - 6.0, subtitle)
+            cur_y -= 24.0
+
+        c.setStrokeColor(ink_black)
+        c.setLineWidth(1.0)
+        c.line(x1 + 16.0, cur_y - 10.0, x1 + 110.0, cur_y - 10.0)
+
+        meta_y = m + 28.0
+        c.setFont("Courier-Bold", 8.0)
+        c.setFillColor(ink_black)
+        c.drawString(x1 + 16.0, meta_y + 44.0, f"[ OPERATOR ] : {author or 'Anonymous.44'}")
+        c.drawString(x1 + 16.0, meta_y + 28.0, f"[ TIMESTAMP] : {date_str or '1944.06.06'}")
+        c.drawString(x1 + 16.0, meta_y + 12.0, f"[ DATASETS ] : {num_slides or 0} Slides Compiled // Monograph")
+
+    elif tpl in ("fifties", "50s"):
         # 4. 1950s Mid-Century Pelican / Penguin Tri-Band Paperbound Classic
         top_band_h = ph * 0.20
         c.setFillColor(Color(0.16, 0.18, 0.20, alpha=1.0))
-        c.rect(0, ph - top_band_h, pw, top_band_h, fill=1, stroke=0)
+        c.rect(left_gutter, ph - top_band_h, avail_w, top_band_h, fill=1, stroke=0)
 
         c.setFont("Helvetica-Bold", 8.5)
         c.setFillColor(Color(0.96, 0.96, 0.96, alpha=0.95))
-        c.drawCentredString(pw / 2.0, ph - 42.0, "M I D - C E N T U R Y   D O S S I E R")
+        c.drawCentredString(center_x, ph - 42.0, "M I D - C E N T U R Y   D O S S I E R")
         c.setFont("Times-Italic", 8.0)
         c.setFillColor(Color(0.82, 0.84, 0.86, alpha=0.85))
-        c.drawCentredString(pw / 2.0, ph - 58.0, "PELICAN & PENGUIN STUDY MONOGRAPH · SERIES NO. 54")
+        c.drawCentredString(center_x, ph - 58.0, "PELICAN & PENGUIN STUDY MONOGRAPH · SERIES NO. 54")
 
         c.setStrokeColor(Color(0.96, 0.96, 0.96, alpha=0.3))
         c.setLineWidth(0.5)
-        c.line(pw / 2.0 - 45.0, ph - 70.0, pw / 2.0 + 45.0, ph - 70.0)
+        c.line(center_x - 45.0, ph - 70.0, center_x + 45.0, ph - 70.0)
 
         lozenge_y = ph * 0.65
         c.setStrokeColor(Color(0.18, 0.20, 0.22, alpha=0.4))
         c.setLineWidth(0.8)
         p = c.beginPath()
-        p.moveTo(pw / 2.0, lozenge_y + 13.0)
-        p.lineTo(pw / 2.0 + 13.0, lozenge_y)
-        p.lineTo(pw / 2.0, lozenge_y - 13.0)
-        p.lineTo(pw / 2.0 - 13.0, lozenge_y)
+        p.moveTo(center_x, lozenge_y + 13.0)
+        p.lineTo(center_x + 13.0, lozenge_y)
+        p.lineTo(center_x, lozenge_y - 13.0)
+        p.lineTo(center_x - 13.0, lozenge_y)
         p.close()
         c.drawPath(p, stroke=1, fill=0)
 
-        c.setFont("Times-Bold", 24)
+        c.setFont("Helvetica-Bold", 24)
         c.setFillColor(Color(0.10, 0.12, 0.14, alpha=1.0))
-        lines = wrap_text_lines(clean_title, "Times-Bold", 24, pw - 80.0, c)
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 24, avail_w - 80.0, c)
         cur_y = lozenge_y - 36.0
         for line in lines:
-            c.drawCentredString(pw / 2.0, cur_y, line)
+            c.drawCentredString(center_x, cur_y, line)
             cur_y -= 32.0
 
         if subtitle:
             c.setFont("Times-Italic", 12.0)
             c.setFillColor(Color(0.35, 0.38, 0.40, alpha=0.95))
-            c.drawCentredString(pw / 2.0, cur_y - 8.0, subtitle)
+            c.drawCentredString(center_x, cur_y - 8.0, subtitle)
             cur_y -= 26.0
 
         bot_band_y = ph * 0.22
         c.setStrokeColor(Color(0.16, 0.18, 0.20, alpha=1.0))
         c.setLineWidth(1.8)
-        c.line(40.0, bot_band_y + 10.0, pw - 40.0, bot_band_y + 10.0)
+        c.line(left_gutter + 40.0, bot_band_y + 10.0, pw - right_gutter - 40.0, bot_band_y + 10.0)
         c.setLineWidth(0.5)
-        c.line(40.0, bot_band_y + 6.0, pw - 40.0, bot_band_y + 6.0)
+        c.line(left_gutter + 40.0, bot_band_y + 6.0, pw - right_gutter - 40.0, bot_band_y + 6.0)
 
         c.setFont("Helvetica-Bold", 7.5)
         c.setFillColor(Color(0.40, 0.42, 0.45, alpha=0.85))
-        c.drawCentredString(pw / 2.0, bot_band_y - 10.0, "STUDENT / RESEARCH COMPILATION")
+        c.drawCentredString(center_x, bot_band_y - 10.0, "STUDENT / RESEARCH COMPILATION")
 
         c.setFont("Times-Roman", 10.5)
         c.setFillColor(Color(0.12, 0.14, 0.16, alpha=1.0))
-        c.drawCentredString(pw / 2.0, bot_band_y - 26.0, author or "General Lecture Edition")
+        c.drawCentredString(center_x, bot_band_y - 26.0, author or "General Lecture Edition")
 
         c.setFont("Times-Italic", 9.0)
         c.setFillColor(Color(0.45, 0.45, 0.48, alpha=0.85))
-        c.drawCentredString(pw / 2.0, bot_band_y - 42.0, f"Published: {date_str}" if date_str else "Archival Edition")
+        c.drawCentredString(center_x, bot_band_y - 42.0, f"Published: {date_str}" if date_str else "Archival Edition")
 
         if num_slides is not None:
             c.setFont("Helvetica", 7.5)
             c.setFillColor(Color(0.52, 0.54, 0.56, alpha=0.8))
             s_word = "slide" if num_slides == 1 else "slides"
-            c.drawCentredString(pw / 2.0, bot_band_y - 58.0, f"{num_slides} {s_word} with ruled marginal notes")
+            c.drawCentredString(center_x, bot_band_y - 58.0, f"{num_slides} {s_word} with ruled marginal notes")
 
     elif tpl == "sixties":
         # 5. 1960s Swiss International Typographic Style (Müller-Brockmann / Basel)
-        margin = 46.0
+        m = 46.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
         c.setFillColor(Color(0.08, 0.08, 0.10, alpha=1.0))
-        c.rect(margin, ph - 54.0, pw - 2 * margin, 5.0, fill=1, stroke=0)
+        c.rect(x1, ph - 54.0, w, 5.0, fill=1, stroke=0)
 
         c.setFont("Helvetica-Bold", 44)
         c.setFillColor(Color(0.08, 0.08, 0.10, alpha=0.12))
-        c.drawRightString(pw - margin, ph - 110.0, "60")
+        c.drawRightString(x2, ph - 110.0, "60")
 
         c.setFont("Helvetica-Bold", 8.0)
         c.setFillColor(Color(0.15, 0.15, 0.18, alpha=0.9))
-        c.drawString(margin, ph - 74.0, "INTERNATIONALE TYPOGRAPHIE  ·  SCHWEIZ 1960")
+        c.drawString(x1, ph - 74.0, "INTERNATIONALE TYPOGRAPHIE  ·  SCHWEIZ 1960")
 
         c.setFont("Helvetica-Bold", 27)
         c.setFillColor(Color(0.08, 0.08, 0.10, alpha=1.0))
-        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 27, pw - 2 * margin - 50.0, c)
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 27, w - 50.0, c)
         cur_y = ph * 0.62 + (len(lines) - 1) * 16.0
         for line in lines:
-            c.drawString(margin, cur_y, line)
+            c.drawString(x1, cur_y, line)
             cur_y -= 35.0
 
         if subtitle:
-            c.setFont("Helvetica", 12.0)
+            c.setFont("Helvetica-Oblique", 12.0)
             c.setFillColor(Color(0.35, 0.35, 0.38, alpha=0.9))
-            c.drawString(margin, cur_y - 6.0, subtitle)
+            c.drawString(x1, cur_y - 6.0, subtitle)
             cur_y -= 26.0
 
         c.setStrokeColor(Color(0.08, 0.08, 0.10, alpha=1.0))
         c.setLineWidth(1.2)
-        c.line(margin, cur_y - 12.0, margin + 45.0, cur_y - 12.0)
+        c.line(x1, cur_y - 12.0, x1 + 45.0, cur_y - 12.0)
 
         grid_y = ph * 0.24
-        col_w = (pw - 2 * margin) / 2.0
+        col_w = w / 2.0
         c.setStrokeColor(Color(0.15, 0.15, 0.18, alpha=0.25))
         c.setLineWidth(0.5)
-        c.line(margin, grid_y + 36.0, pw - margin, grid_y + 36.0)
-        c.line(margin + col_w, grid_y + 36.0, margin + col_w, grid_y - 20.0)
+        c.line(x1, grid_y + 36.0, x2, grid_y + 36.0)
+        c.line(x1 + col_w, grid_y + 36.0, x1 + col_w, grid_y - 20.0)
 
         c.setFont("Helvetica-Bold", 7.0)
         c.setFillColor(Color(0.40, 0.40, 0.42, alpha=0.85))
-        c.drawString(margin, grid_y + 24.0, "FORSCHER / AUTHOR")
+        c.drawString(x1, grid_y + 24.0, "FORSCHER / AUTHOR")
         c.setFont("Helvetica", 9.5)
         c.setFillColor(Color(0.10, 0.10, 0.12, alpha=1.0))
-        c.drawString(margin, grid_y + 10.0, author or "Allgemeine Vorlesung")
+        c.drawString(x1, grid_y + 10.0, author or "Allgemeine Vorlesung")
 
         c.setFont("Helvetica-Bold", 7.0)
         c.setFillColor(Color(0.40, 0.40, 0.42, alpha=0.85))
-        c.drawString(margin + col_w + 14.0, grid_y + 24.0, "DATUM / REGISTRY")
+        c.drawString(x1 + col_w + 14.0, grid_y + 24.0, "DATUM / REGISTRY")
         c.setFont("Helvetica", 9.5)
         c.setFillColor(Color(0.10, 0.10, 0.12, alpha=1.0))
-        c.drawString(margin + col_w + 14.0, grid_y + 10.0, date_str or "Archiv Zürich")
+        c.drawString(x1 + col_w + 14.0, grid_y + 10.0, date_str or "Archiv Zürich")
 
         if num_slides is not None:
             c.setFont("Helvetica-Bold", 7.0)
-            c.drawString(margin, grid_y - 8.0, "FOLIO")
+            c.drawString(x1, grid_y - 8.0, "FOLIO")
             c.setFont("Helvetica", 9.5)
             s_word = "slide" if num_slides == 1 else "slides"
-            c.drawString(margin, grid_y - 20.0, f"{num_slides} {s_word}")
+            c.drawString(x1, grid_y - 20.0, f"{num_slides} {s_word}")
 
     elif tpl == "seventies":
         # 6. 1970s Retro Warm Editorial & Apollo NASA Checklist
         m = 38.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
         c.setStrokeColor(Color(0.22, 0.20, 0.18, alpha=0.85))
         c.setLineWidth(1.6)
-        c.roundRect(m, m, pw - 2 * m, ph - 2 * m, 12.0, stroke=1, fill=0)
+        c.roundRect(x1, m, w, ph - 2 * m, 12.0, stroke=1, fill=0)
         c.setLineWidth(0.6)
-        c.roundRect(m + 4.0, m + 4.0, pw - 2 * m - 8.0, ph - 2 * m - 8.0, 9.0, stroke=1, fill=0)
+        c.roundRect(x1 + 4.0, m + 4.0, w - 8.0, ph - 2 * m - 8.0, 9.0, stroke=1, fill=0)
         c.setLineWidth(0.4)
-        c.roundRect(m + 7.5, m + 7.5, pw - 2 * m - 15.0, ph - 2 * m - 15.0, 7.0, stroke=1, fill=0)
+        c.roundRect(x1 + 7.5, m + 7.5, w - 15.0, ph - 2 * m - 15.0, 7.0, stroke=1, fill=0)
 
         c.setFont("Helvetica-Bold", 8.0)
         c.setFillColor(Color(0.35, 0.32, 0.30, alpha=0.9))
-        c.drawCentredString(pw / 2.0, ph - m - 28.0, "★  A R C H I V A L   D O S S I E R   ·   1 9 7 X  ★")
+        c.drawCentredString(center_x, ph - m - 28.0, "★  A R C H I V A L   D O S S I E R   ·   1 9 7 X  ★")
 
-        badge_x = pw - m - 46.0
+        badge_x = x2 - 46.0
         badge_y = ph - m - 52.0
         c.setStrokeColor(Color(0.35, 0.32, 0.30, alpha=0.4))
         c.circle(badge_x, badge_y, 18.0, stroke=1, fill=0)
@@ -607,30 +933,30 @@ def generate_cover_page(
         c.setFont("Helvetica", 5.5)
         c.drawCentredString(badge_x, badge_y - 6.0, "OFFICIAL")
 
-        c.setFont("Times-Bold", 25)
+        c.setFont("Helvetica-Bold", 25)
         c.setFillColor(Color(0.14, 0.12, 0.10, alpha=1.0))
-        lines = wrap_text_lines(clean_title, "Times-Bold", 25, pw - 2 * m - 70.0, c)
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 25, w - 70.0, c)
         cur_y = ph * 0.58 + (len(lines) - 1) * 15.0
         for line in lines:
-            c.drawCentredString(pw / 2.0, cur_y, line)
+            c.drawCentredString(center_x, cur_y, line)
             cur_y -= 33.0
 
         if subtitle:
             c.setFont("Times-Italic", 12.0)
             c.setFillColor(Color(0.40, 0.36, 0.32, alpha=0.95))
-            c.drawCentredString(pw / 2.0, cur_y - 8.0, subtitle)
+            c.drawCentredString(center_x, cur_y - 8.0, subtitle)
             cur_y -= 24.0
 
         c.setStrokeColor(Color(0.40, 0.36, 0.32, alpha=0.25))
         c.setLineWidth(0.6)
         c.setDash(4, 3)
-        c.line(pw / 2.0 - 50.0, cur_y - 12.0, pw / 2.0 + 50.0, cur_y - 12.0)
+        c.line(center_x - 50.0, cur_y - 12.0, center_x + 50.0, cur_y - 12.0)
         c.setDash()
 
         box_y = m + 36.0
-        box_w = pw - 2 * m - 50.0
+        box_w = w - 50.0
         box_h = 76.0
-        bx = (pw - box_w) / 2.0
+        bx = center_x - box_w / 2.0
         c.setStrokeColor(Color(0.35, 0.32, 0.30, alpha=0.25))
         c.setLineWidth(0.5)
         c.roundRect(bx, box_y, box_w, box_h, 4.0, stroke=1, fill=0)
@@ -654,15 +980,19 @@ def generate_cover_page(
     elif tpl == "eighties":
         # 7. 1980s Memphis Design & Early Macintosh Tech Manual
         m = 42.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
         c.setStrokeColor(Color(0.10, 0.10, 0.12, alpha=1.0))
         c.setLineWidth(1.4)
-        c.rect(m, m, pw - 2 * m, ph - 2 * m, stroke=1, fill=0)
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
         c.setLineWidth(0.4)
-        c.rect(m + 3.5, m + 3.5, pw - 2 * m - 7.0, ph - 2 * m - 7.0, stroke=1, fill=0)
+        c.rect(x1 + 3.5, m + 3.5, w - 7.0, ph - 2 * m - 7.0, stroke=1, fill=0)
 
         hatch_w = 44.0
         hatch_h = 24.0
-        hx = pw - m - hatch_w - 12.0
+        hx = x2 - hatch_w - 12.0
         hy = ph - m - hatch_h - 12.0
         c.setStrokeColor(Color(0.10, 0.10, 0.12, alpha=0.35))
         c.setLineWidth(0.5)
@@ -674,48 +1004,52 @@ def generate_cover_page(
         c.circle(hx - 12.0, hy + 12.0, 3.0, fill=1, stroke=0)
 
         c.setFont("Helvetica-Bold", 7.5)
-        c.drawString(m + 16.0, ph - m - 24.0, "SYS.MANUAL // VOL.84 · PERSONAL STUDY COMPENDIUM")
+        c.drawString(x1 + 16.0, ph - m - 24.0, "SYS.MANUAL // VOL.84 · PERSONAL STUDY COMPENDIUM")
 
         c.setFont("Helvetica-Bold", 26)
         c.setFillColor(Color(0.08, 0.08, 0.10, alpha=1.0))
-        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 26, pw - 2 * m - 50.0, c)
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 26, w - 50.0, c)
         cur_y = ph * 0.60 + (len(lines) - 1) * 16.0
         for line in lines:
-            c.drawString(m + 16.0, cur_y, line)
+            c.drawString(x1 + 16.0, cur_y, line)
             cur_y -= 34.0
 
         if subtitle:
             c.setFont("Helvetica", 11.5)
             c.setFillColor(Color(0.35, 0.35, 0.38, alpha=0.9))
-            c.drawString(m + 16.0, cur_y - 6.0, subtitle)
+            c.drawString(x1 + 16.0, cur_y - 6.0, subtitle)
             cur_y -= 24.0
 
         c.setStrokeColor(Color(0.10, 0.10, 0.12, alpha=1.0))
         c.setLineWidth(1.0)
-        c.line(m + 16.0, cur_y - 12.0, m + 120.0, cur_y - 12.0)
+        c.line(x1 + 16.0, cur_y - 12.0, x1 + 120.0, cur_y - 12.0)
 
         tech_y = m + 28.0
         c.setFont("Courier-Bold", 8.0)
         c.setFillColor(Color(0.20, 0.20, 0.24, alpha=0.95))
-        c.drawString(m + 16.0, tech_y + 44.0, f"[ OPERATOR ] : {author or 'User.01'}")
-        c.drawString(m + 16.0, tech_y + 28.0, f"[ TIMESTAMP] : {date_str or '1984.10.24'}")
-        c.drawString(m + 16.0, tech_y + 12.0, f"[ DATASETS ] : {num_slides or 0} Slides Compiled // Format A4")
+        c.drawString(x1 + 16.0, tech_y + 44.0, f"[ OPERATOR ] : {author or 'User.01'}")
+        c.drawString(x1 + 16.0, tech_y + 28.0, f"[ TIMESTAMP] : {date_str or '1984.10.24'}")
+        c.drawString(x1 + 16.0, tech_y + 12.0, f"[ DATASETS ] : {num_slides or 0} Slides Compiled // Format A4")
 
     elif tpl == "nineties":
         # 8. 1990s Minimalist Lookbook & Indie Zine (Ray Gun, Calvin Klein 90s minimalism)
         m = 36.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
         c.setStrokeColor(Color(0.12, 0.12, 0.14, alpha=0.4))
         c.setLineWidth(0.4)
-        for cx, cy in [(m, ph - m), (pw - m, ph - m), (m, m), (pw - m, m)]:
-            c.line(cx - 8.0, cy, cx + 8.0, cy)
-            c.line(cx, cy - 8.0, cx, cy + 8.0)
-            c.circle(cx, cy, 3.5, stroke=1, fill=0)
+        for cx_val, cy in [(x1, ph - m), (x2, ph - m), (x1, m), (x2, m)]:
+            c.line(cx_val - 8.0, cy, cx_val + 8.0, cy)
+            c.line(cx_val, cy - 8.0, cx_val, cy + 8.0)
+            c.circle(cx_val, cy, 3.5, stroke=1, fill=0)
 
         c.setFont("Courier-Bold", 8.0)
         c.setFillColor(Color(0.25, 0.25, 0.28, alpha=0.9))
-        c.drawString(m + 16.0, ph - m - 18.0, "ISSUE #09 // EDITORIAL DOSSIER")
+        c.drawString(x1 + 16.0, ph - m - 18.0, "ISSUE #09 // EDITORIAL DOSSIER")
 
-        bx = pw - m - 60.0
+        bx = x2 - 60.0
         by = ph - m - 24.0
         bar_widths = [1.2, 0.5, 2.0, 0.8, 1.5, 0.5, 2.2, 0.8, 1.2, 0.5, 1.8]
         curr_bx = bx
@@ -726,85 +1060,241 @@ def generate_cover_page(
 
         c.setStrokeColor(Color(0.12, 0.12, 0.14, alpha=0.2))
         c.setLineWidth(0.5)
-        c.line(m + 16.0, m + 40.0, m + 16.0, ph - m - 40.0)
+        c.line(x1 + 16.0, m + 40.0, x1 + 16.0, ph - m - 40.0)
 
         c.setFont("Helvetica-Bold", 28)
         c.setFillColor(Color(0.06, 0.06, 0.08, alpha=1.0))
-        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 28, pw - m - 70.0, c)
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 28, w - 70.0, c)
         cur_y = ph * 0.56 + (len(lines) - 1) * 16.0
         for line in lines:
-            c.drawString(m + 28.0, cur_y, line)
+            c.drawString(x1 + 28.0, cur_y, line)
             cur_y -= 36.0
 
         if subtitle:
-            c.setFont("Times-Italic", 13.0)
+            c.setFont("Helvetica-Oblique", 13.0)
             c.setFillColor(Color(0.40, 0.40, 0.44, alpha=0.95))
-            c.drawString(m + 28.0, cur_y - 6.0, subtitle)
+            c.drawString(x1 + 28.0, cur_y - 6.0, subtitle)
             cur_y -= 26.0
 
         meta_y = m + 32.0
-        c.setFont("Courier", 8.5)
+        c.setFont("Courier-Bold", 8.5)
         c.setFillColor(Color(0.20, 0.20, 0.24, alpha=0.95))
-        c.drawString(m + 28.0, meta_y + 40.0, "INDEX.REF  :: 90S-ARCHIVE")
-        c.drawString(m + 28.0, meta_y + 26.0, f"CURATOR    :: {author or 'Anonymous'}")
-        c.drawString(m + 28.0, meta_y + 12.0, f"TIMESTAMP  :: {date_str or 'Autumn 1996'}")
-        c.drawString(m + 28.0, meta_y - 2.0,  f"CONTENT    :: {num_slides or 0} Slide Folios")
+        c.drawString(x1 + 28.0, meta_y + 40.0, "INDEX.REF  :: 90S-ARCHIVE")
+        c.drawString(x1 + 28.0, meta_y + 26.0, f"CURATOR    :: {author or 'Anonymous'}")
+        c.drawString(x1 + 28.0, meta_y + 12.0, f"TIMESTAMP  :: {date_str or 'Autumn 1996'}")
+        c.drawString(x1 + 28.0, meta_y - 2.0,  f"CONTENT    :: {num_slides or 0} Slide Folios")
+
+    elif tpl in ("twothousands", "2000s", "2000", "y2k", "noughties"):
+        # 9a. 2000s Y2K Millennium Tech & Dot-Com Era
+        m = 42.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
+        cobalt = Color(0.06, 0.30, 0.62, alpha=1.0)
+        cyan_y2k = Color(0.10, 0.60, 0.82, alpha=1.0)
+
+        c.setFillColor(cobalt)
+        c.rect(x1, ph - m - 12.0, w, 12.0, fill=1, stroke=0)
+        c.setFillColor(cyan_y2k)
+        c.rect(x1, ph - m - 15.0, w, 3.0, fill=1, stroke=0)
+
+        c.setStrokeColor(cobalt)
+        c.setLineWidth(0.8)
+        c.roundRect(x2 - 74.0, ph - m - 42.0, 60.0, 18.0, 9.0, stroke=1, fill=0)
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(cobalt)
+        c.drawCentredString(x2 - 44.0, ph - m - 34.0, "Y2K-2000")
+
+        c.setFont("Helvetica-Bold", 8.5)
+        c.setFillColor(cobalt)
+        c.drawString(x1, ph - m - 34.0, "Y2K MILLENNIUM DOSSIER // DIGITAL ERA")
+
+        c.setFont("Helvetica-Bold", 27)
+        c.setFillColor(Color(0.08, 0.12, 0.18, alpha=1.0))
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 27, w - 50.0, c)
+        cur_y = ph * 0.58 + (len(lines) - 1) * 16.0
+        for line in lines:
+            c.drawString(x1, cur_y, line)
+            cur_y -= 35.0
+
+        if subtitle:
+            c.setFont("Helvetica", 12.0)
+            c.setFillColor(cyan_y2k)
+            c.drawString(x1, cur_y - 6.0, subtitle)
+            cur_y -= 24.0
+
+        c.setStrokeColor(cyan_y2k)
+        c.setLineWidth(1.2)
+        c.line(x1, cur_y - 12.0, x1 + 100.0, cur_y - 12.0)
+
+        meta_y = m + 28.0
+        c.setFont("Courier-Bold", 8.0)
+        c.setFillColor(cobalt)
+        c.drawString(x1, meta_y + 44.0, f"<AUTHOR>    {author or 'Y2K.User'}")
+        c.drawString(x1, meta_y + 28.0, f"<TIMESTAMP> {date_str or '2000.01.01'}")
+        c.drawString(x1, meta_y + 12.0, f"<FOLIOS>    {num_slides or 0} Slides Processed")
+
+    elif tpl in ("twenty10s", "2010s", "2010", "flatdesign", "startup"):
+        # 9b. 2010s Flat Design & Startup Minimalist
+        m = 46.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
+        charcoal = Color(0.10, 0.12, 0.16, alpha=1.0)
+        indigo = Color(0.35, 0.38, 0.88, alpha=1.0)
+
+        c.setFont("Helvetica-Bold", 8.0)
+        c.setFillColor(indigo)
+        c.drawString(x1, ph - m - 20.0, "2010s MINIMALIST // STARTUP EDITION")
+        c.setFont("Helvetica", 7.5)
+        c.setFillColor(Color(0.5, 0.5, 0.55, alpha=0.9))
+        c.drawRightString(x2, ph - m - 20.0, "FLAT DESIGN ARCHIVE · VOL. 14")
+
+        c.setStrokeColor(Color(0.15, 0.15, 0.18, alpha=0.15))
+        c.setLineWidth(0.5)
+        c.line(x1, ph - m - 30.0, x2, ph - m - 30.0)
+
+        c.setFont("Helvetica-Bold", 27)
+        c.setFillColor(charcoal)
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 27, w - 40.0, c)
+        cur_y = ph * 0.60 + (len(lines) - 1) * 16.0
+        for line in lines:
+            c.drawString(x1, cur_y, line)
+            cur_y -= 35.0
+
+        if subtitle:
+            c.setFont("Helvetica", 12.0)
+            c.setFillColor(Color(0.4, 0.4, 0.45, alpha=0.9))
+            c.drawString(x1, cur_y - 6.0, subtitle)
+            cur_y -= 24.0
+
+        c.setFillColor(indigo)
+        c.circle(x1 + 4.0, cur_y - 12.0, 3.0, fill=1, stroke=0)
+
+        meta_y = m + 36.0
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(indigo)
+        c.drawString(x1, meta_y + 24.0, "AUTHOR")
+        c.setFont("Helvetica", 10.0)
+        c.setFillColor(charcoal)
+        c.drawString(x1, meta_y + 10.0, author or "Startup Notes")
+
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(indigo)
+        c.drawString(x1 + w * 0.52, meta_y + 24.0, "DATE")
+        c.setFont("Helvetica", 10.0)
+        c.setFillColor(charcoal)
+        c.drawString(x1 + w * 0.52, meta_y + 10.0, date_str or "2015 Edition")
+
+    elif tpl in ("twentytwenties", "2020s", "2020", "neubrutalism", "contemporary", "ai_era"):
+        # 9c. 2020s Modern Neubrutalism & Contemporary AI Era
+        m = 40.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
+        pitch_black = Color(0.05, 0.05, 0.06, alpha=1.0)
+        emerald = Color(0.05, 0.72, 0.45, alpha=1.0)
+
+        c.setStrokeColor(pitch_black)
+        c.setLineWidth(2.5)
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
+
+        c.setFont("Courier-Bold", 8.0)
+        c.setFillColor(pitch_black)
+        c.drawString(x1 + 16.0, ph - m - 24.0, "[ 2020s // CONTEMPORARY STUDY FOLIO ]")
+
+        c.setFillColor(emerald)
+        c.rect(x2 - 80.0, ph - m - 30.0, 64.0, 16.0, fill=1, stroke=0)
+        c.setFont("Courier-Bold", 7.0)
+        c.setFillColor(pitch_black)
+        c.drawCentredString(x2 - 48.0, ph - m - 22.0, "2026.AI")
+
+        c.setFont("Helvetica-Bold", 27)
+        c.setFillColor(pitch_black)
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 27, w - 50.0, c)
+        cur_y = ph * 0.58 + (len(lines) - 1) * 16.0
+        for line in lines:
+            c.drawString(x1 + 16.0, cur_y, line)
+            cur_y -= 35.0
+
+        if subtitle:
+            c.setFont("Helvetica", 12.0)
+            c.setFillColor(Color(0.3, 0.3, 0.35, alpha=0.9))
+            c.drawString(x1 + 16.0, cur_y - 6.0, subtitle)
+            cur_y -= 24.0
+
+        c.setFillColor(pitch_black)
+        c.rect(x1 + 16.0, cur_y - 12.0, 120.0, 3.0, fill=1, stroke=0)
+
+        box_y = m + 24.0
+        box_w = w - 32.0
+        box_h = 56.0
+        bx = x1 + 16.0
+        c.setStrokeColor(pitch_black)
+        c.setLineWidth(1.5)
+        c.rect(bx, box_y, box_w, box_h, stroke=1, fill=0)
+
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(pitch_black)
+        c.drawString(bx + 12.0, box_y + box_h - 18.0, f"AUTHOR    : {author or 'User.2020'}")
+        c.drawString(bx + 12.0, box_y + box_h - 34.0, f"TIMESTAMP : {date_str or 'Contemporary'}")
+        c.drawString(bx + 12.0, box_y + box_h - 48.0, f"DATASETS  : {num_slides or 0} Slide Folios")
 
     elif tpl == "natural":
         # 10. Natural Deep Forest Editorial (Luxury Architectural Notebook)
-        # Background: Warm unbleached linen paper
         c.setFillColor(Color(0.965, 0.958, 0.942, alpha=1.0))
         c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
         m = 40.0
-        forest_dark = Color(0.06, 0.18, 0.11, alpha=1.0)  # #0F2E1C deep dark forest green
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
+        forest_dark = Color(0.06, 0.18, 0.11, alpha=1.0)
         forest_mid = Color(0.12, 0.28, 0.18, alpha=1.0)
         forest_light = Color(0.24, 0.44, 0.32, alpha=0.35)
         brass_gold = Color(0.72, 0.58, 0.36, alpha=1.0)
 
-        # Outer bold forest frame
         c.setStrokeColor(forest_dark)
         c.setLineWidth(1.4)
-        c.rect(m, m, pw - 2 * m, ph - 2 * m, stroke=1, fill=0)
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
 
-        # Inner fine pinstripe frame
         c.setStrokeColor(forest_light)
         c.setLineWidth(0.4)
-        c.rect(m + 4.5, m + 4.5, pw - 2 * (m + 4.5), ph - 2 * (m + 4.5), stroke=1, fill=0)
+        c.rect(x1 + 4.5, m + 4.5, w - 9.0, ph - 2 * (m + 4.5), stroke=1, fill=0)
 
-        # Corner brass cross-ticks
         c.setStrokeColor(brass_gold)
         c.setLineWidth(0.6)
-        for cx, cy in [(m, m), (pw - m, m), (m, ph - m), (pw - m, ph - m)]:
-            c.line(cx - 5.0, cy, cx + 5.0, cy)
-            c.line(cx, cy - 5.0, cx, cy + 5.0)
+        for cx_val, cy in [(x1, m), (x2, m), (x1, ph - m), (x2, ph - m)]:
+            c.line(cx_val - 5.0, cy, cx_val + 5.0, cy)
+            c.line(cx_val, cy - 5.0, cx_val, cy + 5.0)
 
-        # Top deep forest header block
         hdr_h = 24.0
         c.setFillColor(forest_dark)
-        c.rect(m + 16.0, ph - m - 32.0, pw - 2 * m - 32.0, hdr_h, fill=1, stroke=0)
+        c.rect(x1 + 16.0, ph - m - 32.0, w - 32.0, hdr_h, fill=1, stroke=0)
 
         c.setFont("Helvetica-Bold", 8.0)
         c.setFillColor(Color(0.97, 0.97, 0.96, alpha=0.95))
-        c.drawString(m + 26.0, ph - m - 22.0, "NATURAL COMPENDIUM // EDITORIAL STUDY FOLIO")
+        c.drawString(x1 + 26.0, ph - m - 22.0, "NATURAL COMPENDIUM // EDITORIAL STUDY FOLIO")
 
         c.setFont("Times-Italic", 8.0)
         c.setFillColor(brass_gold)
-        c.drawRightString(pw - m - 26.0, ph - m - 22.0, "VOL. 01 · DEEP FOREST ARCHIVE")
+        c.drawRightString(x2 - 26.0, ph - m - 22.0, "VOL. 01 · DEEP FOREST ARCHIVE")
 
-        # Thin brass accent below header block
         c.setFillColor(brass_gold)
-        c.rect(m + 16.0, ph - m - 35.0, pw - 2 * m - 32.0, 1.0, fill=1, stroke=0)
+        c.rect(x1 + 16.0, ph - m - 35.0, w - 32.0, 1.0, fill=1, stroke=0)
 
-        # Title block
-        title_x = m + 22.0
+        title_x = x1 + 22.0
         c.setFont("Helvetica-Bold", 8.0)
         c.setFillColor(forest_mid)
         c.drawString(title_x, ph * 0.65, "STUDY DOSSIER · NATURAL EDITION")
 
         c.setFont("Times-Bold", 27)
         c.setFillColor(forest_dark)
-        lines = wrap_text_lines(clean_title, "Times-Bold", 27, pw - 2 * m - 60.0, c)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 27, w - 60.0, c)
         cur_y = ph * 0.60 + (len(lines) - 1) * 16.0
         for line in lines:
             c.drawString(title_x, cur_y, line)
@@ -816,7 +1306,6 @@ def generate_cover_page(
             c.drawString(title_x, cur_y - 6.0, subtitle)
             cur_y -= 26.0
 
-        # Architecture triple rule with brass center lozenge
         rule_y = cur_y - 12.0
         c.setStrokeColor(forest_dark)
         c.setLineWidth(1.0)
@@ -827,20 +1316,18 @@ def generate_cover_page(
 
         c.setStrokeColor(forest_light)
         c.setLineWidth(0.5)
-        c.line(title_x + 72.0, rule_y, pw - m - 22.0, rule_y)
+        c.line(title_x + 72.0, rule_y, x2 - 22.0, rule_y)
 
-        # Bottom Two-Column Architectural Metadata Grid in Deep Forest
         grid_y = m + 36.0
-        col_w = (pw - 2 * m - 44.0) / 2.0
+        col_w = (w - 44.0) / 2.0
 
         c.setStrokeColor(forest_dark)
         c.setLineWidth(0.8)
-        c.line(title_x, grid_y + 44.0, pw - m - 22.0, grid_y + 44.0)
+        c.line(title_x, grid_y + 44.0, x2 - 22.0, grid_y + 44.0)
         c.setStrokeColor(forest_light)
         c.setLineWidth(0.5)
         c.line(title_x + col_w, grid_y + 44.0, title_x + col_w, grid_y - 16.0)
 
-        # Col 1
         c.setFont("Helvetica-Bold", 7.0)
         c.setFillColor(forest_mid)
         c.drawString(title_x, grid_y + 32.0, "STUDENT / AUTHOR")
@@ -857,7 +1344,6 @@ def generate_cover_page(
         s_word = "slide sheet" if s_cnt == 1 else "slide sheets"
         c.drawString(title_x, grid_y - 14.0, f"{s_cnt} {s_word} compiled")
 
-        # Col 2
         col2_x = title_x + col_w + 16.0
         c.setFont("Helvetica-Bold", 7.0)
         c.setFillColor(forest_mid)
@@ -879,6 +1365,10 @@ def generate_cover_page(
         c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
         m = 42.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
         sage_deep = Color(0.18, 0.38, 0.25, alpha=1.0)
         sage_soft = Color(0.35, 0.55, 0.42, alpha=0.8)
         sage_mist = Color(0.35, 0.55, 0.42, alpha=0.18)
@@ -886,62 +1376,58 @@ def generate_cover_page(
 
         c.setStrokeColor(sage_soft)
         c.setLineWidth(0.8)
-        c.rect(m, m, pw - 2 * m, ph - 2 * m, stroke=1, fill=0)
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
 
         c.setStrokeColor(sage_mist)
         c.setLineWidth(0.4)
-        c.rect(m + 4.0, m + 4.0, pw - 2 * (m + 4.0), ph - 2 * (m + 4.0), stroke=1, fill=0)
+        c.rect(x1 + 4.0, m + 4.0, w - 8.0, ph - 2 * (m + 4.0), stroke=1, fill=0)
 
-        # Vernal solar crosshair emblem centered in top half
         lozenge_y = ph * 0.68
         c.setStrokeColor(sage_deep)
         c.setLineWidth(0.6)
-        c.circle(pw / 2.0, lozenge_y, 11.0, stroke=1, fill=0)
+        c.circle(center_x, lozenge_y, 11.0, stroke=1, fill=0)
         c.setStrokeColor(blossom_tint)
-        c.line(pw / 2.0 - 15.0, lozenge_y, pw / 2.0 + 15.0, lozenge_y)
-        c.line(pw / 2.0, lozenge_y - 15.0, pw / 2.0, lozenge_y + 15.0)
+        c.line(center_x - 15.0, lozenge_y, center_x + 15.0, lozenge_y)
+        c.line(center_x, lozenge_y - 15.0, center_x, lozenge_y + 15.0)
 
-        # Header tag
         c.setFont("Helvetica-Bold", 8.0)
         c.setFillColor(sage_deep)
-        c.drawCentredString(pw / 2.0, ph - m - 32.0, "V E R N A L   C O M P E N D I U M")
+        c.drawCentredString(center_x, ph - m - 32.0, "V E R N A L   C O M P E N D I U M")
         c.setFont("Times-Italic", 8.0)
         c.setFillColor(sage_soft)
-        c.drawCentredString(pw / 2.0, ph - m - 46.0, "SPRING SERIES · NEW CYCLE · VOL. I")
+        c.drawCentredString(center_x, ph - m - 46.0, "SPRING SERIES · NEW CYCLE · VOL. I")
 
         c.setFont("Times-Bold", 25)
         c.setFillColor(Color(0.12, 0.22, 0.16, alpha=1.0))
-        lines = wrap_text_lines(clean_title, "Times-Bold", 25, pw - 2 * m - 60.0, c)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 25, w - 60.0, c)
         cur_y = lozenge_y - 42.0
         for line in lines:
-            c.drawCentredString(pw / 2.0, cur_y, line)
+            c.drawCentredString(center_x, cur_y, line)
             cur_y -= 33.0
 
         if subtitle:
             c.setFont("Times-Italic", 12.0)
             c.setFillColor(sage_soft)
-            c.drawCentredString(pw / 2.0, cur_y - 8.0, subtitle)
+            c.drawCentredString(center_x, cur_y - 8.0, subtitle)
             cur_y -= 24.0
 
-        # Fine divider
         c.setStrokeColor(sage_soft)
         c.setLineWidth(0.5)
-        c.line(pw / 2.0 - 36.0, cur_y - 12.0, pw / 2.0 + 36.0, cur_y - 12.0)
+        c.line(center_x - 36.0, cur_y - 12.0, center_x + 36.0, cur_y - 12.0)
 
-        # Footer
         meta_y = m + 40.0
         c.setFont("Helvetica-Bold", 7.0)
         c.setFillColor(sage_soft)
-        c.drawCentredString(pw / 2.0, meta_y + 24.0, "CURATED STUDY FOLIO")
+        c.drawCentredString(center_x, meta_y + 24.0, "CURATED STUDY FOLIO")
         c.setFont("Times-Roman", 10.0)
         c.setFillColor(sage_deep)
-        c.drawCentredString(pw / 2.0, meta_y + 10.0, author or "Spring Session Notes")
+        c.drawCentredString(center_x, meta_y + 10.0, author or "Spring Session Notes")
         c.setFont("Times-Italic", 8.5)
         c.setFillColor(sage_soft)
-        c.drawCentredString(pw / 2.0, meta_y - 4.0, date_str or "Springtime")
+        c.drawCentredString(center_x, meta_y - 4.0, date_str or "Springtime")
         if num_slides is not None:
             s_word = "slide" if num_slides == 1 else "slides"
-            c.drawCentredString(pw / 2.0, meta_y - 18.0, f"{num_slides} {s_word} compiled")
+            c.drawCentredString(center_x, meta_y - 18.0, f"{num_slides} {s_word} compiled")
 
     elif tpl == "summer":
         # 12. Summer / Solstice Editorial (Aegean Azure & Solar Warmth)
@@ -949,73 +1435,72 @@ def generate_cover_page(
         c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
         m = 42.0
-        azure_deep = Color(0.06, 0.24, 0.44, alpha=1.0)  # Mediterranean deep blue
-        azure_light = Color(0.18, 0.45, 0.70, alpha=0.3)
-        solar_gold = Color(0.86, 0.60, 0.20, alpha=1.0)  # Warm sun gold
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
 
-        # Top sea horizon bar
+        azure_deep = Color(0.06, 0.24, 0.44, alpha=1.0)
+        azure_light = Color(0.18, 0.45, 0.70, alpha=0.3)
+        solar_gold = Color(0.86, 0.60, 0.20, alpha=1.0)
+
         bar_h = 36.0
         c.setFillColor(azure_deep)
-        c.rect(0, ph - bar_h, pw, bar_h, fill=1, stroke=0)
+        c.rect(left_gutter, ph - bar_h, avail_w, bar_h, fill=1, stroke=0)
         c.setFillColor(solar_gold)
-        c.rect(0, ph - bar_h - 2.5, pw, 2.5, fill=1, stroke=0)
+        c.rect(left_gutter, ph - bar_h - 2.5, avail_w, 2.5, fill=1, stroke=0)
 
         c.setFont("Helvetica-Bold", 8.5)
         c.setFillColor(Color(0.98, 0.98, 0.98, alpha=0.95))
-        c.drawString(m, ph - 22.0, "SOLSTICE COMPENDIUM · SUMMER FOLIO")
+        c.drawString(x1, ph - 22.0, "SOLSTICE COMPENDIUM · SUMMER FOLIO")
         c.setFont("Helvetica", 8.0)
-        c.drawRightString(pw - m, ph - 22.0, "MEDITERRANEAN ARCHIVE // 02")
+        c.drawRightString(x2, ph - 22.0, "MEDITERRANEAN ARCHIVE // 02")
 
-        # Double outer frame below bar
         c.setStrokeColor(azure_light)
         c.setLineWidth(0.6)
-        c.rect(m, m, pw - 2 * m, ph - m - bar_h - 16.0, stroke=1, fill=0)
+        c.rect(x1, m, w, ph - m - bar_h - 16.0, stroke=1, fill=0)
 
-        # Title
-        c.setFont("Times-Bold", 27)
+        c.setFont("Helvetica-Bold", 27)
         c.setFillColor(azure_deep)
-        lines = wrap_text_lines(clean_title, "Times-Bold", 27, pw - 2 * m - 50.0, c)
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 27, w - 50.0, c)
         cur_y = ph * 0.58 + (len(lines) - 1) * 16.0
         for line in lines:
-            c.drawString(m + 18.0, cur_y, line)
+            c.drawString(x1 + 18.0, cur_y, line)
             cur_y -= 35.0
 
         if subtitle:
             c.setFont("Times-Italic", 13.0)
             c.setFillColor(Color(0.25, 0.40, 0.55, alpha=0.95))
-            c.drawString(m + 18.0, cur_y - 6.0, subtitle)
+            c.drawString(x1 + 18.0, cur_y - 6.0, subtitle)
             cur_y -= 26.0
 
-        # Compass tick line
         rule_y = cur_y - 14.0
         c.setStrokeColor(azure_deep)
         c.setLineWidth(1.0)
-        c.line(m + 18.0, rule_y, m + 80.0, rule_y)
+        c.line(x1 + 18.0, rule_y, x1 + 80.0, rule_y)
         c.setStrokeColor(solar_gold)
         c.setLineWidth(1.0)
-        c.line(m + 80.0, rule_y, m + 120.0, rule_y)
+        c.line(x1 + 80.0, rule_y, x1 + 120.0, rule_y)
 
-        # Clean metadata grid
         meta_y = m + 32.0
         c.setFont("Helvetica-Bold", 7.0)
         c.setFillColor(solar_gold)
-        c.drawString(m + 18.0, meta_y + 36.0, "STUDY RESEARCHER")
+        c.drawString(x1 + 18.0, meta_y + 36.0, "STUDY RESEARCHER")
         c.setFont("Times-Roman", 10.0)
         c.setFillColor(azure_deep)
-        c.drawString(m + 18.0, meta_y + 22.0, author or "Summer Study Compendium")
+        c.drawString(x1 + 18.0, meta_y + 22.0, author or "Summer Study Compendium")
 
         c.setFont("Helvetica-Bold", 7.0)
         c.setFillColor(solar_gold)
-        c.drawString(m + 18.0, meta_y + 6.0, "CALENDAR REGISTRY")
+        c.drawString(x1 + 18.0, meta_y + 6.0, "CALENDAR REGISTRY")
         c.setFont("Times-Italic", 9.0)
         c.setFillColor(azure_deep)
-        c.drawString(m + 18.0, meta_y - 8.0, date_str or "Summer Solstice")
+        c.drawString(x1 + 18.0, meta_y - 8.0, date_str or "Summer Solstice")
 
         if num_slides is not None:
             s_word = "slide" if num_slides == 1 else "slides"
             c.setFont("Helvetica", 8.0)
             c.setFillColor(Color(0.4, 0.5, 0.6, alpha=0.9))
-            c.drawRightString(pw - m - 18.0, meta_y + 22.0, f"{num_slides} {s_word} in dossier")
+            c.drawRightString(x2 - 18.0, meta_y + 22.0, f"{num_slides} {s_word} in dossier")
 
     elif tpl == "autumn":
         # 13. Autumn / Equinox Editorial (Burnt Terracotta & Amber Warmth)
@@ -1023,66 +1508,65 @@ def generate_cover_page(
         c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
         m = 40.0
-        terracotta = Color(0.62, 0.22, 0.12, alpha=1.0)  # Rust terracotta #9E381F
-        amber = Color(0.76, 0.50, 0.18, alpha=1.0)       # Amber gold
-        espresso = Color(0.18, 0.10, 0.08, alpha=1.0)    # Dark coffee ink
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
 
-        # Heavy inner rule, thin outer rule (classical bookbindery)
+        terracotta = Color(0.62, 0.22, 0.12, alpha=1.0)
+        amber = Color(0.76, 0.50, 0.18, alpha=1.0)
+        espresso = Color(0.18, 0.10, 0.08, alpha=1.0)
+
         c.setStrokeColor(amber)
         c.setLineWidth(0.5)
-        c.rect(m, m, pw - 2 * m, ph - 2 * m, stroke=1, fill=0)
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
 
         c.setStrokeColor(terracotta)
         c.setLineWidth(1.4)
-        c.rect(m + 4.0, m + 4.0, pw - 2 * (m + 4.0), ph - 2 * (m + 4.0), stroke=1, fill=0)
+        c.rect(x1 + 4.0, m + 4.0, w - 8.0, ph - 2 * (m + 4.0), stroke=1, fill=0)
 
-        # Header tag
         c.setFont("Helvetica-Bold", 8.0)
         c.setFillColor(terracotta)
-        c.drawCentredString(pw / 2.0, ph - m - 32.0, "E Q U I N O X   D O S S I E R")
+        c.drawCentredString(center_x, ph - m - 32.0, "E Q U I N O X   D O S S I E R")
         c.setFont("Times-Italic", 8.0)
         c.setFillColor(amber)
-        c.drawCentredString(pw / 2.0, ph - m - 46.0, "AUTUMNAL COMPENDIUM · OCTOBER ARCHIVE")
+        c.drawCentredString(center_x, ph - m - 46.0, "AUTUMNAL COMPENDIUM · OCTOBER ARCHIVE")
 
-        # Centered amber diamond lozenge
         loz_y = ph * 0.65
         c.setStrokeColor(terracotta)
         c.setLineWidth(0.8)
         p = c.beginPath()
-        p.moveTo(pw / 2.0, loz_y + 11.0)
-        p.lineTo(pw / 2.0 + 11.0, loz_y)
-        p.lineTo(pw / 2.0, loz_y - 11.0)
-        p.lineTo(pw / 2.0 - 11.0, loz_y)
+        p.moveTo(center_x, loz_y + 11.0)
+        p.lineTo(center_x + 11.0, loz_y)
+        p.lineTo(center_x, loz_y - 11.0)
+        p.lineTo(center_x - 11.0, loz_y)
         p.close()
         c.drawPath(p, stroke=1, fill=0)
 
         c.setFillColor(amber)
-        c.circle(pw / 2.0, loz_y, 2.5, fill=1, stroke=0)
+        c.circle(center_x, loz_y, 2.5, fill=1, stroke=0)
 
-        # Title
         c.setFont("Times-Bold", 25)
         c.setFillColor(espresso)
-        lines = wrap_text_lines(clean_title, "Times-Bold", 25, pw - 2 * m - 60.0, c)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 25, w - 60.0, c)
         cur_y = loz_y - 36.0
         for line in lines:
-            c.drawCentredString(pw / 2.0, cur_y, line)
+            c.drawCentredString(center_x, cur_y, line)
             cur_y -= 32.0
 
         if subtitle:
             c.setFont("Times-Italic", 12.0)
             c.setFillColor(terracotta)
-            c.drawCentredString(pw / 2.0, cur_y - 8.0, subtitle)
+            c.drawCentredString(center_x, cur_y - 8.0, subtitle)
             cur_y -= 24.0
 
         c.setStrokeColor(amber)
         c.setLineWidth(0.6)
-        c.line(pw / 2.0 - 45.0, cur_y - 10.0, pw / 2.0 + 45.0, cur_y - 10.0)
+        c.line(center_x - 45.0, cur_y - 10.0, center_x + 45.0, cur_y - 10.0)
 
-        # Bottom archival box
         box_y = m + 32.0
-        box_w = pw - 2 * m - 40.0
+        box_w = w - 40.0
         box_h = 68.0
-        bx = (pw - box_w) / 2.0
+        bx = center_x - box_w / 2.0
         c.setStrokeColor(Color(0.62, 0.22, 0.12, alpha=0.25))
         c.setLineWidth(0.5)
         c.rect(bx, box_y, box_w, box_h, stroke=1, fill=0)
@@ -1115,71 +1599,70 @@ def generate_cover_page(
         c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
         m = 44.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+
         midnight = Color(0.08, 0.14, 0.24, alpha=1.0)
         slate_blue = Color(0.32, 0.46, 0.60, alpha=1.0)
         frost_line = Color(0.32, 0.46, 0.60, alpha=0.25)
 
-        # Alpine triple hairline borders
         c.setStrokeColor(slate_blue)
         c.setLineWidth(0.8)
-        c.rect(m, m, pw - 2 * m, ph - 2 * m, stroke=1, fill=0)
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
         c.setStrokeColor(frost_line)
         c.setLineWidth(0.35)
-        c.rect(m + 4.0, m + 4.0, pw - 2 * (m + 4.0), ph - 2 * (m + 4.0), stroke=1, fill=0)
-        c.rect(m + 7.0, m + 7.0, pw - 2 * (m + 7.0), ph - 2 * (m + 7.0), stroke=1, fill=0)
+        c.rect(x1 + 4.0, m + 4.0, w - 8.0, ph - 2 * (m + 4.0), stroke=1, fill=0)
+        c.rect(x1 + 7.0, m + 7.0, w - 14.0, ph - 2 * (m + 7.0), stroke=1, fill=0)
 
-        # Geometric ice crystal / 6-axis star emblem
         star_y = ph * 0.68
         c.setStrokeColor(slate_blue)
         c.setLineWidth(0.7)
-        c.circle(pw / 2.0, star_y, 13.0, stroke=1, fill=0)
+        c.circle(center_x, star_y, 13.0, stroke=1, fill=0)
         for deg in [0, 60, 120]:
             rad = math.radians(deg)
             dx = 17.0 * math.cos(rad)
             dy = 17.0 * math.sin(rad)
-            c.line(pw / 2.0 - dx, star_y - dy, pw / 2.0 + dx, star_y + dy)
+            c.line(center_x - dx, star_y - dy, center_x + dx, star_y + dy)
 
-        # Header
         c.setFont("Helvetica-Bold", 8.0)
         c.setFillColor(midnight)
-        c.drawCentredString(pw / 2.0, ph - m - 28.0, "HIEMAL COMPENDIUM · ARCTIC ARCHIVE")
+        c.drawCentredString(center_x, ph - m - 28.0, "HIEMAL COMPENDIUM · ARCTIC ARCHIVE")
         c.setFont("Helvetica", 7.0)
         c.setFillColor(slate_blue)
-        c.drawCentredString(pw / 2.0, ph - m - 42.0, "NORDIC ALPINE EDITION · NO. 04")
+        c.drawCentredString(center_x, ph - m - 42.0, "NORDIC ALPINE EDITION · NO. 04")
 
-        # Title
         c.setFont("Times-Bold", 26)
         c.setFillColor(midnight)
-        lines = wrap_text_lines(clean_title, "Times-Bold", 26, pw - 2 * m - 60.0, c)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 26, w - 60.0, c)
         cur_y = star_y - 42.0
         for line in lines:
-            c.drawCentredString(pw / 2.0, cur_y, line)
+            c.drawCentredString(center_x, cur_y, line)
             cur_y -= 34.0
 
         if subtitle:
             c.setFont("Times-Italic", 12.0)
             c.setFillColor(slate_blue)
-            c.drawCentredString(pw / 2.0, cur_y - 8.0, subtitle)
+            c.drawCentredString(center_x, cur_y - 8.0, subtitle)
             cur_y -= 24.0
 
         c.setStrokeColor(slate_blue)
         c.setLineWidth(0.5)
-        c.line(pw / 2.0 - 30.0, cur_y - 12.0, pw / 2.0 + 30.0, cur_y - 12.0)
+        c.line(center_x - 30.0, cur_y - 12.0, center_x + 30.0, cur_y - 12.0)
 
-        # Metadata
         meta_y = m + 38.0
         c.setFont("Helvetica-Bold", 7.0)
         c.setFillColor(slate_blue)
-        c.drawCentredString(pw / 2.0, meta_y + 24.0, "OPERATOR / CURATOR")
+        c.drawCentredString(center_x, meta_y + 24.0, "OPERATOR / CURATOR")
         c.setFont("Helvetica", 9.5)
         c.setFillColor(midnight)
-        c.drawCentredString(pw / 2.0, meta_y + 10.0, author or "Winter Session")
+        c.drawCentredString(center_x, meta_y + 10.0, author or "Winter Session")
         c.setFont("Helvetica", 8.0)
         c.setFillColor(slate_blue)
-        c.drawCentredString(pw / 2.0, meta_y - 4.0, date_str or "Winter Season")
+        c.drawCentredString(center_x, meta_y - 4.0, date_str or "Winter Season")
         if num_slides is not None:
             s_word = "slide" if num_slides == 1 else "slides"
-            c.drawCentredString(pw / 2.0, meta_y - 18.0, f"{num_slides} {s_word} indexed")
+            c.drawCentredString(center_x, meta_y - 18.0, f"{num_slides} {s_word} indexed")
 
     elif tpl == "polo":
         # 15. Ralph Lauren Polo (Collegiate Navy & Gold Shield Heritage)
@@ -1187,95 +1670,90 @@ def generate_cover_page(
         c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
         m = 40.0
-        rl_navy = Color(0.06, 0.12, 0.25, alpha=1.0)   # Ralph Lauren deep collegiate navy #0F1F40
-        rl_green = Color(0.08, 0.22, 0.14, alpha=1.0)  # Ralph Lauren deep hunter green #143824
-        rl_gold = Color(0.76, 0.60, 0.32, alpha=1.0)   # Heritage antique gold #C29952
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
 
-        # Heavy outer navy border
+        rl_navy = Color(0.06, 0.12, 0.25, alpha=1.0)
+        rl_green = Color(0.08, 0.22, 0.14, alpha=1.0)
+        rl_gold = Color(0.76, 0.60, 0.32, alpha=1.0)
+
         c.setStrokeColor(rl_navy)
         c.setLineWidth(2.5)
-        c.rect(m, m, pw - 2 * m, ph - 2 * m, stroke=1, fill=0)
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
 
-        # Inner gold pinstripe border
         c.setStrokeColor(rl_gold)
         c.setLineWidth(0.6)
-        c.rect(m + 4.5, m + 4.5, pw - 2 * (m + 4.5), ph - 2 * (m + 4.5), stroke=1, fill=0)
+        c.rect(x1 + 4.5, m + 4.5, w - 9.0, ph - 2 * (m + 4.5), stroke=1, fill=0)
 
-        # Inner fine navy hairline
         c.setStrokeColor(rl_navy)
         c.setLineWidth(0.4)
-        c.rect(m + 8.0, m + 8.0, pw - 2 * (m + 8.0), ph - 2 * (m + 8.0), stroke=1, fill=0)
+        c.rect(x1 + 8.0, m + 8.0, w - 16.0, ph - 2 * (m + 8.0), stroke=1, fill=0)
 
-        # Top collegiate banner
         c.setFont("Times-Bold", 8.5)
         c.setFillColor(rl_navy)
-        c.drawCentredString(pw / 2.0, ph - m - 28.0, "P O L O   S T U D Y   C O M P E N D I U M")
+        c.drawCentredString(center_x, ph - m - 28.0, "P O L O   S T U D Y   C O M P E N D I U M")
         c.setFont("Times-Italic", 7.5)
         c.setFillColor(rl_green)
-        c.drawCentredString(pw / 2.0, ph - m - 42.0, "HERITAGE COLLEGIATE ARCHIVE · EST. 1967")
+        c.drawCentredString(center_x, ph - m - 42.0, "HERITAGE COLLEGIATE ARCHIVE · EST. 1967")
 
-        # Centered collegiate shield/crest emblem
         shield_y = ph * 0.66
         c.setStrokeColor(rl_navy)
         c.setLineWidth(1.2)
         sh_p = c.beginPath()
-        sh_p.moveTo(pw / 2.0, shield_y + 16.0)
-        sh_p.lineTo(pw / 2.0 + 16.0, shield_y)
-        sh_p.lineTo(pw / 2.0, shield_y - 16.0)
-        sh_p.lineTo(pw / 2.0 - 16.0, shield_y)
+        sh_p.moveTo(center_x, shield_y + 16.0)
+        sh_p.lineTo(center_x + 16.0, shield_y)
+        sh_p.lineTo(center_x, shield_y - 16.0)
+        sh_p.lineTo(center_x - 16.0, shield_y)
         sh_p.close()
         c.drawPath(sh_p, stroke=1, fill=0)
 
-        # Inner gold circle & cross
         c.setStrokeColor(rl_gold)
         c.setLineWidth(0.6)
-        c.circle(pw / 2.0, shield_y, 9.0, stroke=1, fill=0)
-        c.line(pw / 2.0 - 11.0, shield_y, pw / 2.0 + 11.0, shield_y)
-        c.line(pw / 2.0, shield_y - 11.0, pw / 2.0, shield_y + 11.0)
+        c.circle(center_x, shield_y, 9.0, stroke=1, fill=0)
+        c.line(center_x - 11.0, shield_y, center_x + 11.0, shield_y)
+        c.line(center_x, shield_y - 11.0, center_x, shield_y + 11.0)
 
         c.setFont("Times-Bold", 5.5)
         c.setFillColor(rl_navy)
-        c.drawCentredString(pw / 2.0, shield_y - 1.5, "RL")
+        c.drawCentredString(center_x, shield_y - 1.5, "RL")
 
-        # Title
         c.setFont("Times-Bold", 26)
         c.setFillColor(rl_navy)
-        lines = wrap_text_lines(clean_title, "Times-Bold", 26, pw - 2 * m - 60.0, c)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 26, w - 60.0, c)
         cur_y = shield_y - 42.0
         for line in lines:
-            c.drawCentredString(pw / 2.0, cur_y, line)
+            c.drawCentredString(center_x, cur_y, line)
             cur_y -= 34.0
 
         if subtitle:
             c.setFont("Times-Italic", 12.5)
             c.setFillColor(rl_green)
-            c.drawCentredString(pw / 2.0, cur_y - 6.0, subtitle)
+            c.drawCentredString(center_x, cur_y - 6.0, subtitle)
             cur_y -= 24.0
 
-        # Navy and gold dual divider line
         c.setStrokeColor(rl_navy)
         c.setLineWidth(1.0)
-        c.line(pw / 2.0 - 40.0, cur_y - 10.0, pw / 2.0 + 40.0, cur_y - 10.0)
+        c.line(center_x - 40.0, cur_y - 10.0, center_x + 40.0, cur_y - 10.0)
         c.setStrokeColor(rl_gold)
         c.setLineWidth(0.5)
-        c.line(pw / 2.0 - 25.0, cur_y - 13.0, pw / 2.0 + 25.0, cur_y - 13.0)
+        c.line(center_x - 25.0, cur_y - 13.0, center_x + 25.0, cur_y - 13.0)
 
-        # Bottom collegiate registry
         meta_y = m + 36.0
         c.setFont("Times-Bold", 7.5)
         c.setFillColor(rl_gold)
-        c.drawCentredString(pw / 2.0, meta_y + 26.0, "FELLOW / STUDENT RECORD")
+        c.drawCentredString(center_x, meta_y + 26.0, "FELLOW / STUDENT RECORD")
         c.setFont("Times-Bold", 10.5)
         c.setFillColor(rl_navy)
-        c.drawCentredString(pw / 2.0, meta_y + 12.0, author or "Collegiate Member")
+        c.drawCentredString(center_x, meta_y + 12.0, author or "Collegiate Member")
         c.setFont("Times-Italic", 8.5)
         c.setFillColor(rl_green)
-        c.drawCentredString(pw / 2.0, meta_y - 2.0, date_str or "Academic Term")
+        c.drawCentredString(center_x, meta_y - 2.0, date_str or "Academic Term")
         if num_slides is not None:
             s_word = "slide folio" if num_slides == 1 else "slide folios"
             c.setFont("Times-Roman", 8.0)
             c.setFillColor(Color(0.4, 0.45, 0.5, alpha=0.85))
-            c.drawCentredString(pw / 2.0, meta_y - 16.0, f"{num_slides} {s_word} bound")
+            c.drawCentredString(center_x, meta_y - 16.0, f"{num_slides} {s_word} bound")
 
     elif tpl == "equestrian":
         # 16. Ralph Lauren Equestrian (British Country Estate & Hunter Green)
@@ -1283,148 +1761,160 @@ def generate_cover_page(
         c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
         m = 40.0
-        hunter_green = Color(0.08, 0.20, 0.13, alpha=1.0)  # Hunter green #143321
-        saddle_tan = Color(0.55, 0.30, 0.14, alpha=1.0)    # Saddle leather tan #8C4D24
-        brass = Color(0.74, 0.58, 0.30, alpha=1.0)         # Antique equestrian brass #BD944D
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
 
-        # Triple frame in hunter green and saddle tan
+        hunter_green = Color(0.08, 0.20, 0.13, alpha=1.0)
+        saddle_tan = Color(0.55, 0.30, 0.14, alpha=1.0)
+        brass = Color(0.74, 0.58, 0.30, alpha=1.0)
+
         c.setStrokeColor(hunter_green)
         c.setLineWidth(1.6)
-        c.rect(m, m, pw - 2 * m, ph - 2 * m, stroke=1, fill=0)
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
 
         c.setStrokeColor(brass)
         c.setLineWidth(0.6)
-        c.rect(m + 4.0, m + 4.0, pw - 2 * (m + 4.0), ph - 2 * (m + 4.0), stroke=1, fill=0)
+        c.rect(x1 + 4.0, m + 4.0, w - 8.0, ph - 2 * (m + 4.0), stroke=1, fill=0)
 
         c.setStrokeColor(saddle_tan)
         c.setLineWidth(0.4)
         c.setDash(4, 3)
-        c.rect(m + 7.5, m + 7.5, pw - 2 * (m + 7.5), ph - 2 * (m + 7.5), stroke=1, fill=0)
+        c.rect(x1 + 7.5, m + 7.5, w - 15.0, ph - 2 * (m + 7.5), stroke=1, fill=0)
         c.setDash()
 
-        # Header tag
         c.setFont("Times-Bold", 8.5)
         c.setFillColor(hunter_green)
-        c.drawCentredString(pw / 2.0, ph - m - 28.0, "E Q U E S T R I A N   &   F I E L D")
+        c.drawCentredString(center_x, ph - m - 28.0, "E Q U E S T R I A N   &   F I E L D")
         c.setFont("Times-Italic", 7.5)
         c.setFillColor(saddle_tan)
-        c.drawCentredString(pw / 2.0, ph - m - 42.0, "COUNTRY ESTATE ARCHIVE · SERIES IX")
+        c.drawCentredString(center_x, ph - m - 42.0, "COUNTRY ESTATE ARCHIVE · SERIES IX")
 
-        # Centered stirrup / buckle motif
         stirrup_y = ph * 0.66
         c.setStrokeColor(brass)
         c.setLineWidth(1.2)
         p = c.beginPath()
-        p.arc(pw / 2.0 - 13.0, stirrup_y - 6.0, pw / 2.0 + 13.0, stirrup_y + 20.0, 0, 180)
-        p.lineTo(pw / 2.0 - 13.0, stirrup_y - 8.0)
-        p.lineTo(pw / 2.0 + 13.0, stirrup_y - 8.0)
+        p.arc(center_x - 13.0, stirrup_y - 6.0, center_x + 13.0, stirrup_y + 20.0, 0, 180)
+        p.lineTo(center_x - 13.0, stirrup_y - 8.0)
+        p.lineTo(center_x + 13.0, stirrup_y - 8.0)
         p.close()
         c.drawPath(p, stroke=1, fill=0)
 
         c.setStrokeColor(saddle_tan)
         c.setLineWidth(1.0)
-        c.line(pw / 2.0 - 16.0, stirrup_y - 8.0, pw / 2.0 + 16.0, stirrup_y - 8.0)
+        c.line(center_x - 16.0, stirrup_y - 8.0, center_x + 16.0, stirrup_y - 8.0)
 
-        # Title
         c.setFont("Times-Bold", 25)
         c.setFillColor(hunter_green)
-        lines = wrap_text_lines(clean_title, "Times-Bold", 25, pw - 2 * m - 60.0, c)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 25, w - 60.0, c)
         cur_y = stirrup_y - 36.0
         for line in lines:
-            c.drawCentredString(pw / 2.0, cur_y, line)
+            c.drawCentredString(center_x, cur_y, line)
             cur_y -= 33.0
 
         if subtitle:
             c.setFont("Times-Italic", 12.0)
             c.setFillColor(saddle_tan)
-            c.drawCentredString(pw / 2.0, cur_y - 6.0, subtitle)
+            c.drawCentredString(center_x, cur_y - 6.0, subtitle)
             cur_y -= 24.0
 
-        # Saddle-stitched divider line
         rule_y = cur_y - 10.0
         c.setStrokeColor(saddle_tan)
         c.setLineWidth(0.8)
         c.setDash(3, 3)
-        c.line(pw / 2.0 - 45.0, rule_y, pw / 2.0 + 45.0, rule_y)
+        c.line(center_x - 45.0, rule_y, center_x + 45.0, rule_y)
         c.setDash()
 
         c.setFillColor(brass)
-        c.circle(pw / 2.0 - 50.0, rule_y, 2.0, fill=1, stroke=0)
-        c.circle(pw / 2.0 + 50.0, rule_y, 2.0, fill=1, stroke=0)
+        c.circle(center_x - 50.0, rule_y, 2.0, fill=1, stroke=0)
+        c.circle(center_x + 50.0, rule_y, 2.0, fill=1, stroke=0)
 
-        # Metadata
         meta_y = m + 36.0
         c.setFont("Helvetica-Bold", 7.0)
         c.setFillColor(saddle_tan)
-        c.drawCentredString(pw / 2.0, meta_y + 26.0, "ESTATE REGISTER")
+        c.drawCentredString(center_x, meta_y + 26.0, "ESTATE REGISTER")
         c.setFont("Times-Bold", 10.5)
         c.setFillColor(hunter_green)
-        c.drawCentredString(pw / 2.0, meta_y + 12.0, author or "Estate Member")
+        c.drawCentredString(center_x, meta_y + 12.0, author or "Estate Member")
         c.setFont("Times-Italic", 8.5)
         c.setFillColor(saddle_tan)
-        c.drawCentredString(pw / 2.0, meta_y - 2.0, date_str or "Season Archive")
+        c.drawCentredString(center_x, meta_y - 2.0, date_str or "Season Archive")
         if num_slides is not None:
             s_word = "slide" if num_slides == 1 else "slides"
             c.setFont("Times-Roman", 8.0)
             c.setFillColor(brass)
-            c.drawCentredString(pw / 2.0, meta_y - 16.0, f"{num_slides} {s_word} registered")
+            c.drawCentredString(center_x, meta_y - 16.0, f"{num_slides} {s_word} registered")
 
     else:
         # Default: Atelier Notebook (Zara Home Classic)
         inset = 36.0
+        x1 = left_gutter + inset
+        x2 = pw - right_gutter - inset
+        w = x2 - x1
+
         c.setStrokeColor(Color(0.25, 0.25, 0.25, alpha=0.22))
         c.setLineWidth(0.6)
-        c.rect(inset, inset, pw - 2 * inset, ph - 2 * inset)
+        c.rect(x1, inset, w, ph - 2 * inset)
 
         inner_inset = 42.0
+        ix1 = left_gutter + inner_inset
+        ix2 = pw - right_gutter - inner_inset
+        iw = ix2 - ix1
         c.setStrokeColor(Color(0.25, 0.25, 0.25, alpha=0.10))
         c.setLineWidth(0.35)
-        c.rect(inner_inset, inner_inset, pw - 2 * inner_inset, ph - 2 * inner_inset)
+        c.rect(ix1, inner_inset, iw, ph - 2 * inner_inset)
 
         c.setFont("Times-Roman", 8)
         c.setFillColor(Color(0.42, 0.42, 0.42, alpha=0.75))
-        c.drawCentredString(pw / 2.0, ph - 95.0, "N O T E B O O K")
+        c.drawCentredString(center_x, ph - 95.0, "N O T E B O O K")
 
         c.setStrokeColor(Color(0.3, 0.3, 0.3, alpha=0.2))
         c.setLineWidth(0.4)
-        c.line(pw / 2.0 - 24, ph - 105.0, pw / 2.0 + 24, ph - 105.0)
+        c.line(center_x - 24, ph - 105.0, center_x + 24, ph - 105.0)
 
         c.setFont("Times-Bold", 24)
         c.setFillColor(Color(0.12, 0.12, 0.14, alpha=1.0))
-        lines = wrap_text_lines(clean_title, "Times-Bold", 24, pw - 2 * inset - 60, c)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 24, w - 60, c)
         title_y = ph * 0.58 + (len(lines) - 1) * 16.0
         for line in lines:
-            c.drawCentredString(pw / 2.0, title_y, line)
+            c.drawCentredString(center_x, title_y, line)
             title_y -= 32.0
 
         if subtitle:
             c.setFont("Times-Italic", 12.5)
             c.setFillColor(Color(0.32, 0.32, 0.34, alpha=0.9))
-            c.drawCentredString(pw / 2.0, title_y - 8.0, subtitle)
+            c.drawCentredString(center_x, title_y - 8.0, subtitle)
             title_y -= 26.0
 
         c.setStrokeColor(Color(0.3, 0.3, 0.3, alpha=0.18))
         c.setLineWidth(0.4)
-        c.line(pw / 2.0 - 32, title_y - 12.0, pw / 2.0 + 32, title_y - 12.0)
+        c.line(center_x - 32, title_y - 12.0, center_x + 32, title_y - 12.0)
 
         meta_y = ph * 0.26
         if author:
             c.setFont("Times-Roman", 10.5)
             c.setFillColor(Color(0.22, 0.22, 0.24, alpha=0.9))
-            c.drawCentredString(pw / 2.0, meta_y, author)
+            c.drawCentredString(center_x, meta_y, author)
             meta_y -= 18.0
 
         if date_str:
             c.setFont("Times-Italic", 9)
             c.setFillColor(Color(0.42, 0.42, 0.42, alpha=0.8))
-            c.drawCentredString(pw / 2.0, meta_y, f"Date: {date_str}")
+            c.drawCentredString(center_x, meta_y, f"Date: {date_str}")
             meta_y -= 16.0
 
         if num_slides is not None:
             c.setFont("Times-Roman", 8.5)
             c.setFillColor(Color(0.48, 0.48, 0.48, alpha=0.75))
             s_word = "slide" if num_slides == 1 else "slides"
-            c.drawCentredString(pw / 2.0, meta_y, f"{num_slides} {s_word} with dedicated notes")
+            c.drawCentredString(center_x, meta_y, f"{num_slides} {s_word} with dedicated notes")
+
+    if hole_guides and binding in ("binder", "ring", "rings", "archivador", "anillas", "anelas", "spiral", "espiral", "wire-o", "wireo", "coil", "canutillo"):
+        draw_binding_guides(c, page_size, binding, is_verso=is_verso, gutter_margin=gutter_margin)
+
+    c.save()
+    packet.seek(0)
+    return PdfReader(packet).pages[0]
 
     c.save()
     packet.seek(0)

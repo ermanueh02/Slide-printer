@@ -509,45 +509,59 @@
     const titleText = options.coverTitle || 'Presentation';
     const dateFormatted = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
+    const binding = (options.binding || 'none').toLowerCase();
+    const gutterMargin = typeof options.gutterMargin === 'number' ? options.gutterMargin : (BINDING_GUTTER_MAP[binding] || 0);
+    const pageNum = options.pageNum || 1;
+    const isOddSheet = (pageNum % 2 !== 0);
+    const isVerso = options.duplex ? !isOddSheet : false;
+    const leftGutter = isVerso ? 0 : gutterMargin;
+    const rightGutter = isVerso ? gutterMargin : 0;
+    const availW = pw - leftGutter - rightGutter;
+    const centerX = leftGutter + availW / 2;
+
     if (tpl === 'george') {
       // 1. George 90s Editorial / JFK Jr Executive Style
       const m = 44;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+
       ctx.strokeStyle = '#1e1e24';
       ctx.lineWidth = 2.0;
       ctx.beginPath();
-      ctx.moveTo(m, 58);
-      ctx.lineTo(pw - m, 58);
+      ctx.moveTo(x1, 58);
+      ctx.lineTo(x2, 58);
       ctx.stroke();
 
       ctx.lineWidth = 0.5;
       ctx.beginPath();
-      ctx.moveTo(m, 63);
-      ctx.lineTo(pw - m, 63);
+      ctx.moveTo(x1, 63);
+      ctx.lineTo(x2, 63);
       ctx.stroke();
 
       // Header Folio
       ctx.font = '700 8.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#1e1e24';
       ctx.textAlign = 'left';
-      ctx.fillText('STUDY DOSSIER', m, 50);
+      ctx.fillText('STUDY DOSSIER', x1, 50);
 
       ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#6b7280';
       ctx.textAlign = 'right';
-      ctx.fillText('EXECUTIVE BRIEF · 90S ARCHIVE', pw - m, 50);
+      ctx.fillText('EXECUTIVE BRIEF · 90S ARCHIVE', x2, 50);
 
       // Display Title (Authoritative, Left-aligned)
-      ctx.font = '700 28px "Times New Roman", Times, Georgia, "Newsreader", serif';
+      ctx.font = '700 28px "Playfair Display", "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#0f0f11';
       ctx.textAlign = 'left';
-      const endTitleY = drawWrappedText(ctx, titleText, m, ph * 0.36, pw - 2 * m - 20, 36);
+      const endTitleY = drawWrappedText(ctx, titleText, x1, ph * 0.36, w - 20, 36);
 
       // Subtitle / Subject
       let dividerY = endTitleY + 24;
       if (options.studyTitle) {
         ctx.font = 'italic 13.5px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = '#4b5563';
-        ctx.fillText(options.studyTitle, m, dividerY);
+        ctx.fillText(options.studyTitle, x1, dividerY);
         dividerY += 28;
       }
 
@@ -555,8 +569,8 @@
       ctx.strokeStyle = 'rgba(30, 30, 36, 0.25)';
       ctx.lineWidth = 0.6;
       ctx.beginPath();
-      ctx.moveTo(m, dividerY);
-      ctx.lineTo(m + 80, dividerY);
+      ctx.moveTo(x1, dividerY);
+      ctx.lineTo(x1 + 80, dividerY);
       ctx.stroke();
 
       // Structured metadata grid at bottom
@@ -564,20 +578,20 @@
       ctx.strokeStyle = '#1e1e24';
       ctx.lineWidth = 0.8;
       ctx.beginPath();
-      ctx.moveTo(m, metaY - 32);
-      ctx.lineTo(pw - m, metaY - 32);
+      ctx.moveTo(x1, metaY - 32);
+      ctx.lineTo(x2, metaY - 32);
       ctx.stroke();
 
       ctx.font = '700 7.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#4b5563';
       ctx.textAlign = 'left';
-      ctx.fillText('AUTHOR / STUDENT', m, metaY - 18);
+      ctx.fillText('AUTHOR / STUDENT', x1, metaY - 18);
 
       ctx.font = '500 10.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#111827';
-      ctx.fillText(options.coverAuthor || 'General Notes', m, metaY);
+      ctx.fillText(options.coverAuthor || 'General Notes', x1, metaY);
 
-      const col2X = m + (pw - 2 * m) * 0.52;
+      const col2X = x1 + w * 0.52;
       ctx.font = '700 7.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#4b5563';
       ctx.fillText('DATE / COMPILATION', col2X, metaY - 18);
@@ -586,68 +600,75 @@
       ctx.fillStyle = '#111827';
       ctx.fillText(dateFormatted, col2X, metaY);
 
+      ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#6b7280';
+      ctx.textAlign = 'right';
+      ctx.fillText('Archival Executive Copy', x2, metaY + 16);
+
     } else if (tpl === 'monograph') {
       // 2. Archival Monograph (Heritage Stationery Bookplate)
       const inset = 34;
-      ctx.strokeStyle = 'rgba(50, 50, 50, 0.18)';
+      const x1 = leftGutter + inset;
+      const x2 = pw - rightGutter - inset;
+      const w = x2 - x1;
+
+      ctx.strokeStyle = 'rgba(75, 85, 99, 0.25)';
       ctx.lineWidth = 0.5;
-      ctx.strokeRect(inset, inset, pw - 2 * inset, ph - 2 * inset);
+      ctx.strokeRect(x1, inset, w, ph - 2 * inset);
 
-      // Centered elegant cartouche
-      const boxW = pw - 2 * inset - 70;
+      const boxW = Math.min(w - 70, 420);
       const boxH = 190;
-      const boxX = (pw - boxW) / 2;
-      const boxY = ph * 0.36;
+      const boxX = centerX - boxW / 2;
+      const boxY = ph * 0.38;
 
-      ctx.strokeStyle = 'rgba(40, 40, 44, 0.35)';
+      ctx.strokeStyle = 'rgba(30, 30, 36, 0.4)';
       ctx.lineWidth = 0.75;
       ctx.strokeRect(boxX, boxY, boxW, boxH);
-
-      ctx.strokeStyle = 'rgba(40, 40, 44, 0.14)';
+      ctx.strokeStyle = 'rgba(30, 30, 36, 0.15)';
       ctx.lineWidth = 0.35;
       ctx.strokeRect(boxX + 4.5, boxY + 4.5, boxW - 9, boxH - 9);
 
-      // Cartouche Header
-      ctx.font = '500 8px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = 'rgba(70, 70, 70, 0.85)';
+      ctx.font = '400 8px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#6b7280';
       ctx.textAlign = 'center';
-      ctx.fillText('M O N O G R A P H   ·   N O T E S', pw / 2, boxY + 28);
+      ctx.fillText('M O N O G R A P H   ·   N O T E S', centerX, boxY + 26);
 
-      ctx.strokeStyle = 'rgba(80, 80, 80, 0.22)';
+      ctx.strokeStyle = 'rgba(107, 114, 128, 0.3)';
       ctx.lineWidth = 0.35;
       ctx.beginPath();
-      ctx.moveTo(pw / 2 - 20, boxY + 35);
-      ctx.lineTo(pw / 2 + 20, boxY + 35);
+      ctx.moveTo(centerX - 20, boxY + 33);
+      ctx.lineTo(centerX + 20, boxY + 33);
       ctx.stroke();
 
-      // Title inside cartouche
-      ctx.font = '700 22px "Times New Roman", Times, Georgia, "Newsreader", serif';
+      ctx.font = '700 20px "Playfair Display", "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#111827';
-      ctx.textAlign = 'center';
-      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, boxY + 80, boxW - 36, 28);
+      const titleY = boxY + boxH * 0.45;
+      const endTitleY = drawWrappedText(ctx, titleText, centerX, titleY, boxW - 36, 26, 'center');
 
       if (options.studyTitle) {
-        ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
+        ctx.font = 'italic 11.5px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = '#4b5563';
-        ctx.fillText(options.studyTitle, pw / 2, Math.max(endTitleY + 22, boxY + 140));
+        ctx.fillText(options.studyTitle, centerX, endTitleY + 20);
       }
 
-      // Bottom metadata
-      let metaY = ph * 0.78;
+      let metaY = ph * 0.70;
       if (options.coverAuthor) {
         ctx.font = '500 10.5px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = '#1f2937';
-        ctx.fillText(options.coverAuthor, pw / 2, metaY);
+        ctx.fillText(options.coverAuthor, centerX, metaY);
         metaY += 18;
       }
+
       ctx.font = 'italic 9px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#6b7280';
-      ctx.fillText(`Date: ${dateFormatted}`, pw / 2, metaY);
+      ctx.fillText(`Date: ${dateFormatted}`, centerX, metaY);
 
     } else if (tpl === 'bauhaus') {
       // 3. Swiss Modernist Bauhaus Layout
       const m = 48;
-      const vertX = m + 28;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const vertX = x1 + 28;
 
       ctx.strokeStyle = 'rgba(30, 30, 36, 0.18)';
       ctx.lineWidth = 0.6;
@@ -656,44 +677,321 @@
       ctx.lineTo(vertX, ph - m);
       ctx.stroke();
 
-      const hdrY = m + 32;
       ctx.beginPath();
-      ctx.moveTo(m, hdrY);
-      ctx.lineTo(pw - m, hdrY);
+      ctx.moveTo(x1, m + 20);
+      ctx.lineTo(x2, m + 20);
       ctx.stroke();
 
-      ctx.font = '700 8px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#1f2937';
+      ctx.font = '700 8px "Inter", "Helvetica Neue", Arial, sans-serif';
+      ctx.fillStyle = '#374151';
       ctx.textAlign = 'left';
-      ctx.fillText('VOLUME I  ·  STUDY COMPENDIUM', vertX + 14, hdrY - 10);
+      ctx.fillText('VOLUME I  ·  STUDY COMPENDIUM', vertX + 14, m + 14);
 
-      // Large modern title
-      ctx.font = '700 26px "Times New Roman", Times, Georgia, "Newsreader", serif';
-      ctx.fillStyle = '#0f0f11';
-      ctx.textAlign = 'left';
-      const endTitleY = drawWrappedText(ctx, titleText, vertX + 14, ph * 0.38, pw - vertX - m - 20, 34);
+      ctx.font = '700 24px "Inter", "Helvetica Neue", Arial, sans-serif';
+      ctx.fillStyle = '#111827';
+      const endTitleY = drawWrappedText(ctx, titleText, vertX + 14, ph * 0.36, x2 - (vertX + 14), 30);
 
       if (options.studyTitle) {
-        ctx.font = 'italic 13px "Times New Roman", Times, Georgia, serif';
+        ctx.font = 'italic 400 12.5px "Inter", "Helvetica Neue", Arial, sans-serif';
         ctx.fillStyle = '#4b5563';
-        ctx.fillText(options.studyTitle, vertX + 14, endTitleY + 24);
+        ctx.fillText(options.studyTitle, vertX + 14, endTitleY + 22);
       }
 
-      // Structured metadata lines
-      const metaY = ph * 0.76;
-      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      const metaY = ph * 0.70;
+      ctx.font = '700 7px "Inter", "Helvetica Neue", Arial, sans-serif';
       ctx.fillStyle = '#6b7280';
       ctx.fillText('STUDENT:', vertX + 14, metaY);
-      ctx.font = '500 10.5px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = '#111827';
-      ctx.fillText(options.coverAuthor || 'General Study Notes', vertX + 76, metaY);
+      ctx.fillText('ART NOUVEAU ARCHIVE · TURN OF THE CENTURY', pw / 2, m + 42);
 
+      const lozY = ph * 0.35;
+      ctx.strokeStyle = bordeaux;
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.arc(pw / 2, lozY, 14, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.strokeStyle = gold;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.arc(pw / 2, lozY, 9, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.font = '700 25px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#241a1c';
+      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, lozY + 40, pw - 2 * m - 60, 33);
+
+      let subY = endTitleY + 22;
+      if (options.studyTitle) {
+        ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = bordeaux;
+        ctx.fillText(options.studyTitle, pw / 2, subY);
+        subY += 22;
+      }
+
+      ctx.strokeStyle = gold;
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2 - 45, subY); ctx.lineTo(pw / 2 + 45, subY);
+      ctx.stroke();
+
+      const metaY = ph * 0.82;
+      ctx.font = '700 7.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = gold;
+      ctx.fillText('STUDENT / AUTHOR', pw / 2, metaY);
+      ctx.font = '700 10.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = bordeaux;
+      ctx.fillText(options.coverAuthor || 'Belle Époque Edition', pw / 2, metaY + 14);
+      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = gold;
+      ctx.fillText(dateFormatted || 'Turn of the Century', pw / 2, metaY + 28);
+
+    } else if (tpl === 'nineteen10s' || tpl === '1910s' || tpl === '1910' || tpl === '10s') {
+      // 1910s Edwardian & Aviation Monograph
+      const m = 42;
+      const navy = '#1a2947';
+      const goldMuted = '#b2945c';
+
+      ctx.fillStyle = '#fafaf8';
+      ctx.fillRect(0, 0, pw, ph);
+
+      ctx.strokeStyle = navy;
+      ctx.lineWidth = 1.8;
+      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeStyle = goldMuted;
+      ctx.lineWidth = 0.5;
+      ctx.strokeRect(m + 4, m + 4, pw - 2 * (m + 4), ph - 2 * (m + 4));
+
+      ctx.strokeStyle = navy;
+      ctx.lineWidth = 0.6;
+      ctx.strokeRect(pw - m - 110, m + 14, 96, 26);
+      ctx.font = '700 6.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = navy;
+      ctx.textAlign = 'center';
+      ctx.fillText('REGISTRY NO. 1914-SP', pw - m - 62, m + 27);
+      ctx.font = '5.5px system-ui, -apple-system, sans-serif';
+      ctx.fillText('TELEGRAPH DOSSIER', pw - m - 62, m + 35);
+
+      ctx.font = '700 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = navy;
+      ctx.textAlign = 'left';
+      ctx.fillText('E D W A R D I A N   D O S S I E R   ·   1 9 1 0 s', m + 16, m + 26);
+      ctx.font = 'italic 7.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = goldMuted;
+      ctx.fillText('EARLY MODERNIST MONOGRAPH · AVIATION ERA', m + 16, m + 38);
+
+      ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = navy;
+      const endTitleY = drawWrappedText(ctx, titleText, m + 16, ph * 0.38, pw - 2 * m - 50, 34);
+
+      let subY = endTitleY + 22;
+      if (options.studyTitle) {
+        ctx.font = 'italic 12.5px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = goldMuted;
+        ctx.fillText(options.studyTitle, m + 16, subY);
+        subY += 22;
+      }
+
+      ctx.strokeStyle = navy;
+      ctx.lineWidth = 1.0;
+      ctx.beginPath();
+      ctx.moveTo(m + 16, subY); ctx.lineTo(m + 90, subY);
+      ctx.stroke();
+
+      const metaY = ph * 0.82;
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#6b7280';
-      ctx.fillText('DATE:', vertX + 14, metaY + 22);
-      ctx.font = '500 10.5px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = '#111827';
-      ctx.fillText(dateFormatted, vertX + 76, metaY + 22);
+      ctx.fillStyle = goldMuted;
+      ctx.fillText('AUTHOR / CORRESPONDENT', m + 16, metaY);
+      ctx.font = '700 10.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = navy;
+      ctx.fillText(options.coverAuthor || 'Edwardian Edition', m + 16, metaY + 14);
+      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = goldMuted;
+      ctx.fillText(dateFormatted || 'Archival Record 1910', m + 16, metaY + 28);
+
+    } else if (tpl === 'twenties' || tpl === '20s' || tpl === '1920s' || tpl === '1920' || tpl === 'artdeco' || tpl === 'gatsby') {
+      // 1920s Art Deco & Roaring Twenties
+      const m = 40;
+      const decoBlack = '#1a1a1e';
+      const decoGold = '#d1a647';
+
+      ctx.fillStyle = '#faf8f2';
+      ctx.fillRect(0, 0, pw, ph);
+
+      ctx.strokeStyle = decoBlack;
+      ctx.lineWidth = 2.0;
+      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeStyle = decoGold;
+      ctx.lineWidth = 0.8;
+      ctx.strokeRect(m + 4.5, m + 4.5, pw - 2 * (m + 4.5), ph - 2 * (m + 4.5));
+      ctx.lineWidth = 0.4;
+      ctx.strokeRect(m + 8.0, m + 8.0, pw - 2 * (m + 8.0), ph - 2 * (m + 8.0));
+
+      ctx.font = '700 8px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = decoGold;
+      ctx.textAlign = 'center';
+      ctx.fillText('★   A R T   D E C O   C O M P E N D I U M   ·   1 9 2 0 s   ★', pw / 2, m + 28);
+      ctx.font = 'italic 7.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = decoBlack;
+      ctx.fillText('ROARING TWENTIES EDITORIAL · GATSBY ARCHIVE', pw / 2, m + 42);
+
+      const lozY = ph * 0.35;
+      ctx.strokeStyle = decoBlack;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2, lozY - 15);
+      ctx.lineTo(pw / 2 + 15, lozY);
+      ctx.lineTo(pw / 2, lozY + 15);
+      ctx.lineTo(pw / 2 - 15, lozY);
+      ctx.closePath();
+      ctx.stroke();
+
+      ctx.fillStyle = decoGold;
+      ctx.beginPath();
+      ctx.arc(pw / 2, lozY, 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = decoBlack;
+      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, lozY + 42, pw - 2 * m - 60, 34);
+
+      let subY = endTitleY + 22;
+      if (options.studyTitle) {
+        ctx.font = 'italic 12.5px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = decoGold;
+        ctx.fillText(options.studyTitle, pw / 2, subY);
+        subY += 22;
+      }
+
+      ctx.strokeStyle = decoGold;
+      ctx.lineWidth = 1.0;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2 - 45, subY); ctx.lineTo(pw / 2 + 45, subY);
+      ctx.stroke();
+
+      const metaY = ph * 0.82;
+      ctx.font = '700 7.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = decoGold;
+      ctx.fillText('CURATOR / STUDENT', pw / 2, metaY);
+      ctx.font = '700 10.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = decoBlack;
+      ctx.fillText(options.coverAuthor || 'Gatsby Edition', pw / 2, metaY + 14);
+      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = decoGold;
+      ctx.fillText(dateFormatted || '1920s Archive', pw / 2, metaY + 28);
+
+    } else if (tpl === 'thirties' || tpl === '30s' || tpl === '1930s' || tpl === '1930' || tpl === 'streamline') {
+      // 1930s Streamline Moderne & Constructivism
+      const m = 42;
+      const copper = '#994729';
+      const slate = '#384252';
+
+      ctx.fillStyle = '#f8f8f6';
+      ctx.fillRect(0, 0, pw, ph);
+
+      ctx.strokeStyle = slate;
+      ctx.lineWidth = 1.6;
+      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+
+      ctx.strokeStyle = copper;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(m, m + 45); ctx.lineTo(pw - m, m + 45);
+      ctx.stroke();
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(m, m + 49); ctx.lineTo(pw - m, m + 49);
+      ctx.stroke();
+
+      ctx.font = '700 8.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = slate;
+      ctx.textAlign = 'left';
+      ctx.fillText('STREAMLINE MODERNE  ·  DOSSIER 1935', m + 14, m + 32);
+      ctx.font = 'italic 7.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = copper;
+      ctx.textAlign = 'right';
+      ctx.fillText('INDUSTRIAL DESIGN ARCHIVE', pw - m - 14, m + 32);
+
+      ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = slate;
+      ctx.textAlign = 'left';
+      const endTitleY = drawWrappedText(ctx, titleText, m + 14, ph * 0.38, pw - 2 * m - 50, 34);
+
+      let subY = endTitleY + 22;
+      if (options.studyTitle) {
+        ctx.font = 'italic 12.5px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = copper;
+        ctx.fillText(options.studyTitle, m + 14, subY);
+        subY += 22;
+      }
+
+      ctx.strokeStyle = copper;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(m + 14, subY); ctx.lineTo(m + 100, subY);
+      ctx.stroke();
+
+      const metaY = ph * 0.82;
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = copper;
+      ctx.fillText('DESIGNER / AUTHOR', m + 14, metaY);
+      ctx.font = '700 10.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = slate;
+      ctx.fillText(options.coverAuthor || 'Streamline Monograph', m + 14, metaY + 14);
+      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = copper;
+      ctx.fillText(dateFormatted || '1930s Edition', m + 14, metaY + 28);
+
+    } else if (tpl === 'forties' || tpl === '40s' || tpl === '1940s' || tpl === '1940' || tpl === 'typewriter' || tpl === 'postwar') {
+      // 1940s Typewriter Dossier & Post-War Press Release
+      const m = 40;
+      const inkBlack = '#1e1e24';
+      const stampRed = '#b22626';
+
+      ctx.fillStyle = '#faf8f5';
+      ctx.fillRect(0, 0, pw, ph);
+
+      ctx.strokeStyle = inkBlack;
+      ctx.lineWidth = 1.2;
+      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+
+      ctx.strokeStyle = stampRed;
+      ctx.lineWidth = 0.8;
+      ctx.strokeRect(pw - m - 130, m + 14, 116, 24);
+      ctx.font = '700 7px monospace, monospace';
+      ctx.fillStyle = stampRed;
+      ctx.textAlign = 'center';
+      ctx.fillText('CONFIDENTIAL STUDY FILE', pw - m - 72, m + 26);
+      ctx.font = '5.5px monospace, monospace';
+      ctx.fillText('PRESS & RESEARCH DOSSIER', pw - m - 72, m + 34);
+
+      ctx.font = '700 8px monospace, monospace';
+      ctx.fillStyle = inkBlack;
+      ctx.textAlign = 'left';
+      ctx.fillText('[ DOSSIER 1944 ] :: OFFICIAL BRIEF', m + 16, m + 28);
+
+      ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = inkBlack;
+      const endTitleY = drawWrappedText(ctx, titleText, m + 16, ph * 0.38, pw - 2 * m - 50, 34);
+
+      let subY = endTitleY + 22;
+      if (options.studyTitle) {
+        ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#555555';
+        ctx.fillText(options.studyTitle, m + 16, subY);
+        subY += 22;
+      }
+
+      ctx.strokeStyle = inkBlack;
+      ctx.lineWidth = 1.0;
+      ctx.beginPath();
+      ctx.moveTo(m + 16, subY); ctx.lineTo(m + 110, subY);
+      ctx.stroke();
+
+      const metaY = ph * 0.78;
+      ctx.font = '700 8px monospace, monospace';
+      ctx.fillStyle = inkBlack;
+      ctx.fillText(`[ OPERATOR ] : ${options.coverAuthor || 'Anonymous.44'}`, m + 16, metaY);
+      ctx.fillText(`[ TIMESTAMP] : ${dateFormatted}`, m + 16, metaY + 16);
+      ctx.fillText(`[ DATASETS ] : ${options.totalPages || 0} Slides Compiled // Monograph`, m + 16, metaY + 32);
 
     } else if (tpl === 'fifties' || tpl === '50s') {
       // 4. Fifties: Mid-Century Pelican / Penguin Tri-Band
@@ -1049,6 +1347,173 @@
       ctx.fillStyle = '#111111';
       ctx.fillText(options.coverAuthor || 'Studio Dossier', m, metaY + 16);
       ctx.fillText(dateFormatted, m + (pw - 2 * m) * 0.52, metaY + 16);
+
+    } else if (tpl === 'twothousands' || tpl === '2000s' || tpl === '2000' || tpl === 'y2k' || tpl === 'noughties') {
+      // 2000s Y2K Millennium Tech & Dot-Com Era
+      const m = 42;
+      const cobalt = '#0f4c9e';
+      const cyanY2K = '#1aa3d1';
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillRect(0, 0, pw, ph);
+
+      ctx.fillStyle = cobalt;
+      ctx.fillRect(m, m, pw - 2 * m, 12);
+      ctx.fillStyle = cyanY2K;
+      ctx.fillRect(m, m + 12, pw - 2 * m, 3);
+
+      ctx.strokeStyle = cobalt;
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.arc(pw - m - 65, m + 33, 9, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = cobalt;
+      ctx.textAlign = 'center';
+      ctx.fillText('Y2K-2000', pw - m - 44, m + 36);
+
+      ctx.font = '700 8.5px system-ui, -apple-system, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('Y2K MILLENNIUM DOSSIER // DIGITAL ERA', m, m + 34);
+
+      ctx.font = '700 27px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#141e2e';
+      const endTitleY = drawWrappedText(ctx, titleText, m, ph * 0.38, pw - 2 * m - 50, 35);
+
+      let subY = endTitleY + 22;
+      if (options.studyTitle) {
+        ctx.font = '12px system-ui, -apple-system, sans-serif';
+        ctx.fillStyle = cyanY2K;
+        ctx.fillText(options.studyTitle, m, subY);
+        subY += 22;
+      }
+
+      ctx.strokeStyle = cyanY2K;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(m, subY); ctx.lineTo(m + 100, subY);
+      ctx.stroke();
+
+      const metaY = ph * 0.80;
+      ctx.font = '700 8px monospace, monospace';
+      ctx.fillStyle = cobalt;
+      ctx.fillText(`<AUTHOR>    ${options.coverAuthor || 'Y2K.User'}`, m, metaY);
+      ctx.fillText(`<TIMESTAMP> ${dateFormatted}`, m, metaY + 16);
+      ctx.fillText(`<FOLIOS>    ${options.totalPages || 0} Slides Processed`, m, metaY + 32);
+
+    } else if (tpl === 'twenty10s' || tpl === '2010s' || tpl === '2010' || tpl === 'flatdesign' || tpl === 'startup') {
+      // 2010s Flat Design & Startup Minimalist
+      const m = 46;
+      const charcoal = '#1a1e28';
+      const indigo = '#5961e0';
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, pw, ph);
+
+      ctx.font = '700 8px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = indigo;
+      ctx.textAlign = 'left';
+      ctx.fillText('2010s MINIMALIST // STARTUP EDITION', m, m + 20);
+
+      ctx.font = '7.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#80808d';
+      ctx.textAlign = 'right';
+      ctx.fillText('FLAT DESIGN ARCHIVE · VOL. 14', pw - m, m + 20);
+
+      ctx.strokeStyle = 'rgba(30, 30, 40, 0.15)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(m, m + 30); ctx.lineTo(pw - m, m + 30);
+      ctx.stroke();
+
+      ctx.font = '700 27px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = charcoal;
+      ctx.textAlign = 'left';
+      const endTitleY = drawWrappedText(ctx, titleText, m, ph * 0.38, pw - 2 * m - 40, 35);
+
+      let subY = endTitleY + 22;
+      if (options.studyTitle) {
+        ctx.font = '12px system-ui, -apple-system, sans-serif';
+        ctx.fillStyle = '#666675';
+        ctx.fillText(options.studyTitle, m, subY);
+        subY += 22;
+      }
+
+      ctx.fillStyle = indigo;
+      ctx.beginPath();
+      ctx.arc(m + 4, subY + 6, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      const metaY = ph * 0.82;
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = indigo;
+      ctx.fillText('AUTHOR', m, metaY);
+      ctx.font = '10px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = charcoal;
+      ctx.fillText(options.coverAuthor || 'Startup Notes', m, metaY + 14);
+
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = indigo;
+      ctx.fillText('DATE', m + (pw - 2 * m) * 0.52, metaY);
+      ctx.font = '10px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = charcoal;
+      ctx.fillText(dateFormatted || '2015 Edition', m + (pw - 2 * m) * 0.52, metaY + 14);
+
+    } else if (tpl === 'twentytwenties' || tpl === '2020s' || tpl === '2020' || tpl === 'neubrutalism' || tpl === 'contemporary' || tpl === 'ai_era') {
+      // 2020s Modern Neubrutalism & Contemporary AI Era
+      const m = 40;
+      const pitchBlack = '#0d0d10';
+      const emerald = '#0cb873';
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, pw, ph);
+
+      ctx.strokeStyle = pitchBlack;
+      ctx.lineWidth = 2.5;
+      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+
+      ctx.font = '700 8px monospace, monospace';
+      ctx.fillStyle = pitchBlack;
+      ctx.textAlign = 'left';
+      ctx.fillText('[ 2020s // CONTEMPORARY STUDY FOLIO ]', m + 16, m + 24);
+
+      ctx.fillStyle = emerald;
+      ctx.fillRect(pw - m - 80, m + 14, 64, 16);
+      ctx.font = '700 7px monospace, monospace';
+      ctx.fillStyle = pitchBlack;
+      ctx.textAlign = 'center';
+      ctx.fillText('2026.AI', pw - m - 48, m + 25);
+
+      ctx.font = '700 27px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = pitchBlack;
+      ctx.textAlign = 'left';
+      const endTitleY = drawWrappedText(ctx, titleText, m + 16, ph * 0.38, pw - 2 * m - 50, 35);
+
+      let subY = endTitleY + 22;
+      if (options.studyTitle) {
+        ctx.font = '12px system-ui, -apple-system, sans-serif';
+        ctx.fillStyle = '#4a4a55';
+        ctx.fillText(options.studyTitle, m + 16, subY);
+        subY += 22;
+      }
+
+      ctx.fillStyle = pitchBlack;
+      ctx.fillRect(m + 16, subY + 4, 120, 3);
+
+      const boxY = ph * 0.80;
+      const boxW = pw - 2 * m - 32;
+      const boxH = 56;
+      const bx = m + 16;
+      ctx.strokeStyle = pitchBlack;
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(bx, boxY, boxW, boxH);
+
+      ctx.font = '700 7.5px monospace, monospace';
+      ctx.fillStyle = pitchBlack;
+      ctx.fillText(`AUTHOR    : ${options.coverAuthor || 'User.2020'}`, bx + 12, boxY + 18);
+      ctx.fillText(`TIMESTAMP : ${dateFormatted}`, bx + 12, boxY + 34);
+      ctx.fillText(`DATASETS  : ${options.totalPages || 0} Slide Folios`, bx + 12, boxY + 48);
 
     } else if (tpl === 'natural' || tpl === 'forest' || tpl === 'verde' || tpl === 'bosque' || tpl === 'nature') {
       // 10. Natural Deep Forest Editorial (Luxury Architectural Notebook)
