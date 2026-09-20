@@ -782,7 +782,7 @@ def generate_cover_page(
         # 4. 1950s Mid-Century Pelican / Penguin Tri-Band Paperbound Classic
         top_band_h = ph * 0.20
         c.setFillColor(Color(0.16, 0.18, 0.20, alpha=1.0))
-        c.rect(left_gutter, ph - top_band_h, avail_w, top_band_h, fill=1, stroke=0)
+        c.rect(left_gutter, ph - top_band_h, pw - left_gutter - right_gutter, top_band_h, fill=1, stroke=0)
 
         c.setFont("Helvetica-Bold", 8.5)
         c.setFillColor(Color(0.96, 0.96, 0.96, alpha=0.95))
@@ -808,7 +808,7 @@ def generate_cover_page(
 
         c.setFont("Helvetica-Bold", 24)
         c.setFillColor(Color(0.10, 0.12, 0.14, alpha=1.0))
-        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 24, avail_w - 80.0, c)
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 24, w - 40.0, c)
         cur_y = lozenge_y - 36.0
         for line in lines:
             c.drawCentredString(center_x, cur_y, line)
@@ -1450,9 +1450,9 @@ def generate_cover_page(
 
         bar_h = 36.0
         c.setFillColor(azure_deep)
-        c.rect(left_gutter, ph - bar_h, avail_w, bar_h, fill=1, stroke=0)
+        c.rect(left_gutter, ph - bar_h, pw - left_gutter - right_gutter, bar_h, fill=1, stroke=0)
         c.setFillColor(solar_gold)
-        c.rect(left_gutter, ph - bar_h - 2.5, avail_w, 2.5, fill=1, stroke=0)
+        c.rect(left_gutter, ph - bar_h - 2.5, pw - left_gutter - right_gutter, 2.5, fill=1, stroke=0)
 
         c.setFont("Helvetica-Bold", 8.5)
         c.setFillColor(Color(0.98, 0.98, 0.98, alpha=0.95))

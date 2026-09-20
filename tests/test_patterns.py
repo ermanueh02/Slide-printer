@@ -67,24 +67,30 @@ def test_create_notes_overlay_page_number():
     assert overlay_without.extract_text().strip() == ""
 
 
-@pytest.mark.parametrize("template", ["atelier", "george", "bauhaus", "forties", "fifties", "polo", "natural"])
-def test_generate_cover_page_templates(template):
+from slide_printer.constants import COVER_TEMPLATES
+
+
+@pytest.mark.parametrize("template", COVER_TEMPLATES)
+@pytest.mark.parametrize("binding,gutter_margin", [("none", 0.0), ("binder", 30.0), ("spiral", 22.0)])
+def test_generate_cover_page_templates(template, binding, gutter_margin):
     from slide_printer.patterns import generate_cover_page
     a4_size = PAPER_SIZES["a4"]
-    cover = generate_cover_page(
-        page_size=a4_size,
-        title="Test Presentation",
-        subtitle="Test Subtitle",
-        author="Test Author",
-        date_str="2026-09-20",
-        num_slides=10,
-        template=template,
-        binding="binder",
-        hole_guides=True,
-        gutter_margin=30.0,
-    )
-    assert isinstance(cover, PageObject)
-    assert float(cover.mediabox.width) == pytest.approx(a4_size[0], 0.1)
-    assert float(cover.mediabox.height) == pytest.approx(a4_size[1], 0.1)
+    for is_verso in [False, True]:
+        cover = generate_cover_page(
+            page_size=a4_size,
+            title="Test Presentation on Architectural Binding Systems",
+            subtitle="Memphis and Modernist Layout Compendium",
+            author="Test Author",
+            date_str="2026-09-20",
+            num_slides=12,
+            template=template,
+            binding=binding,
+            hole_guides=True,
+            is_verso=is_verso,
+            gutter_margin=gutter_margin,
+        )
+        assert isinstance(cover, PageObject)
+        assert float(cover.mediabox.width) == pytest.approx(a4_size[0], 0.1)
+        assert float(cover.mediabox.height) == pytest.approx(a4_size[1], 0.1)
 
 

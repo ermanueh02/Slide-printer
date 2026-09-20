@@ -935,21 +935,25 @@
     } else if (tpl === 'nineteen00s' || tpl === '1900s' || tpl === '1900' || tpl === '00s') {
       // 1900s Art Nouveau & Belle Époque Classic
       const m = 42;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
       const bordeaux = rgb(0.42, 0.12, 0.15);
       const gold = rgb(0.72, 0.58, 0.32);
 
       page.drawRectangle({
-        x: m,
+        x: x1,
         y: m,
-        width: pw - 2 * m,
+        width: w,
         height: ph - 2 * m,
         borderColor: bordeaux,
         borderWidth: 1.4,
       });
       page.drawRectangle({
-        x: m + 4.5,
+        x: x1 + 4.5,
         y: m + 4.5,
-        width: pw - 2 * (m + 4.5),
+        width: w - 9,
         height: ph - 2 * (m + 4.5),
         borderColor: gold,
         borderWidth: 0.5,
@@ -959,7 +963,7 @@
         const topHdr = 'B E L L E   É P O Q U E   ·   1 9 0 0 s';
         const topW = timesBold.widthOfTextAtSize(topHdr, 8.5);
         page.drawText(topHdr, {
-          x: (pw - topW) / 2,
+          x: centerX - topW / 2,
           y: ph - m - 28,
           size: 8.5,
           font: timesBold,
@@ -970,7 +974,7 @@
         const subHdr = 'ART NOUVEAU ARCHIVE · TURN OF THE CENTURY';
         const subW = timesItalic.widthOfTextAtSize(subHdr, 7.5);
         page.drawText(subHdr, {
-          x: (pw - subW) / 2,
+          x: centerX - subW / 2,
           y: ph - m - 42,
           size: 7.5,
           font: timesItalic,
@@ -980,14 +984,14 @@
 
       const lozY = ph * 0.65;
       page.drawCircle({
-        x: pw / 2,
+        x: centerX,
         y: lozY,
         size: 14,
         borderColor: bordeaux,
         borderWidth: 0.8,
       });
       page.drawCircle({
-        x: pw / 2,
+        x: centerX,
         y: lozY,
         size: 9,
         borderColor: gold,
@@ -996,14 +1000,14 @@
 
       const titleSize = 25;
       const titleLineHeight = 33;
-      const titleLines = wrapText(timesBold, titleText, titleSize, pw - 2 * m - 60);
+      const titleLines = wrapText(timesBold, titleText, titleSize, w - 60);
       let curTitleY = lozY - 40;
 
       if (timesBold) {
         for (const line of titleLines) {
           const lineW = timesBold.widthOfTextAtSize(line, titleSize);
           page.drawText(line, {
-            x: (pw - lineW) / 2,
+            x: centerX - lineW / 2,
             y: curTitleY,
             size: titleSize,
             font: timesBold,
@@ -1016,7 +1020,7 @@
       if (options.subtitle && timesItalic) {
         const subW = timesItalic.widthOfTextAtSize(options.subtitle, 12.0);
         page.drawText(options.subtitle, {
-          x: (pw - subW) / 2,
+          x: centerX - subW / 2,
           y: curTitleY - 8,
           size: 12.0,
           font: timesItalic,
@@ -1026,8 +1030,8 @@
       }
 
       page.drawLine({
-        start: { x: pw / 2 - 45, y: curTitleY - 10 },
-        end: { x: pw / 2 + 45, y: curTitleY - 10 },
+        start: { x: centerX - 45, y: curTitleY - 10 },
+        end: { x: centerX + 45, y: curTitleY - 10 },
         thickness: 0.6,
         color: gold,
       });
@@ -1036,14 +1040,14 @@
       if (timesBold) {
         const lblStr = 'STUDENT / AUTHOR';
         const lblW = timesBold.widthOfTextAtSize(lblStr, 7.5);
-        page.drawText(lblStr, { x: (pw - lblW) / 2, y: metaY + 26, size: 7.5, font: timesBold, color: gold });
+        page.drawText(lblStr, { x: centerX - lblW / 2, y: metaY + 26, size: 7.5, font: timesBold, color: gold });
         const authStr = options.author || 'Belle Époque Edition';
         const authW = timesBold.widthOfTextAtSize(authStr, 10.5);
-        page.drawText(authStr, { x: (pw - authW) / 2, y: metaY + 12, size: 10.5, font: timesBold, color: bordeaux });
+        page.drawText(authStr, { x: centerX - authW / 2, y: metaY + 12, size: 10.5, font: timesBold, color: bordeaux });
       }
       if (timesItalic) {
         const dateW = timesItalic.widthOfTextAtSize(todayStr, 8.5);
-        page.drawText(todayStr, { x: (pw - dateW) / 2, y: metaY - 2, size: 8.5, font: timesItalic, color: gold });
+        page.drawText(todayStr, { x: centerX - dateW / 2, y: metaY - 2, size: 8.5, font: timesItalic, color: gold });
       }
 
     } else if (tpl === 'nineteen10s' || tpl === '1910s' || tpl === '1910' || tpl === '10s') {
@@ -1094,7 +1098,7 @@
 
       const titleSize = 26;
       const titleLineHeight = 34;
-      const titleLines = wrapText(timesBold, titleText, titleSize, pw - 2 * m - 50);
+      const titleLines = wrapText(timesBold, titleText, titleSize, w - 50);
       let curTitleY = ph * 0.58;
 
       if (timesBold) {
@@ -1154,9 +1158,9 @@
         borderWidth: 0.8,
       });
       page.drawRectangle({
-        x: m + 8.0,
+        x: x1 + 8.0,
         y: m + 8.0,
-        width: pw - 2 * (m + 8.0),
+        width: w - 16.0,
         height: ph - 2 * (m + 8.0),
         borderColor: decoGold,
         borderWidth: 0.4,
@@ -1165,55 +1169,55 @@
       if (timesBold) {
         const topStr = '·   A R T   D E C O   C O M P E N D I U M   ·   1 9 2 0 s   ·';
         const topW = timesBold.widthOfTextAtSize(topStr, 8.0);
-        page.drawText(topStr, { x: (pw - topW) / 2, y: ph - m - 28, size: 8.0, font: timesBold, color: decoGold });
+        page.drawText(topStr, { x: centerX - topW / 2, y: ph - m - 28, size: 8.0, font: timesBold, color: decoGold });
       }
       if (timesItalic) {
         const subStr = 'ROARING TWENTIES EDITORIAL · GATSBY ARCHIVE';
-        const subW = timesItalic.widthOfTextAtSize(subStr, 7.5);
-        page.drawText(subStr, { x: (pw - subW) / 2, y: ph - m - 42, size: 7.5, font: timesItalic, color: decoBlack });
+        const subW = timesItalic.widthOfTextAtSize(subHdr || subStr, 7.5);
+        page.drawText(subStr, { x: centerX - subW / 2, y: ph - m - 42, size: 7.5, font: timesItalic, color: decoBlack });
       }
 
       const lozY = ph * 0.65;
       const lSz = 15;
-      page.drawLine({ start: { x: pw / 2, y: lozY + lSz }, end: { x: pw / 2 + lSz, y: lozY }, thickness: 1.2, color: decoBlack });
-      page.drawLine({ start: { x: pw / 2 + lSz, y: lozY }, end: { x: pw / 2, y: lozY - lSz }, thickness: 1.2, color: decoBlack });
-      page.drawLine({ start: { x: pw / 2, y: lozY - lSz }, end: { x: pw / 2 - lSz, y: lozY }, thickness: 1.2, color: decoBlack });
-      page.drawLine({ start: { x: pw / 2 - lSz, y: lozY }, end: { x: pw / 2, y: lozY + lSz }, thickness: 1.2, color: decoBlack });
-      page.drawCircle({ x: pw / 2, y: lozY, size: 4, color: decoGold });
+      page.drawLine({ start: { x: centerX, y: lozY + lSz }, end: { x: centerX + lSz, y: lozY }, thickness: 1.2, color: decoBlack });
+      page.drawLine({ start: { x: centerX + lSz, y: lozY }, end: { x: centerX, y: lozY - lSz }, thickness: 1.2, color: decoBlack });
+      page.drawLine({ start: { x: centerX, y: lozY - lSz }, end: { x: centerX - lSz, y: lozY }, thickness: 1.2, color: decoBlack });
+      page.drawLine({ start: { x: centerX - lSz, y: lozY }, end: { x: centerX, y: lozY + lSz }, thickness: 1.2, color: decoBlack });
+      page.drawCircle({ x: centerX, y: lozY, size: 4, color: decoGold });
 
       const titleSize = 26;
       const titleLineHeight = 34;
-      const titleLines = wrapText(timesBold, titleText, titleSize, pw - 2 * m - 60);
+      const titleLines = wrapText(timesBold, titleText, titleSize, w - 60);
       let curTitleY = lozY - 42;
 
       if (timesBold) {
         for (const line of titleLines) {
           const lineW = timesBold.widthOfTextAtSize(line, titleSize);
-          page.drawText(line, { x: (pw - lineW) / 2, y: curTitleY, size: titleSize, font: timesBold, color: decoBlack });
+          page.drawText(line, { x: centerX - lineW / 2, y: curTitleY, size: titleSize, font: timesBold, color: decoBlack });
           curTitleY -= titleLineHeight;
         }
       }
 
       if (options.subtitle && timesItalic) {
         const subW = timesItalic.widthOfTextAtSize(options.subtitle, 12.5);
-        page.drawText(options.subtitle, { x: (pw - subW) / 2, y: curTitleY - 6, size: 12.5, font: timesItalic, color: decoGold });
+        page.drawText(options.subtitle, { x: centerX - subW / 2, y: curTitleY - 6, size: 12.5, font: timesItalic, color: decoGold });
         curTitleY -= 24;
       }
 
-      page.drawLine({ start: { x: pw / 2 - 45, y: curTitleY - 10 }, end: { x: pw / 2 + 45, y: curTitleY - 10 }, thickness: 1.0, color: decoGold });
+      page.drawLine({ start: { x: centerX - 45, y: curTitleY - 10 }, end: { x: centerX + 45, y: curTitleY - 10 }, thickness: 1.0, color: decoGold });
 
       const metaY = m + 36;
       if (timesBold) {
         const lblStr = 'CURATOR / STUDENT';
         const lblW = timesBold.widthOfTextAtSize(lblStr, 7.5);
-        page.drawText(lblStr, { x: (pw - lblW) / 2, y: metaY + 26, size: 7.5, font: timesBold, color: decoGold });
+        page.drawText(lblStr, { x: centerX - lblW / 2, y: metaY + 26, size: 7.5, font: timesBold, color: decoGold });
         const authStr = options.author || 'Gatsby Edition';
         const authW = timesBold.widthOfTextAtSize(authStr, 10.5);
-        page.drawText(authStr, { x: (pw - authW) / 2, y: metaY + 12, size: 10.5, font: timesBold, color: decoBlack });
+        page.drawText(authStr, { x: centerX - authW / 2, y: metaY + 12, size: 10.5, font: timesBold, color: decoBlack });
       }
       if (timesItalic) {
         const dateW = timesItalic.widthOfTextAtSize(todayStr, 8.5);
-        page.drawText(todayStr, { x: (pw - dateW) / 2, y: metaY - 2, size: 8.5, font: timesItalic, color: decoGold });
+        page.drawText(todayStr, { x: centerX - dateW / 2, y: metaY - 2, size: 8.5, font: timesItalic, color: decoGold });
       }
 
     } else if (tpl === 'thirties' || tpl === '30s' || tpl === '1930s' || tpl === '1930' || tpl === 'streamline') {
@@ -1223,9 +1227,9 @@
       const slate = rgb(0.22, 0.26, 0.32);
 
       page.drawRectangle({
-        x: m,
+        x: x1,
         y: m,
-        width: pw - 2 * m,
+        width: w,
         height: ph - 2 * m,
         borderColor: slate,
         borderWidth: 1.6,
@@ -1245,7 +1249,7 @@
 
       const titleSize = 26;
       const titleLineHeight = 34;
-      const titleLines = wrapText(timesBold, titleText, titleSize, pw - 2 * m - 50);
+      const titleLines = wrapText(timesBold, titleText, titleSize, w - 50);
       let curTitleY = ph * 0.58;
 
       if (timesBold) {
@@ -1274,13 +1278,16 @@
     } else if (tpl === 'forties' || tpl === '40s' || tpl === '1940s' || tpl === '1940' || tpl === 'typewriter' || tpl === 'postwar') {
       // 1940s Typewriter Dossier & Post-War Press Release
       const m = 40;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
       const inkBlack = rgb(0.12, 0.12, 0.14);
       const stampRed = rgb(0.70, 0.15, 0.15);
 
       page.drawRectangle({
-        x: m,
+        x: x1,
         y: m,
-        width: pw - 2 * m,
+        width: w,
         height: ph - 2 * m,
         borderColor: inkBlack,
         borderWidth: 1.2,
@@ -1308,7 +1315,7 @@
 
       const titleSize = 26;
       const titleLineHeight = 34;
-      const titleLines = wrapText(timesBold, titleText, titleSize, pw - 2 * m - 50);
+      const titleLines = wrapText(timesBold, titleText, titleSize, w - 50);
       let curTitleY = ph * 0.58;
 
       if (timesBold) {
@@ -1351,7 +1358,7 @@
         const topHdr = 'P E L I C A N   C O M P E N D I U M';
         const topW = timesBold.widthOfTextAtSize(topHdr, 9.0);
         page.drawText(topHdr, {
-          x: (pw - topW) / 2,
+          x: centerX - topW / 2,
           y: ph - band1H * 0.48,
           size: 9.0,
           font: timesBold,
@@ -1362,7 +1369,7 @@
         const subHdr = 'SERIES IN STUDY & SCHOLARSHIP · NO. 52';
         const subW = timesItalic.widthOfTextAtSize(subHdr, 8.0);
         page.drawText(subHdr, {
-          x: (pw - subW) / 2,
+          x: centerX - subW / 2,
           y: ph - band1H * 0.65,
           size: 8.0,
           font: timesItalic,
@@ -1383,15 +1390,15 @@
       // Diamond emblem at top of middle band
       const emblemY = ph - band1H - 34;
       const dSize = 10;
-      page.drawLine({ start: { x: pw / 2, y: emblemY + dSize }, end: { x: pw / 2 + dSize, y: emblemY }, thickness: 1.0, color: rgb(0.85, 0.38, 0.22) });
-      page.drawLine({ start: { x: pw / 2 + dSize, y: emblemY }, end: { x: pw / 2, y: emblemY - dSize }, thickness: 1.0, color: rgb(0.85, 0.38, 0.22) });
-      page.drawLine({ start: { x: pw / 2, y: emblemY - dSize }, end: { x: pw / 2 - dSize, y: emblemY }, thickness: 1.0, color: rgb(0.85, 0.38, 0.22) });
-      page.drawLine({ start: { x: pw / 2 - dSize, y: emblemY }, end: { x: pw / 2, y: emblemY + dSize }, thickness: 1.0, color: rgb(0.85, 0.38, 0.22) });
+      page.drawLine({ start: { x: centerX, y: emblemY + dSize }, end: { x: centerX + dSize, y: emblemY }, thickness: 1.0, color: rgb(0.85, 0.38, 0.22) });
+      page.drawLine({ start: { x: centerX + dSize, y: emblemY }, end: { x: centerX, y: emblemY - dSize }, thickness: 1.0, color: rgb(0.85, 0.38, 0.22) });
+      page.drawLine({ start: { x: centerX, y: emblemY - dSize }, end: { x: centerX - dSize, y: emblemY }, thickness: 1.0, color: rgb(0.85, 0.38, 0.22) });
+      page.drawLine({ start: { x: centerX - dSize, y: emblemY }, end: { x: centerX, y: emblemY + dSize }, thickness: 1.0, color: rgb(0.85, 0.38, 0.22) });
 
       // Title
       const titleSize = 24;
       const titleLineHeight = 31;
-      const maxTitleW = pw - 80;
+      const maxTitleW = w - 40;
       const titleLines = wrapText(timesBold, titleText, titleSize, maxTitleW);
       let curTitleY = ph - band1H - 78;
 
@@ -1399,7 +1406,7 @@
         for (const line of titleLines) {
           const lineW = timesBold.widthOfTextAtSize(line, titleSize);
           page.drawText(line, {
-            x: (pw - lineW) / 2,
+            x: centerX - lineW / 2,
             y: curTitleY,
             size: titleSize,
             font: timesBold,
@@ -1412,7 +1419,7 @@
       if (options.subtitle && timesItalic) {
         const subW = timesItalic.widthOfTextAtSize(options.subtitle, 12.5);
         page.drawText(options.subtitle, {
-          x: (pw - subW) / 2,
+          x: centerX - subW / 2,
           y: curTitleY - 6,
           size: 12.5,
           font: timesItalic,
@@ -1433,7 +1440,7 @@
         const authStr = (options.author || 'STUDENT COMPOSITION').toUpperCase();
         const authW = timesBold.widthOfTextAtSize(authStr, 11.0);
         page.drawText(authStr, {
-          x: (pw - authW) / 2,
+          x: centerX - authW / 2,
           y: band3H * 0.56,
           size: 11.0,
           font: timesBold,
@@ -1445,7 +1452,7 @@
         const dateStr = `${todayStr} · MID-CENTURY EDITION`;
         const dateW = timesItalic.widthOfTextAtSize(dateStr, 8.5);
         page.drawText(dateStr, {
-          x: (pw - dateW) / 2,
+          x: centerX - dateW / 2,
           y: band3H * 0.42,
           size: 8.5,
           font: timesItalic,
@@ -1457,6 +1464,10 @@
     } else if (tpl === 'sixties' || tpl === '60s') {
       // 5. Sixties: Swiss International Typography (Josef Müller-Brockmann)
       const m = 44;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
       page.drawRectangle({
         x: 0,
         y: 0,
@@ -1467,9 +1478,9 @@
 
       // Heavy black bar across top
       page.drawRectangle({
-        x: m,
+        x: x1,
         y: ph - m - 8,
-        width: pw - 2 * m,
+        width: w,
         height: 8,
         color: rgb(0, 0, 0),
       });
@@ -1479,7 +1490,7 @@
 
       if (swissFont) {
         page.drawText('01 / TYPOGRAFISCHE MONOGRAFIE', {
-          x: m,
+          x: x1,
           y: ph - m - 24,
           size: 8.0,
           font: swissFont,
@@ -1508,14 +1519,14 @@
       // Giant bold title
       const titleSize = 30;
       const titleLineHeight = 38;
-      const maxTitleW = pw - 2 * m;
+      const maxTitleW = w;
       const titleLines = wrapText(swissFont, titleText, titleSize, maxTitleW);
       let curTitleY = ph * 0.64;
 
       if (swissFont) {
         for (const line of titleLines) {
           page.drawText(line, {
-            x: m,
+            x: x1,
             y: curTitleY,
             size: titleSize,
             font: swissFont,
@@ -1528,7 +1539,7 @@
       let midRuleY = curTitleY + 12;
       if (options.subtitle && swissRegular) {
         page.drawText(options.subtitle, {
-          x: m,
+          x: x1,
           y: curTitleY + 8,
           size: 13,
           font: swissRegular,
@@ -1567,25 +1578,25 @@
 
       // Triple concentric frames
       page.drawRectangle({
-        x: 32,
+        x: leftGutter + 32,
         y: 32,
-        width: pw - 64,
+        width: pw - leftGutter - rightGutter - 64,
         height: ph - 64,
         borderColor: rgb(0.83, 0.33, 0.0),
         borderWidth: 2.2,
       });
       page.drawRectangle({
-        x: 39,
+        x: leftGutter + 39,
         y: 39,
-        width: pw - 78,
+        width: pw - leftGutter - rightGutter - 78,
         height: ph - 78,
         borderColor: rgb(0.90, 0.49, 0.13),
         borderWidth: 2.0,
       });
       page.drawRectangle({
-        x: 46,
+        x: leftGutter + 46,
         y: 46,
-        width: pw - 92,
+        width: pw - leftGutter - rightGutter - 92,
         height: ph - 92,
         borderColor: rgb(0.36, 0.25, 0.22),
         borderWidth: 1.8,
@@ -1596,7 +1607,7 @@
         const topBanner = '✦   V I N T A G E   D O S S I E R   ·   1 9 7 4   ✦';
         const topW = timesBold.widthOfTextAtSize(topBanner, 8.0);
         page.drawText(topBanner, {
-          x: (pw - topW) / 2,
+          x: centerX - topW / 2,
           y: ph - 76,
           size: 8.0,
           font: timesBold,
@@ -1607,7 +1618,7 @@
       // Title in warm espresso
       const titleSize = 26;
       const titleLineHeight = 34;
-      const maxTitleW = pw - 120;
+      const maxTitleW = w - 40;
       const titleLines = wrapText(timesBold, titleText, titleSize, maxTitleW);
       let curTitleY = ph * 0.58;
 
@@ -1615,7 +1626,7 @@
         for (const line of titleLines) {
           const lineW = timesBold.widthOfTextAtSize(line, titleSize);
           page.drawText(line, {
-            x: (pw - lineW) / 2,
+            x: centerX - lineW / 2,
             y: curTitleY,
             size: titleSize,
             font: timesBold,
@@ -1628,7 +1639,7 @@
       if (options.subtitle && timesItalic) {
         const subW = timesItalic.widthOfTextAtSize(options.subtitle, 13);
         page.drawText(options.subtitle, {
-          x: (pw - subW) / 2,
+          x: centerX - subW / 2,
           y: curTitleY - 4,
           size: 13,
           font: timesItalic,
@@ -1641,8 +1652,8 @@
       const gColors = [rgb(0.83, 0.33, 0.0), rgb(0.90, 0.49, 0.13), rgb(0.36, 0.25, 0.22)];
       for (let gi = 0; gi < 3; gi++) {
         page.drawLine({
-          start: { x: pw / 2 - 40, y: curTitleY - 8 - gi * 4 },
-          end: { x: pw / 2 + 40, y: curTitleY - 8 - gi * 4 },
+          start: { x: centerX - 40, y: curTitleY - 8 - gi * 4 },
+          end: { x: centerX + 40, y: curTitleY - 8 - gi * 4 },
           thickness: 1.2,
           color: gColors[gi],
         });
@@ -1654,7 +1665,7 @@
         const authStr = options.author || 'Apollo Edition';
         const authW = timesBold.widthOfTextAtSize(authStr, 10.5);
         page.drawText(authStr, {
-          x: (pw - authW) / 2,
+          x: centerX - authW / 2,
           y: metaY,
           size: 10.5,
           font: timesBold,
@@ -1664,7 +1675,7 @@
       if (timesItalic) {
         const dateW = timesItalic.widthOfTextAtSize(todayStr, 9.0);
         page.drawText(todayStr, {
-          x: (pw - dateW) / 2,
+          x: centerX - dateW / 2,
           y: metaY - 16,
           size: 9.0,
           font: timesItalic,
@@ -1675,10 +1686,13 @@
     } else if (tpl === 'eighties' || tpl === '80s') {
       // 7. Eighties: Memphis Design & 1984 Technical Manual
       const m = 44;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
 
       // Diagonal hatch box
       page.drawRectangle({
-        x: m,
+        x: x1,
         y: ph - m - 46,
         width: 46,
         height: 46,
@@ -1687,14 +1701,14 @@
       });
 
       for (let d = -46; d <= 46; d += 8) {
-        const x1 = Math.max(m, m + d);
+        const lx1 = Math.max(x1, x1 + d);
         const y1 = ph - m - 46 + Math.max(0, -d);
-        const x2 = Math.min(m + 46, m + 46 + d);
+        const lx2 = Math.min(x1 + 46, x1 + 46 + d);
         const y2 = ph - m - 46 + Math.min(46, 46 - d);
-        if (x1 < x2) {
+        if (lx1 < lx2) {
           page.drawLine({
-            start: { x: x1, y: y1 },
-            end: { x: x2, y: y2 },
+            start: { x: lx1, y: y1 },
+            end: { x: lx2, y: y2 },
             thickness: 1.0,
             color: rgb(0.05, 0.65, 0.91),
           });
@@ -1706,7 +1720,7 @@
 
       if (techBold) {
         page.drawText('PERSONAL STUDY SYSTEM // 1984', {
-          x: m + 58,
+          x: x1 + 58,
           y: ph - m - 20,
           size: 9.0,
           font: techBold,
@@ -1715,7 +1729,7 @@
       }
       if (techFont) {
         page.drawText('REF. MODEL 84-MKII · MEMPHIS TECH EDITION', {
-          x: m + 58,
+          x: x1 + 58,
           y: ph - m - 34,
           size: 7.5,
           font: techFont,
@@ -1739,14 +1753,14 @@
       // Title
       const titleSize = 28;
       const titleLineHeight = 36;
-      const maxTitleW = pw - 2 * m - 30;
+      const maxTitleW = w - 30;
       const titleLines = wrapText(techBold, titleText, titleSize, maxTitleW);
       let curTitleY = ph * 0.62;
 
       if (techBold) {
         for (const line of titleLines) {
           page.drawText(line, {
-            x: m,
+            x: x1,
             y: curTitleY,
             size: titleSize,
             font: techBold,
@@ -1758,7 +1772,7 @@
 
       if (options.subtitle && techBold) {
         page.drawText(options.subtitle, {
-          x: m,
+          x: x1,
           y: curTitleY - 4,
           size: 13,
           font: techBold,
@@ -1777,9 +1791,9 @@
       // Bottom operator card
       const bY = ph * 0.18;
       page.drawRectangle({
-        x: m,
+        x: x1,
         y: bY,
-        width: pw - 2 * m,
+        width: w,
         height: 54,
         color: rgb(0.97, 0.98, 0.99),
         borderColor: rgb(0.07, 0.09, 0.15),
@@ -1800,9 +1814,12 @@
     } else if (tpl === 'nineties' || tpl === '90s') {
       // 8. Nineties: Minimalist Editorial Lookbook / Indie Zine
       const m = 54;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
 
       // Crop / registration marks at corners
-      const corners = [[30, 30], [pw - 30, 30], [30, ph - 30], [pw - 30, ph - 30]];
+      const corners = [[leftGutter + 30, 30], [pw - rightGutter - 30, 30], [leftGutter + 30, ph - 30], [pw - rightGutter - 30, ph - 30]];
       for (const [cx, cy] of corners) {
         page.drawCircle({
           x: cx,
@@ -1819,7 +1836,7 @@
       const zineFont = fontMap.helveticaFont || timesFont;
       if (zineFont) {
         page.drawText('[ ISSUE 09 // LOOKBOOK ARCHIVE ]', {
-          x: m,
+          x: x1,
           y: ph - 52,
           size: 7.5,
           font: zineFont,
@@ -1840,14 +1857,14 @@
       // Title
       const titleSize = 26;
       const titleLineHeight = 36;
-      const maxTitleW = pw - 2 * m;
+      const maxTitleW = w;
       const titleLines = wrapText(timesBold, titleText, titleSize, maxTitleW);
       let curTitleY = ph * 0.62;
 
       if (timesBold) {
         for (const line of titleLines) {
           page.drawText(line, {
-            x: m,
+            x: x1,
             y: curTitleY,
             size: titleSize,
             font: timesBold,
@@ -1860,7 +1877,7 @@
       let divY = curTitleY + 8;
       if (options.subtitle && timesItalic) {
         page.drawText(options.subtitle, {
-          x: m,
+          x: x1,
           y: curTitleY + 4,
           size: 12,
           font: timesItalic,
@@ -1916,7 +1933,7 @@
 
       const titleSize = 27;
       const titleLineHeight = 35;
-      const titleLines = wrapText(y2kFont, titleText, titleSize, pw - 2 * m - 50);
+      const titleLines = wrapText(y2kFont, titleText, titleSize, w - 50);
       let curTitleY = ph * 0.58;
 
       if (y2kFont) {
@@ -1963,7 +1980,7 @@
 
       const titleSize = 27;
       const titleLineHeight = 35;
-      const titleLines = wrapText(sFont, titleText, titleSize, pw - 2 * m - 40);
+      const titleLines = wrapText(sFont, titleText, titleSize, w - 40);
       let curTitleY = ph * 0.60;
 
       if (sFont) {
@@ -1978,7 +1995,7 @@
         curTitleY -= 24;
       }
 
-      page.drawCircle({ x: m + 4, y: curTitleY - 12, size: 3, color: indigo });
+      page.drawCircle({ x: x1 + 4, y: curTitleY - 12, size: 3, color: indigo });
 
       const metaY = m + 36;
       if (sFont) {
@@ -1997,9 +2014,9 @@
       const emerald = rgb(0.05, 0.72, 0.45);
 
       page.drawRectangle({
-        x: m,
+        x: x1,
         y: m,
-        width: pw - 2 * m,
+        width: w,
         height: ph - 2 * m,
         borderColor: pitchBlack,
         borderWidth: 2.5,
@@ -2022,7 +2039,7 @@
 
       const titleSize = 27;
       const titleLineHeight = 35;
-      const titleLines = wrapText(nFont, titleText, titleSize, pw - 2 * m - 50);
+      const titleLines = wrapText(nFont, titleText, titleSize, w - 50);
       let curTitleY = ph * 0.58;
 
       if (nFont) {
@@ -2040,9 +2057,9 @@
       page.drawRectangle({ x: x1 + 16, y: curTitleY - 12, width: 120, height: 3, color: pitchBlack });
 
       const boxY = m + 24;
-      const boxW = pw - 2 * m - 32;
+      const boxW = w - 32;
       const boxH = 56;
-      const bx = m + 16;
+      const bx = x1 + 16;
       page.drawRectangle({ x: bx, y: boxY, width: boxW, height: boxH, borderColor: pitchBlack, borderWidth: 1.5 });
 
       if (nFont) {
@@ -2062,31 +2079,34 @@
       });
 
       const m = 40;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
       const forestDark = rgb(0.06, 0.18, 0.11);
       const forestMid = rgb(0.12, 0.28, 0.18);
       const forestLight = rgb(0.24, 0.44, 0.32);
       const brassGold = rgb(0.72, 0.58, 0.36);
 
       page.drawRectangle({
-        x: m,
+        x: x1,
         y: m,
-        width: pw - 2 * m,
+        width: w,
         height: ph - 2 * m,
         borderColor: forestDark,
         borderWidth: 1.4,
       });
 
       page.drawRectangle({
-        x: m + 4.5,
+        x: x1 + 4.5,
         y: m + 4.5,
-        width: pw - 2 * (m + 4.5),
+        width: w - 9.0,
         height: ph - 2 * (m + 4.5),
         borderColor: forestLight,
         borderWidth: 0.4,
         borderOpacity: 0.35,
       });
 
-      for (const [cx, cy] of [[m, m], [pw - m, m], [m, ph - m], [pw - m, ph - m]]) {
+      for (const [cx, cy] of [[x1, m], [x2, m], [x1, ph - m], [x2, ph - m]]) {
         page.drawLine({ start: { x: cx - 5, y: cy }, end: { x: cx + 5, y: cy }, thickness: 0.6, color: brassGold });
         page.drawLine({ start: { x: cx, y: cy - 5 }, end: { x: cx, y: cy + 5 }, thickness: 0.6, color: brassGold });
       }
@@ -2094,7 +2114,7 @@
       page.drawRectangle({
         x: x1 + 16,
         y: ph - m - 32,
-        width: pw - 2 * m - 32,
+        width: w - 32,
         height: 24,
         color: forestDark,
       });
@@ -2105,7 +2125,7 @@
 
       if (natSansBold) {
         page.drawText('NATURAL COMPENDIUM // EDITORIAL STUDY FOLIO', {
-          x: m + 26,
+          x: x1 + 26,
           y: ph - m - 22,
           size: 8.0,
           font: natSansBold,
@@ -2128,12 +2148,12 @@
       page.drawRectangle({
         x: x1 + 16,
         y: ph - m - 35,
-        width: pw - 2 * m - 32,
+        width: w - 32,
         height: 1.0,
         color: brassGold,
       });
 
-      const titleX = m + 22;
+      const titleX = x1 + 22;
       if (natSansBold) {
         page.drawText('STUDY DOSSIER · NATURAL EDITION', {
           x: titleX,
@@ -2146,7 +2166,7 @@
 
       const titleSize = 27;
       const titleLineHeight = 35;
-      const maxTitleW = pw - 2 * m - 60;
+      const maxTitleW = w - 60;
       const titleLines = wrapText(natSerifBold, titleText, titleSize, maxTitleW);
       let curTitleY = ph * 0.60 + (titleLines.length - 1) * 16;
 
@@ -2197,7 +2217,7 @@
       });
 
       const gridY = m + 36;
-      const colW = (pw - 2 * m - 44) / 2;
+      const colW = (w - 44) / 2;
       page.drawLine({
         start: { x: titleX, y: gridY + 44 },
         end: { x: x2 - 22, y: gridY + 44 },
@@ -2248,22 +2268,26 @@
       });
 
       const m = 42;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
       const sageDeep = rgb(0.18, 0.38, 0.25);
       const sageSoft = rgb(0.35, 0.55, 0.42);
       const blossomTint = rgb(0.78, 0.54, 0.48);
 
       page.drawRectangle({
-        x: m,
+        x: x1,
         y: m,
-        width: pw - 2 * m,
+        width: w,
         height: ph - 2 * m,
         borderColor: sageSoft,
         borderWidth: 0.8,
       });
       page.drawRectangle({
-        x: m + 4,
+        x: x1 + 4,
         y: m + 4,
-        width: pw - 2 * (m + 4),
+        width: w - 8,
         height: ph - 2 * (m + 4),
         borderColor: sageSoft,
         borderWidth: 0.4,
@@ -2272,14 +2296,14 @@
 
       const lozY = ph * 0.68;
       page.drawCircle({
-        x: pw / 2,
+        x: centerX,
         y: lozY,
         size: 11,
         borderColor: sageDeep,
         borderWidth: 0.6,
       });
-      page.drawLine({ start: { x: pw / 2 - 15, y: lozY }, end: { x: pw / 2 + 15, y: lozY }, thickness: 0.6, color: blossomTint });
-      page.drawLine({ start: { x: pw / 2, y: lozY - 15 }, end: { x: pw / 2, y: lozY + 15 }, thickness: 0.6, color: blossomTint });
+      page.drawLine({ start: { x: centerX - 15, y: lozY }, end: { x: centerX + 15, y: lozY }, thickness: 0.6, color: blossomTint });
+      page.drawLine({ start: { x: centerX, y: lozY - 15 }, end: { x: centerX, y: lozY + 15 }, thickness: 0.6, color: blossomTint });
 
       const sansBold = fontMap.helveticaBold || timesBold;
       const serifBold = timesBold;
@@ -2289,47 +2313,47 @@
       if (sansBold) {
         const topHdr = 'V E R N A L   C O M P E N D I U M';
         const topW = sansBold.widthOfTextAtSize(topHdr, 8.0);
-        page.drawText(topHdr, { x: (pw - topW) / 2, y: ph - m - 32, size: 8.0, font: sansBold, color: sageDeep });
+        page.drawText(topHdr, { x: centerX - topW / 2, y: ph - m - 32, size: 8.0, font: sansBold, color: sageDeep });
       }
       if (serifItalic) {
         const subHdr = 'SPRING SERIES · NEW CYCLE · VOL. I';
         const subW = serifItalic.widthOfTextAtSize(subHdr, 8.0);
-        page.drawText(subHdr, { x: (pw - subW) / 2, y: ph - m - 46, size: 8.0, font: serifItalic, color: sageSoft });
+        page.drawText(subHdr, { x: centerX - subW / 2, y: ph - m - 46, size: 8.0, font: serifItalic, color: sageSoft });
       }
 
-      const titleLines = wrapText(serifBold, titleText, 25, pw - 2 * m - 60);
+      const titleLines = wrapText(serifBold, titleText, 25, w - 60);
       let curY = lozY - 42;
       for (const line of titleLines) {
         if (serifBold) {
           const lW = serifBold.widthOfTextAtSize(line, 25);
-          page.drawText(line, { x: (pw - lW) / 2, y: curY, size: 25, font: serifBold, color: rgb(0.12, 0.22, 0.16) });
+          page.drawText(line, { x: centerX - lW / 2, y: curY, size: 25, font: serifBold, color: rgb(0.12, 0.22, 0.16) });
         }
         curY -= 33;
       }
 
       if (options.subtitle && serifItalic) {
         const sW = serifItalic.widthOfTextAtSize(options.subtitle, 12);
-        page.drawText(options.subtitle, { x: (pw - sW) / 2, y: curY - 8, size: 12, font: serifItalic, color: sageSoft });
+        page.drawText(options.subtitle, { x: centerX - sW / 2, y: curY - 8, size: 12, font: serifItalic, color: sageSoft });
         curY -= 24;
       }
 
-      page.drawLine({ start: { x: pw / 2 - 36, y: curY - 12 }, end: { x: pw / 2 + 36, y: curY - 12 }, thickness: 0.5, color: sageSoft });
+      page.drawLine({ start: { x: centerX - 36, y: curY - 12 }, end: { x: centerX + 36, y: curY - 12 }, thickness: 0.5, color: sageSoft });
 
       const metaY = m + 40;
       if (sansBold) {
         const fHdr = 'CURATED STUDY FOLIO';
         const fW = sansBold.widthOfTextAtSize(fHdr, 7);
-        page.drawText(fHdr, { x: (pw - fW) / 2, y: metaY + 24, size: 7, font: sansBold, color: sageSoft });
+        page.drawText(fHdr, { x: centerX - fW / 2, y: metaY + 24, size: 7, font: sansBold, color: sageSoft });
       }
       if (serifRoman) {
         const aTxt = options.author || 'Spring Session Notes';
         const aW = serifRoman.widthOfTextAtSize(aTxt, 10);
-        page.drawText(aTxt, { x: (pw - aW) / 2, y: metaY + 10, size: 10, font: serifRoman, color: sageDeep });
+        page.drawText(aTxt, { x: centerX - aW / 2, y: metaY + 10, size: 10, font: serifRoman, color: sageDeep });
       }
       if (serifItalic) {
         const dTxt = todayStr || 'Springtime';
         const dW = serifItalic.widthOfTextAtSize(dTxt, 8.5);
-        page.drawText(dTxt, { x: (pw - dW) / 2, y: metaY - 4, size: 8.5, font: serifItalic, color: sageSoft });
+        page.drawText(dTxt, { x: centerX - dW / 2, y: metaY - 4, size: 8.5, font: serifItalic, color: sageSoft });
       }
 
     } else if (tpl === 'summer' || tpl === 'verano' || tpl === 'estio') {
@@ -2367,16 +2391,16 @@
       }
 
       page.drawRectangle({
-        x: m,
+        x: x1,
         y: m,
-        width: pw - 2 * m,
+        width: w,
         height: ph - m - barH - 16,
         borderColor: azureLight,
         borderWidth: 0.6,
         borderOpacity: 0.3,
       });
 
-      const titleLines = wrapText(serifBold, titleText, 27, pw - 2 * m - 50);
+      const titleLines = wrapText(serifBold, titleText, 27, w - 50);
       let curY = ph * 0.58 + (titleLines.length - 1) * 16;
       for (const line of titleLines) {
         if (serifBold) {
@@ -2417,22 +2441,26 @@
       });
 
       const m = 40;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
       const terracotta = rgb(0.62, 0.22, 0.12);
       const amber = rgb(0.76, 0.50, 0.18);
       const espresso = rgb(0.18, 0.10, 0.08);
 
       page.drawRectangle({
-        x: m,
+        x: x1,
         y: m,
-        width: pw - 2 * m,
+        width: w,
         height: ph - 2 * m,
         borderColor: amber,
         borderWidth: 0.5,
       });
       page.drawRectangle({
-        x: m + 4,
+        x: x1 + 4,
         y: m + 4,
-        width: pw - 2 * (m + 4),
+        width: w - 8,
         height: ph - 2 * (m + 4),
         borderColor: terracotta,
         borderWidth: 1.4,
@@ -2446,43 +2474,43 @@
       if (sansBold) {
         const topTag = 'E Q U I N O X   D O S S I E R';
         const topW = sansBold.widthOfTextAtSize(topTag, 8.0);
-        page.drawText(topTag, { x: (pw - topW) / 2, y: ph - m - 32, size: 8.0, font: sansBold, color: terracotta });
+        page.drawText(topTag, { x: centerX - topW / 2, y: ph - m - 32, size: 8.0, font: sansBold, color: terracotta });
       }
       if (serifItalic) {
         const subTag = 'AUTUMNAL COMPENDIUM · OCTOBER ARCHIVE';
         const subW = serifItalic.widthOfTextAtSize(subTag, 8.0);
-        page.drawText(subTag, { x: (pw - subW) / 2, y: ph - m - 46, size: 8.0, font: serifItalic, color: amber });
+        page.drawText(subTag, { x: centerX - subW / 2, y: ph - m - 46, size: 8.0, font: serifItalic, color: amber });
       }
 
       const lozY = ph * 0.65;
-      page.drawLine({ start: { x: pw / 2, y: lozY + 11 }, end: { x: pw / 2 + 11, y: lozY }, thickness: 0.8, color: terracotta });
-      page.drawLine({ start: { x: pw / 2 + 11, y: lozY }, end: { x: pw / 2, y: lozY - 11 }, thickness: 0.8, color: terracotta });
-      page.drawLine({ start: { x: pw / 2, y: lozY - 11 }, end: { x: pw / 2 - 11, y: lozY }, thickness: 0.8, color: terracotta });
-      page.drawLine({ start: { x: pw / 2 - 11, y: lozY }, end: { x: pw / 2, y: lozY + 11 }, thickness: 0.8, color: terracotta });
-      page.drawCircle({ x: pw / 2, y: lozY, size: 2.5, color: amber });
+      page.drawLine({ start: { x: centerX, y: lozY + 11 }, end: { x: centerX + 11, y: lozY }, thickness: 0.8, color: terracotta });
+      page.drawLine({ start: { x: centerX + 11, y: lozY }, end: { x: centerX, y: lozY - 11 }, thickness: 0.8, color: terracotta });
+      page.drawLine({ start: { x: centerX, y: lozY - 11 }, end: { x: centerX - 11, y: lozY }, thickness: 0.8, color: terracotta });
+      page.drawLine({ start: { x: centerX - 11, y: lozY }, end: { x: centerX, y: lozY + 11 }, thickness: 0.8, color: terracotta });
+      page.drawCircle({ x: centerX, y: lozY, size: 2.5, color: amber });
 
-      const titleLines = wrapText(serifBold, titleText, 25, pw - 2 * m - 60);
+      const titleLines = wrapText(serifBold, titleText, 25, w - 60);
       let curY = lozY - 36;
       for (const line of titleLines) {
         if (serifBold) {
           const lW = serifBold.widthOfTextAtSize(line, 25);
-          page.drawText(line, { x: (pw - lW) / 2, y: curY, size: 25, font: serifBold, color: espresso });
+          page.drawText(line, { x: centerX - lW / 2, y: curY, size: 25, font: serifBold, color: espresso });
         }
         curY -= 32;
       }
 
       if (options.subtitle && serifItalic) {
         const sW = serifItalic.widthOfTextAtSize(options.subtitle, 12);
-        page.drawText(options.subtitle, { x: (pw - sW) / 2, y: curY - 8, size: 12, font: serifItalic, color: terracotta });
+        page.drawText(options.subtitle, { x: centerX - sW / 2, y: curY - 8, size: 12, font: serifItalic, color: terracotta });
         curY -= 24;
       }
 
-      page.drawLine({ start: { x: pw / 2 - 45, y: curY - 10 }, end: { x: pw / 2 + 45, y: curY - 10 }, thickness: 0.6, color: amber });
+      page.drawLine({ start: { x: centerX - 45, y: curY - 10 }, end: { x: centerX + 45, y: curY - 10 }, thickness: 0.6, color: amber });
 
       const boxY = m + 32;
-      const boxW = pw - 2 * m - 40;
+      const boxW = w - 40;
       const boxH = 68;
-      const bx = (pw - boxW) / 2;
+      const bx = centerX - boxW / 2;
       page.drawRectangle({
         x: bx,
         y: boxY,
@@ -2518,6 +2546,10 @@
       });
 
       const m = 44;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
       const midnight = rgb(0.08, 0.14, 0.24);
       const slateBlue = rgb(0.32, 0.46, 0.60);
 
@@ -2526,12 +2558,12 @@
       page.drawRectangle({ x: x1 + 7, y: m + 7, width: w - 14, height: ph - 2 * (m + 7), borderColor: slateBlue, borderWidth: 0.35, borderOpacity: 0.25 });
 
       const starY = ph * 0.68;
-      page.drawCircle({ x: pw / 2, y: starY, size: 13, borderColor: slateBlue, borderWidth: 0.7 });
+      page.drawCircle({ x: centerX, y: starY, size: 13, borderColor: slateBlue, borderWidth: 0.7 });
       for (const deg of [0, 60, 120]) {
         const rad = (deg * Math.PI) / 180;
         const dx = 17 * Math.cos(rad);
         const dy = 17 * Math.sin(rad);
-        page.drawLine({ start: { x: pw / 2 - dx, y: starY - dy }, end: { x: pw / 2 + dx, y: starY + dy }, thickness: 0.6, color: slateBlue });
+        page.drawLine({ start: { x: centerX - dx, y: starY - dy }, end: { x: centerX + dx, y: starY + dy }, thickness: 0.6, color: slateBlue });
       }
 
       const sansBold = fontMap.helveticaBold || timesBold;
@@ -2542,46 +2574,46 @@
       if (sansBold) {
         const hTxt = 'HIEMAL COMPENDIUM · ARCTIC ARCHIVE';
         const hW = sansBold.widthOfTextAtSize(hTxt, 8);
-        page.drawText(hTxt, { x: (pw - hW) / 2, y: ph - m - 28, size: 8, font: sansBold, color: midnight });
+        page.drawText(hTxt, { x: centerX - hW / 2, y: ph - m - 28, size: 8, font: sansBold, color: midnight });
       }
       if (sansRegular) {
         const sTxt = 'NORDIC ALPINE EDITION · NO. 04';
         const sW = sansRegular.widthOfTextAtSize(sTxt, 7);
-        page.drawText(sTxt, { x: (pw - sW) / 2, y: ph - m - 42, size: 7, font: sansRegular, color: slateBlue });
+        page.drawText(sTxt, { x: centerX - sW / 2, y: ph - m - 42, size: 7, font: sansRegular, color: slateBlue });
       }
 
-      const titleLines = wrapText(serifBold, titleText, 26, pw - 2 * m - 60);
+      const titleLines = wrapText(serifBold, titleText, 26, w - 60);
       let curY = starY - 42;
       for (const line of titleLines) {
         if (serifBold) {
           const lW = serifBold.widthOfTextAtSize(line, 26);
-          page.drawText(line, { x: (pw - lW) / 2, y: curY, size: 26, font: serifBold, color: midnight });
+          page.drawText(line, { x: centerX - lW / 2, y: curY, size: 26, font: serifBold, color: midnight });
         }
         curY -= 34;
       }
 
       if (options.subtitle && serifItalic) {
         const sW = serifItalic.widthOfTextAtSize(options.subtitle, 12);
-        page.drawText(options.subtitle, { x: (pw - sW) / 2, y: curY - 8, size: 12, font: serifItalic, color: slateBlue });
+        page.drawText(options.subtitle, { x: centerX - sW / 2, y: curY - 8, size: 12, font: serifItalic, color: slateBlue });
         curY -= 24;
       }
 
-      page.drawLine({ start: { x: pw / 2 - 30, y: curY - 12 }, end: { x: pw / 2 + 30, y: curY - 12 }, thickness: 0.5, color: slateBlue });
+      page.drawLine({ start: { x: centerX - 30, y: curY - 12 }, end: { x: centerX + 30, y: curY - 12 }, thickness: 0.5, color: slateBlue });
 
       const metaY = m + 38;
       if (sansBold) {
         const oHdr = 'OPERATOR / CURATOR';
         const oW = sansBold.widthOfTextAtSize(oHdr, 7);
-        page.drawText(oHdr, { x: (pw - oW) / 2, y: metaY + 24, size: 7, font: sansBold, color: slateBlue });
+        page.drawText(oHdr, { x: centerX - oW / 2, y: metaY + 24, size: 7, font: sansBold, color: slateBlue });
       }
       if (sansRegular) {
         const aTxt = options.author || 'Winter Session';
         const aW = sansRegular.widthOfTextAtSize(aTxt, 9.5);
-        page.drawText(aTxt, { x: (pw - aW) / 2, y: metaY + 10, size: 9.5, font: sansRegular, color: midnight });
+        page.drawText(aTxt, { x: centerX - aW / 2, y: metaY + 10, size: 9.5, font: sansRegular, color: midnight });
 
         const dTxt = todayStr || 'Winter Season';
         const dW = sansRegular.widthOfTextAtSize(dTxt, 8);
-        page.drawText(dTxt, { x: (pw - dW) / 2, y: metaY - 4, size: 8, font: sansRegular, color: slateBlue });
+        page.drawText(dTxt, { x: centerX - dW / 2, y: metaY - 4, size: 8, font: sansRegular, color: midnight });
       }
 
     } else if (tpl === 'polo' || tpl === 'ralph' || tpl === 'ralphlauren' || tpl === 'ralph_lauren' || tpl === 'rl_polo' || tpl === 'preppy') {
@@ -2595,6 +2627,10 @@
       });
 
       const m = 40;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
       const rlNavy = rgb(0.06, 0.12, 0.25);
       const rlGreen = rgb(0.08, 0.22, 0.14);
       const rlGold = rgb(0.76, 0.60, 0.32);
@@ -2610,60 +2646,60 @@
       if (serifBold) {
         const topH = 'P O L O   S T U D Y   C O M P E N D I U M';
         const topW = serifBold.widthOfTextAtSize(topH, 8.5);
-        page.drawText(topH, { x: (pw - topW) / 2, y: ph - m - 28, size: 8.5, font: serifBold, color: rlNavy });
+        page.drawText(topH, { x: centerX - topW / 2, y: ph - m - 28, size: 8.5, font: serifBold, color: rlNavy });
       }
       if (serifItalic) {
         const subH = 'HERITAGE COLLEGIATE ARCHIVE · EST. 1967';
         const subW = serifItalic.widthOfTextAtSize(subH, 7.5);
-        page.drawText(subH, { x: (pw - subW) / 2, y: ph - m - 42, size: 7.5, font: serifItalic, color: rlGreen });
+        page.drawText(subH, { x: centerX - subW / 2, y: ph - m - 42, size: 7.5, font: serifItalic, color: rlGreen });
       }
 
       const shieldY = ph * 0.66;
-      page.drawLine({ start: { x: pw / 2, y: shieldY + 16 }, end: { x: pw / 2 + 16, y: shieldY }, thickness: 1.2, color: rlNavy });
-      page.drawLine({ start: { x: pw / 2 + 16, y: shieldY }, end: { x: pw / 2, y: shieldY - 16 }, thickness: 1.2, color: rlNavy });
-      page.drawLine({ start: { x: pw / 2, y: shieldY - 16 }, end: { x: pw / 2 - 16, y: shieldY }, thickness: 1.2, color: rlNavy });
-      page.drawLine({ start: { x: pw / 2 - 16, y: shieldY }, end: { x: pw / 2, y: shieldY + 16 }, thickness: 1.2, color: rlNavy });
-      page.drawCircle({ x: pw / 2, y: shieldY, size: 9, borderColor: rlGold, borderWidth: 0.6 });
-      page.drawLine({ start: { x: pw / 2 - 11, y: shieldY }, end: { x: pw / 2 + 11, y: shieldY }, thickness: 0.6, color: rlGold });
-      page.drawLine({ start: { x: pw / 2, y: shieldY - 11 }, end: { x: pw / 2, y: shieldY + 11 }, thickness: 0.6, color: rlGold });
+      page.drawLine({ start: { x: centerX, y: shieldY + 16 }, end: { x: centerX + 16, y: shieldY }, thickness: 1.2, color: rlNavy });
+      page.drawLine({ start: { x: centerX + 16, y: shieldY }, end: { x: centerX, y: shieldY - 16 }, thickness: 1.2, color: rlNavy });
+      page.drawLine({ start: { x: centerX, y: shieldY - 16 }, end: { x: centerX - 16, y: shieldY }, thickness: 1.2, color: rlNavy });
+      page.drawLine({ start: { x: centerX - 16, y: shieldY }, end: { x: centerX, y: shieldY + 16 }, thickness: 1.2, color: rlNavy });
+      page.drawCircle({ x: centerX, y: shieldY, size: 9, borderColor: rlGold, borderWidth: 0.6 });
+      page.drawLine({ start: { x: centerX - 11, y: shieldY }, end: { x: centerX + 11, y: shieldY }, thickness: 0.6, color: rlGold });
+      page.drawLine({ start: { x: centerX, y: shieldY - 11 }, end: { x: centerX, y: shieldY + 11 }, thickness: 0.6, color: rlGold });
 
       if (serifBold) {
-        page.drawText('RL', { x: pw / 2 - 4.5, y: shieldY - 2, size: 5.5, font: serifBold, color: rlNavy });
+        page.drawText('RL', { x: centerX - 4.5, y: shieldY - 2, size: 5.5, font: serifBold, color: rlNavy });
       }
 
-      const titleLines = wrapText(serifBold, titleText, 26, pw - 2 * m - 60);
+      const titleLines = wrapText(serifBold, titleText, 26, w - 60);
       let curY = shieldY - 42;
       for (const line of titleLines) {
         if (serifBold) {
           const lW = serifBold.widthOfTextAtSize(line, 26);
-          page.drawText(line, { x: (pw - lW) / 2, y: curY, size: 26, font: serifBold, color: rlNavy });
+          page.drawText(line, { x: centerX - lW / 2, y: curY, size: 26, font: serifBold, color: rlNavy });
         }
         curY -= 34;
       }
 
       if (options.subtitle && serifItalic) {
         const sW = serifItalic.widthOfTextAtSize(options.subtitle, 12.5);
-        page.drawText(options.subtitle, { x: (pw - sW) / 2, y: curY - 6, size: 12.5, font: serifItalic, color: rlGreen });
+        page.drawText(options.subtitle, { x: centerX - sW / 2, y: curY - 6, size: 12.5, font: serifItalic, color: rlGreen });
         curY -= 24;
       }
 
-      page.drawLine({ start: { x: pw / 2 - 40, y: curY - 10 }, end: { x: pw / 2 + 40, y: curY - 10 }, thickness: 1.0, color: rlNavy });
-      page.drawLine({ start: { x: pw / 2 - 25, y: curY - 13 }, end: { x: pw / 2 + 25, y: curY - 13 }, thickness: 0.5, color: rlGold });
+      page.drawLine({ start: { x: centerX - 40, y: curY - 10 }, end: { x: centerX + 40, y: curY - 10 }, thickness: 1.0, color: rlNavy });
+      page.drawLine({ start: { x: centerX - 25, y: curY - 13 }, end: { x: centerX + 25, y: curY - 13 }, thickness: 0.5, color: rlGold });
 
       const metaY = m + 36;
       if (serifBold) {
         const rHdr = 'FELLOW / STUDENT RECORD';
         const rW = serifBold.widthOfTextAtSize(rHdr, 7.5);
-        page.drawText(rHdr, { x: (pw - rW) / 2, y: metaY + 26, size: 7.5, font: serifBold, color: rlGold });
+        page.drawText(rHdr, { x: centerX - rW / 2, y: metaY + 26, size: 7.5, font: serifBold, color: rlGold });
 
         const aTxt = options.author || 'Collegiate Member';
         const aW = serifBold.widthOfTextAtSize(aTxt, 10.5);
-        page.drawText(aTxt, { x: (pw - aW) / 2, y: metaY + 12, size: 10.5, font: serifBold, color: rlNavy });
+        page.drawText(aTxt, { x: centerX - aW / 2, y: metaY + 12, size: 10.5, font: serifBold, color: rlNavy });
       }
       if (serifItalic) {
         const dTxt = todayStr || 'Academic Term';
         const dW = serifItalic.widthOfTextAtSize(dTxt, 8.5);
-        page.drawText(dTxt, { x: (pw - dW) / 2, y: metaY - 2, size: 8.5, font: serifItalic, color: rlGreen });
+        page.drawText(dTxt, { x: centerX - dW / 2, y: metaY - 2, size: 8.5, font: serifItalic, color: rlGreen });
       }
 
     } else if (tpl === 'equestrian' || tpl === 'ecuestre' || tpl === 'rl_equestrian' || tpl === 'saddlery') {
@@ -2677,6 +2713,10 @@
       });
 
       const m = 40;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
       const hunterGreen = rgb(0.08, 0.20, 0.13);
       const saddleTan = rgb(0.55, 0.30, 0.14);
       const brass = rgb(0.74, 0.58, 0.30);
@@ -2692,64 +2732,69 @@
       if (serifBold) {
         const topH = 'E Q U E S T R I A N   &   F I E L D';
         const topW = serifBold.widthOfTextAtSize(topH, 8.5);
-        page.drawText(topH, { x: (pw - topW) / 2, y: ph - m - 28, size: 8.5, font: serifBold, color: hunterGreen });
+        page.drawText(topH, { x: centerX - topW / 2, y: ph - m - 28, size: 8.5, font: serifBold, color: hunterGreen });
       }
       if (serifItalic) {
         const subH = 'COUNTRY ESTATE ARCHIVE · SERIES IX';
         const subW = serifItalic.widthOfTextAtSize(subH, 7.5);
-        page.drawText(subH, { x: (pw - subW) / 2, y: ph - m - 42, size: 7.5, font: serifItalic, color: saddleTan });
+        page.drawText(subH, { x: centerX - subW / 2, y: ph - m - 42, size: 7.5, font: serifItalic, color: saddleTan });
       }
 
       const stirrupY = ph * 0.66;
-      page.drawLine({ start: { x: pw / 2 - 13, y: stirrupY - 8 }, end: { x: pw / 2 - 13, y: stirrupY + 12 }, thickness: 1.2, color: brass });
-      page.drawLine({ start: { x: pw / 2 + 13, y: stirrupY - 8 }, end: { x: pw / 2 + 13, y: stirrupY + 12 }, thickness: 1.2, color: brass });
-      page.drawLine({ start: { x: pw / 2 - 13, y: stirrupY + 12 }, end: { x: pw / 2 + 13, y: stirrupY + 12 }, thickness: 1.2, color: brass });
-      page.drawLine({ start: { x: pw / 2 - 16, y: stirrupY - 8 }, end: { x: pw / 2 + 16, y: stirrupY - 8 }, thickness: 1.0, color: saddleTan });
+      page.drawLine({ start: { x: centerX - 13, y: stirrupY - 8 }, end: { x: centerX - 13, y: stirrupY + 12 }, thickness: 1.2, color: brass });
+      page.drawLine({ start: { x: centerX + 13, y: stirrupY - 8 }, end: { x: centerX + 13, y: stirrupY + 12 }, thickness: 1.2, color: brass });
+      page.drawLine({ start: { x: centerX - 13, y: stirrupY + 12 }, end: { x: centerX + 13, y: stirrupY + 12 }, thickness: 1.2, color: brass });
+      page.drawLine({ start: { x: centerX - 16, y: stirrupY - 8 }, end: { x: centerX + 16, y: stirrupY - 8 }, thickness: 1.0, color: saddleTan });
 
-      const titleLines = wrapText(serifBold, titleText, 25, pw - 2 * m - 60);
+      const titleLines = wrapText(serifBold, titleText, 25, w - 60);
       let curY = stirrupY - 36;
       for (const line of titleLines) {
         if (serifBold) {
           const lW = serifBold.widthOfTextAtSize(line, 25);
-          page.drawText(line, { x: (pw - lW) / 2, y: curY, size: 25, font: serifBold, color: hunterGreen });
+          page.drawText(line, { x: centerX - lW / 2, y: curY, size: 25, font: serifBold, color: hunterGreen });
         }
         curY -= 33;
       }
 
       if (options.subtitle && serifItalic) {
         const sW = serifItalic.widthOfTextAtSize(options.subtitle, 12);
-        page.drawText(options.subtitle, { x: (pw - sW) / 2, y: curY - 6, size: 12, font: serifItalic, color: saddleTan });
+        page.drawText(options.subtitle, { x: centerX - sW / 2, y: curY - 6, size: 12, font: serifItalic, color: saddleTan });
         curY -= 24;
       }
 
-      page.drawLine({ start: { x: pw / 2 - 45, y: curY - 10 }, end: { x: pw / 2 + 45, y: curY - 10 }, thickness: 0.8, color: saddleTan, dashArray: [3, 3] });
-      page.drawCircle({ x: pw / 2 - 50, y: curY - 10, size: 2.0, color: brass });
-      page.drawCircle({ x: pw / 2 + 50, y: curY - 10, size: 2.0, color: brass });
+      page.drawLine({ start: { x: centerX - 45, y: curY - 10 }, end: { x: centerX + 45, y: curY - 10 }, thickness: 0.8, color: saddleTan, dashArray: [3, 3] });
+      page.drawCircle({ x: centerX - 50, y: curY - 10, size: 2.0, color: brass });
+      page.drawCircle({ x: centerX + 50, y: curY - 10, size: 2.0, color: brass });
 
       const metaY = m + 36;
       if (sansBold) {
         const rHdr = 'ESTATE REGISTER';
         const rW = sansBold.widthOfTextAtSize(rHdr, 7);
-        page.drawText(rHdr, { x: (pw - rW) / 2, y: metaY + 26, size: 7, font: sansBold, color: saddleTan });
+        page.drawText(rHdr, { x: centerX - rW / 2, y: metaY + 26, size: 7, font: sansBold, color: saddleTan });
       }
       if (serifBold) {
         const aTxt = options.author || 'Estate Member';
         const aW = serifBold.widthOfTextAtSize(aTxt, 10.5);
-        page.drawText(aTxt, { x: (pw - aW) / 2, y: metaY + 12, size: 10.5, font: serifBold, color: hunterGreen });
+        page.drawText(aTxt, { x: centerX - aW / 2, y: metaY + 12, size: 10.5, font: serifBold, color: hunterGreen });
       }
       if (serifItalic) {
         const dTxt = todayStr || 'Season Archive';
         const dW = serifItalic.widthOfTextAtSize(dTxt, 8.5);
-        page.drawText(dTxt, { x: (pw - dW) / 2, y: metaY - 2, size: 8.5, font: serifItalic, color: saddleTan });
+        page.drawText(dTxt, { x: centerX - dW / 2, y: metaY - 2, size: 8.5, font: serifItalic, color: saddleTan });
       }
 
     } else {
       // Default: Atelier Notebook (Zara Home Classic)
       const inset = 36;
+      const x1 = leftGutter + inset;
+      const x2 = pw - rightGutter - inset;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
       page.drawRectangle({
-        x: inset,
+        x: x1,
         y: inset,
-        width: pw - 2 * inset,
+        width: w,
         height: ph - 2 * inset,
         borderColor: rgb(0.25, 0.25, 0.25),
         borderWidth: 0.6,
@@ -2758,10 +2803,12 @@
       });
 
       const innerInset = 42;
+      const ix1 = leftGutter + innerInset;
+      const iw = pw - leftGutter - rightGutter - 2 * innerInset;
       page.drawRectangle({
-        x: innerInset,
+        x: ix1,
         y: innerInset,
-        width: pw - 2 * innerInset,
+        width: iw,
         height: ph - 2 * innerInset,
         borderColor: rgb(0.25, 0.25, 0.25),
         borderWidth: 0.35,
@@ -2773,7 +2820,7 @@
         const superHdr = 'N O T E B O O K';
         const superW = timesFont.widthOfTextAtSize(superHdr, 7.5);
         page.drawText(superHdr, {
-          x: (pw - superW) / 2,
+          x: centerX - superW / 2,
           y: ph - 95,
           size: 7.5,
           font: timesFont,
@@ -2783,8 +2830,8 @@
       }
 
       page.drawLine({
-        start: { x: pw / 2 - 24, y: ph - 105 },
-        end: { x: pw / 2 + 24, y: ph - 105 },
+        start: { x: centerX - 24, y: ph - 105 },
+        end: { x: centerX + 24, y: ph - 105 },
         thickness: 0.4,
         color: rgb(0.3, 0.3, 0.3),
         opacity: 0.20,
@@ -2793,7 +2840,7 @@
       // Title with word wrap
       const titleSize = 24;
       const titleLineHeight = 32;
-      const maxTitleW = pw - 2 * inset - 60;
+      const maxTitleW = w - 60;
       const titleLines = wrapText(timesBold, titleText, titleSize, maxTitleW);
       let curTitleY = ph * 0.58 + ((titleLines.length - 1) * titleLineHeight) / 2;
 
@@ -2801,7 +2848,7 @@
         for (const line of titleLines) {
           const lineW = timesBold.widthOfTextAtSize(line, titleSize);
           page.drawText(line, {
-            x: (pw - lineW) / 2,
+            x: centerX - lineW / 2,
             y: curTitleY,
             size: titleSize,
             font: timesBold,
@@ -2815,7 +2862,7 @@
       if (options.subtitle && timesItalic) {
         const subW = timesItalic.widthOfTextAtSize(options.subtitle, 12.5);
         page.drawText(options.subtitle, {
-          x: (pw - subW) / 2,
+          x: centerX - subW / 2,
           y: curTitleY - 4,
           size: 12.5,
           font: timesItalic,
@@ -2826,8 +2873,8 @@
       }
 
       page.drawLine({
-        start: { x: pw / 2 - 32, y: divY },
-        end: { x: pw / 2 + 32, y: divY },
+        start: { x: centerX - 32, y: divY },
+        end: { x: centerX + 32, y: divY },
         thickness: 0.4,
         color: rgb(0.3, 0.3, 0.3),
         opacity: 0.18,
@@ -2838,7 +2885,7 @@
         const authStr = options.author;
         const authW = timesFont.widthOfTextAtSize(authStr, 10.5);
         page.drawText(authStr, {
-          x: (pw - authW) / 2,
+          x: centerX - authW / 2,
           y: metaY,
           size: 10.5,
           font: timesFont,
@@ -2852,7 +2899,7 @@
         const dateStr = `Date: ${todayStr}`;
         const dateW = timesItalic.widthOfTextAtSize(dateStr, 9);
         page.drawText(dateStr, {
-          x: (pw - dateW) / 2,
+          x: centerX - dateW / 2,
           y: metaY,
           size: 9,
           font: timesItalic,
@@ -2867,7 +2914,7 @@
         const numStr = `${options.numSlides} ${slideWord} with dedicated notes`;
         const numW = timesFont.widthOfTextAtSize(numStr, 8.5);
         page.drawText(numStr, {
-          x: (pw - numW) / 2,
+          x: centerX - numW / 2,
           y: metaY,
           size: 8.5,
           font: timesFont,

@@ -725,6 +725,10 @@
     } else if (tpl === 'nineteen00s' || tpl === '1900s' || tpl === '1900' || tpl === '00s') {
       // 1900s Art Nouveau & Belle Époque
       const m = 40;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
       const bordeaux = '#4a1525';
       const gold = '#c5a059';
 
@@ -741,18 +745,18 @@
       ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = bordeaux;
       ctx.textAlign = 'center';
-      ctx.fillText('ART NOUVEAU ARCHIVE · TURN OF THE CENTURY', pw / 2, m + 42);
+      ctx.fillText('ART NOUVEAU ARCHIVE · TURN OF THE CENTURY', centerX, m + 42);
 
       const lozY = ph * 0.35;
       ctx.strokeStyle = bordeaux;
       ctx.lineWidth = 0.8;
       ctx.beginPath();
-      ctx.arc(pw / 2, lozY, 14, 0, Math.PI * 2);
+      ctx.arc(centerX, lozY, 14, 0, Math.PI * 2);
       ctx.stroke();
       ctx.strokeStyle = gold;
       ctx.lineWidth = 0.5;
       ctx.beginPath();
-      ctx.arc(pw / 2, lozY, 9, 0, Math.PI * 2);
+      ctx.arc(centerX, lozY, 9, 0, Math.PI * 2);
       ctx.stroke();
 
       ctx.font = '700 25px "Times New Roman", Times, Georgia, serif';
@@ -763,26 +767,26 @@
       if (options.studyTitle) {
         ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = bordeaux;
-        ctx.fillText(options.studyTitle, pw / 2, subY);
+        ctx.fillText(options.studyTitle, centerX, subY);
         subY += 22;
       }
 
       ctx.strokeStyle = gold;
       ctx.lineWidth = 0.6;
       ctx.beginPath();
-      ctx.moveTo(pw / 2 - 45, subY); ctx.lineTo(pw / 2 + 45, subY);
+      ctx.moveTo(centerX - 45, subY); ctx.lineTo(centerX + 45, subY);
       ctx.stroke();
 
       const metaY = ph * 0.82;
       ctx.font = '700 7.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = gold;
-      ctx.fillText('STUDENT / AUTHOR', pw / 2, metaY);
+      ctx.fillText('STUDENT / AUTHOR', centerX, metaY);
       ctx.font = '700 10.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = bordeaux;
-      ctx.fillText(options.coverAuthor || 'Belle Époque Edition', pw / 2, metaY + 14);
+      ctx.fillText(options.coverAuthor || 'Belle Époque Edition', centerX, metaY + 14);
       ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = gold;
-      ctx.fillText(dateFormatted || 'Turn of the Century', pw / 2, metaY + 28);
+      ctx.fillText(dateFormatted || 'Turn of the Century', centerX, metaY + 28);
 
     } else if (tpl === 'nineteen10s' || tpl === '1910s' || tpl === '1910' || tpl === '10s') {
       // 1910s Edwardian & Aviation Monograph
@@ -850,6 +854,10 @@
     } else if (tpl === 'twenties' || tpl === '20s' || tpl === '1920s' || tpl === '1920' || tpl === 'artdeco' || tpl === 'gatsby') {
       // 1920s Art Deco & Roaring Twenties
       const m = 40;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
       const decoBlack = '#1a1a1e';
       const decoGold = '#d1a647';
 
@@ -868,25 +876,25 @@
       ctx.font = '700 8px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = decoGold;
       ctx.textAlign = 'center';
-      ctx.fillText('★   A R T   D E C O   C O M P E N D I U M   ·   1 9 2 0 s   ★', pw / 2, m + 28);
+      ctx.fillText('★   A R T   D E C O   C O M P E N D I U M   ·   1 9 2 0 s   ★', centerX, m + 28);
       ctx.font = 'italic 7.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = decoBlack;
-      ctx.fillText('ROARING TWENTIES EDITORIAL · GATSBY ARCHIVE', pw / 2, m + 42);
+      ctx.fillText('ROARING TWENTIES EDITORIAL · GATSBY ARCHIVE', centerX, m + 42);
 
       const lozY = ph * 0.35;
       ctx.strokeStyle = decoBlack;
       ctx.lineWidth = 1.2;
       ctx.beginPath();
-      ctx.moveTo(pw / 2, lozY - 15);
-      ctx.lineTo(pw / 2 + 15, lozY);
-      ctx.lineTo(pw / 2, lozY + 15);
-      ctx.lineTo(pw / 2 - 15, lozY);
+      ctx.moveTo(centerX, lozY - 15);
+      ctx.lineTo(centerX + 15, lozY);
+      ctx.lineTo(centerX, lozY + 15);
+      ctx.lineTo(centerX - 15, lozY);
       ctx.closePath();
       ctx.stroke();
 
       ctx.fillStyle = decoGold;
       ctx.beginPath();
-      ctx.arc(pw / 2, lozY, 4, 0, Math.PI * 2);
+      ctx.arc(centerX, lozY, 4, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
@@ -897,26 +905,26 @@
       if (options.studyTitle) {
         ctx.font = 'italic 12.5px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = decoGold;
-        ctx.fillText(options.studyTitle, pw / 2, subY);
+        ctx.fillText(options.studyTitle, centerX, subY);
         subY += 22;
       }
 
       ctx.strokeStyle = decoGold;
       ctx.lineWidth = 1.0;
       ctx.beginPath();
-      ctx.moveTo(pw / 2 - 45, subY); ctx.lineTo(pw / 2 + 45, subY);
+      ctx.moveTo(centerX - 45, subY); ctx.lineTo(centerX + 45, subY);
       ctx.stroke();
 
       const metaY = ph * 0.82;
       ctx.font = '700 7.5px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = decoGold;
-      ctx.fillText('CURATOR / STUDENT', pw / 2, metaY);
+      ctx.fillText('CURATOR / STUDENT', centerX, metaY);
       ctx.font = '700 10.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = decoBlack;
-      ctx.fillText(options.coverAuthor || 'Gatsby Edition', pw / 2, metaY + 14);
+      ctx.fillText(options.coverAuthor || 'Gatsby Edition', centerX, metaY + 14);
       ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = decoGold;
-      ctx.fillText(dateFormatted || '1920s Archive', pw / 2, metaY + 28);
+      ctx.fillText(dateFormatted || '1920s Archive', centerX, metaY + 28);
 
     } else if (tpl === 'thirties' || tpl === '30s' || tpl === '1930s' || tpl === '1930' || tpl === 'streamline') {
       // 1930s Streamline Moderne & Constructivism
@@ -1035,6 +1043,11 @@
 
     } else if (tpl === 'fifties' || tpl === '50s') {
       // 4. Fifties: Mid-Century Pelican / Penguin Tri-Band
+      const m = 40;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
       const band1H = ph * 0.32;
       const band2H = ph * 0.38;
       const band3H = ph * 0.30;
@@ -1046,11 +1059,11 @@
       ctx.font = '700 9px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'center';
-      ctx.fillText('P E L I C A N   C O M P E N D I U M', pw / 2, band1H * 0.52);
+      ctx.fillText('P E L I C A N   C O M P E N D I U M', centerX, band1H * 0.52);
 
       ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-      ctx.fillText('SERIES IN STUDY & SCHOLARSHIP · NO. 52', pw / 2, band1H * 0.68);
+      ctx.fillText('SERIES IN STUDY & SCHOLARSHIP · NO. 52', centerX, band1H * 0.68);
 
       // Middle white band
       ctx.fillStyle = '#fdfbf7';
@@ -1061,10 +1074,10 @@
       ctx.strokeStyle = '#d9653b';
       ctx.lineWidth = 1.0;
       ctx.beginPath();
-      ctx.moveTo(pw / 2, emblemY - 10);
-      ctx.lineTo(pw / 2 + 10, emblemY);
-      ctx.lineTo(pw / 2, emblemY + 10);
-      ctx.lineTo(pw / 2 - 10, emblemY);
+      ctx.moveTo(centerX, emblemY - 10);
+      ctx.lineTo(centerX + 10, emblemY);
+      ctx.lineTo(centerX, emblemY + 10);
+      ctx.lineTo(centerX - 10, emblemY);
       ctx.closePath();
       ctx.stroke();
 
@@ -1072,13 +1085,13 @@
       ctx.font = '700 24px "Times New Roman", Times, Georgia, "Newsreader", serif';
       ctx.fillStyle = '#1c1917';
       ctx.textAlign = 'center';
-      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, band1H + 78, pw - 80, 31);
+      const endTitleY = drawWrappedText(ctx, titleText, centerX, band1H + 78, w - 40, 31);
 
       // Optional Subtitle
       if (options.studyTitle) {
         ctx.font = 'italic 12.5px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = '#57534e';
-        ctx.fillText(options.studyTitle, pw / 2, endTitleY + 22);
+        ctx.fillText(options.studyTitle, centerX, endTitleY + 22);
       }
 
       // Bottom color band
@@ -1089,11 +1102,11 @@
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'center';
       const authorText = (options.coverAuthor || 'STUDENT COMPOSITION').toUpperCase();
-      ctx.fillText(authorText, pw / 2, band1H + band2H + band3H * 0.38);
+      ctx.fillText(authorText, centerX, band1H + band2H + band3H * 0.38);
 
       ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
-      ctx.fillText(`${dateFormatted} · MID-CENTURY EDITION`, pw / 2, band1H + band2H + band3H * 0.52);
+      ctx.fillText(`${dateFormatted} · MID-CENTURY EDITION`, centerX, band1H + band2H + band3H * 0.52);
 
     } else if (tpl === 'sixties' || tpl === '60s') {
       // 5. Sixties: Swiss International Typography (Müller-Brockmann Style)
@@ -1160,6 +1173,12 @@
       ctx.fillStyle = '#fcf9f2';
       ctx.fillRect(0, 0, pw, ph);
 
+      const m = 40;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
       // Triple concentric rounded borders
       function roundRect(x, y, w, h, r) {
         ctx.beginPath();
@@ -1177,36 +1196,36 @@
 
       ctx.strokeStyle = '#d35400';
       ctx.lineWidth = 2.2;
-      roundRect(32, 32, pw - 64, ph - 64, 14);
+      roundRect(leftGutter + 32, 32, pw - leftGutter - rightGutter - 64, ph - 64, 14);
       ctx.stroke();
 
       ctx.strokeStyle = '#e67e22';
       ctx.lineWidth = 2.0;
-      roundRect(39, 39, pw - 78, ph - 78, 11);
+      roundRect(leftGutter + 39, 39, pw - leftGutter - rightGutter - 78, ph - 78, 11);
       ctx.stroke();
 
       ctx.strokeStyle = '#5d4037';
       ctx.lineWidth = 1.8;
-      roundRect(46, 46, pw - 92, ph - 92, 8);
+      roundRect(leftGutter + 46, 46, pw - leftGutter - rightGutter - 92, ph - 92, 8);
       ctx.stroke();
 
       // Top banner
       ctx.font = '700 8px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#d35400';
       ctx.textAlign = 'center';
-      ctx.fillText('✦   V I N T A G E   D O S S I E R   ·   1 9 7 4   ✦', pw / 2, 76);
+      ctx.fillText('✦   V I N T A G E   D O S S I E R   ·   1 9 7 4   ✦', centerX, 76);
 
       // Title in warm espresso
       ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#3e2213';
       ctx.textAlign = 'center';
-      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, ph * 0.40, pw - 120, 34);
+      const endTitleY = drawWrappedText(ctx, titleText, centerX, ph * 0.40, w - 40, 34);
 
       // Subtitle
       if (options.studyTitle) {
         ctx.font = 'italic 13px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = '#b3541e';
-        ctx.fillText(options.studyTitle, pw / 2, endTitleY + 24);
+        ctx.fillText(options.studyTitle, centerX, endTitleY + 24);
       }
 
       // Decorative triple groove lines
@@ -1216,8 +1235,8 @@
         ctx.strokeStyle = gColors[gi];
         ctx.lineWidth = 1.2;
         ctx.beginPath();
-        ctx.moveTo(pw / 2 - 40, grooveY + gi * 4);
-        ctx.lineTo(pw / 2 + 40, grooveY + gi * 4);
+        ctx.moveTo(centerX - 40, grooveY + gi * 4);
+        ctx.lineTo(centerX + 40, grooveY + gi * 4);
         ctx.stroke();
       }
 
@@ -1226,15 +1245,19 @@
       ctx.font = '700 10.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#3e2213';
       ctx.textAlign = 'center';
-      ctx.fillText(options.coverAuthor || 'Apollo Edition', pw / 2, metaY);
+      ctx.fillText(options.coverAuthor || 'Apollo Edition', centerX, metaY);
 
       ctx.font = 'italic 9px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#7a5230';
-      ctx.fillText(dateFormatted, pw / 2, metaY + 16);
+      ctx.fillText(dateFormatted, centerX, metaY + 16);
 
     } else if (tpl === 'eighties' || tpl === '80s') {
       // 7. Eighties: Memphis Design & 1984 Technical Manual
       const m = 44;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
 
       // Diagonal hatch box
       ctx.strokeStyle = '#111827';
@@ -1245,8 +1268,8 @@
       ctx.strokeStyle = '#0ea5e9';
       for (let d = -46; d <= 46; d += 8) {
         ctx.beginPath();
-        ctx.moveTo(Math.max(m, m + d), m + Math.max(0, -d));
-        ctx.lineTo(Math.min(m + 46, m + 46 + d), m + Math.min(46, 46 - d));
+        ctx.moveTo(Math.max(x1, x1 + d), m + Math.max(0, -d));
+        ctx.lineTo(Math.min(x1 + 46, x1 + 46 + d), m + Math.min(46, 46 - d));
         ctx.stroke();
       }
 
@@ -1326,9 +1349,13 @@
     } else if (tpl === 'nineties' || tpl === '90s') {
       // 8. Nineties: Minimalist Editorial Lookbook / Indie Zine
       const m = 54;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
 
       // Crop / registration marks at corners
-      const corners = [[30, 30], [pw - 30, 30], [30, ph - 30], [pw - 30, ph - 30]];
+      const corners = [[leftGutter + 30, 30], [pw - rightGutter - 30, 30], [leftGutter + 30, ph - 30], [pw - rightGutter - 30, ph - 30]];
       ctx.strokeStyle = 'rgba(30, 30, 30, 0.40)';
       ctx.lineWidth = 0.5;
       for (const [cx, cy] of corners) {
@@ -1405,7 +1432,7 @@
       ctx.strokeStyle = cobalt;
       ctx.lineWidth = 0.8;
       ctx.beginPath();
-      ctx.arc(pw - m - 65, m + 33, 9, 0, Math.PI * 2);
+      ctx.arc(x2 - 44, m + 33, 9, 0, Math.PI * 2);
       ctx.stroke();
 
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
@@ -1482,7 +1509,7 @@
 
       ctx.fillStyle = indigo;
       ctx.beginPath();
-      ctx.arc(m + 4, subY + 6, 3, 0, Math.PI * 2);
+      ctx.arc(x1 + 4, subY + 6, 3, 0, Math.PI * 2);
       ctx.fill();
 
       const metaY = ph * 0.82;
@@ -1542,9 +1569,9 @@
       ctx.fillRect(x1 + 16, subY + 4, 120, 3);
 
       const boxY = ph * 0.80;
-      const boxW = pw - 2 * m - 32;
+      const boxW = w - 32;
       const boxH = 56;
-      const bx = m + 16;
+      const bx = x1 + 16;
       ctx.strokeStyle = pitchBlack;
       ctx.lineWidth = 1.5;
       ctx.strokeRect(bx, boxY, boxW, boxH);
@@ -1695,13 +1722,13 @@
       ctx.strokeStyle = sageDeep;
       ctx.lineWidth = 0.6;
       ctx.beginPath();
-      ctx.arc(pw / 2, lozY, 11, 0, Math.PI * 2);
+      ctx.arc(centerX, lozY, 11, 0, Math.PI * 2);
       ctx.stroke();
 
       ctx.strokeStyle = blossomTint;
       ctx.beginPath();
-      ctx.moveTo(pw / 2 - 15, lozY); ctx.lineTo(pw / 2 + 15, lozY);
-      ctx.moveTo(pw / 2, lozY - 15); ctx.lineTo(pw / 2, lozY + 15);
+      ctx.moveTo(centerX - 15, lozY); ctx.lineTo(centerX + 15, lozY);
+      ctx.moveTo(centerX, lozY - 15); ctx.lineTo(centerX, lozY + 15);
       ctx.stroke();
 
       ctx.font = '700 8px system-ui, -apple-system, sans-serif';
@@ -1721,28 +1748,28 @@
       if (options.studyTitle) {
         ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = sageSoft;
-        ctx.fillText(options.studyTitle, pw / 2, subY);
+        ctx.fillText(options.studyTitle, centerX, subY);
         subY += 22;
       }
 
       ctx.strokeStyle = sageSoft;
       ctx.lineWidth = 0.5;
       ctx.beginPath();
-      ctx.moveTo(pw / 2 - 36, subY); ctx.lineTo(pw / 2 + 36, subY);
+      ctx.moveTo(centerX - 36, subY); ctx.lineTo(centerX + 36, subY);
       ctx.stroke();
 
       const metaY = ph * 0.82;
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = sageSoft;
-      ctx.fillText('CURATED STUDY FOLIO', pw / 2, metaY);
+      ctx.fillText('CURATED STUDY FOLIO', centerX, metaY);
 
       ctx.font = '10px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = sageDeep;
-      ctx.fillText(options.coverAuthor || 'Spring Session Notes', pw / 2, metaY + 14);
+      ctx.fillText(options.coverAuthor || 'Spring Session Notes', centerX, metaY + 14);
 
       ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = sageSoft;
-      ctx.fillText(dateFormatted || 'Springtime', pw / 2, metaY + 28);
+      ctx.fillText(dateFormatted || 'Springtime', centerX, metaY + 28);
 
     } else if (tpl === 'summer' || tpl === 'verano' || tpl === 'estio') {
       // 12. Summer / Solstice Editorial (Aegean Azure & Solar Warmth)
@@ -1839,16 +1866,16 @@
       ctx.strokeStyle = terracotta;
       ctx.lineWidth = 0.8;
       ctx.beginPath();
-      ctx.moveTo(pw / 2, lozY - 11);
-      ctx.lineTo(pw / 2 + 11, lozY);
-      ctx.lineTo(pw / 2, lozY + 11);
-      ctx.lineTo(pw / 2 - 11, lozY);
+      ctx.moveTo(centerX, lozY - 11);
+      ctx.lineTo(centerX + 11, lozY);
+      ctx.lineTo(centerX, lozY + 11);
+      ctx.lineTo(centerX - 11, lozY);
       ctx.closePath();
       ctx.stroke();
 
       ctx.fillStyle = amber;
       ctx.beginPath();
-      ctx.arc(pw / 2, lozY, 2.5, 0, Math.PI * 2);
+      ctx.arc(centerX, lozY, 2.5, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.font = '700 25px "Times New Roman", Times, Georgia, serif';
@@ -1859,20 +1886,20 @@
       if (options.studyTitle) {
         ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = terracotta;
-        ctx.fillText(options.studyTitle, pw / 2, subY);
+        ctx.fillText(options.studyTitle, centerX, subY);
         subY += 22;
       }
 
       ctx.strokeStyle = amber;
       ctx.lineWidth = 0.6;
       ctx.beginPath();
-      ctx.moveTo(pw / 2 - 45, subY); ctx.lineTo(pw / 2 + 45, subY);
+      ctx.moveTo(centerX - 45, subY); ctx.lineTo(centerX + 45, subY);
       ctx.stroke();
 
       const boxY = ph * 0.80;
-      const boxW = pw - 2 * m - 40;
+      const boxW = w - 40;
       const boxH = 55;
-      const bx = (pw - boxW) / 2;
+      const bx = centerX - boxW / 2;
       ctx.strokeStyle = 'rgba(158, 56, 31, 0.25)';
       ctx.lineWidth = 0.5;
       ctx.strokeRect(bx, boxY, boxW, boxH);
@@ -1920,14 +1947,14 @@
       ctx.strokeStyle = slateBlue;
       ctx.lineWidth = 0.7;
       ctx.beginPath();
-      ctx.arc(pw / 2, starY, 13, 0, Math.PI * 2);
+      ctx.arc(centerX, starY, 13, 0, Math.PI * 2);
       ctx.stroke();
       for (const deg of [0, 60, 120]) {
         const rad = (deg * Math.PI) / 180;
         const dx = 17 * Math.cos(rad);
         const dy = 17 * Math.sin(rad);
         ctx.beginPath();
-        ctx.moveTo(pw / 2 - dx, starY - dy); ctx.lineTo(pw / 2 + dx, starY + dy);
+        ctx.moveTo(centerX - dx, starY - dy); ctx.lineTo(centerX + dx, starY + dy);
         ctx.stroke();
       }
 
@@ -1947,26 +1974,26 @@
       if (options.studyTitle) {
         ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = slateBlue;
-        ctx.fillText(options.studyTitle, pw / 2, subY);
+        ctx.fillText(options.studyTitle, centerX, subY);
         subY += 22;
       }
 
       ctx.strokeStyle = slateBlue;
       ctx.lineWidth = 0.5;
       ctx.beginPath();
-      ctx.moveTo(pw / 2 - 30, subY); ctx.lineTo(pw / 2 + 30, subY);
+      ctx.moveTo(centerX - 30, subY); ctx.lineTo(centerX + 30, subY);
       ctx.stroke();
 
       const metaY = ph * 0.82;
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = slateBlue;
-      ctx.fillText('OPERATOR / CURATOR', pw / 2, metaY);
+      ctx.fillText('OPERATOR / CURATOR', centerX, metaY);
       ctx.font = '9.5px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = midnight;
-      ctx.fillText(options.coverAuthor || 'Winter Session', pw / 2, metaY + 14);
+      ctx.fillText(options.coverAuthor || 'Winter Session', centerX, metaY + 14);
       ctx.font = '8px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = slateBlue;
-      ctx.fillText(dateFormatted || 'Winter Season', pw / 2, metaY + 28);
+      ctx.fillText(dateFormatted || 'Winter Season', centerX, metaY + 28);
 
     } else if (tpl === 'polo' || tpl === 'ralph' || tpl === 'ralphlauren' || tpl === 'ralph_lauren' || tpl === 'rl_polo' || tpl === 'preppy') {
       // 15. Ralph Lauren Polo (Collegiate Navy & Gold Shield Heritage)
@@ -2000,26 +2027,26 @@
       ctx.strokeStyle = rlNavy;
       ctx.lineWidth = 1.2;
       ctx.beginPath();
-      ctx.moveTo(pw / 2, shieldY - 16);
-      ctx.lineTo(pw / 2 + 16, shieldY);
-      ctx.lineTo(pw / 2, shieldY + 16);
-      ctx.lineTo(pw / 2 - 16, shieldY);
+      ctx.moveTo(centerX, shieldY - 16);
+      ctx.lineTo(centerX + 16, shieldY);
+      ctx.lineTo(centerX, shieldY + 16);
+      ctx.lineTo(centerX - 16, shieldY);
       ctx.closePath();
       ctx.stroke();
 
       ctx.strokeStyle = rlGold;
       ctx.lineWidth = 0.6;
       ctx.beginPath();
-      ctx.arc(pw / 2, shieldY, 9, 0, Math.PI * 2);
+      ctx.arc(centerX, shieldY, 9, 0, Math.PI * 2);
       ctx.stroke();
       ctx.beginPath();
-      ctx.moveTo(pw / 2 - 11, shieldY); ctx.lineTo(pw / 2 + 11, shieldY);
-      ctx.moveTo(pw / 2, shieldY - 11); ctx.lineTo(pw / 2, shieldY + 11);
+      ctx.moveTo(centerX - 11, shieldY); ctx.lineTo(centerX + 11, shieldY);
+      ctx.moveTo(centerX, shieldY - 11); ctx.lineTo(centerX, shieldY + 11);
       ctx.stroke();
 
       ctx.font = '700 5.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = rlNavy;
-      ctx.fillText('RL', pw / 2, shieldY + 2);
+      ctx.fillText('RL', centerX, shieldY + 2);
 
       ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = rlNavy;
@@ -2029,31 +2056,31 @@
       if (options.studyTitle) {
         ctx.font = 'italic 12.5px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = rlGreen;
-        ctx.fillText(options.studyTitle, pw / 2, subY);
+        ctx.fillText(options.studyTitle, centerX, subY);
         subY += 20;
       }
 
       ctx.strokeStyle = rlNavy;
       ctx.lineWidth = 1.0;
       ctx.beginPath();
-      ctx.moveTo(pw / 2 - 40, subY); ctx.lineTo(pw / 2 + 40, subY);
+      ctx.moveTo(centerX - 40, subY); ctx.lineTo(centerX + 40, subY);
       ctx.stroke();
       ctx.strokeStyle = rlGold;
       ctx.lineWidth = 0.5;
       ctx.beginPath();
-      ctx.moveTo(pw / 2 - 25, subY + 3); ctx.lineTo(pw / 2 + 25, subY + 3);
+      ctx.moveTo(centerX - 25, subY + 3); ctx.lineTo(centerX + 25, subY + 3);
       ctx.stroke();
 
       const metaY = ph * 0.82;
       ctx.font = '700 7.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = rlGold;
-      ctx.fillText('FELLOW / STUDENT RECORD', pw / 2, metaY);
+      ctx.fillText('FELLOW / STUDENT RECORD', centerX, metaY);
       ctx.font = '700 10.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = rlNavy;
-      ctx.fillText(options.coverAuthor || 'Collegiate Member', pw / 2, metaY + 15);
+      ctx.fillText(options.coverAuthor || 'Collegiate Member', centerX, metaY + 15);
       ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = rlGreen;
-      ctx.fillText(dateFormatted || 'Academic Term', pw / 2, metaY + 28);
+      ctx.fillText(dateFormatted || 'Academic Term', centerX, metaY + 28);
 
     } else if (tpl === 'equestrian' || tpl === 'ecuestre' || tpl === 'rl_equestrian' || tpl === 'saddlery') {
       // 16. Ralph Lauren Equestrian (British Country Estate & Hunter Green)
@@ -2090,15 +2117,15 @@
       ctx.strokeStyle = brass;
       ctx.lineWidth = 1.2;
       ctx.beginPath();
-      ctx.moveTo(pw / 2 - 13, stirrupY - 12);
-      ctx.lineTo(pw / 2 - 13, stirrupY + 8);
-      ctx.lineTo(pw / 2 + 13, stirrupY + 8);
-      ctx.lineTo(pw / 2 + 13, stirrupY - 12);
+      ctx.moveTo(centerX - 13, stirrupY - 12);
+      ctx.lineTo(centerX - 13, stirrupY + 8);
+      ctx.lineTo(centerX + 13, stirrupY + 8);
+      ctx.lineTo(centerX + 13, stirrupY - 12);
       ctx.stroke();
       ctx.strokeStyle = saddleTan;
       ctx.lineWidth = 1.0;
       ctx.beginPath();
-      ctx.moveTo(pw / 2 - 16, stirrupY + 8); ctx.lineTo(pw / 2 + 16, stirrupY + 8);
+      ctx.moveTo(centerX - 16, stirrupY + 8); ctx.lineTo(centerX + 16, stirrupY + 8);
       ctx.stroke();
 
       ctx.font = '700 25px "Times New Roman", Times, Georgia, serif';
@@ -2109,7 +2136,7 @@
       if (options.studyTitle) {
         ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = saddleTan;
-        ctx.fillText(options.studyTitle, pw / 2, subY);
+        ctx.fillText(options.studyTitle, centerX, subY);
         subY += 20;
       }
 
@@ -2117,50 +2144,55 @@
       ctx.lineWidth = 0.8;
       ctx.setLineDash([3, 3]);
       ctx.beginPath();
-      ctx.moveTo(pw / 2 - 45, subY); ctx.lineTo(pw / 2 + 45, subY);
+      ctx.moveTo(centerX - 45, subY); ctx.lineTo(centerX + 45, subY);
       ctx.stroke();
       ctx.setLineDash([]);
 
       ctx.fillStyle = brass;
       ctx.beginPath();
-      ctx.arc(pw / 2 - 50, subY, 2, 0, Math.PI * 2);
-      ctx.arc(pw / 2 + 50, subY, 2, 0, Math.PI * 2);
+      ctx.arc(centerX - 50, subY, 2, 0, Math.PI * 2);
+      ctx.arc(centerX + 50, subY, 2, 0, Math.PI * 2);
       ctx.fill();
 
       const metaY = ph * 0.82;
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = saddleTan;
-      ctx.fillText('ESTATE REGISTER', pw / 2, metaY);
+      ctx.fillText('ESTATE REGISTER', centerX, metaY);
       ctx.font = '700 10.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = hunterGreen;
-      ctx.fillText(options.coverAuthor || 'Estate Member', pw / 2, metaY + 15);
+      ctx.fillText(options.coverAuthor || 'Estate Member', centerX, metaY + 15);
       ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = saddleTan;
-      ctx.fillText(dateFormatted || 'Season Archive', pw / 2, metaY + 28);
+      ctx.fillText(dateFormatted || 'Season Archive', centerX, metaY + 28);
 
     } else {
       // Default: Atelier Notebook (Zara Home Classic)
       const inset = 36;
+      const x1 = leftGutter + inset;
+      const x2 = pw - rightGutter - inset;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
       ctx.strokeStyle = 'rgba(40, 40, 40, 0.22)';
       ctx.lineWidth = 0.6;
-      ctx.strokeRect(inset, inset, pw - 2 * inset, ph - 2 * inset);
+      ctx.strokeRect(x1, inset, w, ph - 2 * inset);
 
       ctx.strokeStyle = 'rgba(40, 40, 40, 0.10)';
       ctx.lineWidth = 0.35;
-      ctx.strokeRect(inset + 6, inset + 6, pw - 2 * (inset + 6), ph - 2 * (inset + 6));
+      ctx.strokeRect(x1 + 6, inset + 6, w - 12, ph - 2 * (inset + 6));
 
       // Top Header
       ctx.font = '500 7.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = 'rgba(80, 80, 80, 0.75)';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'alphabetic';
-      ctx.fillText('N O T E B O O K', pw / 2, inset + 45);
+      ctx.fillText('N O T E B O O K', centerX, inset + 45);
 
       ctx.strokeStyle = 'rgba(70, 70, 70, 0.20)';
       ctx.lineWidth = 0.4;
       ctx.beginPath();
-      ctx.moveTo(pw / 2 - 24, inset + 53);
-      ctx.lineTo(pw / 2 + 24, inset + 53);
+      ctx.moveTo(centerX - 24, inset + 53);
+      ctx.lineTo(centerX + 24, inset + 53);
       ctx.stroke();
 
       // Presentation Title
@@ -2168,15 +2200,15 @@
       ctx.fillStyle = '#1c1917';
       ctx.textAlign = 'center';
 
-      const maxTextW = pw - 2 * inset - 60;
+      const maxTextW = w - 60;
       const titleStartY = ph * 0.40;
-      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, titleStartY, maxTextW, 31);
+      const endTitleY = drawWrappedText(ctx, titleText, centerX, titleStartY, maxTextW, 31);
 
       // Optional Subtitle
       if (options.studyTitle) {
         ctx.font = 'italic 12.5px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = '#57534e';
-        ctx.fillText(options.studyTitle, pw / 2, endTitleY + 24);
+        ctx.fillText(options.studyTitle, centerX, endTitleY + 24);
       }
 
       // Delicate accent rule
@@ -2184,8 +2216,8 @@
       ctx.strokeStyle = 'rgba(70, 70, 70, 0.18)';
       ctx.lineWidth = 0.4;
       ctx.beginPath();
-      ctx.moveTo(pw / 2 - 32, dividerY);
-      ctx.lineTo(pw / 2 + 32, dividerY);
+      ctx.moveTo(centerX - 32, dividerY);
+      ctx.lineTo(centerX + 32, dividerY);
       ctx.stroke();
 
       // Author & Date Block
@@ -2193,13 +2225,13 @@
       if (options.coverAuthor) {
         ctx.font = '500 10.5px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = '#292524';
-        ctx.fillText(options.coverAuthor, pw / 2, metaY);
+        ctx.fillText(options.coverAuthor, centerX, metaY);
         metaY += 18;
       }
 
       ctx.font = 'italic 9px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#78716c';
-      ctx.fillText(dateFormatted, pw / 2, metaY);
+      ctx.fillText(dateFormatted, centerX, metaY);
     }
   }
 
