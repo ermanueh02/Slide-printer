@@ -31,6 +31,7 @@ from slide_printer.constants import (
     DEFAULT_HOLE_GUIDES,
     COVER_TEMPLATES,
     COVER_TEMPLATE_ALIASES,
+    DEFAULT_COVER_MODE,
 )
 from slide_printer.core import SlidePrinter, resolve_style
 
@@ -737,13 +738,19 @@ Examples:
         "--generate-cover",
         action="store_true",
         default=False,
-        help="Generate an elegant editorial cover page at the beginning of the handout.",
+        help="Generate an elegant editorial cover page at the beginning of the handout (default).",
+    )
+    parser.add_argument(
+        "--no-cover",
+        action="store_true",
+        default=False,
+        help="Disable cover page generation (no cover).",
     )
     parser.add_argument(
         "--cover-template",
         choices=COVER_TEMPLATES + list(COVER_TEMPLATE_ALIASES.keys()),
         default="atelier",
-        help="Editorial cover template: 'atelier', 'george', 'monograph', 'bauhaus', 'fifties' (50s), 'sixties' (60s), 'seventies' (70s), 'eighties' (80s), 'nineties' (90s), 'natural' (botanical) (default: atelier).",
+        help="Editorial cover template: Classics ('atelier', 'george', 'monograph', 'bauhaus'), Decades ('fifties', 'sixties', 'seventies', 'eighties', 'nineties'), Seasons ('spring', 'summer', 'autumn', 'winter'), Ralph Lauren ('polo', 'equestrian'), Nature ('natural') (default: atelier).",
     )
     parser.add_argument(
         "--cover-title",
@@ -905,11 +912,13 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(red(f"Error: {err}"), file=sys.stderr)
         return 1
 
-    cover_mode = "none"
-    if args.generate_cover:
-        cover_mode = "generate"
+    cover_mode = DEFAULT_COVER_MODE
+    if getattr(args, "no_cover", False):
+        cover_mode = "none"
     elif args.clean_cover:
         cover_mode = "clean_first"
+    elif args.generate_cover:
+        cover_mode = "generate"
 
     binding_mode = (args.binding or "none").lower()
     if args.spiral:

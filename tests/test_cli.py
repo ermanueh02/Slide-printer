@@ -292,9 +292,9 @@ def test_cli_parse_args_page_numbers():
 
 
 def test_cli_page_numbers_execution(sample_slide_pdf, tmp_path):
-    # 1. Default (with page numbers)
+    # 1. Default (with page numbers and --no-cover)
     out_dir_yes = str(tmp_path / "out_yes")
-    code_yes = main(["-i", sample_slide_pdf, "-s", "lines", "-o", out_dir_yes, "-q"])
+    code_yes = main(["-i", sample_slide_pdf, "-s", "lines", "--no-cover", "-o", out_dir_yes, "-q"])
     assert code_yes == 0
 
     base = os.path.splitext(os.path.basename(sample_slide_pdf))[0]
@@ -307,7 +307,7 @@ def test_cli_page_numbers_execution(sample_slide_pdf, tmp_path):
 
     # 2. Disabled via --no-page-numbers
     out_dir_no = str(tmp_path / "out_no")
-    code_no = main(["-i", sample_slide_pdf, "-s", "lines", "--no-page-numbers", "-o", out_dir_no, "-q"])
+    code_no = main(["-i", sample_slide_pdf, "-s", "lines", "--no-cover", "--no-page-numbers", "-o", out_dir_no, "-q"])
     assert code_no == 0
 
     pdf_no = tmp_path / "out_no" / "lines" / f"{base}_lines.pdf"
@@ -356,6 +356,7 @@ def test_cli_execution_extended_flags(sample_slide_pdf, tmp_path):
         "--study-header",
         "--study-title", "Física Cuántica",
         "-2",
+        "--no-cover",
         "-o", out_dir,
         "-q",
     ])
@@ -396,6 +397,24 @@ def test_cli_binding_and_spiral_flags(sample_slide_pdf, tmp_path):
     assert out_pdf.exists()
 
 
+def test_cli_no_cover_flag(sample_slide_pdf, tmp_path):
+    out_dir = str(tmp_path / "cli_no_cover")
+    code = main([
+        "-i", sample_slide_pdf,
+        "-s", "lines",
+        "--no-cover",
+        "-o", out_dir,
+        "-q",
+    ])
+    assert code == 0
+    base = os.path.splitext(os.path.basename(sample_slide_pdf))[0]
+    out_pdf = tmp_path / "cli_no_cover" / "lines" / f"{base}_lines.pdf"
+    assert out_pdf.exists()
+    reader = PdfReader(str(out_pdf))
+    # 2 slides with no cover = exactly 2 pages
+    assert len(reader.pages) == 2
+
+
 def test_cli_decade_cover_template_flag(sample_slide_pdf, tmp_path):
     out_dir = str(tmp_path / "cli_fifties")
     code = main([
@@ -422,8 +441,8 @@ def test_cli_natural_cover_template_flag(sample_slide_pdf, tmp_path):
         "-s", "lines",
         "--generate-cover",
         "--cover-template", "natural",
-        "--cover-title", "Flora & Silva Compendium",
-        "--cover-author", "Botanist Alexander",
+        "--cover-title", "Forest & Woodwork Compendium",
+        "--cover-author", "Architect Alexander",
         "-o", out_dir,
         "-q",
     ])
@@ -433,3 +452,24 @@ def test_cli_natural_cover_template_flag(sample_slide_pdf, tmp_path):
     assert out_pdf.exists()
     reader = PdfReader(str(out_pdf))
     assert len(reader.pages) == 3
+
+
+def test_cli_polo_and_seasons_template_flags(sample_slide_pdf, tmp_path):
+    for tmpl in ["polo", "equestrian", "spring", "summer", "autumn", "winter"]:
+        out_dir = str(tmp_path / f"cli_{tmpl}")
+        code = main([
+            "-i", sample_slide_pdf,
+            "-s", "lines",
+            "--cover-template", tmpl,
+            "--cover-title", f"Edition {tmpl.title()}",
+            "-o", out_dir,
+            "-q",
+        ])
+        assert code == 0
+        base = os.path.splitext(os.path.basename(sample_slide_pdf))[0]
+        out_pdf = tmp_path / f"cli_{tmpl}" / "lines" / f"{base}_lines.pdf"
+        assert out_pdf.exists()
+        reader = PdfReader(str(out_pdf))
+        assert len(reader.pages) == 3
+        cover_text = reader.pages[0].extract_text()
+        assert f"Edition {tmpl.title()}" in cover_text

@@ -105,12 +105,22 @@ COVER_TEMPLATES = [
     "seventies",
     "eighties",
     "nineties",
+    "spring",
+    "summer",
+    "autumn",
+    "winter",
+    "polo",
+    "equestrian",
     "natural",
 ]
 
 COVER_TEMPLATE_ALIASES: Dict[str, str] = {
     "atelier": "atelier",
+    "zara": "atelier",
+    "zarahome": "atelier",
     "george": "george",
+    "jfk": "george",
+    "executive": "george",
     "monograph": "monograph",
     "bauhaus": "bauhaus",
     "fifties": "fifties",
@@ -134,12 +144,36 @@ COVER_TEMPLATE_ALIASES: Dict[str, str] = {
     "grunge": "nineties",
     "lookbook": "nineties",
     "zine": "nineties",
+    # Seasons
+    "spring": "spring",
+    "primavera": "spring",
+    "vernal": "spring",
+    "summer": "summer",
+    "verano": "summer",
+    "estio": "summer",
+    "autumn": "autumn",
+    "otono": "autumn",
+    "otonno": "autumn",
+    "fall": "autumn",
+    "winter": "winter",
+    "invierno": "winter",
+    "hiemal": "winter",
+    # Ralph Lauren
+    "polo": "polo",
+    "ralph": "polo",
+    "ralphlauren": "polo",
+    "ralph_lauren": "polo",
+    "rl_polo": "polo",
+    "preppy": "polo",
+    "equestrian": "equestrian",
+    "ecuestre": "equestrian",
+    "rl_equestrian": "equestrian",
+    "saddlery": "equestrian",
+    # Nature
     "natural": "natural",
-    "botanical": "natural",
     "forest": "natural",
-    "organic": "natural",
-    "organico": "natural",
-    "organica": "natural",
+    "verde": "natural",
+    "darkgreen": "natural",
     "bosque": "natural",
     "nature": "natural",
 }
@@ -148,6 +182,6 @@ DEFAULT_DUPLEX = False
 DEFAULT_STUDY_HEADER = False
 DEFAULT_LAYOUT = "1-up"  # "1-up" or "2-up"
 DEFAULT_GRAYSCALE = False
-DEFAULT_COVER_MODE = "none"  # "none", "clean_first", "generate"
+DEFAULT_COVER_MODE = "generate"  # "generate" (default), "clean_first", "none"
 DEFAULT_COVER_TEMPLATE = "atelier"
 

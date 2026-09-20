@@ -105,6 +105,11 @@
       optCoverCleanFirst: "1st slide as cover (No notes)",
       optCoverGenerate: "Generate editorial cover",
       coverTemplateLabel: "Cover Template Style",
+      groupClassics: "Classics / Zara",
+      groupDecades: "Decades",
+      groupSeasons: "Seasons",
+      groupRalphLauren: "Ralph Lauren",
+      groupNature: "Nature",
       optTemplateAtelier: "Atelier Notebook (Zara Home Classic)",
       optTemplateGeorge: "George 90s (JFK Jr Executive)",
       optTemplateMonograph: "Archival Monograph (Heritage Bookplate)",
@@ -114,7 +119,13 @@
       optTemplateSeventies: "Seventies (Retro Warm Groove 1970s)",
       optTemplateEighties: "Eighties (Memphis Tech 1980s)",
       optTemplateNineties: "Nineties (Minimalist Lookbook 1990s)",
-      optTemplateNatural: "Natural (Botanical & Deep Forest)",
+      optTemplateSpring: "Spring (Vernal Blossom & Sage)",
+      optTemplateSummer: "Summer (Aegean Azure & Gold)",
+      optTemplateAutumn: "Autumn (Terracotta & Amber)",
+      optTemplateWinter: "Winter (Nordic Frost & Slate)",
+      optTemplatePolo: "Polo (Collegiate Navy & Shield)",
+      optTemplateEquestrian: "Equestrian (Heritage Green & Crest)",
+      optTemplateNatural: "Natural (Deep Forest Editorial)",
       coverTitlePlaceholder: "Cover title",
       coverAuthorPlaceholder: "Author / Student / Subject",
       pageRangeLabel: "Slide Range",
@@ -227,6 +238,11 @@
       optCoverCleanFirst: "1ª diapositiva como portada (sin notas)",
       optCoverGenerate: "Generar portada nueva",
       coverTemplateLabel: "Estilo de portada editorial",
+      groupClassics: "Clásicos / Zara",
+      groupDecades: "Décadas",
+      groupSeasons: "Estaciones",
+      groupRalphLauren: "Ralph Lauren",
+      groupNature: "Naturaleza",
       optTemplateAtelier: "Cuaderno Atelier (Zara Home / Clásico)",
       optTemplateGeorge: "George años 90 (JFK Jr / Ejecutivo)",
       optTemplateMonograph: "Monografía de archivo (Ex libris)",
@@ -236,7 +252,13 @@
       optTemplateSeventies: "Años 70 (Retro warm groove 1970s)",
       optTemplateEighties: "Años 80 (Memphis tech 1980s)",
       optTemplateNineties: "Años 90 (Minimal lookbook editorial 1990s)",
-      optTemplateNatural: "Natural (Editorial Botánico y Verde Bosque)",
+      optTemplateSpring: "Primavera (Flor de Cerezo y Salvia)",
+      optTemplateSummer: "Verano (Azul Egeo y Dorado Solar)",
+      optTemplateAutumn: "Otoño (Terracota y Ámbar Cálido)",
+      optTemplateWinter: "Invierno (Escarcha Nórdica y Pizarra)",
+      optTemplatePolo: "Polo (Azul Marino Colegial y Escudo)",
+      optTemplateEquestrian: "Hípica / Equestrian (Verde Inglés y Emblema)",
+      optTemplateNatural: "Natural (Editorial Verde Bosque)",
       coverTitlePlaceholder: "Título para la portada",
       coverAuthorPlaceholder: "Autor / Estudiante / Asignatura",
       pageRangeLabel: "Rango de diapositivas",
@@ -349,6 +371,11 @@
       optCoverCleanFirst: "1ª diapositiva como portada (sen notas)",
       optCoverGenerate: "Xerar portada nova",
       coverTemplateLabel: "Estilo de portada editorial",
+      groupClassics: "Clásicos / Zara",
+      groupDecades: "Décadas",
+      groupSeasons: "Estacións",
+      groupRalphLauren: "Ralph Lauren",
+      groupNature: "Natureza",
       optTemplateAtelier: "Caderno Atelier (Zara Home / Clásico)",
       optTemplateGeorge: "George anos 90 (JFK Jr / Executivo)",
       optTemplateMonograph: "Monografía de arquivo (Ex libris)",
@@ -358,7 +385,13 @@
       optTemplateSeventies: "Anos 70 (Retro warm groove 1970s)",
       optTemplateEighties: "Anos 80 (Memphis tech 1980s)",
       optTemplateNineties: "Anos 90 (Minimal lookbook editorial 1990s)",
-      optTemplateNatural: "Natural (Editorial Botánico e Verde Bosque)",
+      optTemplateSpring: "Primavera (Flor de Cerdeira e Salvia)",
+      optTemplateSummer: "Verán (Azul Exeo e Dourado Solar)",
+      optTemplateAutumn: "Outono (Terracota e Ámbar Cálido)",
+      optTemplateWinter: "Inverno (Xeada Nórdica e Lousa)",
+      optTemplatePolo: "Polo (Azul Mariño Colexial e Escudo)",
+      optTemplateEquestrian: "Hípica / Equestrian (Verde Inglés e Emblema)",
+      optTemplateNatural: "Natural (Editorial Verde Bosque)",
       coverTitlePlaceholder: "Título para a portada",
       coverAuthorPlaceholder: "Autor / Estudante / Materia",
       pageRangeLabel: "Rango de diapositivas",
@@ -407,7 +440,7 @@
     step: 14,
     separation: 10,
     layout: '1-up',
-    coverMode: 'none',
+    coverMode: 'generate',
     coverTemplate: 'atelier',
     coverTitle: '',
     coverAuthor: '',
@@ -685,6 +718,16 @@
     setText('optCoverCleanFirst', dict.optCoverCleanFirst);
     setText('optCoverGenerate', dict.optCoverGenerate);
     setText('coverTemplateLabelText', dict.coverTemplateLabel);
+    const setOptgroupLabel = (id, label) => {
+      const el = document.getElementById(id);
+      if (el && label) el.label = label;
+    };
+    setOptgroupLabel('groupClassics', dict.groupClassics);
+    setOptgroupLabel('groupDecades', dict.groupDecades);
+    setOptgroupLabel('groupSeasons', dict.groupSeasons);
+    setOptgroupLabel('groupRalphLauren', dict.groupRalphLauren);
+    setOptgroupLabel('groupNature', dict.groupNature);
+
     setText('optTemplateAtelier', dict.optTemplateAtelier);
     setText('optTemplateGeorge', dict.optTemplateGeorge);
     setText('optTemplateMonograph', dict.optTemplateMonograph);
@@ -694,6 +737,12 @@
     setText('optTemplateSeventies', dict.optTemplateSeventies);
     setText('optTemplateEighties', dict.optTemplateEighties);
     setText('optTemplateNineties', dict.optTemplateNineties);
+    setText('optTemplateSpring', dict.optTemplateSpring);
+    setText('optTemplateSummer', dict.optTemplateSummer);
+    setText('optTemplateAutumn', dict.optTemplateAutumn);
+    setText('optTemplateWinter', dict.optTemplateWinter);
+    setText('optTemplatePolo', dict.optTemplatePolo);
+    setText('optTemplateEquestrian', dict.optTemplateEquestrian);
     setText('optTemplateNatural', dict.optTemplateNatural);
     const coverTitleInput = document.getElementById('coverTitleInput');
     if (coverTitleInput && dict.coverTitlePlaceholder) coverTitleInput.placeholder = dict.coverTitlePlaceholder;
@@ -1113,12 +1162,13 @@
     if (metaFileSize) metaFileSize.textContent = item.sizeStr;
     if (metaAspectRatio) metaAspectRatio.textContent = item.ratioText;
 
-    // Reset document-specific fields so past notes/titles (like 'simulación') never pollute a new file
+    // Reset document-specific fields so past notes/titles never pollute a new file
     state.studyTitle = '';
-    state.coverTitle = '';
+    state.coverTitle = getBaseFileName();
     state.coverAuthor = '';
     state.pageRanges = '';
-    state.coverMode = 'none';
+    state.coverMode = 'generate';
+    state.coverTemplate = state.coverTemplate || 'atelier';
     state.studyHeader = false;
 
     const coverSelect = document.getElementById('coverSelect');
@@ -1130,9 +1180,9 @@
     const studyTitleInput = document.getElementById('studyTitleInput');
     const pageRangeInput = document.getElementById('pageRangeInput');
 
-    if (coverSelect) coverSelect.value = 'none';
-    if (coverMetaFields) coverMetaFields.classList.add('hidden');
-    if (coverTitleInput) coverTitleInput.value = '';
+    if (coverSelect) coverSelect.value = 'generate';
+    if (coverMetaFields) coverMetaFields.classList.remove('hidden');
+    if (coverTitleInput) coverTitleInput.value = state.coverTitle;
     if (coverAuthorInput) coverAuthorInput.value = '';
     if (studyHeaderToggle) studyHeaderToggle.checked = false;
     if (studyHeaderField) studyHeaderField.classList.add('hidden');
@@ -1668,9 +1718,9 @@
     const resetCoverBtn = document.getElementById('resetCoverBtn');
     if (resetCoverBtn) {
       resetCoverBtn.addEventListener('click', () => {
-        state.coverMode = 'none';
+        state.coverMode = 'generate';
         state.coverTemplate = 'atelier';
-        state.coverTitle = '';
+        state.coverTitle = getBaseFileName();
         state.coverAuthor = '';
         state.studyHeader = false;
         state.studyTitle = '';
@@ -1684,10 +1734,10 @@
         const studyHeaderField = document.getElementById('studyHeaderField');
         const studyTitleInput = document.getElementById('studyTitleInput');
 
-        if (coverSelect) coverSelect.value = 'none';
+        if (coverSelect) coverSelect.value = 'generate';
         if (coverTemplateSelect) coverTemplateSelect.value = 'atelier';
-        if (coverMetaFields) coverMetaFields.classList.add('hidden');
-        if (coverTitleInput) coverTitleInput.value = '';
+        if (coverMetaFields) coverMetaFields.classList.remove('hidden');
+        if (coverTitleInput) coverTitleInput.value = state.coverTitle;
         if (coverAuthorInput) coverAuthorInput.value = '';
         if (studyHeaderToggle) studyHeaderToggle.checked = false;
         if (studyHeaderField) studyHeaderField.classList.add('hidden');

@@ -308,23 +308,39 @@
             <div class="form-group" style="margin-bottom: 0.85rem;">
               <label for="coverSelect" class="form-label"><span id="coverLabelText">Document Cover</span></label>
               <select id="coverSelect" class="form-select">
-                <option value="none" id="optCoverNone" selected>Standard (No cover)</option>
+                <option value="none" id="optCoverNone">Standard (No cover)</option>
                 <option value="clean_first" id="optCoverCleanFirst">1st slide as cover (No notes)</option>
-                <option value="generate" id="optCoverGenerate">Generate notebook cover</option>
+                <option value="generate" id="optCoverGenerate" selected>Generate notebook cover</option>
               </select>
-              <div id="coverMetaFields" class="sub-form-group hidden" style="margin-top: 0.5rem;">
+              <div id="coverMetaFields" class="sub-form-group" style="margin-top: 0.5rem;">
                 <label for="coverTemplateSelect" class="form-label" style="font-size: 0.75rem; margin-bottom: 0.25rem;"><span id="coverTemplateLabelText">Cover Style</span></label>
                 <select id="coverTemplateSelect" class="form-select" style="margin-bottom: 0.35rem;">
-                  <option value="atelier" id="optTemplateAtelier" selected>Atelier Notebook (Zara Home Classic)</option>
-                  <option value="george" id="optTemplateGeorge">George 90s (JFK Jr Executive)</option>
-                  <option value="monograph" id="optTemplateMonograph">Archival Monograph (Heritage Bookplate)</option>
-                  <option value="bauhaus" id="optTemplateBauhaus">Swiss Modernist (Mid-Century Editorial)</option>
-                  <option value="fifties" id="optTemplateFifties">Fifties (Mid-Century Pelican 1950s)</option>
-                  <option value="sixties" id="optTemplateSixties">Sixties (Swiss International 1960s)</option>
-                  <option value="seventies" id="optTemplateSeventies">Seventies (Retro Warm Groove 1970s)</option>
-                  <option value="eighties" id="optTemplateEighties">Eighties (Memphis Tech 1980s)</option>
-                  <option value="nineties" id="optTemplateNineties">Nineties (Minimalist Lookbook 1990s)</option>
-                  <option value="natural" id="optTemplateNatural">Natural (Botanical &amp; Deep Forest)</option>
+                  <optgroup label="Clásicos / Zara" id="groupClassics">
+                    <option value="atelier" id="optTemplateAtelier" selected>Atelier Notebook (Zara Home Classic)</option>
+                    <option value="george" id="optTemplateGeorge">George 90s (JFK Jr Executive)</option>
+                    <option value="monograph" id="optTemplateMonograph">Archival Monograph (Heritage Bookplate)</option>
+                    <option value="bauhaus" id="optTemplateBauhaus">Swiss Modernist (Mid-Century Editorial)</option>
+                  </optgroup>
+                  <optgroup label="Décadas" id="groupDecades">
+                    <option value="fifties" id="optTemplateFifties">Fifties (Mid-Century Pelican 1950s)</option>
+                    <option value="sixties" id="optTemplateSixties">Sixties (Swiss International 1960s)</option>
+                    <option value="seventies" id="optTemplateSeventies">Seventies (Retro Warm Groove 1970s)</option>
+                    <option value="eighties" id="optTemplateEighties">Eighties (Memphis Tech 1980s)</option>
+                    <option value="nineties" id="optTemplateNineties">Nineties (Minimalist Lookbook 1990s)</option>
+                  </optgroup>
+                  <optgroup label="Estaciones" id="groupSeasons">
+                    <option value="spring" id="optTemplateSpring">Spring (Vernal Blossom &amp; Sage)</option>
+                    <option value="summer" id="optTemplateSummer">Summer (Aegean Azure &amp; Gold)</option>
+                    <option value="autumn" id="optTemplateAutumn">Autumn (Terracotta &amp; Amber)</option>
+                    <option value="winter" id="optTemplateWinter">Winter (Nordic Frost &amp; Slate)</option>
+                  </optgroup>
+                  <optgroup label="Ralph Lauren" id="groupRalphLauren">
+                    <option value="polo" id="optTemplatePolo">Polo (Collegiate Navy &amp; Shield)</option>
+                    <option value="equestrian" id="optTemplateEquestrian">Equestrian (Heritage Green &amp; Crest)</option>
+                  </optgroup>
+                  <optgroup label="Naturaleza" id="groupNature">
+                    <option value="natural" id="optTemplateNatural">Natural (Deep Forest Editorial)</option>
+                  </optgroup>
                 </select>
                 <input type="text" id="coverTitleInput" class="form-input" placeholder="Cover title" style="margin-bottom: 0.35rem;">
                 <input type="text" id="coverAuthorInput" class="form-input" placeholder="Author / Course / Subject">

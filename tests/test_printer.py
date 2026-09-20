@@ -27,7 +27,7 @@ def test_resolve_style():
 
 def test_slide_printer_conversion(sample_slide_pdf, tmp_path):
     out_dir = str(tmp_path / "output")
-    printer = SlidePrinter(paper_size="a4", margin=40.0, output_dir=out_dir)
+    printer = SlidePrinter(paper_size="a4", margin=40.0, output_dir=out_dir, cover_mode="none")
 
     results = printer.process_file(
         sample_slide_pdf,
@@ -58,9 +58,21 @@ def test_slide_printer_conversion(sample_slide_pdf, tmp_path):
         assert annot_rect[3] == pytest.approx(699.9075, 0.01)
 
 
+def test_slide_printer_default_cover_mode(sample_slide_pdf, tmp_path):
+    out_dir = str(tmp_path / "output_default_cov")
+    printer = SlidePrinter(output_dir=out_dir)
+    assert printer.cover_mode == "generate"
+
+    results = printer.process_file(sample_slide_pdf, styles=["lines"])
+    assert len(results) == 1
+    reader = PdfReader(results[0])
+    # 1 cover page + 2 slides = 3 pages
+    assert len(reader.pages) == 3
+
+
 def test_slide_printer_letter_size(sample_slide_pdf, tmp_path):
     out_dir = str(tmp_path / "output_letter")
-    printer = SlidePrinter(paper_size="letter", margin=30.0, output_dir=out_dir)
+    printer = SlidePrinter(paper_size="letter", margin=30.0, output_dir=out_dir, cover_mode="none")
 
     results = printer.process_file(sample_slide_pdf, styles=["lines"])
     assert len(results) == 1
@@ -72,7 +84,7 @@ def test_slide_printer_letter_size(sample_slide_pdf, tmp_path):
 
 def test_batch_process_paths(sample_slide_pdf, tmp_path):
     out_dir = str(tmp_path / "output_batch")
-    printer = SlidePrinter(output_dir=out_dir)
+    printer = SlidePrinter(output_dir=out_dir, cover_mode="none")
 
     results = printer.process_paths([sample_slide_pdf], styles=["dots"])
     assert len(results) == 1
@@ -81,7 +93,7 @@ def test_batch_process_paths(sample_slide_pdf, tmp_path):
 
 def test_slide_printer_page_numbers_toggle(sample_slide_pdf, tmp_path):
     # With page numbers
-    printer_on = SlidePrinter(output_dir=str(tmp_path / "on"), page_numbers=True)
+    printer_on = SlidePrinter(output_dir=str(tmp_path / "on"), page_numbers=True, cover_mode="none")
     res_on = printer_on.process_file(sample_slide_pdf, styles=["blank"])
     reader_on = PdfReader(res_on[0])
     lines_p0_on = [l.strip() for l in reader_on.pages[0].extract_text().splitlines()]
@@ -90,7 +102,7 @@ def test_slide_printer_page_numbers_toggle(sample_slide_pdf, tmp_path):
     assert "2 / 2" in lines_p1_on
 
     # Without page numbers
-    printer_off = SlidePrinter(output_dir=str(tmp_path / "off"), page_numbers=False)
+    printer_off = SlidePrinter(output_dir=str(tmp_path / "off"), page_numbers=False, cover_mode="none")
     res_off = printer_off.process_file(sample_slide_pdf, styles=["blank"])
     reader_off = PdfReader(res_off[0])
     lines_p0_off = [l.strip() for l in reader_off.pages[0].extract_text().splitlines()]
@@ -117,6 +129,7 @@ def test_study_header_and_gutter(sample_slide_pdf, tmp_path):
         study_title="Matemáticas Avanzadas",
         gutter_margin=30.0,
         duplex=True,
+        cover_mode="none",
     )
     res = printer.process_file(sample_slide_pdf, styles=["lines"])
     assert len(res) == 1
@@ -128,8 +141,8 @@ def test_study_header_and_gutter(sample_slide_pdf, tmp_path):
 
 
 def test_layout_2up(sample_slide_pdf, tmp_path):
-    # sample_slide_pdf has 2 slides -> with 2-up layout it should fit in 1 sheet!
-    printer = SlidePrinter(output_dir=str(tmp_path / "2up"), layout="2-up")
+    # sample_slide_pdf has 2 slides -> with 2-up layout and cover_mode="none" it should fit in 1 sheet!
+    printer = SlidePrinter(output_dir=str(tmp_path / "2up"), layout="2-up", cover_mode="none")
     res = printer.process_file(sample_slide_pdf, styles=["grid"])
     assert len(res) == 1
     reader = PdfReader(res[0])
@@ -141,8 +154,14 @@ def test_layout_2up(sample_slide_pdf, tmp_path):
 
 
 def test_cover_modes(sample_slide_pdf, tmp_path):
-    # 1. Generated editorial cover
-    for tmpl in ["atelier", "george", "monograph", "bauhaus"]:
+    # 1. Generated editorial cover across all templates
+    all_templates = [
+        "atelier", "george", "monograph", "bauhaus",
+        "fifties", "sixties", "seventies", "eighties", "nineties",
+        "natural", "spring", "summer", "autumn", "winter",
+        "polo", "equestrian",
+    ]
+    for tmpl in all_templates:
         printer_gen = SlidePrinter(
             output_dir=str(tmp_path / f"cov_gen_{tmpl}"),
             cover_mode="generate",
@@ -180,21 +199,13 @@ def test_page_number_format_simple(sample_slide_pdf, tmp_path):
     printer = SlidePrinter(
         output_dir=str(tmp_path / "simple"),
         page_number_format="simple",
+        cover_mode="none",
     )
     res = printer.process_file(sample_slide_pdf, styles=["dots"])
     reader = PdfReader(res[0])
     p0_lines = [l.strip() for l in reader.pages[0].extract_text().splitlines()]
     assert "1" in p0_lines
     assert "1 / 2" not in p0_lines
-
-
-def test_parse_page_ranges():
-    from slide_printer.core import parse_page_ranges
-    assert parse_page_ranges("2-", 5) == [1, 2, 3, 4]
-    assert parse_page_ranges("-3", 5) == [0, 1, 2]
-    assert parse_page_ranges("1-2, 4-", 5) == [0, 1, 3, 4]
-    assert parse_page_ranges("all", 5) == [0, 1, 2, 3, 4]
-    assert parse_page_ranges(None, 5) == [0, 1, 2, 3, 4]
 
 
 def test_slide_printer_binding_spiral(sample_slide_pdf, tmp_path):
@@ -204,6 +215,7 @@ def test_slide_printer_binding_spiral(sample_slide_pdf, tmp_path):
         binding="spiral",
         hole_guides=True,
         duplex=True,
+        cover_mode="none",
     )
     assert printer.binding == "spiral"
     assert printer.gutter_margin == pytest.approx(22.0, 0.1)

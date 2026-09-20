@@ -1,6 +1,7 @@
 """Pattern overlay generators for note sections."""
 
 import io
+import math
 from typing import Tuple, Optional, List
 from pypdf import PdfReader
 from pypdf._page import PageObject
@@ -257,16 +258,27 @@ def generate_cover_page(
     """Generates an editorial notebook cover page inspired by vintage and modernist designs.
 
     Templates:
-      - 'atelier': Zara Home timeless notebook with double hairline borders and quiet serif typography.
-      - 'george': JFK Jr 90s executive brief with architectural header rules and authoritative hierarchy.
-      - 'monograph': Archival heritage stationery with a centered bordered cartouche/bookplate.
-      - 'bauhaus': Swiss modernist layout with asymmetric cross-rules and modernist composition.
-      - 'fifties': Mid-century 1950s Pelican/Penguin tri-band classic with geometric diamond emblem.
-      - 'sixties': 1960s Swiss International Typographic Style (Müller-Brockmann / Helvetica grid).
-      - 'seventies': 1970s warm retro groove & Apollo flight checklist with triple rounded frames.
-      - 'eighties': 1980s Memphis design & early Macintosh 1984 manual with diagonal hatch accents.
-      - 'nineties': 1990s minimalist lookbook & indie zine with corner registration marks & monospace specs.
-      - 'natural': Organic botanical & deep forest editorial on cream art paper with Swiss precision.
+      Classics / Zara:
+        - 'atelier': Zara Home timeless notebook with double hairline borders and quiet serif typography.
+        - 'george': JFK Jr 90s executive brief with architectural header rules and authoritative hierarchy.
+        - 'monograph': Archival heritage stationery with a centered bordered cartouche/bookplate.
+        - 'bauhaus': Swiss modernist layout with asymmetric cross-rules and modernist composition.
+      Decades:
+        - 'fifties': Mid-century 1950s Pelican/Penguin tri-band classic with geometric diamond emblem.
+        - 'sixties': 1960s Swiss International Typographic Style (Müller-Brockmann / Helvetica grid).
+        - 'seventies': 1970s warm retro groove & Apollo flight checklist with triple rounded frames.
+        - 'eighties': 1980s Memphis design & early Macintosh 1984 manual with diagonal hatch accents.
+        - 'nineties': 1990s minimalist lookbook & indie zine with corner registration marks & monospace specs.
+      Seasons:
+        - 'spring': Vernal sage & fresh linen with delicate solar crosshair and airy typography.
+        - 'summer': Mediterranean azure horizon & solar ochre bar with marine precision.
+        - 'autumn': Burnt terracotta & harvest amber with diamond lozenge and warm archival cartouche.
+        - 'winter': Nordic alpine midnight blue & crystalline slate with hexagonal ice compass.
+      Ralph Lauren:
+        - 'polo': Collegiate navy pinstripe & antique gold shield emblem with Ivy League typography.
+        - 'equestrian': Hunter green & saddle leather tan with equestrian stirrup crest & dashed rule.
+      Nature:
+        - 'natural': Deep forest green architectural dossier on unbleached linen with brass accents.
     """
     packet = io.BytesIO()
     c = canvas.Canvas(packet, pagesize=page_size)
@@ -739,153 +751,623 @@ def generate_cover_page(
         c.drawString(m + 28.0, meta_y - 2.0,  f"CONTENT    :: {num_slides or 0} Slide Folios")
 
     elif tpl == "natural":
-        # 10. Natural Botanical & Forest Editorial (Mid-Century Swiss Structure + Organic Harmony)
-        # Background: Warm archival cream art paper
-        c.setFillColor(Color(0.965, 0.953, 0.925, alpha=1.0))
+        # 10. Natural Deep Forest Editorial (Luxury Architectural Notebook)
+        # Background: Warm unbleached linen paper
+        c.setFillColor(Color(0.965, 0.958, 0.942, alpha=1.0))
         c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
-        m = 38.0
-        forest_dark = Color(0.08, 0.21, 0.14, alpha=1.0)
-        forest_ink = Color(0.06, 0.16, 0.10, alpha=1.0)
-        sage = Color(0.28, 0.44, 0.33, alpha=1.0)
-        sage_tint = Color(0.28, 0.44, 0.33, alpha=0.35)
-        sage_pale = Color(0.28, 0.44, 0.33, alpha=0.10)
-        earth_gold = Color(0.72, 0.57, 0.35, alpha=1.0)
+        m = 40.0
+        forest_dark = Color(0.06, 0.18, 0.11, alpha=1.0)  # #0F2E1C deep dark forest green
+        forest_mid = Color(0.12, 0.28, 0.18, alpha=1.0)
+        forest_light = Color(0.24, 0.44, 0.32, alpha=0.35)
+        brass_gold = Color(0.72, 0.58, 0.36, alpha=1.0)
 
-        # Double fine perimeter frame
-        c.setStrokeColor(sage_tint)
-        c.setLineWidth(0.75)
+        # Outer bold forest frame
+        c.setStrokeColor(forest_dark)
+        c.setLineWidth(1.4)
         c.rect(m, m, pw - 2 * m, ph - 2 * m, stroke=1, fill=0)
 
-        c.setStrokeColor(Color(0.28, 0.44, 0.33, alpha=0.18))
+        # Inner fine pinstripe frame
+        c.setStrokeColor(forest_light)
         c.setLineWidth(0.4)
-        c.rect(m + 4.0, m + 4.0, pw - 2 * (m + 4.0), ph - 2 * (m + 4.0), stroke=1, fill=0)
+        c.rect(m + 4.5, m + 4.5, pw - 2 * (m + 4.5), ph - 2 * (m + 4.5), stroke=1, fill=0)
 
-        # Corner botanical corner accents
-        for cx, cy, dx, dy in [
-            (m, ph - m, 1, -1),
-            (pw - m, ph - m, -1, -1),
-            (m, m, 1, 1),
-            (pw - m, m, -1, 1),
-        ]:
-            c.setStrokeColor(earth_gold)
-            c.setLineWidth(0.6)
-            c.line(cx + dx * 2.0, cy + dy * 10.0, cx + dx * 10.0, cy + dy * 2.0)
+        # Corner brass cross-ticks
+        c.setStrokeColor(brass_gold)
+        c.setLineWidth(0.6)
+        for cx, cy in [(m, m), (pw - m, m), (m, ph - m), (pw - m, ph - m)]:
+            c.line(cx - 5.0, cy, cx + 5.0, cy)
+            c.line(cx, cy - 5.0, cx, cy + 5.0)
 
-        # Botanical foliage watermark on right (echoing sixties subtle motif)
-        c.setFillColor(sage_pale)
-        c.setStrokeColor(sage_pale)
-        c.setLineWidth(1.0)
-        stem = c.beginPath()
-        stem.moveTo(pw - m - 40.0, ph * 0.40)
-        stem.curveTo(pw - m - 20.0, ph * 0.55, pw - m - 70.0, ph * 0.68, pw - m - 30.0, ph * 0.80)
-        c.drawPath(stem, stroke=1, fill=0)
-
-        for lx, ly, rx, ry in [
-            (pw - m - 46.0, ph * 0.48, 16.0, 7.0),
-            (pw - m - 28.0, ph * 0.56, 18.0, 8.0),
-            (pw - m - 58.0, ph * 0.65, 20.0, 9.0),
-            (pw - m - 38.0, ph * 0.74, 17.0, 7.5),
-        ]:
-            c.saveState()
-            c.translate(lx, ly)
-            c.rotate(35.0)
-            c.ellipse(-rx / 2.0, -ry / 2.0, rx / 2.0, ry / 2.0, fill=1, stroke=0)
-            c.restoreState()
-
-        # Top deep forest green header bar (structured poise from sixties)
+        # Top deep forest header block
+        hdr_h = 24.0
         c.setFillColor(forest_dark)
-        c.rect(m + 16.0, ph - m - 24.0, pw - 2 * m - 32.0, 4.5, fill=1, stroke=0)
-
-        c.setFillColor(earth_gold)
-        c.rect(m + 16.0, ph - m - 28.5, 48.0, 1.2, fill=1, stroke=0)
+        c.rect(m + 16.0, ph - m - 32.0, pw - 2 * m - 32.0, hdr_h, fill=1, stroke=0)
 
         c.setFont("Helvetica-Bold", 8.0)
-        c.setFillColor(forest_dark)
-        c.drawString(m + 16.0, ph - m - 42.0, "HERBARIUM & SILVA  ·  COLLECTIO NATURALIS")
+        c.setFillColor(Color(0.97, 0.97, 0.96, alpha=0.95))
+        c.drawString(m + 26.0, ph - m - 22.0, "NATURAL COMPENDIUM // EDITORIAL STUDY FOLIO")
 
-        c.setFont("Times-Italic", 8.5)
-        c.setFillColor(sage)
-        c.drawRightString(pw - m - 16.0, ph - m - 42.0, "FASCICULUS NATURAE // VOL. 01")
+        c.setFont("Times-Italic", 8.0)
+        c.setFillColor(brass_gold)
+        c.drawRightString(pw - m - 26.0, ph - m - 22.0, "VOL. 01 · DEEP FOREST ARCHIVE")
 
-        c.setStrokeColor(sage_tint)
-        c.setLineWidth(0.5)
-        c.line(m + 16.0, ph - m - 48.0, pw - m - 16.0, ph - m - 48.0)
+        # Thin brass accent below header block
+        c.setFillColor(brass_gold)
+        c.rect(m + 16.0, ph - m - 35.0, pw - 2 * m - 32.0, 1.0, fill=1, stroke=0)
 
-        # Title & Subtitle block (clean left-aligned editorial hierarchy)
-        title_x = m + 20.0
+        # Title block
+        title_x = m + 22.0
         c.setFont("Helvetica-Bold", 8.0)
-        c.setFillColor(sage)
-        c.drawString(title_x, ph * 0.66, "INDEX BOTANICUS  //  STUDY COMPENDIUM")
+        c.setFillColor(forest_mid)
+        c.drawString(title_x, ph * 0.65, "STUDY DOSSIER · NATURAL EDITION")
 
         c.setFont("Times-Bold", 27)
-        c.setFillColor(forest_ink)
-        lines = wrap_text_lines(clean_title, "Times-Bold", 27, pw - 2 * m - 70.0, c)
-        cur_y = ph * 0.61 + (len(lines) - 1) * 16.0
+        c.setFillColor(forest_dark)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 27, pw - 2 * m - 60.0, c)
+        cur_y = ph * 0.60 + (len(lines) - 1) * 16.0
         for line in lines:
             c.drawString(title_x, cur_y, line)
             cur_y -= 35.0
 
         if subtitle:
             c.setFont("Times-Italic", 13.0)
-            c.setFillColor(sage)
+            c.setFillColor(forest_mid)
             c.drawString(title_x, cur_y - 6.0, subtitle)
             cur_y -= 26.0
 
-        # Organic divider rule with earth gold seed lozenge
+        # Architecture triple rule with brass center lozenge
         rule_y = cur_y - 12.0
         c.setStrokeColor(forest_dark)
         c.setLineWidth(1.0)
-        c.line(title_x, rule_y, title_x + 50.0, rule_y)
+        c.line(title_x, rule_y, title_x + 60.0, rule_y)
 
-        c.setFillColor(earth_gold)
-        c.circle(title_x + 56.0, rule_y, 2.2, fill=1, stroke=0)
+        c.setFillColor(brass_gold)
+        c.rect(title_x + 64.0, rule_y - 2.0, 4.0, 4.0, fill=1, stroke=0)
 
-        c.setStrokeColor(sage_tint)
+        c.setStrokeColor(forest_light)
         c.setLineWidth(0.5)
-        c.line(title_x + 62.0, rule_y, title_x + 130.0, rule_y)
+        c.line(title_x + 72.0, rule_y, pw - m - 22.0, rule_y)
 
-        # Bottom Two-Column Swiss/Natural Metadata Grid
-        grid_y = m + 44.0
-        col_w = (pw - 2 * m - 40.0) / 2.0
+        # Bottom Two-Column Architectural Metadata Grid in Deep Forest
+        grid_y = m + 36.0
+        col_w = (pw - 2 * m - 44.0) / 2.0
 
-        c.setStrokeColor(sage_tint)
+        c.setStrokeColor(forest_dark)
+        c.setLineWidth(0.8)
+        c.line(title_x, grid_y + 44.0, pw - m - 22.0, grid_y + 44.0)
+        c.setStrokeColor(forest_light)
+        c.setLineWidth(0.5)
+        c.line(title_x + col_w, grid_y + 44.0, title_x + col_w, grid_y - 16.0)
+
+        # Col 1
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(forest_mid)
+        c.drawString(title_x, grid_y + 32.0, "STUDENT / AUTHOR")
+        c.setFont("Times-Bold", 10.0)
+        c.setFillColor(forest_dark)
+        c.drawString(title_x, grid_y + 16.0, author or "Natural Dossier")
+
+        c.setFont("Helvetica-Bold", 6.5)
+        c.setFillColor(forest_mid)
+        c.drawString(title_x, grid_y - 2.0, "CONTENT FOLIOS")
+        c.setFont("Times-Italic", 9.0)
+        c.setFillColor(forest_dark)
+        s_cnt = num_slides if num_slides is not None else 0
+        s_word = "slide sheet" if s_cnt == 1 else "slide sheets"
+        c.drawString(title_x, grid_y - 14.0, f"{s_cnt} {s_word} compiled")
+
+        # Col 2
+        col2_x = title_x + col_w + 16.0
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(forest_mid)
+        c.drawString(col2_x, grid_y + 32.0, "DATE / COMPILATION")
+        c.setFont("Times-Bold", 10.0)
+        c.setFillColor(forest_dark)
+        c.drawString(col2_x, grid_y + 16.0, date_str or "Archival Record")
+
+        c.setFont("Helvetica-Bold", 6.5)
+        c.setFillColor(forest_mid)
+        c.drawString(col2_x, grid_y - 2.0, "EDITION")
+        c.setFont("Times-Italic", 9.0)
+        c.setFillColor(forest_dark)
+        c.drawString(col2_x, grid_y - 14.0, "Natural Forest Series // No. 01")
+
+    elif tpl == "spring":
+        # 11. Spring / Vernal Editorial (Fresh Sage Green & Airy Geometry)
+        c.setFillColor(Color(0.985, 0.988, 0.982, alpha=1.0))
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = 42.0
+        sage_deep = Color(0.18, 0.38, 0.25, alpha=1.0)
+        sage_soft = Color(0.35, 0.55, 0.42, alpha=0.8)
+        sage_mist = Color(0.35, 0.55, 0.42, alpha=0.18)
+        blossom_tint = Color(0.78, 0.54, 0.48, alpha=1.0)
+
+        c.setStrokeColor(sage_soft)
+        c.setLineWidth(0.8)
+        c.rect(m, m, pw - 2 * m, ph - 2 * m, stroke=1, fill=0)
+
+        c.setStrokeColor(sage_mist)
+        c.setLineWidth(0.4)
+        c.rect(m + 4.0, m + 4.0, pw - 2 * (m + 4.0), ph - 2 * (m + 4.0), stroke=1, fill=0)
+
+        # Vernal solar crosshair emblem centered in top half
+        lozenge_y = ph * 0.68
+        c.setStrokeColor(sage_deep)
         c.setLineWidth(0.6)
-        c.line(m + 20.0, grid_y + 44.0, pw - m - 20.0, grid_y + 44.0)
-        c.line(m + 20.0 + col_w, grid_y + 44.0, m + 20.0 + col_w, grid_y - 16.0)
+        c.circle(pw / 2.0, lozenge_y, 11.0, stroke=1, fill=0)
+        c.setStrokeColor(blossom_tint)
+        c.line(pw / 2.0 - 15.0, lozenge_y, pw / 2.0 + 15.0, lozenge_y)
+        c.line(pw / 2.0, lozenge_y - 15.0, pw / 2.0, lozenge_y + 15.0)
 
-        # Column 1: Author & Slides
+        # Header tag
+        c.setFont("Helvetica-Bold", 8.0)
+        c.setFillColor(sage_deep)
+        c.drawCentredString(pw / 2.0, ph - m - 32.0, "V E R N A L   C O M P E N D I U M")
+        c.setFont("Times-Italic", 8.0)
+        c.setFillColor(sage_soft)
+        c.drawCentredString(pw / 2.0, ph - m - 46.0, "SPRING SERIES · NEW CYCLE · VOL. I")
+
+        c.setFont("Times-Bold", 25)
+        c.setFillColor(Color(0.12, 0.22, 0.16, alpha=1.0))
+        lines = wrap_text_lines(clean_title, "Times-Bold", 25, pw - 2 * m - 60.0, c)
+        cur_y = lozenge_y - 42.0
+        for line in lines:
+            c.drawCentredString(pw / 2.0, cur_y, line)
+            cur_y -= 33.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 12.0)
+            c.setFillColor(sage_soft)
+            c.drawCentredString(pw / 2.0, cur_y - 8.0, subtitle)
+            cur_y -= 24.0
+
+        # Fine divider
+        c.setStrokeColor(sage_soft)
+        c.setLineWidth(0.5)
+        c.line(pw / 2.0 - 36.0, cur_y - 12.0, pw / 2.0 + 36.0, cur_y - 12.0)
+
+        # Footer
+        meta_y = m + 40.0
         c.setFont("Helvetica-Bold", 7.0)
-        c.setFillColor(sage)
-        c.drawString(m + 20.0, grid_y + 32.0, "AUCTOR / HERBARIUM")
-        c.setFont("Times-Bold", 10.0)
-        c.setFillColor(forest_dark)
-        c.drawString(m + 20.0, grid_y + 16.0, author or "Documentación Natural")
+        c.setFillColor(sage_soft)
+        c.drawCentredString(pw / 2.0, meta_y + 24.0, "CURATED STUDY FOLIO")
+        c.setFont("Times-Roman", 10.0)
+        c.setFillColor(sage_deep)
+        c.drawCentredString(pw / 2.0, meta_y + 10.0, author or "Spring Session Notes")
+        c.setFont("Times-Italic", 8.5)
+        c.setFillColor(sage_soft)
+        c.drawCentredString(pw / 2.0, meta_y - 4.0, date_str or "Springtime")
+        if num_slides is not None:
+            s_word = "slide" if num_slides == 1 else "slides"
+            c.drawCentredString(pw / 2.0, meta_y - 18.0, f"{num_slides} {s_word} compiled")
 
-        c.setFont("Helvetica-Bold", 6.5)
-        c.setFillColor(sage)
-        c.drawString(m + 20.0, grid_y - 2.0, "SPECIMINA")
-        c.setFont("Times-Italic", 9.0)
-        c.setFillColor(forest_dark)
-        s_count = num_slides if num_slides is not None else 0
-        s_word = "folio botanico" if s_count == 1 else "folia botanica"
-        c.drawString(m + 20.0, grid_y - 14.0, f"{s_count} {s_word}")
+    elif tpl == "summer":
+        # 12. Summer / Solstice Editorial (Aegean Azure & Solar Warmth)
+        c.setFillColor(Color(0.99, 0.99, 0.985, alpha=1.0))
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
-        # Column 2: Date & Series
-        col2_x = m + 20.0 + col_w + 16.0
+        m = 42.0
+        azure_deep = Color(0.06, 0.24, 0.44, alpha=1.0)  # Mediterranean deep blue
+        azure_light = Color(0.18, 0.45, 0.70, alpha=0.3)
+        solar_gold = Color(0.86, 0.60, 0.20, alpha=1.0)  # Warm sun gold
+
+        # Top sea horizon bar
+        bar_h = 36.0
+        c.setFillColor(azure_deep)
+        c.rect(0, ph - bar_h, pw, bar_h, fill=1, stroke=0)
+        c.setFillColor(solar_gold)
+        c.rect(0, ph - bar_h - 2.5, pw, 2.5, fill=1, stroke=0)
+
+        c.setFont("Helvetica-Bold", 8.5)
+        c.setFillColor(Color(0.98, 0.98, 0.98, alpha=0.95))
+        c.drawString(m, ph - 22.0, "SOLSTICE COMPENDIUM · SUMMER FOLIO")
+        c.setFont("Helvetica", 8.0)
+        c.drawRightString(pw - m, ph - 22.0, "MEDITERRANEAN ARCHIVE // 02")
+
+        # Double outer frame below bar
+        c.setStrokeColor(azure_light)
+        c.setLineWidth(0.6)
+        c.rect(m, m, pw - 2 * m, ph - m - bar_h - 16.0, stroke=1, fill=0)
+
+        # Title
+        c.setFont("Times-Bold", 27)
+        c.setFillColor(azure_deep)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 27, pw - 2 * m - 50.0, c)
+        cur_y = ph * 0.58 + (len(lines) - 1) * 16.0
+        for line in lines:
+            c.drawString(m + 18.0, cur_y, line)
+            cur_y -= 35.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 13.0)
+            c.setFillColor(Color(0.25, 0.40, 0.55, alpha=0.95))
+            c.drawString(m + 18.0, cur_y - 6.0, subtitle)
+            cur_y -= 26.0
+
+        # Compass tick line
+        rule_y = cur_y - 14.0
+        c.setStrokeColor(azure_deep)
+        c.setLineWidth(1.0)
+        c.line(m + 18.0, rule_y, m + 80.0, rule_y)
+        c.setStrokeColor(solar_gold)
+        c.setLineWidth(1.0)
+        c.line(m + 80.0, rule_y, m + 120.0, rule_y)
+
+        # Clean metadata grid
+        meta_y = m + 32.0
         c.setFont("Helvetica-Bold", 7.0)
-        c.setFillColor(sage)
-        c.drawString(col2_x, grid_y + 32.0, "CHRONICA / REGISTRUM")
-        c.setFont("Times-Bold", 10.0)
-        c.setFillColor(forest_dark)
-        c.drawString(col2_x, grid_y + 16.0, date_str or "Silva & Campus")
+        c.setFillColor(solar_gold)
+        c.drawString(m + 18.0, meta_y + 36.0, "STUDY RESEARCHER")
+        c.setFont("Times-Roman", 10.0)
+        c.setFillColor(azure_deep)
+        c.drawString(m + 18.0, meta_y + 22.0, author or "Summer Study Compendium")
 
-        c.setFont("Helvetica-Bold", 6.5)
-        c.setFillColor(sage)
-        c.drawString(col2_x, grid_y - 2.0, "SERIES")
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(solar_gold)
+        c.drawString(m + 18.0, meta_y + 6.0, "CALENDAR REGISTRY")
         c.setFont("Times-Italic", 9.0)
-        c.setFillColor(forest_dark)
-        c.drawString(col2_x, grid_y - 14.0, "Collectio Botanica · Fasc. I")
+        c.setFillColor(azure_deep)
+        c.drawString(m + 18.0, meta_y - 8.0, date_str or "Summer Solstice")
+
+        if num_slides is not None:
+            s_word = "slide" if num_slides == 1 else "slides"
+            c.setFont("Helvetica", 8.0)
+            c.setFillColor(Color(0.4, 0.5, 0.6, alpha=0.9))
+            c.drawRightString(pw - m - 18.0, meta_y + 22.0, f"{num_slides} {s_word} in dossier")
+
+    elif tpl == "autumn":
+        # 13. Autumn / Equinox Editorial (Burnt Terracotta & Amber Warmth)
+        c.setFillColor(Color(0.965, 0.945, 0.915, alpha=1.0))
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = 40.0
+        terracotta = Color(0.62, 0.22, 0.12, alpha=1.0)  # Rust terracotta #9E381F
+        amber = Color(0.76, 0.50, 0.18, alpha=1.0)       # Amber gold
+        espresso = Color(0.18, 0.10, 0.08, alpha=1.0)    # Dark coffee ink
+
+        # Heavy inner rule, thin outer rule (classical bookbindery)
+        c.setStrokeColor(amber)
+        c.setLineWidth(0.5)
+        c.rect(m, m, pw - 2 * m, ph - 2 * m, stroke=1, fill=0)
+
+        c.setStrokeColor(terracotta)
+        c.setLineWidth(1.4)
+        c.rect(m + 4.0, m + 4.0, pw - 2 * (m + 4.0), ph - 2 * (m + 4.0), stroke=1, fill=0)
+
+        # Header tag
+        c.setFont("Helvetica-Bold", 8.0)
+        c.setFillColor(terracotta)
+        c.drawCentredString(pw / 2.0, ph - m - 32.0, "E Q U I N O X   D O S S I E R")
+        c.setFont("Times-Italic", 8.0)
+        c.setFillColor(amber)
+        c.drawCentredString(pw / 2.0, ph - m - 46.0, "AUTUMNAL COMPENDIUM · OCTOBER ARCHIVE")
+
+        # Centered amber diamond lozenge
+        loz_y = ph * 0.65
+        c.setStrokeColor(terracotta)
+        c.setLineWidth(0.8)
+        p = c.beginPath()
+        p.moveTo(pw / 2.0, loz_y + 11.0)
+        p.lineTo(pw / 2.0 + 11.0, loz_y)
+        p.lineTo(pw / 2.0, loz_y - 11.0)
+        p.lineTo(pw / 2.0 - 11.0, loz_y)
+        p.close()
+        c.drawPath(p, stroke=1, fill=0)
+
+        c.setFillColor(amber)
+        c.circle(pw / 2.0, loz_y, 2.5, fill=1, stroke=0)
+
+        # Title
+        c.setFont("Times-Bold", 25)
+        c.setFillColor(espresso)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 25, pw - 2 * m - 60.0, c)
+        cur_y = loz_y - 36.0
+        for line in lines:
+            c.drawCentredString(pw / 2.0, cur_y, line)
+            cur_y -= 32.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 12.0)
+            c.setFillColor(terracotta)
+            c.drawCentredString(pw / 2.0, cur_y - 8.0, subtitle)
+            cur_y -= 24.0
+
+        c.setStrokeColor(amber)
+        c.setLineWidth(0.6)
+        c.line(pw / 2.0 - 45.0, cur_y - 10.0, pw / 2.0 + 45.0, cur_y - 10.0)
+
+        # Bottom archival box
+        box_y = m + 32.0
+        box_w = pw - 2 * m - 40.0
+        box_h = 68.0
+        bx = (pw - box_w) / 2.0
+        c.setStrokeColor(Color(0.62, 0.22, 0.12, alpha=0.25))
+        c.setLineWidth(0.5)
+        c.rect(bx, box_y, box_w, box_h, stroke=1, fill=0)
+
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(terracotta)
+        c.drawString(bx + 14.0, box_y + box_h - 18.0, "RESEARCHER / STUDENT:")
+        c.setFont("Times-Roman", 9.5)
+        c.setFillColor(espresso)
+        c.drawString(bx + 140.0, box_y + box_h - 18.0, author or "Autumn Studies")
+
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(terracotta)
+        c.drawString(bx + 14.0, box_y + box_h - 36.0, "SESSION DATE:")
+        c.setFont("Times-Roman", 9.5)
+        c.setFillColor(espresso)
+        c.drawString(bx + 140.0, box_y + box_h - 36.0, date_str or "Autumn Season")
+
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(terracotta)
+        c.drawString(bx + 14.0, box_y + box_h - 54.0, "FOLIO ARCHIVE:")
+        c.setFont("Times-Italic", 8.5)
+        c.setFillColor(amber)
+        s_cnt = num_slides if num_slides is not None else 0
+        c.drawString(bx + 140.0, box_y + box_h - 54.0, f"{s_cnt} Slide Sheets Compiled")
+
+    elif tpl == "winter":
+        # 14. Winter / Hiemal Editorial (Nordic Alpine Midnight & Crystalline Slate)
+        c.setFillColor(Color(0.965, 0.975, 0.985, alpha=1.0))
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = 44.0
+        midnight = Color(0.08, 0.14, 0.24, alpha=1.0)
+        slate_blue = Color(0.32, 0.46, 0.60, alpha=1.0)
+        frost_line = Color(0.32, 0.46, 0.60, alpha=0.25)
+
+        # Alpine triple hairline borders
+        c.setStrokeColor(slate_blue)
+        c.setLineWidth(0.8)
+        c.rect(m, m, pw - 2 * m, ph - 2 * m, stroke=1, fill=0)
+        c.setStrokeColor(frost_line)
+        c.setLineWidth(0.35)
+        c.rect(m + 4.0, m + 4.0, pw - 2 * (m + 4.0), ph - 2 * (m + 4.0), stroke=1, fill=0)
+        c.rect(m + 7.0, m + 7.0, pw - 2 * (m + 7.0), ph - 2 * (m + 7.0), stroke=1, fill=0)
+
+        # Geometric ice crystal / 6-axis star emblem
+        star_y = ph * 0.68
+        c.setStrokeColor(slate_blue)
+        c.setLineWidth(0.7)
+        c.circle(pw / 2.0, star_y, 13.0, stroke=1, fill=0)
+        for deg in [0, 60, 120]:
+            rad = math.radians(deg)
+            dx = 17.0 * math.cos(rad)
+            dy = 17.0 * math.sin(rad)
+            c.line(pw / 2.0 - dx, star_y - dy, pw / 2.0 + dx, star_y + dy)
+
+        # Header
+        c.setFont("Helvetica-Bold", 8.0)
+        c.setFillColor(midnight)
+        c.drawCentredString(pw / 2.0, ph - m - 28.0, "HIEMAL COMPENDIUM · ARCTIC ARCHIVE")
+        c.setFont("Helvetica", 7.0)
+        c.setFillColor(slate_blue)
+        c.drawCentredString(pw / 2.0, ph - m - 42.0, "NORDIC ALPINE EDITION · NO. 04")
+
+        # Title
+        c.setFont("Times-Bold", 26)
+        c.setFillColor(midnight)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 26, pw - 2 * m - 60.0, c)
+        cur_y = star_y - 42.0
+        for line in lines:
+            c.drawCentredString(pw / 2.0, cur_y, line)
+            cur_y -= 34.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 12.0)
+            c.setFillColor(slate_blue)
+            c.drawCentredString(pw / 2.0, cur_y - 8.0, subtitle)
+            cur_y -= 24.0
+
+        c.setStrokeColor(slate_blue)
+        c.setLineWidth(0.5)
+        c.line(pw / 2.0 - 30.0, cur_y - 12.0, pw / 2.0 + 30.0, cur_y - 12.0)
+
+        # Metadata
+        meta_y = m + 38.0
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(slate_blue)
+        c.drawCentredString(pw / 2.0, meta_y + 24.0, "OPERATOR / CURATOR")
+        c.setFont("Helvetica", 9.5)
+        c.setFillColor(midnight)
+        c.drawCentredString(pw / 2.0, meta_y + 10.0, author or "Winter Session")
+        c.setFont("Helvetica", 8.0)
+        c.setFillColor(slate_blue)
+        c.drawCentredString(pw / 2.0, meta_y - 4.0, date_str or "Winter Season")
+        if num_slides is not None:
+            s_word = "slide" if num_slides == 1 else "slides"
+            c.drawCentredString(pw / 2.0, meta_y - 18.0, f"{num_slides} {s_word} indexed")
+
+    elif tpl == "polo":
+        # 15. Ralph Lauren Polo (Collegiate Navy & Gold Shield Heritage)
+        c.setFillColor(Color(0.975, 0.970, 0.960, alpha=1.0))
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = 40.0
+        rl_navy = Color(0.06, 0.12, 0.25, alpha=1.0)   # Ralph Lauren deep collegiate navy #0F1F40
+        rl_green = Color(0.08, 0.22, 0.14, alpha=1.0)  # Ralph Lauren deep hunter green #143824
+        rl_gold = Color(0.76, 0.60, 0.32, alpha=1.0)   # Heritage antique gold #C29952
+
+        # Heavy outer navy border
+        c.setStrokeColor(rl_navy)
+        c.setLineWidth(2.5)
+        c.rect(m, m, pw - 2 * m, ph - 2 * m, stroke=1, fill=0)
+
+        # Inner gold pinstripe border
+        c.setStrokeColor(rl_gold)
+        c.setLineWidth(0.6)
+        c.rect(m + 4.5, m + 4.5, pw - 2 * (m + 4.5), ph - 2 * (m + 4.5), stroke=1, fill=0)
+
+        # Inner fine navy hairline
+        c.setStrokeColor(rl_navy)
+        c.setLineWidth(0.4)
+        c.rect(m + 8.0, m + 8.0, pw - 2 * (m + 8.0), ph - 2 * (m + 8.0), stroke=1, fill=0)
+
+        # Top collegiate banner
+        c.setFont("Times-Bold", 8.5)
+        c.setFillColor(rl_navy)
+        c.drawCentredString(pw / 2.0, ph - m - 28.0, "P O L O   S T U D Y   C O M P E N D I U M")
+        c.setFont("Times-Italic", 7.5)
+        c.setFillColor(rl_green)
+        c.drawCentredString(pw / 2.0, ph - m - 42.0, "HERITAGE COLLEGIATE ARCHIVE · EST. 1967")
+
+        # Centered collegiate shield/crest emblem
+        shield_y = ph * 0.66
+        c.setStrokeColor(rl_navy)
+        c.setLineWidth(1.2)
+        sh_p = c.beginPath()
+        sh_p.moveTo(pw / 2.0, shield_y + 16.0)
+        sh_p.lineTo(pw / 2.0 + 16.0, shield_y)
+        sh_p.lineTo(pw / 2.0, shield_y - 16.0)
+        sh_p.lineTo(pw / 2.0 - 16.0, shield_y)
+        sh_p.close()
+        c.drawPath(sh_p, stroke=1, fill=0)
+
+        # Inner gold circle & cross
+        c.setStrokeColor(rl_gold)
+        c.setLineWidth(0.6)
+        c.circle(pw / 2.0, shield_y, 9.0, stroke=1, fill=0)
+        c.line(pw / 2.0 - 11.0, shield_y, pw / 2.0 + 11.0, shield_y)
+        c.line(pw / 2.0, shield_y - 11.0, pw / 2.0, shield_y + 11.0)
+
+        c.setFont("Times-Bold", 5.5)
+        c.setFillColor(rl_navy)
+        c.drawCentredString(pw / 2.0, shield_y - 1.5, "RL")
+
+        # Title
+        c.setFont("Times-Bold", 26)
+        c.setFillColor(rl_navy)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 26, pw - 2 * m - 60.0, c)
+        cur_y = shield_y - 42.0
+        for line in lines:
+            c.drawCentredString(pw / 2.0, cur_y, line)
+            cur_y -= 34.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 12.5)
+            c.setFillColor(rl_green)
+            c.drawCentredString(pw / 2.0, cur_y - 6.0, subtitle)
+            cur_y -= 24.0
+
+        # Navy and gold dual divider line
+        c.setStrokeColor(rl_navy)
+        c.setLineWidth(1.0)
+        c.line(pw / 2.0 - 40.0, cur_y - 10.0, pw / 2.0 + 40.0, cur_y - 10.0)
+        c.setStrokeColor(rl_gold)
+        c.setLineWidth(0.5)
+        c.line(pw / 2.0 - 25.0, cur_y - 13.0, pw / 2.0 + 25.0, cur_y - 13.0)
+
+        # Bottom collegiate registry
+        meta_y = m + 36.0
+        c.setFont("Times-Bold", 7.5)
+        c.setFillColor(rl_gold)
+        c.drawCentredString(pw / 2.0, meta_y + 26.0, "FELLOW / STUDENT RECORD")
+        c.setFont("Times-Bold", 10.5)
+        c.setFillColor(rl_navy)
+        c.drawCentredString(pw / 2.0, meta_y + 12.0, author or "Collegiate Member")
+        c.setFont("Times-Italic", 8.5)
+        c.setFillColor(rl_green)
+        c.drawCentredString(pw / 2.0, meta_y - 2.0, date_str or "Academic Term")
+        if num_slides is not None:
+            s_word = "slide folio" if num_slides == 1 else "slide folios"
+            c.setFont("Times-Roman", 8.0)
+            c.setFillColor(Color(0.4, 0.45, 0.5, alpha=0.85))
+            c.drawCentredString(pw / 2.0, meta_y - 16.0, f"{num_slides} {s_word} bound")
+
+    elif tpl == "equestrian":
+        # 16. Ralph Lauren Equestrian (British Country Estate & Hunter Green)
+        c.setFillColor(Color(0.965, 0.952, 0.925, alpha=1.0))
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = 40.0
+        hunter_green = Color(0.08, 0.20, 0.13, alpha=1.0)  # Hunter green #143321
+        saddle_tan = Color(0.55, 0.30, 0.14, alpha=1.0)    # Saddle leather tan #8C4D24
+        brass = Color(0.74, 0.58, 0.30, alpha=1.0)         # Antique equestrian brass #BD944D
+
+        # Triple frame in hunter green and saddle tan
+        c.setStrokeColor(hunter_green)
+        c.setLineWidth(1.6)
+        c.rect(m, m, pw - 2 * m, ph - 2 * m, stroke=1, fill=0)
+
+        c.setStrokeColor(brass)
+        c.setLineWidth(0.6)
+        c.rect(m + 4.0, m + 4.0, pw - 2 * (m + 4.0), ph - 2 * (m + 4.0), stroke=1, fill=0)
+
+        c.setStrokeColor(saddle_tan)
+        c.setLineWidth(0.4)
+        c.setDash(4, 3)
+        c.rect(m + 7.5, m + 7.5, pw - 2 * (m + 7.5), ph - 2 * (m + 7.5), stroke=1, fill=0)
+        c.setDash()
+
+        # Header tag
+        c.setFont("Times-Bold", 8.5)
+        c.setFillColor(hunter_green)
+        c.drawCentredString(pw / 2.0, ph - m - 28.0, "E Q U E S T R I A N   &   F I E L D")
+        c.setFont("Times-Italic", 7.5)
+        c.setFillColor(saddle_tan)
+        c.drawCentredString(pw / 2.0, ph - m - 42.0, "COUNTRY ESTATE ARCHIVE · SERIES IX")
+
+        # Centered stirrup / buckle motif
+        stirrup_y = ph * 0.66
+        c.setStrokeColor(brass)
+        c.setLineWidth(1.2)
+        p = c.beginPath()
+        p.arc(pw / 2.0 - 13.0, stirrup_y - 6.0, pw / 2.0 + 13.0, stirrup_y + 20.0, 0, 180)
+        p.lineTo(pw / 2.0 - 13.0, stirrup_y - 8.0)
+        p.lineTo(pw / 2.0 + 13.0, stirrup_y - 8.0)
+        p.close()
+        c.drawPath(p, stroke=1, fill=0)
+
+        c.setStrokeColor(saddle_tan)
+        c.setLineWidth(1.0)
+        c.line(pw / 2.0 - 16.0, stirrup_y - 8.0, pw / 2.0 + 16.0, stirrup_y - 8.0)
+
+        # Title
+        c.setFont("Times-Bold", 25)
+        c.setFillColor(hunter_green)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 25, pw - 2 * m - 60.0, c)
+        cur_y = stirrup_y - 36.0
+        for line in lines:
+            c.drawCentredString(pw / 2.0, cur_y, line)
+            cur_y -= 33.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 12.0)
+            c.setFillColor(saddle_tan)
+            c.drawCentredString(pw / 2.0, cur_y - 6.0, subtitle)
+            cur_y -= 24.0
+
+        # Saddle-stitched divider line
+        rule_y = cur_y - 10.0
+        c.setStrokeColor(saddle_tan)
+        c.setLineWidth(0.8)
+        c.setDash(3, 3)
+        c.line(pw / 2.0 - 45.0, rule_y, pw / 2.0 + 45.0, rule_y)
+        c.setDash()
+
+        c.setFillColor(brass)
+        c.circle(pw / 2.0 - 50.0, rule_y, 2.0, fill=1, stroke=0)
+        c.circle(pw / 2.0 + 50.0, rule_y, 2.0, fill=1, stroke=0)
+
+        # Metadata
+        meta_y = m + 36.0
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(saddle_tan)
+        c.drawCentredString(pw / 2.0, meta_y + 26.0, "ESTATE REGISTER")
+        c.setFont("Times-Bold", 10.5)
+        c.setFillColor(hunter_green)
+        c.drawCentredString(pw / 2.0, meta_y + 12.0, author or "Estate Member")
+        c.setFont("Times-Italic", 8.5)
+        c.setFillColor(saddle_tan)
+        c.drawCentredString(pw / 2.0, meta_y - 2.0, date_str or "Season Archive")
+        if num_slides is not None:
+            s_word = "slide" if num_slides == 1 else "slides"
+            c.setFont("Times-Roman", 8.0)
+            c.setFillColor(brass)
+            c.drawCentredString(pw / 2.0, meta_y - 16.0, f"{num_slides} {s_word} registered")
 
     else:
         # Default: Atelier Notebook (Zara Home Classic)

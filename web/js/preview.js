@@ -1050,172 +1050,588 @@
       ctx.fillText(options.coverAuthor || 'Studio Dossier', m, metaY + 16);
       ctx.fillText(dateFormatted, m + (pw - 2 * m) * 0.52, metaY + 16);
 
-    } else if (tpl === 'natural' || tpl === 'botanical' || tpl === 'forest' || tpl === 'organic') {
-      // 10. Natural Botanical & Forest Editorial (Mid-Century Swiss Structure + Organic Harmony)
-      // Warm archival cream art paper background
-      ctx.fillStyle = '#f6f3ec';
+    } else if (tpl === 'natural' || tpl === 'forest' || tpl === 'verde' || tpl === 'bosque' || tpl === 'nature') {
+      // 10. Natural Deep Forest Editorial (Luxury Architectural Notebook)
+      ctx.fillStyle = '#f6f5f0';
       ctx.fillRect(0, 0, pw, ph);
 
-      const m = 38;
-      const forestDark = '#143524';
-      const forestInk = '#0f291c';
-      const sage = '#477054';
-      const sageTint = 'rgba(71, 112, 84, 0.35)';
-      const sagePale = 'rgba(71, 112, 84, 0.12)';
-      const earthGold = '#b89259';
+      const m = 40;
+      const forestDark = '#0f2e1c';
+      const forestMid = '#1e472e';
+      const forestLight = 'rgba(38, 70, 51, 0.35)';
+      const brassGold = '#b8945c';
 
-      // Double perimeter frame
-      ctx.strokeStyle = sageTint;
-      ctx.lineWidth = 0.75;
+      ctx.strokeStyle = forestDark;
+      ctx.lineWidth = 1.4;
       ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
 
-      ctx.strokeStyle = 'rgba(71, 112, 84, 0.18)';
+      ctx.strokeStyle = forestLight;
       ctx.lineWidth = 0.4;
-      ctx.strokeRect(m + 4, m + 4, pw - 2 * (m + 4), ph - 2 * (m + 4));
+      ctx.strokeRect(m + 4.5, m + 4.5, pw - 2 * (m + 4.5), ph - 2 * (m + 4.5));
 
-      // Corner botanical accents
-      ctx.strokeStyle = earthGold;
+      ctx.strokeStyle = brassGold;
       ctx.lineWidth = 0.6;
-      for (const [cx, cy, dx, dy] of [
-        [m, m, 1, 1],
-        [pw - m, m, -1, 1],
-        [m, ph - m, 1, -1],
-        [pw - m, ph - m, -1, -1]
-      ]) {
+      for (const [cx, cy] of [[m, m], [pw - m, m], [m, ph - m], [pw - m, ph - m]]) {
         ctx.beginPath();
-        ctx.moveTo(cx + dx * 2, cy + dy * 10);
-        ctx.lineTo(cx + dx * 10, cy + dy * 2);
+        ctx.moveTo(cx - 5, cy); ctx.lineTo(cx + 5, cy);
+        ctx.moveTo(cx, cy - 5); ctx.lineTo(cx, cy + 5);
         ctx.stroke();
       }
 
-      // Botanical foliage watermark on right
-      ctx.fillStyle = sagePale;
-      ctx.strokeStyle = sagePale;
-      ctx.lineWidth = 1.0;
-      ctx.beginPath();
-      ctx.moveTo(pw - m - 40, ph * 0.40);
-      ctx.bezierCurveTo(pw - m - 20, ph * 0.55, pw - m - 70, ph * 0.68, pw - m - 30, ph * 0.80);
-      ctx.stroke();
-
-      for (const [lx, ly, rx, ry] of [
-        [pw - m - 46, ph * 0.48, 16, 7],
-        [pw - m - 28, ph * 0.56, 18, 8],
-        [pw - m - 58, ph * 0.65, 20, 9],
-        [pw - m - 38, ph * 0.74, 17, 7.5]
-      ]) {
-        ctx.save();
-        ctx.translate(lx, ly);
-        ctx.rotate((35 * Math.PI) / 180);
-        ctx.beginPath();
-        ctx.ellipse(0, 0, rx / 2, ry / 2, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      // Top deep forest green header bar (Swiss poise from sixties)
       ctx.fillStyle = forestDark;
-      ctx.fillRect(m + 16, m + 16, pw - 2 * m - 32, 4.5);
-
-      ctx.fillStyle = earthGold;
-      ctx.fillRect(m + 16, m + 22, 48, 1.2);
+      ctx.fillRect(m + 16, m + 14, pw - 2 * m - 32, 24);
 
       ctx.font = '700 8px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = forestDark;
+      ctx.fillStyle = '#f8f9fa';
       ctx.textAlign = 'left';
-      ctx.fillText('HERBARIUM & SILVA  ·  COLLECTIO NATURALIS', m + 16, m + 36);
+      ctx.fillText('NATURAL COMPENDIUM // EDITORIAL STUDY FOLIO', m + 26, m + 29);
 
-      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = sage;
+      ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = brassGold;
       ctx.textAlign = 'right';
-      ctx.fillText('FASCICULUS NATURAE // VOL. 01', pw - m - 16, m + 36);
+      ctx.fillText('VOL. 01 · DEEP FOREST ARCHIVE', pw - m - 26, m + 29);
 
-      ctx.strokeStyle = sageTint;
-      ctx.lineWidth = 0.5;
-      ctx.beginPath();
-      ctx.moveTo(m + 16, m + 42);
-      ctx.lineTo(pw - m - 16, m + 42);
-      ctx.stroke();
+      ctx.fillStyle = brassGold;
+      ctx.fillRect(m + 16, m + 38, pw - 2 * m - 32, 1.2);
 
-      // Title & Subtitle block
-      const titleX = m + 20;
+      const titleX = m + 22;
       ctx.font = '700 8px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = sage;
+      ctx.fillStyle = forestMid;
       ctx.textAlign = 'left';
-      ctx.fillText('INDEX BOTANICUS  //  STUDY COMPENDIUM', titleX, ph * 0.35);
+      ctx.fillText('STUDY DOSSIER · NATURAL EDITION', titleX, ph * 0.35);
 
       ctx.font = '700 27px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = forestInk;
-      const endTitleY = drawWrappedText(ctx, titleText, titleX, ph * 0.39, pw - 2 * m - 70, 35);
+      ctx.fillStyle = forestDark;
+      const endTitleY = drawWrappedText(ctx, titleText, titleX, ph * 0.39, pw - 2 * m - 60, 35);
 
       let ruleY = endTitleY + 22;
       if (options.studyTitle) {
         ctx.font = 'italic 13px "Times New Roman", Times, Georgia, serif';
-        ctx.fillStyle = sage;
+        ctx.fillStyle = forestMid;
         ctx.fillText(options.studyTitle, titleX, ruleY);
         ruleY += 22;
       }
 
-      // Organic divider rule with earth gold seed lozenge
       ctx.strokeStyle = forestDark;
       ctx.lineWidth = 1.0;
       ctx.beginPath();
       ctx.moveTo(titleX, ruleY);
-      ctx.lineTo(titleX + 50, ruleY);
+      ctx.lineTo(titleX + 60, ruleY);
       ctx.stroke();
 
-      ctx.fillStyle = earthGold;
-      ctx.beginPath();
-      ctx.arc(titleX + 56, ruleY, 2.2, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.fillStyle = brassGold;
+      ctx.fillRect(titleX + 64, ruleY - 2, 4, 4);
 
-      ctx.strokeStyle = sageTint;
+      ctx.strokeStyle = forestLight;
       ctx.lineWidth = 0.5;
       ctx.beginPath();
-      ctx.moveTo(titleX + 62, ruleY);
-      ctx.lineTo(titleX + 130, ruleY);
+      ctx.moveTo(titleX + 72, ruleY);
+      ctx.lineTo(pw - m - 22, ruleY);
       ctx.stroke();
 
-      // Bottom Two-Column Swiss/Natural Metadata Grid
-      const gridY = ph * 0.82;
-      const colW = (pw - 2 * m - 40) / 2;
+      const gridY = ph * 0.80;
+      const colW = (pw - 2 * m - 44) / 2;
 
-      ctx.strokeStyle = sageTint;
+      ctx.strokeStyle = forestDark;
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(titleX, gridY);
+      ctx.lineTo(pw - m - 22, gridY);
+      ctx.stroke();
+
+      ctx.strokeStyle = forestLight;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(titleX + colW, gridY);
+      ctx.lineTo(titleX + colW, gridY + 45);
+      ctx.stroke();
+
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = forestMid;
+      ctx.fillText('STUDENT / AUTHOR', titleX, gridY + 12);
+      ctx.font = '700 10px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = forestDark;
+      ctx.fillText(options.coverAuthor || 'Natural Dossier', titleX, gridY + 26);
+      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = forestMid;
+      const totalS = options.totalPages || 0;
+      ctx.fillText(`${totalS} ${totalS === 1 ? 'slide sheet' : 'slide sheets'} compiled`, titleX, gridY + 39);
+
+      const col2X = titleX + colW + 16;
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = forestMid;
+      ctx.fillText('DATE / COMPILATION', col2X, gridY + 12);
+      ctx.font = '700 10px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = forestDark;
+      ctx.fillText(dateFormatted || 'Archival Record', col2X, gridY + 26);
+      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = forestMid;
+      ctx.fillText('Natural Forest Series // No. 01', col2X, gridY + 39);
+
+    } else if (tpl === 'spring' || tpl === 'primavera' || tpl === 'vernal') {
+      // 11. Spring / Vernal Editorial (Fresh Sage Green & Airy Geometry)
+      ctx.fillStyle = '#fafcf8';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const m = 42;
+      const sageDeep = '#2a5a3a';
+      const sageSoft = '#558265';
+      const blossomTint = '#c78a7f';
+
+      ctx.strokeStyle = sageSoft;
+      ctx.lineWidth = 0.8;
+      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+
+      ctx.strokeStyle = 'rgba(85, 130, 101, 0.18)';
+      ctx.lineWidth = 0.4;
+      ctx.strokeRect(m + 4, m + 4, pw - 2 * (m + 4), ph - 2 * (m + 4));
+
+      const lozY = ph * 0.32;
+      ctx.strokeStyle = sageDeep;
       ctx.lineWidth = 0.6;
       ctx.beginPath();
-      ctx.moveTo(m + 20, gridY);
-      ctx.lineTo(pw - m - 20, gridY);
-      ctx.moveTo(m + 20 + colW, gridY);
-      ctx.lineTo(m + 20 + colW, gridY + 45);
+      ctx.arc(pw / 2, lozY, 11, 0, Math.PI * 2);
       ctx.stroke();
 
-      // Column 1: Author & Slides
+      ctx.strokeStyle = blossomTint;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2 - 15, lozY); ctx.lineTo(pw / 2 + 15, lozY);
+      ctx.moveTo(pw / 2, lozY - 15); ctx.lineTo(pw / 2, lozY + 15);
+      ctx.stroke();
+
+      ctx.font = '700 8px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = sageDeep;
+      ctx.textAlign = 'center';
+      ctx.fillText('V E R N A L   C O M P E N D I U M', pw / 2, m + 28);
+
+      ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = sageSoft;
+      ctx.fillText('SPRING SERIES · NEW CYCLE · VOL. I', pw / 2, m + 42);
+
+      ctx.font = '700 25px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#1c3022';
+      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, lozY + 42, pw - 2 * m - 60, 33);
+
+      let subY = endTitleY + 22;
+      if (options.studyTitle) {
+        ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = sageSoft;
+        ctx.fillText(options.studyTitle, pw / 2, subY);
+        subY += 22;
+      }
+
+      ctx.strokeStyle = sageSoft;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2 - 36, subY); ctx.lineTo(pw / 2 + 36, subY);
+      ctx.stroke();
+
+      const metaY = ph * 0.82;
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = sage;
+      ctx.fillStyle = sageSoft;
+      ctx.fillText('CURATED STUDY FOLIO', pw / 2, metaY);
+
+      ctx.font = '10px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = sageDeep;
+      ctx.fillText(options.coverAuthor || 'Spring Session Notes', pw / 2, metaY + 14);
+
+      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = sageSoft;
+      ctx.fillText(dateFormatted || 'Springtime', pw / 2, metaY + 28);
+
+    } else if (tpl === 'summer' || tpl === 'verano' || tpl === 'estio') {
+      // 12. Summer / Solstice Editorial (Aegean Azure & Solar Warmth)
+      ctx.fillStyle = '#fdfdfb';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const m = 42;
+      const azureDeep = '#0f3a63';
+      const solarGold = '#d69633';
+
+      const barH = 36;
+      ctx.fillStyle = azureDeep;
+      ctx.fillRect(0, 0, pw, barH);
+      ctx.fillStyle = solarGold;
+      ctx.fillRect(0, barH, pw, 2.5);
+
+      ctx.font = '700 8.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'left';
-      ctx.fillText('AUCTOR / HERBARIUM', m + 20, gridY + 12);
+      ctx.fillText('SOLSTICE COMPENDIUM · SUMMER FOLIO', m, 22);
+      ctx.textAlign = 'right';
+      ctx.fillText('MEDITERRANEAN ARCHIVE // 02', pw - m, 22);
 
-      ctx.font = '700 10px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = forestDark;
-      ctx.fillText(options.coverAuthor || 'Documentación Natural', m + 20, gridY + 26);
+      ctx.strokeStyle = 'rgba(15, 58, 99, 0.25)';
+      ctx.lineWidth = 0.6;
+      ctx.strokeRect(m, barH + 16, pw - 2 * m, ph - barH - m - 16);
 
-      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = sage;
-      const totalS = options.totalPages || 0;
-      ctx.fillText(`${totalS} ${totalS === 1 ? 'folio botanico' : 'folia botanica'}`, m + 20, gridY + 39);
+      ctx.font = '700 27px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = azureDeep;
+      ctx.textAlign = 'left';
+      const endTitleY = drawWrappedText(ctx, titleText, m + 18, ph * 0.38, pw - 2 * m - 50, 35);
 
-      // Column 2: Date & Series
-      const col2X = m + 20 + colW + 16;
+      let subY = endTitleY + 22;
+      if (options.studyTitle) {
+        ctx.font = 'italic 13px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#3a668f';
+        ctx.fillText(options.studyTitle, m + 18, subY);
+        subY += 22;
+      }
+
+      ctx.strokeStyle = azureDeep;
+      ctx.lineWidth = 1.0;
+      ctx.beginPath();
+      ctx.moveTo(m + 18, subY); ctx.lineTo(m + 80, subY);
+      ctx.stroke();
+      ctx.strokeStyle = solarGold;
+      ctx.beginPath();
+      ctx.moveTo(m + 80, subY); ctx.lineTo(m + 120, subY);
+      ctx.stroke();
+
+      const metaY = ph * 0.82;
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = sage;
-      ctx.fillText('CHRONICA / REGISTRUM', col2X, gridY + 12);
+      ctx.fillStyle = solarGold;
+      ctx.fillText('STUDY RESEARCHER', m + 18, metaY);
+      ctx.font = '10px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = azureDeep;
+      ctx.fillText(options.coverAuthor || 'Summer Study Compendium', m + 18, metaY + 14);
 
-      ctx.font = '700 10px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = forestDark;
-      ctx.fillText(dateFormatted || 'Silva & Campus', col2X, gridY + 26);
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = solarGold;
+      ctx.fillText('CALENDAR REGISTRY', m + 18, metaY + 28);
+      ctx.font = 'italic 9px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = azureDeep;
+      ctx.fillText(dateFormatted || 'Summer Solstice', m + 18, metaY + 40);
 
+    } else if (tpl === 'autumn' || tpl === 'otono' || tpl === 'otonno' || tpl === 'fall') {
+      // 13. Autumn / Equinox Editorial (Burnt Terracotta & Amber Warmth)
+      ctx.fillStyle = '#f7f2ea';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const m = 40;
+      const terracotta = '#9e381f';
+      const amber = '#c2812e';
+      const espresso = '#2e1a14';
+
+      ctx.strokeStyle = amber;
+      ctx.lineWidth = 0.5;
+      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+
+      ctx.strokeStyle = terracotta;
+      ctx.lineWidth = 1.4;
+      ctx.strokeRect(m + 4, m + 4, pw - 2 * (m + 4), ph - 2 * (m + 4));
+
+      ctx.font = '700 8px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = terracotta;
+      ctx.textAlign = 'center';
+      ctx.fillText('E Q U I N O X   D O S S I E R', pw / 2, m + 28);
+
+      ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = amber;
+      ctx.fillText('AUTUMNAL COMPENDIUM · OCTOBER ARCHIVE', pw / 2, m + 42);
+
+      const lozY = ph * 0.35;
+      ctx.strokeStyle = terracotta;
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2, lozY - 11);
+      ctx.lineTo(pw / 2 + 11, lozY);
+      ctx.lineTo(pw / 2, lozY + 11);
+      ctx.lineTo(pw / 2 - 11, lozY);
+      ctx.closePath();
+      ctx.stroke();
+
+      ctx.fillStyle = amber;
+      ctx.beginPath();
+      ctx.arc(pw / 2, lozY, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.font = '700 25px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = espresso;
+      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, lozY + 40, pw - 2 * m - 60, 32);
+
+      let subY = endTitleY + 22;
+      if (options.studyTitle) {
+        ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = terracotta;
+        ctx.fillText(options.studyTitle, pw / 2, subY);
+        subY += 22;
+      }
+
+      ctx.strokeStyle = amber;
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2 - 45, subY); ctx.lineTo(pw / 2 + 45, subY);
+      ctx.stroke();
+
+      const boxY = ph * 0.80;
+      const boxW = pw - 2 * m - 40;
+      const boxH = 55;
+      const bx = (pw - boxW) / 2;
+      ctx.strokeStyle = 'rgba(158, 56, 31, 0.25)';
+      ctx.lineWidth = 0.5;
+      ctx.strokeRect(bx, boxY, boxW, boxH);
+
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = terracotta;
+      ctx.textAlign = 'left';
+      ctx.fillText('RESEARCHER / STUDENT:', bx + 14, boxY + 16);
+      ctx.font = '9.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = espresso;
+      ctx.fillText(options.coverAuthor || 'Autumn Studies', bx + 140, boxY + 16);
+
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = terracotta;
+      ctx.fillText('SESSION DATE:', bx + 14, boxY + 32);
+      ctx.font = '9.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = espresso;
+      ctx.fillText(dateFormatted || 'Autumn Season', bx + 140, boxY + 32);
+
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = terracotta;
+      ctx.fillText('FOLIO ARCHIVE:', bx + 14, boxY + 47);
       ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = sage;
-      ctx.fillText('Collectio Botanica · Fasc. I', col2X, gridY + 39);
+      ctx.fillStyle = amber;
+      ctx.fillText(`${options.totalPages || 0} Slide Sheets Compiled`, bx + 140, boxY + 47);
+
+    } else if (tpl === 'winter' || tpl === 'invierno' || tpl === 'hiemal') {
+      // 14. Winter / Hiemal Editorial (Nordic Alpine Midnight & Crystalline Slate)
+      ctx.fillStyle = '#f6f9fc';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const m = 44;
+      const midnight = '#14243d';
+      const slateBlue = '#527599';
+
+      ctx.strokeStyle = slateBlue;
+      ctx.lineWidth = 0.8;
+      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeStyle = 'rgba(82, 117, 153, 0.25)';
+      ctx.lineWidth = 0.35;
+      ctx.strokeRect(m + 4, m + 4, pw - 2 * (m + 4), ph - 2 * (m + 4));
+      ctx.strokeRect(m + 7, m + 7, pw - 2 * (m + 7), ph - 2 * (m + 7));
+
+      const starY = ph * 0.32;
+      ctx.strokeStyle = slateBlue;
+      ctx.lineWidth = 0.7;
+      ctx.beginPath();
+      ctx.arc(pw / 2, starY, 13, 0, Math.PI * 2);
+      ctx.stroke();
+      for (const deg of [0, 60, 120]) {
+        const rad = (deg * Math.PI) / 180;
+        const dx = 17 * Math.cos(rad);
+        const dy = 17 * Math.sin(rad);
+        ctx.beginPath();
+        ctx.moveTo(pw / 2 - dx, starY - dy); ctx.lineTo(pw / 2 + dx, starY + dy);
+        ctx.stroke();
+      }
+
+      ctx.font = '700 8px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = midnight;
+      ctx.textAlign = 'center';
+      ctx.fillText('HIEMAL COMPENDIUM · ARCTIC ARCHIVE', pw / 2, m + 28);
+      ctx.font = '7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = slateBlue;
+      ctx.fillText('NORDIC ALPINE EDITION · NO. 04', pw / 2, m + 42);
+
+      ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = midnight;
+      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, starY + 44, pw - 2 * m - 60, 34);
+
+      let subY = endTitleY + 22;
+      if (options.studyTitle) {
+        ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = slateBlue;
+        ctx.fillText(options.studyTitle, pw / 2, subY);
+        subY += 22;
+      }
+
+      ctx.strokeStyle = slateBlue;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2 - 30, subY); ctx.lineTo(pw / 2 + 30, subY);
+      ctx.stroke();
+
+      const metaY = ph * 0.82;
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = slateBlue;
+      ctx.fillText('OPERATOR / CURATOR', pw / 2, metaY);
+      ctx.font = '9.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = midnight;
+      ctx.fillText(options.coverAuthor || 'Winter Session', pw / 2, metaY + 14);
+      ctx.font = '8px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = slateBlue;
+      ctx.fillText(dateFormatted || 'Winter Season', pw / 2, metaY + 28);
+
+    } else if (tpl === 'polo' || tpl === 'ralph' || tpl === 'ralphlauren' || tpl === 'ralph_lauren' || tpl === 'rl_polo' || tpl === 'preppy') {
+      // 15. Ralph Lauren Polo (Collegiate Navy & Gold Shield Heritage)
+      ctx.fillStyle = '#faf7f2';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const m = 40;
+      const rlNavy = '#0f1f40';
+      const rlGreen = '#143824';
+      const rlGold = '#c29952';
+
+      ctx.strokeStyle = rlNavy;
+      ctx.lineWidth = 2.5;
+      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeStyle = rlGold;
+      ctx.lineWidth = 0.6;
+      ctx.strokeRect(m + 4.5, m + 4.5, pw - 2 * (m + 4.5), ph - 2 * (m + 4.5));
+      ctx.strokeStyle = rlNavy;
+      ctx.lineWidth = 0.4;
+      ctx.strokeRect(m + 8.0, m + 8.0, pw - 2 * (m + 8.0), ph - 2 * (m + 8.0));
+
+      ctx.font = '700 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = rlNavy;
+      ctx.textAlign = 'center';
+      ctx.fillText('P O L O   S T U D Y   C O M P E N D I U M', pw / 2, m + 28);
+      ctx.font = 'italic 7.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = rlGreen;
+      ctx.fillText('HERITAGE COLLEGIATE ARCHIVE · EST. 1967', pw / 2, m + 42);
+
+      const shieldY = ph * 0.34;
+      ctx.strokeStyle = rlNavy;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2, shieldY - 16);
+      ctx.lineTo(pw / 2 + 16, shieldY);
+      ctx.lineTo(pw / 2, shieldY + 16);
+      ctx.lineTo(pw / 2 - 16, shieldY);
+      ctx.closePath();
+      ctx.stroke();
+
+      ctx.strokeStyle = rlGold;
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.arc(pw / 2, shieldY, 9, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(pw / 2 - 11, shieldY); ctx.lineTo(pw / 2 + 11, shieldY);
+      ctx.moveTo(pw / 2, shieldY - 11); ctx.lineTo(pw / 2, shieldY + 11);
+      ctx.stroke();
+
+      ctx.font = '700 5.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = rlNavy;
+      ctx.fillText('RL', pw / 2, shieldY + 2);
+
+      ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = rlNavy;
+      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, shieldY + 44, pw - 2 * m - 60, 34);
+
+      let subY = endTitleY + 20;
+      if (options.studyTitle) {
+        ctx.font = 'italic 12.5px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = rlGreen;
+        ctx.fillText(options.studyTitle, pw / 2, subY);
+        subY += 20;
+      }
+
+      ctx.strokeStyle = rlNavy;
+      ctx.lineWidth = 1.0;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2 - 40, subY); ctx.lineTo(pw / 2 + 40, subY);
+      ctx.stroke();
+      ctx.strokeStyle = rlGold;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2 - 25, subY + 3); ctx.lineTo(pw / 2 + 25, subY + 3);
+      ctx.stroke();
+
+      const metaY = ph * 0.82;
+      ctx.font = '700 7.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = rlGold;
+      ctx.fillText('FELLOW / STUDENT RECORD', pw / 2, metaY);
+      ctx.font = '700 10.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = rlNavy;
+      ctx.fillText(options.coverAuthor || 'Collegiate Member', pw / 2, metaY + 15);
+      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = rlGreen;
+      ctx.fillText(dateFormatted || 'Academic Term', pw / 2, metaY + 28);
+
+    } else if (tpl === 'equestrian' || tpl === 'ecuestre' || tpl === 'rl_equestrian' || tpl === 'saddlery') {
+      // 16. Ralph Lauren Equestrian (British Country Estate & Hunter Green)
+      ctx.fillStyle = '#f8f5ee';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const m = 40;
+      const hunterGreen = '#143321';
+      const saddleTan = '#8c4d24';
+      const brass = '#bd944d';
+
+      ctx.strokeStyle = hunterGreen;
+      ctx.lineWidth = 1.6;
+      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+      ctx.strokeStyle = brass;
+      ctx.lineWidth = 0.6;
+      ctx.strokeRect(m + 4, m + 4, pw - 2 * (m + 4), ph - 2 * (m + 4));
+
+      ctx.strokeStyle = saddleTan;
+      ctx.lineWidth = 0.4;
+      ctx.setLineDash([4, 3]);
+      ctx.strokeRect(m + 7.5, m + 7.5, pw - 2 * (m + 7.5), ph - 2 * (m + 7.5));
+      ctx.setLineDash([]);
+
+      ctx.font = '700 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = hunterGreen;
+      ctx.textAlign = 'center';
+      ctx.fillText('E Q U E S T R I A N   &   F I E L D', pw / 2, m + 28);
+      ctx.font = 'italic 7.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = saddleTan;
+      ctx.fillText('COUNTRY ESTATE ARCHIVE · SERIES IX', pw / 2, m + 42);
+
+      const stirrupY = ph * 0.34;
+      ctx.strokeStyle = brass;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2 - 13, stirrupY - 12);
+      ctx.lineTo(pw / 2 - 13, stirrupY + 8);
+      ctx.lineTo(pw / 2 + 13, stirrupY + 8);
+      ctx.lineTo(pw / 2 + 13, stirrupY - 12);
+      ctx.stroke();
+      ctx.strokeStyle = saddleTan;
+      ctx.lineWidth = 1.0;
+      ctx.beginPath();
+      ctx.moveTo(pw / 2 - 16, stirrupY + 8); ctx.lineTo(pw / 2 + 16, stirrupY + 8);
+      ctx.stroke();
+
+      ctx.font = '700 25px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = hunterGreen;
+      const endTitleY = drawWrappedText(ctx, titleText, pw / 2, stirrupY + 38, pw - 2 * m - 60, 33);
+
+      let subY = endTitleY + 20;
+      if (options.studyTitle) {
+        ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = saddleTan;
+        ctx.fillText(options.studyTitle, pw / 2, subY);
+        subY += 20;
+      }
+
+      ctx.strokeStyle = saddleTan;
+      ctx.lineWidth = 0.8;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(pw / 2 - 45, subY); ctx.lineTo(pw / 2 + 45, subY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = brass;
+      ctx.beginPath();
+      ctx.arc(pw / 2 - 50, subY, 2, 0, Math.PI * 2);
+      ctx.arc(pw / 2 + 50, subY, 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      const metaY = ph * 0.82;
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = saddleTan;
+      ctx.fillText('ESTATE REGISTER', pw / 2, metaY);
+      ctx.font = '700 10.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = hunterGreen;
+      ctx.fillText(options.coverAuthor || 'Estate Member', pw / 2, metaY + 15);
+      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = saddleTan;
+      ctx.fillText(dateFormatted || 'Season Archive', pw / 2, metaY + 28);
 
     } else {
       // Default: Atelier Notebook (Zara Home Classic)
