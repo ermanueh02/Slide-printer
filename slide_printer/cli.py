@@ -743,7 +743,7 @@ Examples:
         "--cover-template",
         choices=COVER_TEMPLATES + list(COVER_TEMPLATE_ALIASES.keys()),
         default="atelier",
-        help="Editorial cover template: 'atelier', 'george', 'monograph', 'bauhaus', 'fifties' (50s), 'sixties' (60s), 'seventies' (70s), 'eighties' (80s), 'nineties' (90s) (default: atelier).",
+        help="Editorial cover template: 'atelier', 'george', 'monograph', 'bauhaus', 'fifties' (50s), 'sixties' (60s), 'seventies' (70s), 'eighties' (80s), 'nineties' (90s), 'natural' (botanical) (default: atelier).",
     )
     parser.add_argument(
         "--cover-title",

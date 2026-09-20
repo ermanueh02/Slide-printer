@@ -1050,6 +1050,173 @@
       ctx.fillText(options.coverAuthor || 'Studio Dossier', m, metaY + 16);
       ctx.fillText(dateFormatted, m + (pw - 2 * m) * 0.52, metaY + 16);
 
+    } else if (tpl === 'natural' || tpl === 'botanical' || tpl === 'forest' || tpl === 'organic') {
+      // 10. Natural Botanical & Forest Editorial (Mid-Century Swiss Structure + Organic Harmony)
+      // Warm archival cream art paper background
+      ctx.fillStyle = '#f6f3ec';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const m = 38;
+      const forestDark = '#143524';
+      const forestInk = '#0f291c';
+      const sage = '#477054';
+      const sageTint = 'rgba(71, 112, 84, 0.35)';
+      const sagePale = 'rgba(71, 112, 84, 0.12)';
+      const earthGold = '#b89259';
+
+      // Double perimeter frame
+      ctx.strokeStyle = sageTint;
+      ctx.lineWidth = 0.75;
+      ctx.strokeRect(m, m, pw - 2 * m, ph - 2 * m);
+
+      ctx.strokeStyle = 'rgba(71, 112, 84, 0.18)';
+      ctx.lineWidth = 0.4;
+      ctx.strokeRect(m + 4, m + 4, pw - 2 * (m + 4), ph - 2 * (m + 4));
+
+      // Corner botanical accents
+      ctx.strokeStyle = earthGold;
+      ctx.lineWidth = 0.6;
+      for (const [cx, cy, dx, dy] of [
+        [m, m, 1, 1],
+        [pw - m, m, -1, 1],
+        [m, ph - m, 1, -1],
+        [pw - m, ph - m, -1, -1]
+      ]) {
+        ctx.beginPath();
+        ctx.moveTo(cx + dx * 2, cy + dy * 10);
+        ctx.lineTo(cx + dx * 10, cy + dy * 2);
+        ctx.stroke();
+      }
+
+      // Botanical foliage watermark on right
+      ctx.fillStyle = sagePale;
+      ctx.strokeStyle = sagePale;
+      ctx.lineWidth = 1.0;
+      ctx.beginPath();
+      ctx.moveTo(pw - m - 40, ph * 0.40);
+      ctx.bezierCurveTo(pw - m - 20, ph * 0.55, pw - m - 70, ph * 0.68, pw - m - 30, ph * 0.80);
+      ctx.stroke();
+
+      for (const [lx, ly, rx, ry] of [
+        [pw - m - 46, ph * 0.48, 16, 7],
+        [pw - m - 28, ph * 0.56, 18, 8],
+        [pw - m - 58, ph * 0.65, 20, 9],
+        [pw - m - 38, ph * 0.74, 17, 7.5]
+      ]) {
+        ctx.save();
+        ctx.translate(lx, ly);
+        ctx.rotate((35 * Math.PI) / 180);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, rx / 2, ry / 2, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Top deep forest green header bar (Swiss poise from sixties)
+      ctx.fillStyle = forestDark;
+      ctx.fillRect(m + 16, m + 16, pw - 2 * m - 32, 4.5);
+
+      ctx.fillStyle = earthGold;
+      ctx.fillRect(m + 16, m + 22, 48, 1.2);
+
+      ctx.font = '700 8px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = forestDark;
+      ctx.textAlign = 'left';
+      ctx.fillText('HERBARIUM & SILVA  ·  COLLECTIO NATURALIS', m + 16, m + 36);
+
+      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = sage;
+      ctx.textAlign = 'right';
+      ctx.fillText('FASCICULUS NATURAE // VOL. 01', pw - m - 16, m + 36);
+
+      ctx.strokeStyle = sageTint;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(m + 16, m + 42);
+      ctx.lineTo(pw - m - 16, m + 42);
+      ctx.stroke();
+
+      // Title & Subtitle block
+      const titleX = m + 20;
+      ctx.font = '700 8px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = sage;
+      ctx.textAlign = 'left';
+      ctx.fillText('INDEX BOTANICUS  //  STUDY COMPENDIUM', titleX, ph * 0.35);
+
+      ctx.font = '700 27px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = forestInk;
+      const endTitleY = drawWrappedText(ctx, titleText, titleX, ph * 0.39, pw - 2 * m - 70, 35);
+
+      let ruleY = endTitleY + 22;
+      if (options.studyTitle) {
+        ctx.font = 'italic 13px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = sage;
+        ctx.fillText(options.studyTitle, titleX, ruleY);
+        ruleY += 22;
+      }
+
+      // Organic divider rule with earth gold seed lozenge
+      ctx.strokeStyle = forestDark;
+      ctx.lineWidth = 1.0;
+      ctx.beginPath();
+      ctx.moveTo(titleX, ruleY);
+      ctx.lineTo(titleX + 50, ruleY);
+      ctx.stroke();
+
+      ctx.fillStyle = earthGold;
+      ctx.beginPath();
+      ctx.arc(titleX + 56, ruleY, 2.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = sageTint;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(titleX + 62, ruleY);
+      ctx.lineTo(titleX + 130, ruleY);
+      ctx.stroke();
+
+      // Bottom Two-Column Swiss/Natural Metadata Grid
+      const gridY = ph * 0.82;
+      const colW = (pw - 2 * m - 40) / 2;
+
+      ctx.strokeStyle = sageTint;
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(m + 20, gridY);
+      ctx.lineTo(pw - m - 20, gridY);
+      ctx.moveTo(m + 20 + colW, gridY);
+      ctx.lineTo(m + 20 + colW, gridY + 45);
+      ctx.stroke();
+
+      // Column 1: Author & Slides
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = sage;
+      ctx.textAlign = 'left';
+      ctx.fillText('AUCTOR / HERBARIUM', m + 20, gridY + 12);
+
+      ctx.font = '700 10px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = forestDark;
+      ctx.fillText(options.coverAuthor || 'Documentación Natural', m + 20, gridY + 26);
+
+      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = sage;
+      const totalS = options.totalPages || 0;
+      ctx.fillText(`${totalS} ${totalS === 1 ? 'folio botanico' : 'folia botanica'}`, m + 20, gridY + 39);
+
+      // Column 2: Date & Series
+      const col2X = m + 20 + colW + 16;
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = sage;
+      ctx.fillText('CHRONICA / REGISTRUM', col2X, gridY + 12);
+
+      ctx.font = '700 10px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = forestDark;
+      ctx.fillText(dateFormatted || 'Silva & Campus', col2X, gridY + 26);
+
+      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = sage;
+      ctx.fillText('Collectio Botanica · Fasc. I', col2X, gridY + 39);
+
     } else {
       // Default: Atelier Notebook (Zara Home Classic)
       const inset = 36;

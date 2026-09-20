@@ -413,3 +413,23 @@ def test_cli_decade_cover_template_flag(sample_slide_pdf, tmp_path):
     assert out_pdf.exists()
     reader = PdfReader(str(out_pdf))
     assert len(reader.pages) == 3
+
+
+def test_cli_natural_cover_template_flag(sample_slide_pdf, tmp_path):
+    out_dir = str(tmp_path / "cli_natural")
+    code = main([
+        "-i", sample_slide_pdf,
+        "-s", "lines",
+        "--generate-cover",
+        "--cover-template", "natural",
+        "--cover-title", "Flora & Silva Compendium",
+        "--cover-author", "Botanist Alexander",
+        "-o", out_dir,
+        "-q",
+    ])
+    assert code == 0
+    base = os.path.splitext(os.path.basename(sample_slide_pdf))[0]
+    out_pdf = tmp_path / "cli_natural" / "lines" / f"{base}_lines.pdf"
+    assert out_pdf.exists()
+    reader = PdfReader(str(out_pdf))
+    assert len(reader.pages) == 3

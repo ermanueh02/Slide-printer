@@ -266,6 +266,7 @@ def generate_cover_page(
       - 'seventies': 1970s warm retro groove & Apollo flight checklist with triple rounded frames.
       - 'eighties': 1980s Memphis design & early Macintosh 1984 manual with diagonal hatch accents.
       - 'nineties': 1990s minimalist lookbook & indie zine with corner registration marks & monospace specs.
+      - 'natural': Organic botanical & deep forest editorial on cream art paper with Swiss precision.
     """
     packet = io.BytesIO()
     c = canvas.Canvas(packet, pagesize=page_size)
@@ -736,6 +737,155 @@ def generate_cover_page(
         c.drawString(m + 28.0, meta_y + 26.0, f"CURATOR    :: {author or 'Anonymous'}")
         c.drawString(m + 28.0, meta_y + 12.0, f"TIMESTAMP  :: {date_str or 'Autumn 1996'}")
         c.drawString(m + 28.0, meta_y - 2.0,  f"CONTENT    :: {num_slides or 0} Slide Folios")
+
+    elif tpl == "natural":
+        # 10. Natural Botanical & Forest Editorial (Mid-Century Swiss Structure + Organic Harmony)
+        # Background: Warm archival cream art paper
+        c.setFillColor(Color(0.965, 0.953, 0.925, alpha=1.0))
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = 38.0
+        forest_dark = Color(0.08, 0.21, 0.14, alpha=1.0)
+        forest_ink = Color(0.06, 0.16, 0.10, alpha=1.0)
+        sage = Color(0.28, 0.44, 0.33, alpha=1.0)
+        sage_tint = Color(0.28, 0.44, 0.33, alpha=0.35)
+        sage_pale = Color(0.28, 0.44, 0.33, alpha=0.10)
+        earth_gold = Color(0.72, 0.57, 0.35, alpha=1.0)
+
+        # Double fine perimeter frame
+        c.setStrokeColor(sage_tint)
+        c.setLineWidth(0.75)
+        c.rect(m, m, pw - 2 * m, ph - 2 * m, stroke=1, fill=0)
+
+        c.setStrokeColor(Color(0.28, 0.44, 0.33, alpha=0.18))
+        c.setLineWidth(0.4)
+        c.rect(m + 4.0, m + 4.0, pw - 2 * (m + 4.0), ph - 2 * (m + 4.0), stroke=1, fill=0)
+
+        # Corner botanical corner accents
+        for cx, cy, dx, dy in [
+            (m, ph - m, 1, -1),
+            (pw - m, ph - m, -1, -1),
+            (m, m, 1, 1),
+            (pw - m, m, -1, 1),
+        ]:
+            c.setStrokeColor(earth_gold)
+            c.setLineWidth(0.6)
+            c.line(cx + dx * 2.0, cy + dy * 10.0, cx + dx * 10.0, cy + dy * 2.0)
+
+        # Botanical foliage watermark on right (echoing sixties subtle motif)
+        c.setFillColor(sage_pale)
+        c.setStrokeColor(sage_pale)
+        c.setLineWidth(1.0)
+        stem = c.beginPath()
+        stem.moveTo(pw - m - 40.0, ph * 0.40)
+        stem.curveTo(pw - m - 20.0, ph * 0.55, pw - m - 70.0, ph * 0.68, pw - m - 30.0, ph * 0.80)
+        c.drawPath(stem, stroke=1, fill=0)
+
+        for lx, ly, rx, ry in [
+            (pw - m - 46.0, ph * 0.48, 16.0, 7.0),
+            (pw - m - 28.0, ph * 0.56, 18.0, 8.0),
+            (pw - m - 58.0, ph * 0.65, 20.0, 9.0),
+            (pw - m - 38.0, ph * 0.74, 17.0, 7.5),
+        ]:
+            c.saveState()
+            c.translate(lx, ly)
+            c.rotate(35.0)
+            c.ellipse(-rx / 2.0, -ry / 2.0, rx / 2.0, ry / 2.0, fill=1, stroke=0)
+            c.restoreState()
+
+        # Top deep forest green header bar (structured poise from sixties)
+        c.setFillColor(forest_dark)
+        c.rect(m + 16.0, ph - m - 24.0, pw - 2 * m - 32.0, 4.5, fill=1, stroke=0)
+
+        c.setFillColor(earth_gold)
+        c.rect(m + 16.0, ph - m - 28.5, 48.0, 1.2, fill=1, stroke=0)
+
+        c.setFont("Helvetica-Bold", 8.0)
+        c.setFillColor(forest_dark)
+        c.drawString(m + 16.0, ph - m - 42.0, "HERBARIUM & SILVA  ·  COLLECTIO NATURALIS")
+
+        c.setFont("Times-Italic", 8.5)
+        c.setFillColor(sage)
+        c.drawRightString(pw - m - 16.0, ph - m - 42.0, "FASCICULUS NATURAE // VOL. 01")
+
+        c.setStrokeColor(sage_tint)
+        c.setLineWidth(0.5)
+        c.line(m + 16.0, ph - m - 48.0, pw - m - 16.0, ph - m - 48.0)
+
+        # Title & Subtitle block (clean left-aligned editorial hierarchy)
+        title_x = m + 20.0
+        c.setFont("Helvetica-Bold", 8.0)
+        c.setFillColor(sage)
+        c.drawString(title_x, ph * 0.66, "INDEX BOTANICUS  //  STUDY COMPENDIUM")
+
+        c.setFont("Times-Bold", 27)
+        c.setFillColor(forest_ink)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 27, pw - 2 * m - 70.0, c)
+        cur_y = ph * 0.61 + (len(lines) - 1) * 16.0
+        for line in lines:
+            c.drawString(title_x, cur_y, line)
+            cur_y -= 35.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 13.0)
+            c.setFillColor(sage)
+            c.drawString(title_x, cur_y - 6.0, subtitle)
+            cur_y -= 26.0
+
+        # Organic divider rule with earth gold seed lozenge
+        rule_y = cur_y - 12.0
+        c.setStrokeColor(forest_dark)
+        c.setLineWidth(1.0)
+        c.line(title_x, rule_y, title_x + 50.0, rule_y)
+
+        c.setFillColor(earth_gold)
+        c.circle(title_x + 56.0, rule_y, 2.2, fill=1, stroke=0)
+
+        c.setStrokeColor(sage_tint)
+        c.setLineWidth(0.5)
+        c.line(title_x + 62.0, rule_y, title_x + 130.0, rule_y)
+
+        # Bottom Two-Column Swiss/Natural Metadata Grid
+        grid_y = m + 44.0
+        col_w = (pw - 2 * m - 40.0) / 2.0
+
+        c.setStrokeColor(sage_tint)
+        c.setLineWidth(0.6)
+        c.line(m + 20.0, grid_y + 44.0, pw - m - 20.0, grid_y + 44.0)
+        c.line(m + 20.0 + col_w, grid_y + 44.0, m + 20.0 + col_w, grid_y - 16.0)
+
+        # Column 1: Author & Slides
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(sage)
+        c.drawString(m + 20.0, grid_y + 32.0, "AUCTOR / HERBARIUM")
+        c.setFont("Times-Bold", 10.0)
+        c.setFillColor(forest_dark)
+        c.drawString(m + 20.0, grid_y + 16.0, author or "Documentación Natural")
+
+        c.setFont("Helvetica-Bold", 6.5)
+        c.setFillColor(sage)
+        c.drawString(m + 20.0, grid_y - 2.0, "SPECIMINA")
+        c.setFont("Times-Italic", 9.0)
+        c.setFillColor(forest_dark)
+        s_count = num_slides if num_slides is not None else 0
+        s_word = "folio botanico" if s_count == 1 else "folia botanica"
+        c.drawString(m + 20.0, grid_y - 14.0, f"{s_count} {s_word}")
+
+        # Column 2: Date & Series
+        col2_x = m + 20.0 + col_w + 16.0
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(sage)
+        c.drawString(col2_x, grid_y + 32.0, "CHRONICA / REGISTRUM")
+        c.setFont("Times-Bold", 10.0)
+        c.setFillColor(forest_dark)
+        c.drawString(col2_x, grid_y + 16.0, date_str or "Silva & Campus")
+
+        c.setFont("Helvetica-Bold", 6.5)
+        c.setFillColor(sage)
+        c.drawString(col2_x, grid_y - 2.0, "SERIES")
+        c.setFont("Times-Italic", 9.0)
+        c.setFillColor(forest_dark)
+        c.drawString(col2_x, grid_y - 14.0, "Collectio Botanica · Fasc. I")
 
     else:
         # Default: Atelier Notebook (Zara Home Classic)

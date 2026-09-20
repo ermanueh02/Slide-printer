@@ -231,7 +231,7 @@ def test_slide_printer_binding_binder(sample_slide_pdf, tmp_path):
 
 
 def test_decade_cover_templates(sample_slide_pdf, tmp_path):
-    templates = ["fifties", "sixties", "seventies", "eighties", "nineties"]
+    templates = ["fifties", "sixties", "seventies", "eighties", "nineties", "natural"]
     for tpl in templates:
         out_dir = str(tmp_path / f"cover_{tpl}")
         printer = SlidePrinter(

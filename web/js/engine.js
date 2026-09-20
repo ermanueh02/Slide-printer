@@ -1397,6 +1397,223 @@
         page.drawText(todayStr, { x: m + (pw - 2 * m) * 0.52, y: metaY, size: 10.5, font: timesFont, color: rgb(0.07, 0.07, 0.07) });
       }
 
+    } else if (tpl === 'natural' || tpl === 'botanical' || tpl === 'forest' || tpl === 'organic') {
+      // 10. Natural Botanical & Forest Editorial (Mid-Century Swiss Structure + Organic Harmony)
+      // Background: Warm archival cream art paper
+      page.drawRectangle({
+        x: 0,
+        y: 0,
+        width: pw,
+        height: ph,
+        color: rgb(0.965, 0.953, 0.925),
+      });
+
+      const m = 38;
+      const forestDark = rgb(0.08, 0.21, 0.14);
+      const forestInk = rgb(0.06, 0.16, 0.10);
+      const sage = rgb(0.28, 0.44, 0.33);
+      const earthGold = rgb(0.72, 0.57, 0.35);
+
+      // Double perimeter frame
+      page.drawRectangle({
+        x: m,
+        y: m,
+        width: pw - 2 * m,
+        height: ph - 2 * m,
+        borderColor: sage,
+        borderWidth: 0.75,
+        borderOpacity: 0.35,
+      });
+
+      page.drawRectangle({
+        x: m + 4,
+        y: m + 4,
+        width: pw - 2 * (m + 4),
+        height: ph - 2 * (m + 4),
+        borderColor: sage,
+        borderWidth: 0.4,
+        borderOpacity: 0.18,
+      });
+
+      // Corner botanical accents
+      for (const [cx, cy, dx, dy] of [
+        [m, ph - m, 1, -1],
+        [pw - m, ph - m, -1, -1],
+        [m, m, 1, 1],
+        [pw - m, m, -1, 1],
+      ]) {
+        page.drawLine({
+          start: { x: cx + dx * 2, y: cy + dy * 10 },
+          end: { x: cx + dx * 10, y: cy + dy * 2 },
+          thickness: 0.6,
+          color: earthGold,
+        });
+      }
+
+      // Top forest green header bar (sixties architectural poise)
+      page.drawRectangle({
+        x: m + 16,
+        y: ph - m - 24,
+        width: pw - 2 * m - 32,
+        height: 4.5,
+        color: forestDark,
+      });
+
+      page.drawRectangle({
+        x: m + 16,
+        y: ph - m - 28.5,
+        width: 48,
+        height: 1.2,
+        color: earthGold,
+      });
+
+      const natSansBold = fontMap.helveticaBold || timesBold;
+      const natItalic = fontMap.timesItalic || timesFont;
+      const natSerifBold = timesBold;
+
+      if (natSansBold) {
+        page.drawText('HERBARIUM & SILVA  ·  COLLECTIO NATURALIS', {
+          x: m + 16,
+          y: ph - m - 42,
+          size: 8.0,
+          font: natSansBold,
+          color: forestDark,
+        });
+      }
+
+      if (natItalic) {
+        const rightLabel = 'FASCICULUS NATURAE // VOL. 01';
+        const rightW = natItalic.widthOfTextAtSize(rightLabel, 8.5);
+        page.drawText(rightLabel, {
+          x: pw - m - 16 - rightW,
+          y: ph - m - 42,
+          size: 8.5,
+          font: natItalic,
+          color: sage,
+        });
+      }
+
+      page.drawLine({
+        start: { x: m + 16, y: ph - m - 48 },
+        end: { x: pw - m - 16, y: ph - m - 48 },
+        thickness: 0.5,
+        color: sage,
+        opacity: 0.35,
+      });
+
+      // Title & Subtitle block
+      const titleX = m + 20;
+      if (natSansBold) {
+        page.drawText('INDEX BOTANICUS  //  STUDY COMPENDIUM', {
+          x: titleX,
+          y: ph * 0.66,
+          size: 8.0,
+          font: natSansBold,
+          color: sage,
+        });
+      }
+
+      const titleSize = 27;
+      const titleLineHeight = 35;
+      const maxTitleW = pw - 2 * m - 70;
+      const titleLines = wrapTextIntoLines(titleText, natSerifBold, titleSize, maxTitleW);
+      let curTitleY = ph * 0.61 + (titleLines.length - 1) * 16;
+
+      for (const line of titleLines) {
+        if (natSerifBold) {
+          page.drawText(line, {
+            x: titleX,
+            y: curTitleY,
+            size: titleSize,
+            font: natSerifBold,
+            color: forestInk,
+          });
+        }
+        curTitleY -= titleLineHeight;
+      }
+
+      if (options.studyTitle && natItalic) {
+        page.drawText(options.studyTitle, {
+          x: titleX,
+          y: curTitleY - 6,
+          size: 13.0,
+          font: natItalic,
+          color: sage,
+        });
+        curTitleY -= 26;
+      }
+
+      // Botanical divider rule with seed pip
+      const ruleY = curTitleY - 12;
+      page.drawLine({
+        start: { x: titleX, y: ruleY },
+        end: { x: titleX + 50, y: ruleY },
+        thickness: 1.0,
+        color: forestDark,
+      });
+
+      page.drawCircle({
+        x: titleX + 56,
+        y: ruleY,
+        size: 2.2,
+        color: earthGold,
+      });
+
+      page.drawLine({
+        start: { x: titleX + 62, y: ruleY },
+        end: { x: titleX + 130, y: ruleY },
+        thickness: 0.5,
+        color: sage,
+        opacity: 0.35,
+      });
+
+      // Bottom Two-Column Swiss/Natural Metadata Grid
+      const gridY = m + 44;
+      const colW = (pw - 2 * m - 40) / 2;
+
+      page.drawLine({
+        start: { x: m + 20, y: gridY + 44 },
+        end: { x: pw - m - 20, y: gridY + 44 },
+        thickness: 0.6,
+        color: sage,
+        opacity: 0.35,
+      });
+
+      page.drawLine({
+        start: { x: m + 20 + colW, y: gridY + 44 },
+        end: { x: m + 20 + colW, y: gridY - 16 },
+        thickness: 0.6,
+        color: sage,
+        opacity: 0.35,
+      });
+
+      // Column 1: Author & Slides
+      if (natSansBold) {
+        page.drawText('AUCTOR / HERBARIUM', { x: m + 20, y: gridY + 32, size: 7.0, font: natSansBold, color: sage });
+        page.drawText('SPECIMINA', { x: m + 20, y: gridY - 2, size: 6.5, font: natSansBold, color: sage });
+      }
+      if (natSerifBold) {
+        page.drawText(options.author || 'Documentación Natural', { x: m + 20, y: gridY + 16, size: 10.0, font: natSerifBold, color: forestDark });
+      }
+      if (natItalic) {
+        const slideCount = options.totalSlides || 0;
+        const slideWord = slideCount === 1 ? 'folio botanico' : 'folia botanica';
+        page.drawText(`${slideCount} ${slideWord}`, { x: m + 20, y: gridY - 14, size: 9.0, font: natItalic, color: forestDark });
+      }
+
+      // Column 2: Date & Series
+      const col2X = m + 20 + colW + 16;
+      if (natSansBold) {
+        page.drawText('CHRONICA / REGISTRUM', { x: col2X, y: gridY + 32, size: 7.0, font: natSansBold, color: sage });
+        page.drawText('SERIES', { x: col2X, y: gridY - 2, size: 6.5, font: natSansBold, color: sage });
+      }
+      if (natSerifBold) {
+        page.drawText(todayStr || 'Silva & Campus', { x: col2X, y: gridY + 16, size: 10.0, font: natSerifBold, color: forestDark });
+      }
+      if (natItalic) {
+        page.drawText('Collectio Botanica · Fasc. I', { x: col2X, y: gridY - 14, size: 9.0, font: natItalic, color: forestDark });
+      }
+
     } else {
       // Default: Atelier Notebook (Zara Home Classic)
       const inset = 36;

@@ -105,6 +105,7 @@ COVER_TEMPLATES = [
     "seventies",
     "eighties",
     "nineties",
+    "natural",
 ]
 
 COVER_TEMPLATE_ALIASES: Dict[str, str] = {
@@ -133,6 +134,14 @@ COVER_TEMPLATE_ALIASES: Dict[str, str] = {
     "grunge": "nineties",
     "lookbook": "nineties",
     "zine": "nineties",
+    "natural": "natural",
+    "botanical": "natural",
+    "forest": "natural",
+    "organic": "natural",
+    "organico": "natural",
+    "organica": "natural",
+    "bosque": "natural",
+    "nature": "natural",
 }
 
 DEFAULT_DUPLEX = False

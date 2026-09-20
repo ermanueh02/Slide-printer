@@ -114,6 +114,7 @@
       optTemplateSeventies: "Seventies (Retro Warm Groove 1970s)",
       optTemplateEighties: "Eighties (Memphis Tech 1980s)",
       optTemplateNineties: "Nineties (Minimalist Lookbook 1990s)",
+      optTemplateNatural: "Natural (Botanical & Deep Forest)",
       coverTitlePlaceholder: "Cover title",
       coverAuthorPlaceholder: "Author / Student / Subject",
       pageRangeLabel: "Slide Range",
@@ -235,6 +236,7 @@
       optTemplateSeventies: "Años 70 (Retro warm groove 1970s)",
       optTemplateEighties: "Años 80 (Memphis tech 1980s)",
       optTemplateNineties: "Años 90 (Minimal lookbook editorial 1990s)",
+      optTemplateNatural: "Natural (Editorial Botánico y Verde Bosque)",
       coverTitlePlaceholder: "Título para la portada",
       coverAuthorPlaceholder: "Autor / Estudiante / Asignatura",
       pageRangeLabel: "Rango de diapositivas",
@@ -356,6 +358,7 @@
       optTemplateSeventies: "Anos 70 (Retro warm groove 1970s)",
       optTemplateEighties: "Anos 80 (Memphis tech 1980s)",
       optTemplateNineties: "Anos 90 (Minimal lookbook editorial 1990s)",
+      optTemplateNatural: "Natural (Editorial Botánico e Verde Bosque)",
       coverTitlePlaceholder: "Título para a portada",
       coverAuthorPlaceholder: "Autor / Estudante / Materia",
       pageRangeLabel: "Rango de diapositivas",
@@ -691,6 +694,7 @@
     setText('optTemplateSeventies', dict.optTemplateSeventies);
     setText('optTemplateEighties', dict.optTemplateEighties);
     setText('optTemplateNineties', dict.optTemplateNineties);
+    setText('optTemplateNatural', dict.optTemplateNatural);
     const coverTitleInput = document.getElementById('coverTitleInput');
     if (coverTitleInput && dict.coverTitlePlaceholder) coverTitleInput.placeholder = dict.coverTitlePlaceholder;
     const coverAuthorInput = document.getElementById('coverAuthorInput');
@@ -1069,6 +1073,7 @@
       const workspace = document.getElementById('workspace');
       if (initialHero) initialHero.classList.add('hidden');
       if (workspace) workspace.classList.remove('hidden');
+      document.body.classList.add('editor-mode');
 
       showLoading(false);
     } catch (err) {
@@ -1151,6 +1156,7 @@
       const workspace = document.getElementById('workspace');
       if (initialHero) initialHero.classList.remove('hidden');
       if (workspace) workspace.classList.add('hidden');
+      document.body.classList.remove('editor-mode');
       state.file = null;
       state.fileName = '';
       state.pdfBytes = null;
