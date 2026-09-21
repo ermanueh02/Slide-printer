@@ -117,6 +117,11 @@
       optTemplateCompBlue: "Composition Book (Blue & Gold Wave)",
       optTemplateCompCoral: "Composition Book (Coral & Slate Swirl)",
       optTemplateCompAmber: "Composition Book (Amber Onyx)",
+      optTemplateCompMarbled: "Composition Book (Florentine Stone)",
+      optTemplateCompMorris: "Composition Book (William Morris Flora)",
+      optTemplateCompUkiyoe: "Composition Book (Japanese Woodblock)",
+      optTemplateCompFlora: "Composition Book (Dutch Floral Still Life)",
+      optTemplateCompPastoral: "Composition Book (Pastoral Landscape)",
       optTemplateCollege: "Composition Book (College Ruled)",
       optTemplateAcademicGreen: "Composition Book (Amber Onyx)",
       optTemplateAcademicTeal: "Composition Book (Coral & Slate Swirl)",
@@ -261,6 +266,11 @@
       optTemplateCompBlue: "Composition Book (Azul y Dorado)",
       optTemplateCompCoral: "Composition Book (Coral y Pizarra)",
       optTemplateCompAmber: "Composition Book (Ámbar y Ónix)",
+      optTemplateCompMarbled: "Composition Book (Piedra Florentina)",
+      optTemplateCompMorris: "Composition Book (William Morris Floral)",
+      optTemplateCompUkiyoe: "Composition Book (Grabado Japonés Ukiyo-e)",
+      optTemplateCompFlora: "Composition Book (Bodegón Floral Flamenco)",
+      optTemplateCompPastoral: "Composition Book (Paisaje Pastoral Clásico)",
       optTemplateCollege: "Composition Book (College Ruled)",
       optTemplateAcademicGreen: "Composition Book (Ámbar y Ónix)",
       optTemplateAcademicTeal: "Composition Book (Coral y Pizarra)",
@@ -405,6 +415,11 @@
       optTemplateCompBlue: "Composition Book (Azul e Dourado)",
       optTemplateCompCoral: "Composition Book (Coral e Lousa)",
       optTemplateCompAmber: "Composition Book (Ámbar e Ónix)",
+      optTemplateCompMarbled: "Composition Book (Pedra Florentina)",
+      optTemplateCompMorris: "Composition Book (William Morris Floral)",
+      optTemplateCompUkiyoe: "Composition Book (Gravado Xaponés Ukiyo-e)",
+      optTemplateCompFlora: "Composition Book (Bodegón Floral Flamengo)",
+      optTemplateCompPastoral: "Composition Book (Paisaxe Pastoral Clásico)",
       optTemplateCollege: "Composition Book (College Ruled)",
       optTemplateAcademicGreen: "Composition Book (Ámbar e Ónix)",
       optTemplateAcademicTeal: "Composition Book (Coral e Lousa)",
@@ -771,6 +786,11 @@
     setText('optTemplateCompBlue', dict.optTemplateCompBlue);
     setText('optTemplateCompCoral', dict.optTemplateCompCoral);
     setText('optTemplateCompAmber', dict.optTemplateCompAmber);
+    setText('optTemplateCompMarbled', dict.optTemplateCompMarbled);
+    setText('optTemplateCompMorris', dict.optTemplateCompMorris);
+    setText('optTemplateCompUkiyoe', dict.optTemplateCompUkiyoe);
+    setText('optTemplateCompFlora', dict.optTemplateCompFlora);
+    setText('optTemplateCompPastoral', dict.optTemplateCompPastoral);
     setText('optTemplateCollege', dict.optTemplateCollege);
     setText('optTemplateAcademicGreen', dict.optTemplateAcademicGreen);
     setText('optTemplateAcademicTeal', dict.optTemplateAcademicTeal);

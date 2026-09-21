@@ -2800,6 +2800,11 @@
                tpl === 'comp_blue' || tpl === 'comp_ocean' || tpl === 'comp_wave' || tpl === 'academic_wave' || tpl === 'suminagashi' || tpl === 'ocean_wave' || tpl === 'academic_navy' || tpl === 'academic_burgundy' ||
                tpl === 'comp_coral' || tpl === 'comp_terracotta' || tpl === 'comp_slate' || tpl === 'academic_teal' || tpl === 'ebru' || tpl === 'bubble' || tpl === 'academic_ebru' || tpl === 'academic_stone' || tpl === 'academic_blue' ||
                tpl === 'comp_amber' || tpl === 'comp_gold' || tpl === 'comp_onyx' || tpl === 'academic_green' || tpl === 'academic' || tpl === 'peacock' || tpl === 'florentine' || tpl === 'academic_peacock' || tpl === 'academic_yellow' ||
+               tpl === 'comp_morris' || tpl === 'morris' || tpl === 'strawberry_thief' || tpl === 'william_morris' || tpl === 'botanical' ||
+               tpl === 'comp_ukiyoe' || tpl === 'ukiyoe' || tpl === 'japanese' || tpl === 'sakura' || tpl === 'woodblock' ||
+               tpl === 'comp_flora' || tpl === 'flora' || tpl === 'still_life' || tpl === 'dutch_flora' || tpl === 'bouquet' || tpl === 'baroque_flora' ||
+               tpl === 'comp_pastoral' || tpl === 'pastoral' || tpl === 'landscape' || tpl === 'oil_landscape' || tpl === 'romantic_landscape' ||
+               tpl === 'comp_marbled' || tpl === 'marbled' || tpl === 'florentine_stone' || tpl === 'ebru_stone' ||
                tpl === 'college' || tpl === 'collegeruled' || tpl === 'college_ruled' || tpl === 'vintage_college' || tpl === 'swirl' || tpl === 'marble_grey') {
       let assetKey = 'composition';
       let spineColor = rgb(0.08, 0.08, 0.09); // #141416
@@ -2807,7 +2812,32 @@
       let fallbackBg = rgb(0.11, 0.11, 0.12);
       let bookTitle = 'COMPOSITION BOOK';
 
-      if (tpl.includes('blue') || tpl.includes('wave') || tpl.includes('ocean') || tpl.includes('suminagashi') || tpl.includes('navy')) {
+      if (tpl.includes('morris') || tpl.includes('strawberry') || tpl.includes('botanical')) {
+        assetKey = 'comp_morris';
+        spineColor = rgb(0.07, 0.12, 0.21);  // Deep Victorian Indigo #122036
+        seamColor = rgb(0.18, 0.23, 0.31);   // #2d3b50
+        fallbackBg = rgb(0.11, 0.20, 0.31);  // #1d334e
+      } else if (tpl.includes('ukiyoe') || tpl.includes('japanese') || tpl.includes('sakura') || tpl.includes('woodblock')) {
+        assetKey = 'comp_ukiyoe';
+        spineColor = rgb(0.45, 0.11, 0.09);  // Traditional Lacquer Vermilion #731c18
+        seamColor = rgb(0.61, 0.20, 0.17);   // #9c342b
+        fallbackBg = rgb(0.20, 0.32, 0.28);  // #335248
+      } else if (tpl.includes('flora') || tpl.includes('bouquet') || tpl.includes('still_life')) {
+        assetKey = 'comp_flora';
+        spineColor = rgb(0.06, 0.06, 0.07);  // Velvet Black / Charcoal #101012
+        seamColor = rgb(0.22, 0.20, 0.15);   // Dark bronze gold #383226
+        fallbackBg = rgb(0.07, 0.07, 0.07);  // #111113
+      } else if (tpl.includes('pastoral') || tpl.includes('landscape')) {
+        assetKey = 'comp_pastoral';
+        spineColor = rgb(0.18, 0.13, 0.09);  // Dark Walnut Leather #2e2218
+        seamColor = rgb(0.30, 0.23, 0.17);   // #4d3a2b
+        fallbackBg = rgb(0.28, 0.24, 0.16);  // #473d2a
+      } else if (tpl.includes('marbled') || tpl.includes('florentine_stone')) {
+        assetKey = 'comp_marbled';
+        spineColor = rgb(0.30, 0.08, 0.11);  // Deep Burgundy Wine #4c141d
+        seamColor = rgb(0.44, 0.15, 0.18);   // #70252e
+        fallbackBg = rgb(0.48, 0.20, 0.14);  // #7a3424
+      } else if (tpl.includes('blue') || tpl.includes('wave') || tpl.includes('ocean') || tpl.includes('suminagashi') || tpl.includes('navy')) {
         assetKey = 'comp_blue';
         spineColor = rgb(0.05, 0.12, 0.20);  // Royal navy #0e1e33
         seamColor = rgb(0.14, 0.24, 0.38);   // #243e62

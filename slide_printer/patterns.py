@@ -1868,6 +1868,11 @@ def generate_cover_page(
                  "comp_blue", "comp_ocean", "comp_wave", "academic_wave", "suminagashi", "ocean_wave", "academic_navy", "academic_burgundy",
                  "comp_coral", "comp_terracotta", "comp_slate", "academic_teal", "ebru", "bubble", "academic_ebru", "academic_stone", "academic_blue",
                  "comp_amber", "comp_gold", "comp_onyx", "academic_green", "academic", "peacock", "florentine", "academic_peacock", "academic_yellow",
+                 "comp_morris", "morris", "strawberry_thief", "william_morris", "botanical",
+                 "comp_ukiyoe", "ukiyoe", "japanese", "sakura", "woodblock",
+                 "comp_flora", "flora", "still_life", "dutch_flora", "bouquet", "baroque_flora",
+                 "comp_pastoral", "pastoral", "landscape", "oil_landscape", "romantic_landscape",
+                 "comp_marbled", "marbled", "florentine_stone", "ebru_stone",
                  "college", "collegeruled", "college_ruled", "vintage_college", "swirl", "marble_grey"):
         asset_key = "composition"
         spine_color = Color(0.08, 0.08, 0.09, alpha=1.0)
@@ -1875,7 +1880,32 @@ def generate_cover_page(
         fallback_bg = Color(0.11, 0.11, 0.12, alpha=1.0)
         book_title = "COMPOSITION BOOK"
 
-        if any(k in tpl for k in ("blue", "wave", "ocean", "suminagashi", "navy")):
+        if any(k in tpl for k in ("morris", "strawberry", "botanical")):
+            asset_key = "comp_morris"
+            spine_color = Color(0.07, 0.12, 0.21, alpha=1.0)  # Deep Victorian Indigo #122036
+            seam_color = Color(0.18, 0.23, 0.31, alpha=1.0)   # #2d3b50
+            fallback_bg = Color(0.11, 0.20, 0.31, alpha=1.0)  # #1d334e
+        elif any(k in tpl for k in ("ukiyoe", "japanese", "sakura", "woodblock")):
+            asset_key = "comp_ukiyoe"
+            spine_color = Color(0.45, 0.11, 0.09, alpha=1.0)  # Lacquer Vermilion #731c18
+            seam_color = Color(0.61, 0.20, 0.17, alpha=1.0)   # #9c342b
+            fallback_bg = Color(0.20, 0.32, 0.28, alpha=1.0)  # #335248
+        elif any(k in tpl for k in ("flora", "bouquet", "still_life")):
+            asset_key = "comp_flora"
+            spine_color = Color(0.06, 0.06, 0.07, alpha=1.0)  # Velvet Black / Charcoal #101012
+            seam_color = Color(0.22, 0.20, 0.15, alpha=1.0)   # Dark bronze gold #383226
+            fallback_bg = Color(0.07, 0.07, 0.07, alpha=1.0)  # #111113
+        elif any(k in tpl for k in ("pastoral", "landscape")):
+            asset_key = "comp_pastoral"
+            spine_color = Color(0.18, 0.13, 0.09, alpha=1.0)  # Dark Walnut Leather #2e2218
+            seam_color = Color(0.30, 0.23, 0.17, alpha=1.0)   # #4d3a2b
+            fallback_bg = Color(0.28, 0.24, 0.16, alpha=1.0)  # #473d2a
+        elif any(k in tpl for k in ("marbled", "florentine_stone")):
+            asset_key = "comp_marbled"
+            spine_color = Color(0.30, 0.08, 0.11, alpha=1.0)  # Deep Burgundy Wine #4c141d
+            seam_color = Color(0.44, 0.15, 0.18, alpha=1.0)   # #70252e
+            fallback_bg = Color(0.48, 0.20, 0.14, alpha=1.0)  # #7a3424
+        elif any(k in tpl for k in ("blue", "wave", "ocean", "suminagashi", "navy")):
             asset_key = "comp_blue"
             spine_color = Color(0.05, 0.12, 0.20, alpha=1.0)
             seam_color = Color(0.14, 0.24, 0.38, alpha=1.0)
