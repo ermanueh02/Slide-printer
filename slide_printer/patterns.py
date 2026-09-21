@@ -2,6 +2,7 @@
 
 import io
 import math
+import os
 from typing import Tuple, Optional, List
 from pypdf import PdfReader
 from pypdf._page import PageObject
@@ -9,6 +10,19 @@ from reportlab.lib.colors import Color
 from reportlab.pdfgen import canvas
 
 from slide_printer.constants import DEFAULT_STEP, COVER_TEMPLATE_ALIASES
+
+
+def _get_cover_texture_path(template_name: str) -> Optional[str]:
+    """Resolves path to high-res cover background texture image."""
+    pkg_dir = os.path.dirname(os.path.abspath(__file__))
+    candidates = [
+        os.path.join(pkg_dir, "assets", "covers", f"{template_name}.jpg"),
+        os.path.join(pkg_dir, "..", "web", "covers", f"{template_name}.jpg"),
+    ]
+    for p in candidates:
+        if os.path.exists(p):
+            return p
+    return None
 
 
 def wrap_text_lines(
@@ -1849,6 +1863,224 @@ def generate_cover_page(
             c.setFont("Times-Roman", 8.0)
             c.setFillColor(brass)
             c.drawCentredString(center_x, meta_y - 16.0, f"{num_slides} {s_word} registered")
+
+    elif tpl in ("college", "collegeruled", "college_ruled", "vintage_college", "swirl", "marble_grey"):
+        # Marbled Grey Vintage College Ruled Notebook
+        tex_path = _get_cover_texture_path("college")
+        if tex_path:
+            c.drawImage(tex_path, 0, 0, width=pw, height=ph, preserveAspectRatio=False)
+        else:
+            c.setFillColor(Color(0.86, 0.84, 0.80, alpha=1.0))
+            c.rect(0, 0, pw, ph, fill=1, stroke=0)
+            spine_w = left_gutter + 45.0
+            c.setFillColor(Color(0.18, 0.16, 0.15, alpha=1.0))
+            c.rect(0, 0, spine_w, ph, fill=1, stroke=0)
+
+        lbl_w = min(avail_w - 30.0, 340.0)
+        lbl_h = 160.0
+        lbl_x = center_x - lbl_w / 2.0
+        lbl_y = ph * 0.62
+
+        c.setFillColor(Color(0.95, 0.93, 0.88, alpha=0.96))
+        c.setStrokeColor(Color(0.14, 0.14, 0.14, alpha=1.0))
+        c.setLineWidth(1.2)
+        c.roundRect(lbl_x, lbl_y, lbl_w, lbl_h, 10.0, fill=1, stroke=1)
+        c.setLineWidth(0.5)
+        c.roundRect(lbl_x + 3.5, lbl_y + 3.5, lbl_w - 7.0, lbl_h - 7.0, 7.5, fill=0, stroke=1)
+
+        line_w = lbl_w - 44.0
+        line_x1 = lbl_x + 22.0
+        line_x2 = line_x1 + line_w
+        line1_y = lbl_y + 104.0
+        line2_y = lbl_y + 64.0
+
+        c.setStrokeColor(Color(0.4, 0.4, 0.4, alpha=0.55))
+        c.setLineWidth(0.6)
+        c.line(line_x1, line1_y, line_x2, line1_y)
+        c.line(line_x1, line2_y, line_x2, line2_y)
+
+        title_lines = wrap_text_lines(clean_title, "Helvetica-Bold", 14.0, line_w - 10.0, c)
+        c.setFillColor(Color(0.10, 0.10, 0.12, alpha=1.0))
+        if len(title_lines) >= 2:
+            c.setFont("Helvetica-Bold", 13.0)
+            c.drawCentredString(center_x, line1_y + 3.5, title_lines[0])
+            c.setFont("Helvetica-Bold", 13.0)
+            c.drawCentredString(center_x, line2_y + 3.5, title_lines[1])
+        elif len(title_lines) == 1:
+            c.setFont("Helvetica-Bold", 14.0)
+            c.drawCentredString(center_x, line1_y + 3.5, title_lines[0])
+            sub_or_auth = author or subtitle or date_str or "Study Compendium"
+            c.setFont("Helvetica", 11.0)
+            c.setFillColor(Color(0.25, 0.25, 0.28, alpha=0.9))
+            c.drawCentredString(center_x, line2_y + 3.5, sub_or_auth)
+
+        c.setFont("Helvetica-Bold", 8.0)
+        c.setFillColor(Color(0.18, 0.18, 0.20, alpha=1.0))
+        c.drawCentredString(center_x, lbl_y + 24.0, "COLLEGE RULED")
+
+        if num_slides is not None:
+            s_word = "slide" if num_slides == 1 else "slides"
+            c.setFont("Helvetica", 8.0)
+            c.setFillColor(Color(0.35, 0.35, 0.35, alpha=0.8))
+            c.drawCentredString(center_x, lbl_y - 20.0, f"{num_slides} {s_word} bound · {date_str or 'Handout'}")
+
+    elif tpl in ("academic_green", "academic", "peacock", "florentine", "academic_peacock", "academic_yellow",
+                 "academic_teal", "ebru", "bubble", "academic_ebru", "academic_stone", "academic_blue",
+                 "academic_wave", "suminagashi", "ocean_wave", "academic_navy", "academic_burgundy"):
+        # Academic Lined Notebook Series (Florentine Peacock, Turkish Ebru, Suminagashi Wave)
+        if "wave" in tpl or "suminagashi" in tpl or "ocean" in tpl or "navy" in tpl or "burgundy" in tpl:
+            asset_key = "academic_wave"
+            fallback_spine = Color(0.38, 0.10, 0.15, alpha=1.0)
+            fallback_bg = Color(0.12, 0.20, 0.32, alpha=1.0)
+        elif "teal" in tpl or "ebru" in tpl or "bubble" in tpl or "stone" in tpl or "blue" in tpl:
+            asset_key = "academic_teal"
+            fallback_spine = Color(0.08, 0.22, 0.28, alpha=1.0)
+            fallback_bg = Color(0.32, 0.38, 0.42, alpha=1.0)
+        else:
+            asset_key = "academic_green"
+            fallback_spine = Color(0.06, 0.22, 0.14, alpha=1.0)
+            fallback_bg = Color(0.52, 0.22, 0.18, alpha=1.0)
+
+        tex_path = _get_cover_texture_path(asset_key)
+        if tex_path:
+            c.drawImage(tex_path, 0, 0, width=pw, height=ph, preserveAspectRatio=False)
+        else:
+            c.setFillColor(fallback_bg)
+            c.rect(0, 0, pw, ph, fill=1, stroke=0)
+            spine_w = left_gutter + 55.0
+            c.setFillColor(fallback_spine)
+            c.rect(0, 0, spine_w, ph, fill=1, stroke=0)
+
+        lbl_w = min(avail_w * 0.55, 270.0)
+        lbl_h = 160.0
+        lbl_x = x2 - lbl_w - 6.0
+        lbl_y = ph - effective_m - lbl_h - 40.0
+
+        c.setFillColor(Color(0.96, 0.94, 0.88, alpha=0.98))
+        c.setStrokeColor(Color(0.35, 0.32, 0.28, alpha=0.9))
+        c.setLineWidth(0.8)
+        c.rect(lbl_x, lbl_y, lbl_w, lbl_h, fill=1, stroke=1)
+        c.setLineWidth(0.4)
+        c.rect(lbl_x + 3.0, lbl_y + 3.0, lbl_w - 6.0, lbl_h - 6.0, fill=0, stroke=1)
+
+        c.setFont("Times-Bold", 12.5)
+        c.setFillColor(Color(0.20, 0.20, 0.22, alpha=1.0))
+        c.drawString(lbl_x + 14.0, lbl_y + lbl_h - 24.0, "ACADEMIC")
+        c.setFont("Times-Italic", 11.0)
+        c.setFillColor(Color(0.35, 0.35, 0.38, alpha=0.95))
+        c.drawString(lbl_x + 92.0, lbl_y + lbl_h - 24.0, "Lined notebook")
+
+        line_w = lbl_w - 28.0
+        lx1 = lbl_x + 14.0
+        lx2 = lx1 + line_w
+        line_ys = [
+            lbl_y + lbl_h - 52.0,
+            lbl_y + lbl_h - 75.0,
+            lbl_y + lbl_h - 98.0,
+            lbl_y + lbl_h - 121.0,
+        ]
+
+        c.setStrokeColor(Color(0.68, 0.65, 0.60, alpha=0.85))
+        c.setLineWidth(0.5)
+        for ly in line_ys:
+            c.line(lx1, ly, lx2, ly)
+
+        t_lines = wrap_text_lines(clean_title, "Times-Bold", 11.0, line_w - 6.0, c)
+        c.setFillColor(Color(0.12, 0.12, 0.14, alpha=1.0))
+        c.setFont("Times-Bold", 11.0)
+
+        slot = 0
+        for tl in t_lines[:2]:
+            c.drawString(lx1 + 2.0, line_ys[slot] + 3.0, tl)
+            slot += 1
+
+        if slot == 1 and subtitle:
+            c.setFont("Times-Italic", 9.5)
+            c.setFillColor(Color(0.30, 0.30, 0.34, alpha=0.95))
+            c.drawString(lx1 + 2.0, line_ys[slot] + 3.0, subtitle)
+            slot += 1
+
+        if slot <= 2:
+            c.setFont("Times-Roman", 9.5)
+            c.setFillColor(Color(0.25, 0.25, 0.28, alpha=0.9))
+            c.drawString(lx1 + 2.0, line_ys[slot] + 3.0, author or "General Notes")
+            slot += 1
+
+        if slot <= 3:
+            c.setFont("Times-Italic", 8.5)
+            c.setFillColor(Color(0.38, 0.38, 0.42, alpha=0.85))
+            c.drawString(lx1 + 2.0, line_ys[slot] + 3.0, date_str or "Archival Compendium")
+
+        c.setFont("Times-Italic", 6.0)
+        c.setFillColor(Color(0.48, 0.45, 0.40, alpha=0.9))
+        foot_str = f'178 × 254 mm (7 × 10") : {num_slides or 80} {"slides" if num_slides else "pages"} : grey ruled • 7.1mm'
+        c.drawCentredString(lbl_x + lbl_w / 2.0, lbl_y + 10.0, foot_str)
+
+    elif tpl in ("composition", "compbook", "composition_book", "marble_bw", "cuaderno", "compo"):
+        # Classic American Composition Notebook (Agate Marble)
+        tex_path = _get_cover_texture_path("composition")
+        if tex_path:
+            c.drawImage(tex_path, 0, 0, width=pw, height=ph, preserveAspectRatio=False)
+        else:
+            c.setFillColor(Color(0.12, 0.12, 0.12, alpha=1.0))
+            c.rect(0, 0, pw, ph, fill=1, stroke=0)
+            spine_w = left_gutter + 50.0
+            c.setFillColor(Color(0.04, 0.04, 0.04, alpha=1.0))
+            c.rect(0, 0, spine_w, ph, fill=1, stroke=0)
+
+        badge_w = min(avail_w - 40.0, 320.0)
+        badge_h = 180.0
+        badge_x = center_x - badge_w / 2.0
+        badge_y = ph * 0.58
+
+        c.setFillColor(Color(0.99, 0.99, 0.98, alpha=0.98))
+        c.setStrokeColor(Color(0.08, 0.08, 0.08, alpha=1.0))
+        c.setLineWidth(3.0)
+        c.roundRect(badge_x, badge_y, badge_w, badge_h, 14.0, fill=1, stroke=1)
+        c.setLineWidth(0.8)
+        c.roundRect(badge_x + 4.5, badge_y + 4.5, badge_w - 9.0, badge_h - 9.0, 10.0, fill=0, stroke=1)
+
+        c.setFont("Times-Bold", 16.0)
+        c.setFillColor(Color(0.08, 0.08, 0.10, alpha=1.0))
+        c.drawCentredString(center_x, badge_y + badge_h - 32.0, "COMPOSITION BOOK")
+
+        line_w = badge_w - 40.0
+        lx1 = badge_x + 20.0
+        lx2 = lx1 + line_w
+        line1_y = badge_y + badge_h - 60.0
+        line2_y = badge_y + badge_h - 85.0
+        line3_y = badge_y + badge_h - 110.0
+
+        c.setStrokeColor(Color(0.45, 0.45, 0.45, alpha=0.6))
+        c.setLineWidth(0.6)
+        c.line(lx1, line1_y, lx2, line1_y)
+        c.line(lx1, line2_y, lx2, line2_y)
+        c.line(lx1, line3_y, lx2, line3_y)
+
+        t_lines = wrap_text_lines(clean_title, "Times-Bold", 12.0, line_w - 6.0, c)
+        c.setFillColor(Color(0.10, 0.10, 0.12, alpha=1.0))
+        if len(t_lines) >= 2:
+            c.setFont("Times-Bold", 12.0)
+            c.drawString(lx1 + 2.0, line1_y + 3.0, t_lines[0])
+            c.drawString(lx1 + 2.0, line2_y + 3.0, t_lines[1])
+            c.setFont("Times-Roman", 10.0)
+            c.drawString(lx1 + 2.0, line3_y + 3.0, author or date_str or "Compendium")
+        elif len(t_lines) == 1:
+            c.setFont("Times-Bold", 12.5)
+            c.drawString(lx1 + 2.0, line1_y + 3.0, t_lines[0])
+            c.setFont("Times-Italic", 10.5)
+            c.drawString(lx1 + 2.0, line2_y + 3.0, subtitle or author or "Subject Notes")
+            c.setFont("Times-Roman", 10.0)
+            c.drawString(lx1 + 2.0, line3_y + 3.0, (f"{author} · " if author else "") + (date_str or "Archival Copy"))
+
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(Color(0.18, 0.18, 0.20, alpha=1.0))
+        slides_count_str = f"{num_slides} Slides · Handout Notes" if num_slides else "100 Sheets · 200 Pages"
+        c.drawCentredString(center_x, badge_y + 38.0, slides_count_str)
+        c.setFont("Helvetica", 6.5)
+        c.drawCentredString(center_x, badge_y + 26.0, '9 3/4 in x 7 1/2 in (24.7cm x 19cm)')
+        c.setFont("Helvetica-Bold", 6.5)
+        c.drawCentredString(center_x, badge_y + 14.0, "Wide Ruled")
 
     else:
         # Default: Atelier Notebook (Zara Home Classic)

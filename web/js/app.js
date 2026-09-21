@@ -108,10 +108,16 @@
       optCoverGenerate: "Generate editorial cover",
       coverTemplateLabel: "Cover Template Style",
       groupClassics: "Classics / Zara",
+      groupNotebooks: "Marbled Notebooks",
       groupDecades: "Decades",
       groupSeasons: "Seasons",
       groupRalphLauren: "Ralph Lauren",
       groupNature: "Nature",
+      optTemplateCollege: "Vintage College (Marbled Grey Swirl)",
+      optTemplateAcademicGreen: "Academic Peacock (Florentine Red & Green)",
+      optTemplateAcademicTeal: "Academic Ebru (Turkish Bubble Slate)",
+      optTemplateAcademicWave: "Academic Wave (Suminagashi Navy & Burgundy)",
+      optTemplateComposition: "Composition Book (Classic Black & White)",
       optTemplateAtelier: "Atelier Notebook (Zara Home Classic)",
       optTemplateGeorge: "George 90s (JFK Jr Executive)",
       optTemplateMonograph: "Archival Monograph (Heritage Bookplate)",
@@ -243,10 +249,16 @@
       optCoverGenerate: "Generar portada nueva",
       coverTemplateLabel: "Estilo de portada editorial",
       groupClassics: "Clásicos / Zara",
+      groupNotebooks: "Cuadernos Marmoleados",
       groupDecades: "Décadas",
       groupSeasons: "Estaciones",
       groupRalphLauren: "Ralph Lauren",
       groupNature: "Naturaleza",
+      optTemplateCollege: "Vintage College (Gris Marmoleado)",
+      optTemplateAcademicGreen: "Academic Peacock (Marmoleado Florentino)",
+      optTemplateAcademicTeal: "Academic Ebru (Marmoleado Turco Pizarra)",
+      optTemplateAcademicWave: "Academic Wave (Suminagashi Azul Marino)",
+      optTemplateComposition: "Composition Book (Cuaderno Clásico B&N)",
       optTemplateAtelier: "Cuaderno Atelier (Zara Home / Clásico)",
       optTemplateGeorge: "George años 90 (JFK Jr / Ejecutivo)",
       optTemplateMonograph: "Monografía de archivo (Ex libris)",
@@ -378,10 +390,16 @@
       optCoverGenerate: "Xerar portada nova",
       coverTemplateLabel: "Estilo de portada editorial",
       groupClassics: "Clásicos / Zara",
+      groupNotebooks: "Cadernos Marmoleados",
       groupDecades: "Décadas",
       groupSeasons: "Estacións",
       groupRalphLauren: "Ralph Lauren",
       groupNature: "Natureza",
+      optTemplateCollege: "Vintage College (Gris Marmoleado)",
+      optTemplateAcademicGreen: "Academic Peacock (Marmoleado Florentino)",
+      optTemplateAcademicTeal: "Academic Ebru (Marmoleado Turco Lousa)",
+      optTemplateAcademicWave: "Academic Wave (Suminagashi Azul Mariño)",
+      optTemplateComposition: "Composition Book (Caderno Clásico B&N)",
       optTemplateAtelier: "Caderno Atelier (Zara Home / Clásico)",
       optTemplateGeorge: "George anos 90 (JFK Jr / Executivo)",
       optTemplateMonograph: "Monografía de arquivo (Ex libris)",
@@ -734,11 +752,17 @@
       if (el && label) el.label = label;
     };
     setOptgroupLabel('groupClassics', dict.groupClassics);
+    setOptgroupLabel('groupNotebooks', dict.groupNotebooks);
     setOptgroupLabel('groupDecades', dict.groupDecades);
     setOptgroupLabel('groupSeasons', dict.groupSeasons);
     setOptgroupLabel('groupRalphLauren', dict.groupRalphLauren);
     setOptgroupLabel('groupNature', dict.groupNature);
 
+    setText('optTemplateCollege', dict.optTemplateCollege);
+    setText('optTemplateAcademicGreen', dict.optTemplateAcademicGreen);
+    setText('optTemplateAcademicTeal', dict.optTemplateAcademicTeal);
+    setText('optTemplateAcademicWave', dict.optTemplateAcademicWave);
+    setText('optTemplateComposition', dict.optTemplateComposition);
     setText('optTemplateAtelier', dict.optTemplateAtelier);
     setText('optTemplateGeorge', dict.optTemplateGeorge);
     setText('optTemplateMonograph', dict.optTemplateMonograph);
@@ -1496,6 +1520,11 @@
       coverTemplateSelect.addEventListener('change', (e) => {
         state.coverTemplate = e.target.value;
         savePresets();
+        if (state.coverMode === 'generate') {
+          renderCurrentPreview();
+        }
+      });
+      window.addEventListener('slideprinter-cover-loaded', () => {
         if (state.coverMode === 'generate') {
           renderCurrentPreview();
         }

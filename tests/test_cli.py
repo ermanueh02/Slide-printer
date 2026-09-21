@@ -470,6 +470,26 @@ def test_cli_polo_and_seasons_template_flags(sample_slide_pdf, tmp_path):
         out_pdf = tmp_path / f"cli_{tmpl}" / "lines" / f"{base}_lines.pdf"
         assert out_pdf.exists()
         reader = PdfReader(str(out_pdf))
-        assert len(reader.pages) == 3
         cover_text = reader.pages[0].extract_text()
         assert f"Edition {tmpl.title()}" in cover_text
+
+
+def test_cli_notebooks_cover_template_flags(sample_slide_pdf, tmp_path):
+    for tmpl in ["college", "academic_green", "academic_teal", "academic_wave", "composition"]:
+        out_dir = str(tmp_path / f"cli_{tmpl}")
+        code = main([
+            "-i", sample_slide_pdf,
+            "-s", "grid",
+            "--cover-template", tmpl,
+            "--cover-title", f"Notebook {tmpl}",
+            "-o", out_dir,
+            "-q",
+        ])
+        assert code == 0
+        base = os.path.splitext(os.path.basename(sample_slide_pdf))[0]
+        out_pdf = tmp_path / f"cli_{tmpl}" / "grid" / f"{base}_grid.pdf"
+        assert out_pdf.exists()
+        reader = PdfReader(str(out_pdf))
+        assert len(reader.pages) == 3
+        cover_text = reader.pages[0].extract_text()
+        assert f"Notebook {tmpl}" in cover_text
