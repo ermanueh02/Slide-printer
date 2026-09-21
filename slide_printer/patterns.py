@@ -1872,8 +1872,7 @@ def generate_cover_page(
                  "comp_ukiyoe", "ukiyoe", "japanese", "sakura", "woodblock",
                  "comp_flora", "flora", "still_life", "dutch_flora", "bouquet", "baroque_flora",
                  "comp_pastoral", "pastoral", "landscape", "oil_landscape", "romantic_landscape",
-                 "comp_marbled", "marbled", "florentine_stone", "ebru_stone",
-                 "college", "collegeruled", "college_ruled", "vintage_college", "swirl", "marble_grey"):
+                 "comp_marbled", "marbled", "florentine_stone", "ebru_stone"):
         asset_key = "composition"
         spine_color = Color(0.08, 0.08, 0.09, alpha=1.0)
         seam_color = Color(0.20, 0.20, 0.22, alpha=1.0)
@@ -1920,12 +1919,6 @@ def generate_cover_page(
             spine_color = Color(0.14, 0.08, 0.05, alpha=1.0)
             seam_color = Color(0.27, 0.17, 0.11, alpha=1.0)
             fallback_bg = Color(0.59, 0.38, 0.16, alpha=1.0)
-        elif any(k in tpl for k in ("college", "swirl")):
-            asset_key = "college"
-            spine_color = Color(0.15, 0.14, 0.13, alpha=1.0)
-            seam_color = Color(0.25, 0.24, 0.23, alpha=1.0)
-            fallback_bg = Color(0.85, 0.83, 0.80, alpha=1.0)
-            book_title = "COLLEGE RULED"
 
         # 1. Capa Fondo (Full-bleed texture)
         tex_path = _get_cover_texture_path(asset_key)
@@ -1959,17 +1952,42 @@ def generate_cover_page(
         badge_x = visible_center_x - badge_w / 2.0
         badge_y = ph * 0.60
 
-        c.setFillColor(Color(0.99, 0.99, 0.98, alpha=1.0))
-        c.setStrokeColor(Color(0.08, 0.08, 0.09, alpha=1.0))
+        is_bw = (asset_key == "composition")
+
+        if is_bw:
+            # Blanco puro para portadas en blanco y negro (Composition clásica)
+            badge_bg = Color(1.0, 1.0, 1.0, alpha=1.0)
+            outer_stroke = Color(0.08, 0.08, 0.09, alpha=1.0)
+            inner_stroke = Color(0.13, 0.13, 0.14, alpha=1.0)
+            line_stroke = Color(0.47, 0.47, 0.50, alpha=0.55)
+            text_head_color = Color(0.08, 0.08, 0.10, alpha=1.0)
+            text_title_color = Color(0.10, 0.10, 0.12, alpha=1.0)
+            text_sub_color = Color(0.25, 0.25, 0.28, alpha=1.0)
+            text_meta_dark = Color(0.14, 0.14, 0.14, alpha=1.0)
+            text_meta_muted = Color(0.35, 0.35, 0.35, alpha=1.0)
+        else:
+            # Crema cálido / marfil de archivo para portadas artísticas y a color
+            badge_bg = Color(0.980, 0.957, 0.910, alpha=1.0)  # #faf4e8
+            outer_stroke = Color(0.12, 0.11, 0.10, alpha=1.0)  # #1f1c18
+            inner_stroke = Color(0.18, 0.16, 0.14, alpha=1.0)  # #2e2924
+            line_stroke = Color(0.57, 0.51, 0.45, alpha=0.50)  # Sepia suave armonizado
+            text_head_color = Color(0.08, 0.07, 0.06, alpha=1.0)
+            text_title_color = Color(0.10, 0.09, 0.08, alpha=1.0)
+            text_sub_color = Color(0.23, 0.21, 0.19, alpha=1.0)
+            text_meta_dark = Color(0.14, 0.13, 0.12, alpha=1.0)
+            text_meta_muted = Color(0.34, 0.31, 0.28, alpha=1.0)
+
+        c.setFillColor(badge_bg)
+        c.setStrokeColor(outer_stroke)
         c.setLineWidth(2.8)
         c.roundRect(badge_x, badge_y, badge_w, badge_h, 12.0, fill=1, stroke=1)
 
-        c.setStrokeColor(Color(0.13, 0.13, 0.14, alpha=1.0))
+        c.setStrokeColor(inner_stroke)
         c.setLineWidth(0.8)
         c.roundRect(badge_x + 4.5, badge_y + 4.5, badge_w - 9.0, badge_h - 9.0, 8.5, fill=0, stroke=1)
 
         c.setFont("Times-Bold", 15.0)
-        c.setFillColor(Color(0.08, 0.08, 0.10, alpha=1.0))
+        c.setFillColor(text_head_color)
         c.drawCentredString(visible_center_x, badge_y + badge_h - 32.0, book_title)
 
         line_w = badge_w - 40.0
@@ -1979,39 +1997,39 @@ def generate_cover_page(
         line2_y = badge_y + badge_h - 83.0
         line3_y = badge_y + badge_h - 108.0
 
-        c.setStrokeColor(Color(0.47, 0.47, 0.50, alpha=0.55))
+        c.setStrokeColor(line_stroke)
         c.setLineWidth(0.6)
         for ly in (line1_y, line2_y, line3_y):
             c.line(lx1, ly, lx2, ly)
 
         t_lines = wrap_text_lines(clean_title, "Times-Bold", 11.5, line_w - 10.0, c)
-        c.setFillColor(Color(0.10, 0.10, 0.12, alpha=1.0))
+        c.setFillColor(text_title_color)
         if len(t_lines) >= 2:
             c.setFont("Times-Bold", 11.5)
             c.drawCentredString(visible_center_x, line1_y + 3.5, t_lines[0])
             c.drawCentredString(visible_center_x, line2_y + 3.5, t_lines[1])
             c.setFont("Times-Roman", 10.0)
-            c.setFillColor(Color(0.25, 0.25, 0.28, alpha=1.0))
+            c.setFillColor(text_sub_color)
             c.drawCentredString(visible_center_x, line3_y + 3.5, author or date_str or "Study Compendium")
         elif len(t_lines) == 1:
             c.setFont("Times-Bold", 12.0)
             c.drawCentredString(visible_center_x, line1_y + 3.5, t_lines[0])
             c.setFont("Times-Italic", 10.5)
-            c.setFillColor(Color(0.25, 0.25, 0.28, alpha=1.0))
+            c.setFillColor(text_sub_color)
             c.drawCentredString(visible_center_x, line2_y + 3.5, subtitle or author or "Subject Notes")
             c.setFont("Times-Roman", 9.5)
             auth_date = (f"{author} · " if author else "") + (date_str or "Archival Copy")
             c.drawCentredString(visible_center_x, line3_y + 3.5, auth_date)
 
         c.setFont("Helvetica-Bold", 7.0)
-        c.setFillColor(Color(0.14, 0.14, 0.14, alpha=1.0))
+        c.setFillColor(text_meta_dark)
         slide_count_str = f"{num_slides} {'Slide' if num_slides == 1 else 'Slides'} Bound" if num_slides else "100 Sheets · 200 Pages"
         c.drawCentredString(visible_center_x, badge_y + 36.0, slide_count_str)
         c.setFont("Helvetica", 6.5)
-        c.setFillColor(Color(0.35, 0.35, 0.35, alpha=1.0))
+        c.setFillColor(text_meta_muted)
         c.drawCentredString(visible_center_x, badge_y + 24.0, "9 3/4 in × 7 1/2 in (24.7cm × 19cm)")
         c.setFont("Helvetica-Bold", 6.5)
-        c.setFillColor(Color(0.14, 0.14, 0.14, alpha=1.0))
+        c.setFillColor(text_meta_dark)
         c.drawCentredString(visible_center_x, badge_y + 12.0, "Archival Edition")
 
     else:

@@ -64,7 +64,6 @@ Each page of your presentation is placed on the sheet, followed by a customizabl
   - **Duplex Intelligence (`--duplex`)**: Shifts odd sheets (recto) to the right (left gutter) and even sheets (verso) to the left (right gutter) so punched holes never bite into content.
 - **15+ Editorial Cover Templates (`--generate-cover`, `--cover-template`)**:
   - **Notebooks & Marbled Papers**:
-    - **College (`college` / `collegeruled`)**: Vintage grey/sepia marbled notebook with double-frame badge and "COLLEGE RULED" header.
     - **Academic Peacock (`academic_green` / `peacock`)**: Florentine combed peacock marbling in red, yellow, and green with forest green cloth spine and ivory Academic label.
     - **Academic Ebru (`academic_teal` / `ebru`)**: Turkish stone/bubble marbling in slate and ochre with petroleum teal spine and ivory Academic label.
     - **Academic Wave (`academic_wave` / `suminagashi`)**: Suminagashi flowing water marbling in Prussian blue with burgundy spine and ivory Academic label.
@@ -198,7 +197,7 @@ slide-printer --dry-run -i presentation.pdf -s all
 | `--duplex` / `--simplex` | Alternate gutter margin on odd/even sheets for 2-sided printing | `--simplex` |
 | `--clean-cover` | Use 1st slide as title cover without note lines or dividers | `False` |
 | `--generate-cover` | Generate an editorial title cover page before slides | `False` |
-| `--cover-template` | Cover design: `atelier`, `college`, `academic_green`, `academic_teal`, `academic_wave`, `composition`, `george`, `monograph`, `bauhaus`, `fifties`, `sixties`, `seventies`, `eighties`, `nineties`, `natural`, `polo`, `equestrian` | `atelier` |
+| `--cover-template` | Cover design: `atelier`, `academic_green`, `academic_teal`, `academic_wave`, `composition`, `george`, `monograph`, `bauhaus`, `fifties`, `sixties`, `seventies`, `eighties`, `nineties`, `natural`, `polo`, `equestrian` | `atelier` |
 | `--cover-title` | Title for generated cover page | Presentation name |
 | `--cover-author` | Author/Student/Topic for generated cover page | — |
 | `--study-header` | Add top metadata bar with subject fill-in and date line | `False` |

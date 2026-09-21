@@ -2804,8 +2804,7 @@
                tpl === 'comp_ukiyoe' || tpl === 'ukiyoe' || tpl === 'japanese' || tpl === 'sakura' || tpl === 'woodblock' ||
                tpl === 'comp_flora' || tpl === 'flora' || tpl === 'still_life' || tpl === 'dutch_flora' || tpl === 'bouquet' || tpl === 'baroque_flora' ||
                tpl === 'comp_pastoral' || tpl === 'pastoral' || tpl === 'landscape' || tpl === 'oil_landscape' || tpl === 'romantic_landscape' ||
-               tpl === 'comp_marbled' || tpl === 'marbled' || tpl === 'florentine_stone' || tpl === 'ebru_stone' ||
-               tpl === 'college' || tpl === 'collegeruled' || tpl === 'college_ruled' || tpl === 'vintage_college' || tpl === 'swirl' || tpl === 'marble_grey') {
+               tpl === 'comp_marbled' || tpl === 'marbled' || tpl === 'florentine_stone' || tpl === 'ebru_stone') {
       let assetKey = 'composition';
       let spineColor = rgb(0.08, 0.08, 0.09); // #141416
       let seamColor = rgb(0.20, 0.20, 0.22);  // #333338
@@ -2852,12 +2851,6 @@
         spineColor = rgb(0.14, 0.08, 0.05);  // Rich espresso walnut #23150d
         seamColor = rgb(0.27, 0.17, 0.11);   // #462c1d
         fallbackBg = rgb(0.59, 0.38, 0.16);
-      } else if (tpl.includes('college') || tpl.includes('swirl')) {
-        assetKey = 'college';
-        spineColor = rgb(0.15, 0.14, 0.13);  // Classic charcoal #262422
-        seamColor = rgb(0.25, 0.24, 0.23);   // #3f3c3a
-        fallbackBg = rgb(0.85, 0.83, 0.80);
-        bookTitle = 'COLLEGE RULED';
       }
 
       // 1. Capa Fondo (Full-bleed texture)
@@ -2900,13 +2893,24 @@
       const badgeX = visibleCenterX - badgeW / 2;
       const badgeY = ph * 0.60;
 
+      const isBw = (assetKey === 'composition');
+      const badgeBg = isBw ? rgb(1, 1, 1) : rgb(0.980, 0.957, 0.910);
+      const outerStroke = isBw ? rgb(0.08, 0.08, 0.09) : rgb(0.12, 0.11, 0.10);
+      const innerStroke = isBw ? rgb(0.13, 0.13, 0.14) : rgb(0.18, 0.16, 0.14);
+      const lineStroke = isBw ? rgb(0.47, 0.47, 0.50) : rgb(0.57, 0.51, 0.45);
+      const textHeadColor = isBw ? rgb(0.08, 0.08, 0.10) : rgb(0.08, 0.07, 0.06);
+      const textTitleColor = isBw ? rgb(0.10, 0.10, 0.12) : rgb(0.10, 0.09, 0.08);
+      const textSubColor = isBw ? rgb(0.25, 0.25, 0.28) : rgb(0.23, 0.21, 0.19);
+      const textMetaDark = isBw ? rgb(0.14, 0.14, 0.14) : rgb(0.14, 0.13, 0.12);
+      const textMetaMuted = isBw ? rgb(0.35, 0.35, 0.35) : rgb(0.34, 0.31, 0.28);
+
       page.drawRectangle({
         x: badgeX,
         y: badgeY,
         width: badgeW,
         height: badgeH,
-        color: rgb(0.99, 0.99, 0.98),
-        borderColor: rgb(0.08, 0.08, 0.09),
+        color: badgeBg,
+        borderColor: outerStroke,
         borderWidth: 2.8,
       });
       page.drawRectangle({
@@ -2914,13 +2918,13 @@
         y: badgeY + 4.5,
         width: badgeW - 9,
         height: badgeH - 9,
-        borderColor: rgb(0.13, 0.13, 0.14),
+        borderColor: innerStroke,
         borderWidth: 0.8,
       });
 
       if (timesBold) {
         const headW = timesBold.widthOfTextAtSize(bookTitle, 15);
-        page.drawText(bookTitle, { x: visibleCenterX - headW / 2, y: badgeY + badgeH - 32, size: 15, font: timesBold, color: rgb(0.08, 0.08, 0.10) });
+        page.drawText(bookTitle, { x: visibleCenterX - headW / 2, y: badgeY + badgeH - 32, size: 15, font: timesBold, color: textHeadColor });
       }
 
       const lineW = badgeW - 40;
@@ -2935,7 +2939,7 @@
           start: { x: lx1, y: ly },
           end: { x: lx2, y: ly },
           thickness: 0.6,
-          color: rgb(0.47, 0.47, 0.50),
+          color: lineStroke,
           opacity: 0.45,
         });
       }
@@ -2943,42 +2947,42 @@
       const tLines = wrapText(timesBold, titleText, 11.5, lineW - 10);
       if (tLines.length >= 2 && timesBold) {
         const l1W = timesBold.widthOfTextAtSize(tLines[0], 11.5);
-        page.drawText(tLines[0], { x: visibleCenterX - l1W / 2, y: line1Y + 3.5, size: 11.5, font: timesBold, color: rgb(0.10, 0.10, 0.12) });
+        page.drawText(tLines[0], { x: visibleCenterX - l1W / 2, y: line1Y + 3.5, size: 11.5, font: timesBold, color: textTitleColor });
         const l2W = timesBold.widthOfTextAtSize(tLines[1], 11.5);
-        page.drawText(tLines[1], { x: visibleCenterX - l2W / 2, y: line2Y + 3.5, size: 11.5, font: timesBold, color: rgb(0.10, 0.10, 0.12) });
+        page.drawText(tLines[1], { x: visibleCenterX - l2W / 2, y: line2Y + 3.5, size: 11.5, font: timesBold, color: textTitleColor });
         if (timesFont) {
           const authTxt = options.coverAuthor || todayStr || 'Study Compendium';
           const aW = timesFont.widthOfTextAtSize(authTxt, 10);
-          page.drawText(authTxt, { x: visibleCenterX - aW / 2, y: line3Y + 3.5, size: 10, font: timesFont, color: rgb(0.25, 0.25, 0.28) });
+          page.drawText(authTxt, { x: visibleCenterX - aW / 2, y: line3Y + 3.5, size: 10, font: timesFont, color: textSubColor });
         }
       } else if (tLines.length === 1 && timesBold) {
         const l1W = timesBold.widthOfTextAtSize(tLines[0], 12);
-        page.drawText(tLines[0], { x: visibleCenterX - l1W / 2, y: line1Y + 3.5, size: 12, font: timesBold, color: rgb(0.10, 0.10, 0.12) });
+        page.drawText(tLines[0], { x: visibleCenterX - l1W / 2, y: line1Y + 3.5, size: 12, font: timesBold, color: textTitleColor });
         if (timesItalic) {
           const subTxt = options.subtitle || options.studyTitle || options.coverAuthor || 'Subject Notes';
           const sW = timesItalic.widthOfTextAtSize(subTxt, 10.5);
-          page.drawText(subTxt, { x: visibleCenterX - sW / 2, y: line2Y + 3.5, size: 10.5, font: timesItalic, color: rgb(0.25, 0.25, 0.28) });
+          page.drawText(subTxt, { x: visibleCenterX - sW / 2, y: line2Y + 3.5, size: 10.5, font: timesItalic, color: textSubColor });
         }
         if (timesFont) {
           const authDate = (options.coverAuthor ? options.coverAuthor + ' · ' : '') + (todayStr || 'Archival Copy');
           const adW = timesFont.widthOfTextAtSize(authDate, 9.5);
-          page.drawText(authDate, { x: visibleCenterX - adW / 2, y: line3Y + 3.5, size: 9.5, font: timesFont, color: rgb(0.25, 0.25, 0.28) });
+          page.drawText(authDate, { x: visibleCenterX - adW / 2, y: line3Y + 3.5, size: 9.5, font: timesFont, color: textSubColor });
         }
       }
 
       if (helveticaBold) {
         const slideTxt = options.numSlides ? `${options.numSlides} ${options.numSlides === 1 ? 'Slide' : 'Slides'} Bound` : '100 Sheets · 200 Pages';
         const sW = helveticaBold.widthOfTextAtSize(slideTxt, 7);
-        page.drawText(slideTxt, { x: visibleCenterX - sW / 2, y: badgeY + 36, size: 7, font: helveticaBold, color: rgb(0.14, 0.14, 0.14) });
+        page.drawText(slideTxt, { x: visibleCenterX - sW / 2, y: badgeY + 36, size: 7, font: helveticaBold, color: textMetaDark });
       }
       if (helveticaFont) {
         const dimStr = '9 3/4 in × 7 1/2 in (24.7cm × 19cm)';
         const dW = helveticaFont.widthOfTextAtSize(dimStr, 6.5);
-        page.drawText(dimStr, { x: visibleCenterX - dW / 2, y: badgeY + 24, size: 6.5, font: helveticaFont, color: rgb(0.35, 0.35, 0.35) });
+        page.drawText(dimStr, { x: visibleCenterX - dW / 2, y: badgeY + 24, size: 6.5, font: helveticaFont, color: textMetaMuted });
       }
       if (helveticaBold) {
         const rW = helveticaBold.widthOfTextAtSize('Archival Edition', 6.5);
-        page.drawText('Archival Edition', { x: visibleCenterX - rW / 2, y: badgeY + 12, size: 6.5, font: helveticaBold, color: rgb(0.14, 0.14, 0.14) });
+        page.drawText('Archival Edition', { x: visibleCenterX - rW / 2, y: badgeY + 12, size: 6.5, font: helveticaBold, color: textMetaDark });
       }
 
     } else {

@@ -94,3 +94,39 @@ def test_generate_cover_page_templates(template, binding, gutter_margin):
         assert float(cover.mediabox.height) == pytest.approx(a4_size[1], 0.1)
 
 
+def test_college_alias_and_composition_badge():
+    from slide_printer.constants import COVER_TEMPLATES, COVER_TEMPLATE_ALIASES
+    from slide_printer.patterns import generate_cover_page
+
+    assert "college" not in COVER_TEMPLATES
+    assert COVER_TEMPLATE_ALIASES.get("college") == "composition"
+    assert COVER_TEMPLATE_ALIASES.get("collegeruled") == "composition"
+    assert COVER_TEMPLATE_ALIASES.get("swirl") == "composition"
+
+    a4_size = PAPER_SIZES["a4"]
+    # Test generation with alias "college"
+    cover_alias = generate_cover_page(
+        page_size=a4_size,
+        title="College Alias Test",
+        template="college",
+    )
+    assert isinstance(cover_alias, PageObject)
+    assert "COMPOSITION BOOK" in cover_alias.extract_text()
+
+    # Test B&W composition and artistic cream notebook
+    cover_bw = generate_cover_page(
+        page_size=a4_size,
+        title="Classic B&W",
+        template="composition",
+    )
+    assert isinstance(cover_bw, PageObject)
+
+    cover_cream = generate_cover_page(
+        page_size=a4_size,
+        title="Vintage Morris Cream",
+        template="comp_morris",
+    )
+    assert isinstance(cover_cream, PageObject)
+
+
+

@@ -476,7 +476,7 @@ def test_cli_polo_and_seasons_template_flags(sample_slide_pdf, tmp_path):
 
 def test_cli_notebooks_cover_template_flags(sample_slide_pdf, tmp_path):
     for tmpl in [
-        "college", "academic_green", "academic_teal", "academic_wave",
+        "academic_green", "academic_teal", "academic_wave",
         "composition", "comp_blue", "comp_coral", "comp_amber",
         "comp_morris", "comp_ukiyoe", "comp_flora", "comp_pastoral", "comp_marbled"
     ]:

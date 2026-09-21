@@ -122,7 +122,6 @@
       optTemplateCompUkiyoe: "Composition Book (Japanese Woodblock)",
       optTemplateCompFlora: "Composition Book (Dutch Floral Still Life)",
       optTemplateCompPastoral: "Composition Book (Pastoral Landscape)",
-      optTemplateCollege: "Composition Book (College Ruled)",
       optTemplateAcademicGreen: "Composition Book (Amber Onyx)",
       optTemplateAcademicTeal: "Composition Book (Coral & Slate Swirl)",
       optTemplateAcademicWave: "Composition Book (Blue & Gold Wave)",
@@ -271,7 +270,6 @@
       optTemplateCompUkiyoe: "Composition Book (Grabado Japonés Ukiyo-e)",
       optTemplateCompFlora: "Composition Book (Bodegón Floral Flamenco)",
       optTemplateCompPastoral: "Composition Book (Paisaje Pastoral Clásico)",
-      optTemplateCollege: "Composition Book (College Ruled)",
       optTemplateAcademicGreen: "Composition Book (Ámbar y Ónix)",
       optTemplateAcademicTeal: "Composition Book (Coral y Pizarra)",
       optTemplateAcademicWave: "Composition Book (Azul y Dorado)",
@@ -420,7 +418,6 @@
       optTemplateCompUkiyoe: "Composition Book (Gravado Xaponés Ukiyo-e)",
       optTemplateCompFlora: "Composition Book (Bodegón Floral Flamengo)",
       optTemplateCompPastoral: "Composition Book (Paisaxe Pastoral Clásico)",
-      optTemplateCollege: "Composition Book (College Ruled)",
       optTemplateAcademicGreen: "Composition Book (Ámbar e Ónix)",
       optTemplateAcademicTeal: "Composition Book (Coral e Lousa)",
       optTemplateAcademicWave: "Composition Book (Azul e Dourado)",
@@ -791,7 +788,6 @@
     setText('optTemplateCompUkiyoe', dict.optTemplateCompUkiyoe);
     setText('optTemplateCompFlora', dict.optTemplateCompFlora);
     setText('optTemplateCompPastoral', dict.optTemplateCompPastoral);
-    setText('optTemplateCollege', dict.optTemplateCollege);
     setText('optTemplateAcademicGreen', dict.optTemplateAcademicGreen);
     setText('optTemplateAcademicTeal', dict.optTemplateAcademicTeal);
     setText('optTemplateAcademicWave', dict.optTemplateAcademicWave);

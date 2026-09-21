@@ -750,7 +750,7 @@ Examples:
         "--cover-template",
         choices=COVER_TEMPLATES + list(COVER_TEMPLATE_ALIASES.keys()),
         default="atelier",
-        help="Editorial cover template: Classics ('atelier', 'george', 'monograph', 'bauhaus'), Notebooks ('college', 'academic_green', 'academic_teal', 'academic_wave', 'composition'), Decades ('fifties', 'sixties', 'seventies', 'eighties', 'nineties'), Seasons ('spring', 'summer', 'autumn', 'winter'), Ralph Lauren ('polo', 'equestrian'), Nature ('natural') (default: atelier).",
+        help="Editorial cover template: Classics ('atelier', 'george', 'monograph', 'bauhaus'), Notebooks ('composition', 'academic_green', 'academic_teal', 'academic_wave'), Decades ('fifties', 'sixties', 'seventies', 'eighties', 'nineties'), Seasons ('spring', 'summer', 'autumn', 'winter'), Ralph Lauren ('polo', 'equestrian'), Nature ('natural') (default: atelier).",
     )
     parser.add_argument(
         "--cover-title",

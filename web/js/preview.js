@@ -2187,8 +2187,7 @@
                tpl === 'comp_ukiyoe' || tpl === 'ukiyoe' || tpl === 'japanese' || tpl === 'sakura' || tpl === 'woodblock' ||
                tpl === 'comp_flora' || tpl === 'flora' || tpl === 'still_life' || tpl === 'dutch_flora' || tpl === 'bouquet' || tpl === 'baroque_flora' ||
                tpl === 'comp_pastoral' || tpl === 'pastoral' || tpl === 'landscape' || tpl === 'oil_landscape' || tpl === 'romantic_landscape' ||
-               tpl === 'comp_marbled' || tpl === 'marbled' || tpl === 'florentine_stone' || tpl === 'ebru_stone' ||
-               tpl === 'college' || tpl === 'collegeruled' || tpl === 'college_ruled' || tpl === 'vintage_college' || tpl === 'swirl' || tpl === 'marble_grey') {
+               tpl === 'comp_marbled' || tpl === 'marbled' || tpl === 'florentine_stone' || tpl === 'ebru_stone') {
       let assetKey = 'composition';
       let spineColor = '#141416';
       let seamColor = '#333338';
@@ -2235,12 +2234,6 @@
         spineColor = '#23150d';      // Rich espresso walnut
         seamColor = '#462c1d';
         fallbackBg = '#966028';
-      } else if (tpl.includes('college') || tpl.includes('swirl')) {
-        assetKey = 'college';
-        spineColor = '#262422';      // Classic charcoal
-        seamColor = '#3f3c3a';
-        fallbackBg = '#d8d4cb';
-        bookTitle = 'COLLEGE RULED';
       }
 
       // 1. Capa Fondo (Full-bleed texture)
@@ -2293,13 +2286,24 @@
       const badgeX = visibleCenterX - badgeW / 2;
       const badgeY = ph * 0.16;
 
+      const isBw = (assetKey === 'composition');
+      const badgeBg = isBw ? '#ffffff' : '#faf4e8';
+      const outerStroke = isBw ? '#141416' : '#1f1c18';
+      const innerStroke = isBw ? '#222224' : '#2e2924';
+      const lineStroke = isBw ? 'rgba(120, 120, 128, 0.45)' : 'rgba(145, 130, 115, 0.45)';
+      const textHeadColor = isBw ? '#111111' : '#141210';
+      const textTitleColor = isBw ? '#1a1a1c' : '#1a1816';
+      const textSubColor = isBw ? '#444444' : '#3a3530';
+      const textMetaDark = isBw ? '#222222' : '#24201c';
+      const textMetaMuted = isBw ? '#555555' : '#574f46';
+
       ctx.save();
       ctx.shadowColor = 'rgba(0, 0, 0, 0.20)';
       ctx.shadowBlur = 8;
       ctx.shadowOffsetY = 3;
 
-      ctx.fillStyle = '#fdfdfb';
-      ctx.strokeStyle = '#141416';
+      ctx.fillStyle = badgeBg;
+      ctx.strokeStyle = outerStroke;
       ctx.lineWidth = 2.8;
       ctx.beginPath();
       if (ctx.roundRect) {
@@ -2312,7 +2316,7 @@
       ctx.stroke();
 
       ctx.lineWidth = 0.8;
-      ctx.strokeStyle = '#222224';
+      ctx.strokeStyle = innerStroke;
       ctx.beginPath();
       if (ctx.roundRect) {
         ctx.roundRect(badgeX + 4.5, badgeY + 4.5, badgeW - 9, badgeH - 9, 8.5);
@@ -2322,7 +2326,7 @@
       ctx.stroke();
 
       ctx.font = '700 15px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = '#111';
+      ctx.fillStyle = textHeadColor;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'alphabetic';
       ctx.fillText(bookTitle, visibleCenterX, badgeY + 32);
@@ -2334,7 +2338,7 @@
       const line2Y = badgeY + 83;
       const line3Y = badgeY + 108;
 
-      ctx.strokeStyle = 'rgba(120, 120, 128, 0.45)';
+      ctx.strokeStyle = lineStroke;
       ctx.lineWidth = 0.6;
       for (const ly of [line1Y, line2Y, line3Y]) {
         ctx.beginPath();
@@ -2343,7 +2347,7 @@
         ctx.stroke();
       }
 
-      ctx.fillStyle = '#1a1a1c';
+      ctx.fillStyle = textTitleColor;
       ctx.font = '700 11.5px "Times New Roman", Times, Georgia, serif';
       const cWords = titleText.split(' ');
       if (ctx.measureText(titleText).width > lineW - 10 && cWords.length > 1) {
@@ -2351,26 +2355,26 @@
         ctx.fillText(cWords.slice(0, mid).join(' '), visibleCenterX, line1Y - 4);
         ctx.fillText(cWords.slice(mid).join(' '), visibleCenterX, line2Y - 4);
         ctx.font = '500 10px "Times New Roman", Times, Georgia, serif';
-        ctx.fillStyle = '#444';
+        ctx.fillStyle = textSubColor;
         ctx.fillText(options.coverAuthor || dateFormatted || 'Study Compendium', visibleCenterX, line3Y - 4);
       } else {
         ctx.fillText(titleText, visibleCenterX, line1Y - 4);
         ctx.font = 'italic 10.5px "Times New Roman", Times, Georgia, serif';
-        ctx.fillStyle = '#444';
+        ctx.fillStyle = textSubColor;
         ctx.fillText(options.studyTitle || options.coverAuthor || 'Subject Notes', visibleCenterX, line2Y - 4);
         ctx.font = '500 9.5px "Times New Roman", Times, Georgia, serif';
         ctx.fillText((options.coverAuthor ? options.coverAuthor + ' · ' : '') + dateFormatted, visibleCenterX, line3Y - 4);
       }
 
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#222';
+      ctx.fillStyle = textMetaDark;
       const slideCountStr = options.numSlides ? `${options.numSlides} ${options.numSlides === 1 ? 'Slide' : 'Slides'} Bound` : '100 Sheets · 200 Pages';
       ctx.fillText(slideCountStr, visibleCenterX, badgeY + badgeH - 36);
       ctx.font = '500 6.5px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#555';
+      ctx.fillStyle = textMetaMuted;
       ctx.fillText('9 3/4 in × 7 1/2 in (24.7cm × 19cm)', visibleCenterX, badgeY + badgeH - 24);
       ctx.font = '700 6.5px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#222';
+      ctx.fillStyle = textMetaDark;
       ctx.fillText('Archival Edition', visibleCenterX, badgeY + badgeH - 12);
       ctx.restore();
 
