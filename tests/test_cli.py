@@ -475,7 +475,7 @@ def test_cli_polo_and_seasons_template_flags(sample_slide_pdf, tmp_path):
 
 
 def test_cli_notebooks_cover_template_flags(sample_slide_pdf, tmp_path):
-    for tmpl in ["college", "academic_green", "academic_teal", "academic_wave", "composition"]:
+    for tmpl in ["college", "academic_green", "academic_teal", "academic_wave", "composition", "comp_blue", "comp_coral", "comp_amber"]:
         out_dir = str(tmp_path / f"cli_{tmpl}")
         code = main([
             "-i", sample_slide_pdf,

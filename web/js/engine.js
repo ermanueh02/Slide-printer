@@ -2796,202 +2796,79 @@
         page.drawText(dTxt, { x: centerX - dW / 2, y: metaY - 2, size: 8.5, font: serifItalic, color: saddleTan });
       }
 
-    } else if (tpl === 'college' || tpl === 'collegeruled' || tpl === 'vintage_college' || tpl === 'swirl' || tpl === 'marble_grey' || tpl === 'college_ruled') {
-      const coverImg = await embedCoverImage('college');
-      if (coverImg) {
-        page.drawImage(coverImg, { x: 0, y: 0, width: pw, height: ph });
-      } else {
-        page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: rgb(0.86, 0.84, 0.80) });
-        page.drawRectangle({ x: 0, y: 0, width: leftGutter + 45, height: ph, color: rgb(0.18, 0.16, 0.15) });
+    } else if (tpl === 'composition' || tpl === 'compbook' || tpl === 'composition_book' || tpl === 'comp_classic' || tpl === 'marble_bw' || tpl === 'cuaderno' || tpl === 'compo' ||
+               tpl === 'comp_blue' || tpl === 'comp_ocean' || tpl === 'comp_wave' || tpl === 'academic_wave' || tpl === 'suminagashi' || tpl === 'ocean_wave' || tpl === 'academic_navy' || tpl === 'academic_burgundy' ||
+               tpl === 'comp_coral' || tpl === 'comp_terracotta' || tpl === 'comp_slate' || tpl === 'academic_teal' || tpl === 'ebru' || tpl === 'bubble' || tpl === 'academic_ebru' || tpl === 'academic_stone' || tpl === 'academic_blue' ||
+               tpl === 'comp_amber' || tpl === 'comp_gold' || tpl === 'comp_onyx' || tpl === 'academic_green' || tpl === 'academic' || tpl === 'peacock' || tpl === 'florentine' || tpl === 'academic_peacock' || tpl === 'academic_yellow' ||
+               tpl === 'college' || tpl === 'collegeruled' || tpl === 'college_ruled' || tpl === 'vintage_college' || tpl === 'swirl' || tpl === 'marble_grey') {
+      let assetKey = 'composition';
+      let spineColor = rgb(0.08, 0.08, 0.09); // #141416
+      let seamColor = rgb(0.20, 0.20, 0.22);  // #333338
+      let fallbackBg = rgb(0.11, 0.11, 0.12);
+      let bookTitle = 'COMPOSITION BOOK';
+
+      if (tpl.includes('blue') || tpl.includes('wave') || tpl.includes('ocean') || tpl.includes('suminagashi') || tpl.includes('navy')) {
+        assetKey = 'comp_blue';
+        spineColor = rgb(0.05, 0.12, 0.20);  // Royal navy #0e1e33
+        seamColor = rgb(0.14, 0.24, 0.38);   // #243e62
+        fallbackBg = rgb(0.11, 0.20, 0.32);
+      } else if (tpl.includes('coral') || tpl.includes('terracotta') || tpl.includes('slate') || tpl.includes('teal') || tpl.includes('ebru') || tpl.includes('bubble') || tpl.includes('stone')) {
+        assetKey = 'comp_coral';
+        spineColor = rgb(0.11, 0.16, 0.16);  // Deep slate teal #1c2929
+        seamColor = rgb(0.20, 0.28, 0.28);   // #334848
+        fallbackBg = rgb(0.78, 0.41, 0.29);
+      } else if (tpl.includes('amber') || tpl.includes('gold') || tpl.includes('onyx') || tpl.includes('green') || tpl.includes('peacock') || tpl.includes('florentine') || tpl.includes('academic')) {
+        assetKey = 'comp_amber';
+        spineColor = rgb(0.14, 0.08, 0.05);  // Rich espresso walnut #23150d
+        seamColor = rgb(0.27, 0.17, 0.11);   // #462c1d
+        fallbackBg = rgb(0.59, 0.38, 0.16);
+      } else if (tpl.includes('college') || tpl.includes('swirl')) {
+        assetKey = 'college';
+        spineColor = rgb(0.15, 0.14, 0.13);  // Classic charcoal #262422
+        seamColor = rgb(0.25, 0.24, 0.23);   // #3f3c3a
+        fallbackBg = rgb(0.85, 0.83, 0.80);
+        bookTitle = 'COLLEGE RULED';
       }
 
-      const lblW = Math.min(w - 30, 340);
-      const lblH = 160;
-      const lblX = centerX - lblW / 2;
-      const lblY = ph * 0.62;
-
-      page.drawRectangle({
-        x: lblX,
-        y: lblY,
-        width: lblW,
-        height: lblH,
-        color: rgb(0.95, 0.93, 0.88),
-        borderColor: rgb(0.14, 0.14, 0.14),
-        borderWidth: 1.2,
-      });
-      page.drawRectangle({
-        x: lblX + 3.5,
-        y: lblY + 3.5,
-        width: lblW - 7,
-        height: lblH - 7,
-        borderColor: rgb(0.14, 0.14, 0.14),
-        borderWidth: 0.5,
-      });
-
-      const lineW = lblW - 44;
-      const lx1 = lblX + 22;
-      const lx2 = lx1 + lineW;
-      const line1Y = lblY + 104;
-      const line2Y = lblY + 64;
-
-      page.drawLine({
-        start: { x: lx1, y: line1Y },
-        end: { x: lx2, y: line1Y },
-        thickness: 0.6,
-        color: rgb(0.4, 0.4, 0.4),
-        opacity: 0.55,
-      });
-      page.drawLine({
-        start: { x: lx1, y: line2Y },
-        end: { x: lx2, y: line2Y },
-        thickness: 0.6,
-        color: rgb(0.4, 0.4, 0.4),
-        opacity: 0.55,
-      });
-
-      const tLines = wrapText(helveticaBold, titleText, 14, lineW - 10);
-      if (tLines.length >= 2 && helveticaBold) {
-        const l1W = helveticaBold.widthOfTextAtSize(tLines[0], 13);
-        page.drawText(tLines[0], { x: centerX - l1W / 2, y: line1Y + 3.5, size: 13, font: helveticaBold, color: rgb(0.10, 0.10, 0.12) });
-        const l2W = helveticaBold.widthOfTextAtSize(tLines[1], 13);
-        page.drawText(tLines[1], { x: centerX - l2W / 2, y: line2Y + 3.5, size: 13, font: helveticaBold, color: rgb(0.10, 0.10, 0.12) });
-      } else if (tLines.length === 1 && helveticaBold) {
-        const l1W = helveticaBold.widthOfTextAtSize(tLines[0], 14);
-        page.drawText(tLines[0], { x: centerX - l1W / 2, y: line1Y + 3.5, size: 14, font: helveticaBold, color: rgb(0.10, 0.10, 0.12) });
-        const subOrAuth = options.author || options.subtitle || todayStr || 'Study Compendium';
-        if (helveticaFont) {
-          const sW = helveticaFont.widthOfTextAtSize(subOrAuth, 11);
-          page.drawText(subOrAuth, { x: centerX - sW / 2, y: line2Y + 3.5, size: 11, font: helveticaFont, color: rgb(0.25, 0.25, 0.28) });
-        }
-      }
-
-      if (helveticaBold) {
-        const footW = helveticaBold.widthOfTextAtSize('COLLEGE RULED', 8);
-        page.drawText('COLLEGE RULED', { x: centerX - footW / 2, y: lblY + 24, size: 8, font: helveticaBold, color: rgb(0.18, 0.18, 0.20) });
-      }
-
-      if (options.numSlides && helveticaFont) {
-        const sWord = options.numSlides === 1 ? 'slide' : 'slides';
-        const numStr = `${options.numSlides} ${sWord} bound · ${todayStr}`;
-        const numW = helveticaFont.widthOfTextAtSize(numStr, 8);
-        page.drawText(numStr, { x: centerX - numW / 2, y: lblY - 20, size: 8, font: helveticaFont, color: rgb(0.35, 0.35, 0.35) });
-      }
-
-    } else if (tpl === 'academic_green' || tpl === 'academic' || tpl === 'peacock' || tpl === 'florentine' || tpl === 'academic_peacock' || tpl === 'academic_yellow' ||
-               tpl === 'academic_teal' || tpl === 'ebru' || tpl === 'bubble' || tpl === 'academic_ebru' || tpl === 'academic_stone' || tpl === 'academic_blue' ||
-               tpl === 'academic_wave' || tpl === 'suminagashi' || tpl === 'ocean_wave' || tpl === 'academic_navy' || tpl === 'academic_burgundy') {
-      let assetKey = 'academic_green';
-      let fallbackSpine = rgb(0.06, 0.22, 0.14);
-      let fallbackBg = rgb(0.52, 0.22, 0.18);
-      if (tpl.includes('wave') || tpl.includes('suminagashi') || tpl.includes('ocean') || tpl.includes('navy') || tpl.includes('burgundy')) {
-        assetKey = 'academic_wave';
-        fallbackSpine = rgb(0.38, 0.10, 0.15);
-        fallbackBg = rgb(0.12, 0.20, 0.32);
-      } else if (tpl.includes('teal') || tpl.includes('ebru') || tpl.includes('bubble') || tpl.includes('stone') || tpl.includes('blue')) {
-        assetKey = 'academic_teal';
-        fallbackSpine = rgb(0.08, 0.22, 0.28);
-        fallbackBg = rgb(0.32, 0.38, 0.42);
-      }
-
+      // 1. Capa Fondo (Full-bleed texture)
       const coverImg = await embedCoverImage(assetKey);
       if (coverImg) {
         page.drawImage(coverImg, { x: 0, y: 0, width: pw, height: ph });
       } else {
         page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: fallbackBg });
-        page.drawRectangle({ x: 0, y: 0, width: leftGutter + 55, height: ph, color: fallbackSpine });
       }
 
-      const lblW = Math.min(w * 0.55, 270);
-      const lblH = 160;
-      const lblX = x2 - lblW - 6;
-      const lblY = ph - m - lblH - 40;
+      // 2. Capa Lomo (Harmonized spine on binding edge)
+      const baseSpineW = Math.max(pw * 0.145, 68);
+      const spineW = isVerso ? (rightGutter + baseSpineW) : (leftGutter + baseSpineW);
+      const spineX = isVerso ? (pw - spineW) : 0;
 
       page.drawRectangle({
-        x: lblX,
-        y: lblY,
-        width: lblW,
-        height: lblH,
-        color: rgb(0.96, 0.94, 0.88),
-        borderColor: rgb(0.35, 0.32, 0.28),
-        borderWidth: 0.8,
-      });
-      page.drawRectangle({
-        x: lblX + 3,
-        y: lblY + 3,
-        width: lblW - 6,
-        height: lblH - 6,
-        borderColor: rgb(0.35, 0.32, 0.28),
-        borderWidth: 0.4,
+        x: spineX,
+        y: 0,
+        width: spineW,
+        height: ph,
+        color: spineColor,
       });
 
-      if (timesBold) {
-        page.drawText('ACADEMIC', { x: lblX + 14, y: lblY + lblH - 24, size: 12.5, font: timesBold, color: rgb(0.20, 0.20, 0.22) });
-      }
-      if (timesItalic) {
-        page.drawText('Lined notebook', { x: lblX + 92, y: lblY + lblH - 24, size: 11, font: timesItalic, color: rgb(0.35, 0.35, 0.38) });
-      }
+      const seamX = isVerso ? (pw - spineW) : spineW;
+      page.drawLine({
+        start: { x: seamX, y: 0 },
+        end: { x: seamX, y: ph },
+        thickness: 1.4,
+        color: seamColor,
+      });
 
-      const lineW = lblW - 28;
-      const lx1 = lblX + 14;
-      const lx2 = lx1 + lineW;
-      const lineYs = [
-        lblY + lblH - 52,
-        lblY + lblH - 75,
-        lblY + lblH - 98,
-        lblY + lblH - 121
-      ];
+      // 3. Capa Etiqueta (Centered badge with vector borders and ruled lines)
+      const visibleX1 = isVerso ? 0 : spineW;
+      const visibleX2 = isVerso ? (pw - spineW) : pw;
+      const visibleW = visibleX2 - visibleX1;
+      const visibleCenterX = (visibleX1 + visibleX2) / 2;
 
-      for (const ly of lineYs) {
-        page.drawLine({
-          start: { x: lx1, y: ly },
-          end: { x: lx2, y: ly },
-          thickness: 0.5,
-          color: rgb(0.68, 0.65, 0.60),
-        });
-      }
-
-      const tLines = wrapText(timesBold, titleText, 11, lineW - 6);
-      let slot = 0;
-      for (const tl of tLines.slice(0, 2)) {
-        if (timesBold) {
-          page.drawText(tl, { x: lx1 + 2, y: lineYs[slot] + 3, size: 11, font: timesBold, color: rgb(0.12, 0.12, 0.14) });
-        }
-        slot++;
-      }
-
-      if (slot === 1 && options.subtitle && timesItalic) {
-        page.drawText(options.subtitle, { x: lx1 + 2, y: lineYs[slot] + 3, size: 9.5, font: timesItalic, color: rgb(0.30, 0.30, 0.34) });
-        slot++;
-      }
-
-      if (slot <= 2 && timesFont) {
-        page.drawText(options.author || 'General Notes', { x: lx1 + 2, y: lineYs[slot] + 3, size: 9.5, font: timesFont, color: rgb(0.25, 0.25, 0.28) });
-        slot++;
-      }
-
-      if (slot <= 3 && timesItalic) {
-        page.drawText(todayStr || 'Archival Compendium', { x: lx1 + 2, y: lineYs[slot] + 3, size: 8.5, font: timesItalic, color: rgb(0.38, 0.38, 0.42) });
-      }
-
-      if (timesItalic) {
-        const footStr = `178 × 254 mm (7 × 10") : ${options.numSlides || 80} ${options.numSlides ? 'slides' : 'pages'} : grey ruled • 7.1mm`;
-        const footW = timesItalic.widthOfTextAtSize(footStr, 6);
-        page.drawText(footStr, { x: lblX + (lblW - footW) / 2, y: lblY + 10, size: 6, font: timesItalic, color: rgb(0.48, 0.45, 0.40) });
-      }
-
-    } else if (tpl === 'composition' || tpl === 'compbook' || tpl === 'composition_book' || tpl === 'marble_bw' || tpl === 'cuaderno' || tpl === 'compo') {
-      const coverImg = await embedCoverImage('composition');
-      if (coverImg) {
-        page.drawImage(coverImg, { x: 0, y: 0, width: pw, height: ph });
-      } else {
-        page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: rgb(0.12, 0.12, 0.12) });
-        page.drawRectangle({ x: 0, y: 0, width: leftGutter + 50, height: ph, color: rgb(0.04, 0.04, 0.04) });
-      }
-
-      const badgeW = Math.min(w - 40, 320);
-      const badgeH = 180;
-      const badgeX = centerX - badgeW / 2;
-      const badgeY = ph * 0.58;
+      const badgeW = Math.min(visibleW * 0.72, 330);
+      const badgeH = 178;
+      const badgeX = visibleCenterX - badgeW / 2;
+      const badgeY = ph * 0.60;
 
       page.drawRectangle({
         x: badgeX,
@@ -2999,71 +2876,79 @@
         width: badgeW,
         height: badgeH,
         color: rgb(0.99, 0.99, 0.98),
-        borderColor: rgb(0.08, 0.08, 0.08),
-        borderWidth: 3.0,
+        borderColor: rgb(0.08, 0.08, 0.09),
+        borderWidth: 2.8,
       });
       page.drawRectangle({
         x: badgeX + 4.5,
         y: badgeY + 4.5,
         width: badgeW - 9,
         height: badgeH - 9,
-        borderColor: rgb(0.08, 0.08, 0.08),
+        borderColor: rgb(0.13, 0.13, 0.14),
         borderWidth: 0.8,
       });
 
       if (timesBold) {
-        const headW = timesBold.widthOfTextAtSize('COMPOSITION BOOK', 16);
-        page.drawText('COMPOSITION BOOK', { x: centerX - headW / 2, y: badgeY + badgeH - 32, size: 16, font: timesBold, color: rgb(0.08, 0.08, 0.10) });
+        const headW = timesBold.widthOfTextAtSize(bookTitle, 15);
+        page.drawText(bookTitle, { x: visibleCenterX - headW / 2, y: badgeY + badgeH - 32, size: 15, font: timesBold, color: rgb(0.08, 0.08, 0.10) });
       }
 
       const lineW = badgeW - 40;
       const lx1 = badgeX + 20;
       const lx2 = lx1 + lineW;
-      const line1Y = badgeY + badgeH - 60;
-      const line2Y = badgeY + badgeH - 85;
-      const line3Y = badgeY + badgeH - 110;
+      const line1Y = badgeY + badgeH - 58;
+      const line2Y = badgeY + badgeH - 83;
+      const line3Y = badgeY + badgeH - 108;
 
       for (const ly of [line1Y, line2Y, line3Y]) {
         page.drawLine({
           start: { x: lx1, y: ly },
           end: { x: lx2, y: ly },
           thickness: 0.6,
-          color: rgb(0.45, 0.45, 0.45),
-          opacity: 0.6,
+          color: rgb(0.47, 0.47, 0.50),
+          opacity: 0.45,
         });
       }
 
-      const tLines = wrapText(timesBold, titleText, 12, lineW - 6);
+      const tLines = wrapText(timesBold, titleText, 11.5, lineW - 10);
       if (tLines.length >= 2 && timesBold) {
-        page.drawText(tLines[0], { x: lx1 + 2, y: line1Y + 3, size: 12, font: timesBold, color: rgb(0.10, 0.10, 0.12) });
-        page.drawText(tLines[1], { x: lx1 + 2, y: line2Y + 3, size: 12, font: timesBold, color: rgb(0.10, 0.10, 0.12) });
+        const l1W = timesBold.widthOfTextAtSize(tLines[0], 11.5);
+        page.drawText(tLines[0], { x: visibleCenterX - l1W / 2, y: line1Y + 3.5, size: 11.5, font: timesBold, color: rgb(0.10, 0.10, 0.12) });
+        const l2W = timesBold.widthOfTextAtSize(tLines[1], 11.5);
+        page.drawText(tLines[1], { x: visibleCenterX - l2W / 2, y: line2Y + 3.5, size: 11.5, font: timesBold, color: rgb(0.10, 0.10, 0.12) });
         if (timesFont) {
-          page.drawText(options.author || todayStr || 'Compendium', { x: lx1 + 2, y: line3Y + 3, size: 10, font: timesFont, color: rgb(0.10, 0.10, 0.12) });
+          const authTxt = options.coverAuthor || todayStr || 'Study Compendium';
+          const aW = timesFont.widthOfTextAtSize(authTxt, 10);
+          page.drawText(authTxt, { x: visibleCenterX - aW / 2, y: line3Y + 3.5, size: 10, font: timesFont, color: rgb(0.25, 0.25, 0.28) });
         }
       } else if (tLines.length === 1 && timesBold) {
-        page.drawText(tLines[0], { x: lx1 + 2, y: line1Y + 3, size: 12.5, font: timesBold, color: rgb(0.10, 0.10, 0.12) });
+        const l1W = timesBold.widthOfTextAtSize(tLines[0], 12);
+        page.drawText(tLines[0], { x: visibleCenterX - l1W / 2, y: line1Y + 3.5, size: 12, font: timesBold, color: rgb(0.10, 0.10, 0.12) });
         if (timesItalic) {
-          page.drawText(options.subtitle || options.author || 'Subject Notes', { x: lx1 + 2, y: line2Y + 3, size: 10.5, font: timesItalic, color: rgb(0.25, 0.25, 0.28) });
+          const subTxt = options.subtitle || options.studyTitle || options.coverAuthor || 'Subject Notes';
+          const sW = timesItalic.widthOfTextAtSize(subTxt, 10.5);
+          page.drawText(subTxt, { x: visibleCenterX - sW / 2, y: line2Y + 3.5, size: 10.5, font: timesItalic, color: rgb(0.25, 0.25, 0.28) });
         }
         if (timesFont) {
-          const authDate = (options.author ? options.author + ' · ' : '') + (todayStr || 'Archival Copy');
-          page.drawText(authDate, { x: lx1 + 2, y: line3Y + 3, size: 10, font: timesFont, color: rgb(0.10, 0.10, 0.12) });
+          const authDate = (options.coverAuthor ? options.coverAuthor + ' · ' : '') + (todayStr || 'Archival Copy');
+          const adW = timesFont.widthOfTextAtSize(authDate, 9.5);
+          page.drawText(authDate, { x: visibleCenterX - adW / 2, y: line3Y + 3.5, size: 9.5, font: timesFont, color: rgb(0.25, 0.25, 0.28) });
         }
       }
 
       if (helveticaBold) {
-        const slideTxt = options.numSlides ? `${options.numSlides} Slides · Handout Notes` : '100 Sheets · 200 Pages';
+        const slideTxt = options.numSlides ? `${options.numSlides} ${options.numSlides === 1 ? 'Slide' : 'Slides'} Bound` : '100 Sheets · 200 Pages';
         const sW = helveticaBold.widthOfTextAtSize(slideTxt, 7);
-        page.drawText(slideTxt, { x: centerX - sW / 2, y: badgeY + 38, size: 7, font: helveticaBold, color: rgb(0.18, 0.18, 0.20) });
+        page.drawText(slideTxt, { x: visibleCenterX - sW / 2, y: badgeY + 36, size: 7, font: helveticaBold, color: rgb(0.14, 0.14, 0.14) });
       }
       if (helveticaFont) {
-        const dimStr = '9 3/4 in x 7 1/2 in (24.7cm x 19cm)';
+        const dimStr = '9 3/4 in × 7 1/2 in (24.7cm × 19cm)';
         const dW = helveticaFont.widthOfTextAtSize(dimStr, 6.5);
-        page.drawText(dimStr, { x: centerX - dW / 2, y: badgeY + 26, size: 6.5, font: helveticaFont, color: rgb(0.18, 0.18, 0.20) });
+        page.drawText(dimStr, { x: visibleCenterX - dW / 2, y: badgeY + 24, size: 6.5, font: helveticaFont, color: rgb(0.35, 0.35, 0.35) });
       }
       if (helveticaBold) {
-        const rW = helveticaBold.widthOfTextAtSize('Wide Ruled', 6.5);
-        page.drawText('Wide Ruled', { x: centerX - rW / 2, y: badgeY + 14, size: 6.5, font: helveticaBold, color: rgb(0.18, 0.18, 0.20) });
+        const rW = helveticaBold.widthOfTextAtSize('Archival Edition', 6.5);
+        page.drawText('Archival Edition', { x: visibleCenterX - rW / 2, y: badgeY + 12, size: 6.5, font: helveticaBold, color: rgb(0.14, 0.14, 0.14) });
       }
 
     } else {

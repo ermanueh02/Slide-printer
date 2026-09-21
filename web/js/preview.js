@@ -2179,276 +2179,169 @@
       ctx.fillStyle = saddleTan;
       ctx.fillText(dateFormatted || 'Season Archive', centerX, metaY + 28);
 
-    } else if (tpl === 'college' || tpl === 'collegeruled' || tpl === 'vintage_college' || tpl === 'swirl' || tpl === 'marble_grey' || tpl === 'college_ruled') {
-      const img = getCoverImage('college');
-      if (img && img.complete && img.naturalWidth) {
-        ctx.drawImage(img, 0, 0, pw, ph);
-      } else {
-        ctx.fillStyle = '#dbd6cb';
-        ctx.fillRect(0, 0, pw, ph);
-        ctx.fillStyle = '#2b2724';
-        ctx.fillRect(0, 0, leftGutter + 45, ph);
+    } else if (tpl === 'composition' || tpl === 'compbook' || tpl === 'composition_book' || tpl === 'comp_classic' || tpl === 'marble_bw' || tpl === 'cuaderno' || tpl === 'compo' ||
+               tpl === 'comp_blue' || tpl === 'comp_ocean' || tpl === 'comp_wave' || tpl === 'academic_wave' || tpl === 'suminagashi' || tpl === 'ocean_wave' || tpl === 'academic_navy' || tpl === 'academic_burgundy' ||
+               tpl === 'comp_coral' || tpl === 'comp_terracotta' || tpl === 'comp_slate' || tpl === 'academic_teal' || tpl === 'ebru' || tpl === 'bubble' || tpl === 'academic_ebru' || tpl === 'academic_stone' || tpl === 'academic_blue' ||
+               tpl === 'comp_amber' || tpl === 'comp_gold' || tpl === 'comp_onyx' || tpl === 'academic_green' || tpl === 'academic' || tpl === 'peacock' || tpl === 'florentine' || tpl === 'academic_peacock' || tpl === 'academic_yellow' ||
+               tpl === 'college' || tpl === 'collegeruled' || tpl === 'college_ruled' || tpl === 'vintage_college' || tpl === 'swirl' || tpl === 'marble_grey') {
+      let assetKey = 'composition';
+      let spineColor = '#141416';
+      let seamColor = '#333338';
+      let fallbackBg = '#1c1c1e';
+      let bookTitle = 'COMPOSITION BOOK';
+
+      if (tpl.includes('blue') || tpl.includes('wave') || tpl.includes('ocean') || tpl.includes('suminagashi') || tpl.includes('navy')) {
+        assetKey = 'comp_blue';
+        spineColor = '#0e1e33';      // Royal navy
+        seamColor = '#243e62';
+        fallbackBg = '#1c3452';
+      } else if (tpl.includes('coral') || tpl.includes('terracotta') || tpl.includes('slate') || tpl.includes('teal') || tpl.includes('ebru') || tpl.includes('bubble') || tpl.includes('stone')) {
+        assetKey = 'comp_coral';
+        spineColor = '#1c2929';      // Deep slate teal
+        seamColor = '#334848';
+        fallbackBg = '#c8684a';
+      } else if (tpl.includes('amber') || tpl.includes('gold') || tpl.includes('onyx') || tpl.includes('green') || tpl.includes('peacock') || tpl.includes('florentine') || tpl.includes('academic')) {
+        assetKey = 'comp_amber';
+        spineColor = '#23150d';      // Rich espresso walnut
+        seamColor = '#462c1d';
+        fallbackBg = '#966028';
+      } else if (tpl.includes('college') || tpl.includes('swirl')) {
+        assetKey = 'college';
+        spineColor = '#262422';      // Classic charcoal
+        seamColor = '#3f3c3a';
+        fallbackBg = '#d8d4cb';
+        bookTitle = 'COLLEGE RULED';
       }
 
-      const lblW = Math.min(w - 30, 340);
-      const lblH = 160;
-      const lblX = centerX - lblW / 2;
-      const lblY = ph * 0.22;
-
-      ctx.save();
-      ctx.fillStyle = 'rgba(244, 240, 230, 0.96)';
-      ctx.strokeStyle = '#222';
-      ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      if (ctx.roundRect) {
-        ctx.roundRect(lblX, lblY, lblW, lblH, 10);
-      } else {
-        ctx.rect(lblX, lblY, lblW, lblH);
-      }
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.lineWidth = 0.5;
-      ctx.beginPath();
-      if (ctx.roundRect) {
-        ctx.roundRect(lblX + 3.5, lblY + 3.5, lblW - 7, lblH - 7, 7.5);
-      } else {
-        ctx.rect(lblX + 3.5, lblY + 3.5, lblW - 7, lblH - 7);
-      }
-      ctx.stroke();
-
-      const lineW = lblW - 44;
-      const lx1 = lblX + 22;
-      const lx2 = lx1 + lineW;
-      const line1Y = lblY + 56;
-      const line2Y = lblY + 96;
-
-      ctx.strokeStyle = 'rgba(80, 80, 80, 0.45)';
-      ctx.lineWidth = 0.6;
-      ctx.beginPath();
-      ctx.moveTo(lx1, line1Y); ctx.lineTo(lx2, line1Y);
-      ctx.moveTo(lx1, line2Y); ctx.lineTo(lx2, line2Y);
-      ctx.stroke();
-
-      ctx.fillStyle = '#1a1a1c';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'alphabetic';
-
-      const words = titleText.split(' ');
-      let line1 = titleText;
-      let line2 = options.coverAuthor || options.studyTitle || dateFormatted || 'Study Compendium';
-      if (ctx.measureText(titleText).width > lineW - 10 && words.length > 1) {
-        const mid = Math.ceil(words.length / 2);
-        line1 = words.slice(0, mid).join(' ');
-        line2 = words.slice(mid).join(' ');
-      }
-
-      ctx.font = '700 13px system-ui, -apple-system, sans-serif';
-      ctx.fillText(line1, centerX, line1Y - 4);
-      ctx.font = (line2 === titleText || words.length > 1 && line2.includes(words[words.length - 1]))
-        ? '700 13px system-ui, -apple-system, sans-serif'
-        : '500 11px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#333';
-      ctx.fillText(line2, centerX, line2Y - 4);
-
-      ctx.font = '700 8px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#222';
-      ctx.fillText('COLLEGE RULED', centerX, lblY + lblH - 22);
-      ctx.restore();
-
-    } else if (tpl === 'academic_green' || tpl === 'academic' || tpl === 'peacock' || tpl === 'florentine' || tpl === 'academic_peacock' || tpl === 'academic_yellow' ||
-               tpl === 'academic_teal' || tpl === 'ebru' || tpl === 'bubble' || tpl === 'academic_ebru' || tpl === 'academic_stone' || tpl === 'academic_blue' ||
-               tpl === 'academic_wave' || tpl === 'suminagashi' || tpl === 'ocean_wave' || tpl === 'academic_navy' || tpl === 'academic_burgundy') {
-      let assetKey = 'academic_green';
-      let fallbackSpine = '#103924';
-      let fallbackBg = '#7c2820';
-      if (tpl.includes('wave') || tpl.includes('suminagashi') || tpl.includes('ocean') || tpl.includes('navy') || tpl.includes('burgundy')) {
-        assetKey = 'academic_wave';
-        fallbackSpine = '#5e1925';
-        fallbackBg = '#1e304b';
-      } else if (tpl.includes('teal') || tpl.includes('ebru') || tpl.includes('bubble') || tpl.includes('stone') || tpl.includes('blue')) {
-        assetKey = 'academic_teal';
-        fallbackSpine = '#143846';
-        fallbackBg = '#4a5b66';
-      }
-
+      // 1. Capa Fondo (Full-bleed texture)
       const img = getCoverImage(assetKey);
       if (img && img.complete && img.naturalWidth) {
-        ctx.drawImage(img, 0, 0, pw, ph);
+        const imgAspect = img.naturalWidth / img.naturalHeight;
+        const pageAspect = pw / ph;
+        let drawW = pw, drawH = ph, drawX = 0, drawY = 0;
+        if (imgAspect > pageAspect) {
+          drawW = ph * imgAspect;
+          drawX = (pw - drawW) / 2;
+        } else {
+          drawH = pw / imgAspect;
+          drawY = (ph - drawH) / 2;
+        }
+        ctx.drawImage(img, drawX, drawY, drawW, drawH);
       } else {
         ctx.fillStyle = fallbackBg;
         ctx.fillRect(0, 0, pw, ph);
-        ctx.fillStyle = fallbackSpine;
-        ctx.fillRect(0, 0, leftGutter + 55, ph);
       }
 
-      const lblW = Math.min(w * 0.55, 270);
-      const lblH = 160;
-      const lblX = x2 - lblW - 6;
-      const lblY = 40 + (ph * 0.05);
+      // 2. Capa Lomo (Harmonized spine on binding edge)
+      const baseSpineW = Math.max(pw * 0.145, 68);
+      const spineW = isVerso ? (rightGutter + baseSpineW) : (leftGutter + baseSpineW);
+      const spineX = isVerso ? (pw - spineW) : 0;
+
+      ctx.fillStyle = spineColor;
+      ctx.fillRect(spineX, 0, spineW, ph);
+
+      const seamX = isVerso ? (pw - spineW) : spineW;
+      ctx.lineWidth = 1.4;
+      ctx.strokeStyle = seamColor;
+      ctx.beginPath();
+      ctx.moveTo(seamX, 0);
+      ctx.lineTo(seamX, ph);
+      ctx.stroke();
+
+      const shadowDir = isVerso ? -1 : 1;
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      ctx.fillRect(seamX, 0, shadowDir * 2.5, ph);
+
+      // 3. Capa Etiqueta (Centered badge with title lines)
+      const visibleX1 = isVerso ? 0 : spineW;
+      const visibleX2 = isVerso ? (pw - spineW) : pw;
+      const visibleW = visibleX2 - visibleX1;
+      const visibleCenterX = (visibleX1 + visibleX2) / 2;
+
+      const badgeW = Math.min(visibleW * 0.72, 330);
+      const badgeH = 178;
+      const badgeX = visibleCenterX - badgeW / 2;
+      const badgeY = ph * 0.16;
 
       ctx.save();
-      ctx.fillStyle = 'rgba(245, 239, 225, 0.98)';
-      ctx.strokeStyle = 'rgba(80, 70, 60, 0.85)';
-      ctx.lineWidth = 0.8;
-      ctx.fillRect(lblX, lblY, lblW, lblH);
-      ctx.strokeRect(lblX, lblY, lblW, lblH);
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.20)';
+      ctx.shadowBlur = 8;
+      ctx.shadowOffsetY = 3;
 
-      ctx.lineWidth = 0.4;
-      ctx.strokeRect(lblX + 3, lblY + 3, lblW - 6, lblH - 6);
-
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'alphabetic';
-      ctx.font = '700 12.5px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = '#222';
-      ctx.fillText('ACADEMIC', lblX + 14, lblY + 24);
-      ctx.font = 'italic 11px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = '#444';
-      ctx.fillText('Lined notebook', lblX + 90, lblY + 24);
-
-      const lineW = lblW - 28;
-      const lx1 = lblX + 14;
-      const lx2 = lx1 + lineW;
-      const lineYs = [
-        lblY + 52,
-        lblY + 75,
-        lblY + 98,
-        lblY + 121
-      ];
-
-      ctx.strokeStyle = 'rgba(170, 162, 148, 0.85)';
-      ctx.lineWidth = 0.5;
-      for (const ly of lineYs) {
-        ctx.beginPath();
-        ctx.moveTo(lx1, ly); ctx.lineTo(lx2, ly);
-        ctx.stroke();
-      }
-
-      ctx.fillStyle = '#1c1917';
-      ctx.font = '700 11px "Times New Roman", Times, Georgia, serif';
-      let curLine = 0;
-      const tWords = titleText.split(' ');
-      if (ctx.measureText(titleText).width > lineW - 10 && tWords.length > 1) {
-        const mid = Math.ceil(tWords.length / 2);
-        ctx.fillText(tWords.slice(0, mid).join(' '), lx1 + 2, lineYs[0] - 4);
-        ctx.fillText(tWords.slice(mid).join(' '), lx1 + 2, lineYs[1] - 4);
-        curLine = 2;
-      } else {
-        ctx.fillText(titleText, lx1 + 2, lineYs[0] - 4);
-        curLine = 1;
-      }
-
-      if (curLine === 1 && options.studyTitle) {
-        ctx.font = 'italic 9.5px "Times New Roman", Times, Georgia, serif';
-        ctx.fillStyle = '#4b5563';
-        ctx.fillText(options.studyTitle, lx1 + 2, lineYs[curLine] - 4);
-        curLine++;
-      }
-
-      if (curLine <= 2) {
-        ctx.font = '500 9.5px "Times New Roman", Times, Georgia, serif';
-        ctx.fillStyle = '#374151';
-        ctx.fillText(options.coverAuthor || 'General Notes', lx1 + 2, lineYs[curLine] - 4);
-        curLine++;
-      }
-
-      if (curLine <= 3) {
-        ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
-        ctx.fillStyle = '#6b7280';
-        ctx.fillText(dateFormatted || 'Archival Copy', lx1 + 2, lineYs[curLine] - 4);
-      }
-
-      ctx.font = 'italic 6px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = '#7a7062';
-      ctx.textAlign = 'center';
-      ctx.fillText('178 × 254 mm (7 × 10") : 80 pages (40 leaves) : grey ruled • 7.1mm', lblX + lblW / 2, lblY + lblH - 12);
-      ctx.restore();
-
-    } else if (tpl === 'composition' || tpl === 'compbook' || tpl === 'composition_book' || tpl === 'marble_bw' || tpl === 'cuaderno' || tpl === 'compo') {
-      const img = getCoverImage('composition');
-      if (img && img.complete && img.naturalWidth) {
-        ctx.drawImage(img, 0, 0, pw, ph);
-      } else {
-        ctx.fillStyle = '#1c1c1e';
-        ctx.fillRect(0, 0, pw, ph);
-        ctx.fillStyle = '#080808';
-        ctx.fillRect(0, 0, leftGutter + 50, ph);
-      }
-
-      const badgeW = Math.min(w - 40, 320);
-      const badgeH = 180;
-      const badgeX = centerX - badgeW / 2;
-      const badgeY = ph * 0.24;
-
-      ctx.save();
-      ctx.fillStyle = 'rgba(253, 253, 252, 0.98)';
-      ctx.strokeStyle = '#111';
-      ctx.lineWidth = 3.0;
+      ctx.fillStyle = '#fdfdfb';
+      ctx.strokeStyle = '#141416';
+      ctx.lineWidth = 2.8;
       ctx.beginPath();
       if (ctx.roundRect) {
-        ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 14);
+        ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 12);
       } else {
         ctx.rect(badgeX, badgeY, badgeW, badgeH);
       }
       ctx.fill();
+      ctx.shadowColor = 'transparent';
       ctx.stroke();
 
       ctx.lineWidth = 0.8;
+      ctx.strokeStyle = '#222224';
       ctx.beginPath();
       if (ctx.roundRect) {
-        ctx.roundRect(badgeX + 4.5, badgeY + 4.5, badgeW - 9, badgeH - 9, 10);
+        ctx.roundRect(badgeX + 4.5, badgeY + 4.5, badgeW - 9, badgeH - 9, 8.5);
       } else {
         ctx.rect(badgeX + 4.5, badgeY + 4.5, badgeW - 9, badgeH - 9);
       }
       ctx.stroke();
 
-      ctx.font = '700 16px "Times New Roman", Times, Georgia, serif';
+      ctx.font = '700 15px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = '#111';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'alphabetic';
-      ctx.fillText('COMPOSITION BOOK', centerX, badgeY + 34);
+      ctx.fillText(bookTitle, visibleCenterX, badgeY + 32);
 
       const lineW = badgeW - 40;
       const lx1 = badgeX + 20;
       const lx2 = lx1 + lineW;
-      const line1Y = badgeY + 62;
-      const line2Y = badgeY + 87;
-      const line3Y = badgeY + 112;
+      const line1Y = badgeY + 58;
+      const line2Y = badgeY + 83;
+      const line3Y = badgeY + 108;
 
-      ctx.strokeStyle = 'rgba(80, 80, 80, 0.45)';
+      ctx.strokeStyle = 'rgba(120, 120, 128, 0.45)';
       ctx.lineWidth = 0.6;
-      ctx.beginPath();
-      ctx.moveTo(lx1, line1Y); ctx.lineTo(lx2, line1Y);
-      ctx.moveTo(lx1, line2Y); ctx.lineTo(lx2, line2Y);
-      ctx.moveTo(lx1, line3Y); ctx.lineTo(lx2, line3Y);
-      ctx.stroke();
+      for (const ly of [line1Y, line2Y, line3Y]) {
+        ctx.beginPath();
+        ctx.moveTo(lx1, ly);
+        ctx.lineTo(lx2, ly);
+        ctx.stroke();
+      }
 
       ctx.fillStyle = '#1a1a1c';
-      ctx.font = '700 12px "Times New Roman", Times, Georgia, serif';
+      ctx.font = '700 11.5px "Times New Roman", Times, Georgia, serif';
       const cWords = titleText.split(' ');
       if (ctx.measureText(titleText).width > lineW - 10 && cWords.length > 1) {
         const mid = Math.ceil(cWords.length / 2);
-        ctx.fillText(cWords.slice(0, mid).join(' '), centerX, line1Y - 4);
-        ctx.fillText(cWords.slice(mid).join(' '), centerX, line2Y - 4);
+        ctx.fillText(cWords.slice(0, mid).join(' '), visibleCenterX, line1Y - 4);
+        ctx.fillText(cWords.slice(mid).join(' '), visibleCenterX, line2Y - 4);
         ctx.font = '500 10px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = '#444';
-        ctx.fillText(options.coverAuthor || dateFormatted || 'Study Compendium', centerX, line3Y - 4);
+        ctx.fillText(options.coverAuthor || dateFormatted || 'Study Compendium', visibleCenterX, line3Y - 4);
       } else {
-        ctx.fillText(titleText, centerX, line1Y - 4);
+        ctx.fillText(titleText, visibleCenterX, line1Y - 4);
         ctx.font = 'italic 10.5px "Times New Roman", Times, Georgia, serif';
         ctx.fillStyle = '#444';
-        ctx.fillText(options.studyTitle || options.coverAuthor || 'Subject Notes', centerX, line2Y - 4);
-        ctx.font = '500 10px "Times New Roman", Times, Georgia, serif';
-        ctx.fillText((options.coverAuthor ? options.coverAuthor + ' · ' : '') + dateFormatted, centerX, line3Y - 4);
+        ctx.fillText(options.studyTitle || options.coverAuthor || 'Subject Notes', visibleCenterX, line2Y - 4);
+        ctx.font = '500 9.5px "Times New Roman", Times, Georgia, serif';
+        ctx.fillText((options.coverAuthor ? options.coverAuthor + ' · ' : '') + dateFormatted, visibleCenterX, line3Y - 4);
       }
 
       ctx.font = '700 7px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = '#222';
-      ctx.fillText('100 Sheets · 200 Pages', centerX, badgeY + badgeH - 38);
+      const slideCountStr = options.numSlides ? `${options.numSlides} ${options.numSlides === 1 ? 'Slide' : 'Slides'} Bound` : '100 Sheets · 200 Pages';
+      ctx.fillText(slideCountStr, visibleCenterX, badgeY + badgeH - 36);
       ctx.font = '500 6.5px system-ui, -apple-system, sans-serif';
-      ctx.fillText('9 3/4 in x 7 1/2 in (24.7cm x 19cm)', centerX, badgeY + badgeH - 26);
+      ctx.fillStyle = '#555';
+      ctx.fillText('9 3/4 in × 7 1/2 in (24.7cm × 19cm)', visibleCenterX, badgeY + badgeH - 24);
       ctx.font = '700 6.5px system-ui, -apple-system, sans-serif';
-      ctx.fillText('Wide Ruled', centerX, badgeY + badgeH - 14);
+      ctx.fillStyle = '#222';
+      ctx.fillText('Archival Edition', visibleCenterX, badgeY + badgeH - 12);
       ctx.restore();
 
     } else {

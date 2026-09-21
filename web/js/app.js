@@ -108,16 +108,19 @@
       optCoverGenerate: "Generate editorial cover",
       coverTemplateLabel: "Cover Template Style",
       groupClassics: "Classics / Zara",
-      groupNotebooks: "Marbled Notebooks",
+      groupNotebooks: "Composition Books",
       groupDecades: "Decades",
       groupSeasons: "Seasons",
       groupRalphLauren: "Ralph Lauren",
       groupNature: "Nature",
-      optTemplateCollege: "Vintage College (Marbled Grey Swirl)",
-      optTemplateAcademicGreen: "Academic Peacock (Florentine Red & Green)",
-      optTemplateAcademicTeal: "Academic Ebru (Turkish Bubble Slate)",
-      optTemplateAcademicWave: "Academic Wave (Suminagashi Navy & Burgundy)",
-      optTemplateComposition: "Composition Book (Classic Black & White)",
+      optTemplateComposition: "Composition Book (Classic B&W)",
+      optTemplateCompBlue: "Composition Book (Blue & Gold Wave)",
+      optTemplateCompCoral: "Composition Book (Coral & Slate Swirl)",
+      optTemplateCompAmber: "Composition Book (Amber Onyx)",
+      optTemplateCollege: "Composition Book (College Ruled)",
+      optTemplateAcademicGreen: "Composition Book (Amber Onyx)",
+      optTemplateAcademicTeal: "Composition Book (Coral & Slate Swirl)",
+      optTemplateAcademicWave: "Composition Book (Blue & Gold Wave)",
       optTemplateAtelier: "Atelier Notebook (Zara Home Classic)",
       optTemplateGeorge: "George 90s (JFK Jr Executive)",
       optTemplateMonograph: "Archival Monograph (Heritage Bookplate)",
@@ -249,16 +252,19 @@
       optCoverGenerate: "Generar portada nueva",
       coverTemplateLabel: "Estilo de portada editorial",
       groupClassics: "Clásicos / Zara",
-      groupNotebooks: "Cuadernos Marmoleados",
+      groupNotebooks: "Composition Book",
       groupDecades: "Décadas",
       groupSeasons: "Estaciones",
       groupRalphLauren: "Ralph Lauren",
       groupNature: "Naturaleza",
-      optTemplateCollege: "Vintage College (Gris Marmoleado)",
-      optTemplateAcademicGreen: "Academic Peacock (Marmoleado Florentino)",
-      optTemplateAcademicTeal: "Academic Ebru (Marmoleado Turco Pizarra)",
-      optTemplateAcademicWave: "Academic Wave (Suminagashi Azul Marino)",
-      optTemplateComposition: "Composition Book (Cuaderno Clásico B&N)",
+      optTemplateComposition: "Composition Book (Clásico B&N)",
+      optTemplateCompBlue: "Composition Book (Azul y Dorado)",
+      optTemplateCompCoral: "Composition Book (Coral y Pizarra)",
+      optTemplateCompAmber: "Composition Book (Ámbar y Ónix)",
+      optTemplateCollege: "Composition Book (College Ruled)",
+      optTemplateAcademicGreen: "Composition Book (Ámbar y Ónix)",
+      optTemplateAcademicTeal: "Composition Book (Coral y Pizarra)",
+      optTemplateAcademicWave: "Composition Book (Azul y Dorado)",
       optTemplateAtelier: "Cuaderno Atelier (Zara Home / Clásico)",
       optTemplateGeorge: "George años 90 (JFK Jr / Ejecutivo)",
       optTemplateMonograph: "Monografía de archivo (Ex libris)",
@@ -390,16 +396,19 @@
       optCoverGenerate: "Xerar portada nova",
       coverTemplateLabel: "Estilo de portada editorial",
       groupClassics: "Clásicos / Zara",
-      groupNotebooks: "Cadernos Marmoleados",
+      groupNotebooks: "Composition Book",
       groupDecades: "Décadas",
       groupSeasons: "Estacións",
       groupRalphLauren: "Ralph Lauren",
       groupNature: "Natureza",
-      optTemplateCollege: "Vintage College (Gris Marmoleado)",
-      optTemplateAcademicGreen: "Academic Peacock (Marmoleado Florentino)",
-      optTemplateAcademicTeal: "Academic Ebru (Marmoleado Turco Lousa)",
-      optTemplateAcademicWave: "Academic Wave (Suminagashi Azul Mariño)",
-      optTemplateComposition: "Composition Book (Caderno Clásico B&N)",
+      optTemplateComposition: "Composition Book (Clásico B&N)",
+      optTemplateCompBlue: "Composition Book (Azul e Dourado)",
+      optTemplateCompCoral: "Composition Book (Coral e Lousa)",
+      optTemplateCompAmber: "Composition Book (Ámbar e Ónix)",
+      optTemplateCollege: "Composition Book (College Ruled)",
+      optTemplateAcademicGreen: "Composition Book (Ámbar e Ónix)",
+      optTemplateAcademicTeal: "Composition Book (Coral e Lousa)",
+      optTemplateAcademicWave: "Composition Book (Azul e Dourado)",
       optTemplateAtelier: "Caderno Atelier (Zara Home / Clásico)",
       optTemplateGeorge: "George anos 90 (JFK Jr / Executivo)",
       optTemplateMonograph: "Monografía de arquivo (Ex libris)",
@@ -758,11 +767,14 @@
     setOptgroupLabel('groupRalphLauren', dict.groupRalphLauren);
     setOptgroupLabel('groupNature', dict.groupNature);
 
+    setText('optTemplateComposition', dict.optTemplateComposition);
+    setText('optTemplateCompBlue', dict.optTemplateCompBlue);
+    setText('optTemplateCompCoral', dict.optTemplateCompCoral);
+    setText('optTemplateCompAmber', dict.optTemplateCompAmber);
     setText('optTemplateCollege', dict.optTemplateCollege);
     setText('optTemplateAcademicGreen', dict.optTemplateAcademicGreen);
     setText('optTemplateAcademicTeal', dict.optTemplateAcademicTeal);
     setText('optTemplateAcademicWave', dict.optTemplateAcademicWave);
-    setText('optTemplateComposition', dict.optTemplateComposition);
     setText('optTemplateAtelier', dict.optTemplateAtelier);
     setText('optTemplateGeorge', dict.optTemplateGeorge);
     setText('optTemplateMonograph', dict.optTemplateMonograph);
