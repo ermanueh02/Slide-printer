@@ -3,7 +3,7 @@
  * Enables PWA offline capability and instant caching for mobile & desktop Chrome
  */
 
-const CACHE_NAME = 'slide-printer-v3';
+const CACHE_NAME = 'slide-printer-v4';
 
 const PRECACHE_ASSETS = [
   './',
@@ -24,6 +24,13 @@ const PRECACHE_ASSETS = [
   './covers/comp_flora.jpg',
   './covers/comp_pastoral.jpg',
   './covers/comp_marbled.jpg',
+  './covers/science_biophysics.jpg',
+  './covers/science_atmospheric.jpg',
+  './covers/science_fortran.jpg',
+  './covers/science_nuclear.jpg',
+  './covers/science_solid_state.jpg',
+  './covers/science_atomic.jpg',
+  './covers/science_circuits.jpg',
   './vendor/pdf-lib.min.js',
   './vendor/pdf.min.js',
   './vendor/pdf.worker.min.js',

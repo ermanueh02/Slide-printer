@@ -2187,14 +2187,71 @@
                tpl === 'comp_ukiyoe' || tpl === 'ukiyoe' || tpl === 'japanese' || tpl === 'sakura' || tpl === 'woodblock' ||
                tpl === 'comp_flora' || tpl === 'flora' || tpl === 'still_life' || tpl === 'dutch_flora' || tpl === 'bouquet' || tpl === 'baroque_flora' ||
                tpl === 'comp_pastoral' || tpl === 'pastoral' || tpl === 'landscape' || tpl === 'oil_landscape' || tpl === 'romantic_landscape' ||
-               tpl === 'comp_marbled' || tpl === 'marbled' || tpl === 'florentine_stone' || tpl === 'ebru_stone') {
+               tpl === 'comp_marbled' || tpl === 'marbled' || tpl === 'florentine_stone' || tpl === 'ebru_stone' ||
+               tpl.includes('biophysics') || tpl.includes('biofisica') || tpl.includes('alphafold') || tpl.includes('neural_bio') ||
+               tpl.includes('atmospheric') || tpl.includes('atmosferica') || tpl.includes('complex_systems') || tpl.includes('sistemas_complejos') || tpl.includes('chaos') || tpl.includes('lorenz') ||
+               tpl.includes('fortran') || tpl.includes('materiales') || tpl.includes('materials_sim') || tpl.includes('computational_materials') || tpl.includes('f77') || tpl.includes('f90') ||
+               tpl.includes('nuclear') || tpl.includes('particulas') || tpl.includes('particle_physics') || tpl.includes('cern') || tpl.includes('lhc') || tpl.includes('feynman') ||
+               tpl.includes('solid_state') || tpl.includes('estado_solido') || tpl.includes('solido') || tpl.includes('condensed_matter') || tpl.includes('brillouin') || tpl.includes('fermi_surface') ||
+               tpl.includes('atomic') || tpl.includes('atomica') || tpl.includes('quantum_atomic') || tpl.includes('spectroscopy') || tpl.includes('rydberg') ||
+               tpl.includes('circuits') || tpl.includes('instrumentacion') || tpl.includes('opamps') || tpl.includes('electronica') || tpl.includes('filters') || tpl.includes('adc_dac')) {
       let assetKey = 'composition';
       let spineColor = '#141416';
       let seamColor = '#333338';
       let fallbackBg = '#1c1c1e';
       let bookTitle = 'COMPOSITION BOOK';
+      let editionTag = 'Archival Edition';
 
-      if (tpl.includes('morris') || tpl.includes('strawberry') || tpl.includes('botanical')) {
+      if (tpl.includes('biophysics') || tpl.includes('biofisica') || tpl.includes('alphafold') || tpl.includes('neural_bio')) {
+        assetKey = 'science_biophysics';
+        spineColor = '#0a1f29';
+        seamColor = '#1a5261';
+        fallbackBg = '#0f2633';
+        bookTitle = 'BIOPHYSICS & MACHINE LEARNING';
+        editionTag = 'Computational Biophysics Dossier';
+      } else if (tpl.includes('atmospheric') || tpl.includes('atmosferica') || tpl.includes('complex_systems') || tpl.includes('sistemas_complejos') || tpl.includes('chaos') || tpl.includes('lorenz')) {
+        assetKey = 'science_atmospheric';
+        spineColor = '#121c2e';
+        seamColor = '#2e4766';
+        fallbackBg = '#16233b';
+        bookTitle = 'ATMOSPHERIC & COMPLEX SYSTEMS';
+        editionTag = 'Nonlinear Dynamics & Climate Archive';
+      } else if (tpl.includes('fortran') || tpl.includes('materiales') || tpl.includes('materials_sim') || tpl.includes('computational_materials') || tpl.includes('f77') || tpl.includes('f90')) {
+        assetKey = 'science_fortran';
+        spineColor = '#141c17';
+        seamColor = '#2e4733';
+        fallbackBg = '#19241d';
+        bookTitle = 'COMPUTATIONAL MATERIALS';
+        editionTag = 'Materials Simulation Archive · Fortran';
+      } else if (tpl.includes('nuclear') || tpl.includes('particulas') || tpl.includes('particle_physics') || tpl.includes('cern') || tpl.includes('lhc') || tpl.includes('feynman')) {
+        assetKey = 'science_nuclear';
+        spineColor = '#140f1f';
+        seamColor = '#402e57';
+        fallbackBg = '#171124';
+        bookTitle = 'NUCLEAR & PARTICLE PHYSICS';
+        editionTag = 'High-Energy Physics Compendium';
+      } else if (tpl.includes('solid_state') || tpl.includes('estado_solido') || tpl.includes('solido') || tpl.includes('condensed_matter') || tpl.includes('brillouin') || tpl.includes('fermi_surface')) {
+        assetKey = 'science_solid_state';
+        spineColor = '#121c29';
+        seamColor = '#334761';
+        fallbackBg = '#162333';
+        bookTitle = 'SOLID STATE PHYSICS';
+        editionTag = 'Condensed Matter Laboratory Log';
+      } else if (tpl.includes('atomic') || tpl.includes('atomica') || tpl.includes('quantum_atomic') || tpl.includes('spectroscopy') || tpl.includes('rydberg')) {
+        assetKey = 'science_atomic';
+        spineColor = '#1a0d24';
+        seamColor = '#472b61';
+        fallbackBg = '#1f102b';
+        bookTitle = 'ATOMIC & QUANTUM OPTICS';
+        editionTag = 'Quantum Spectroscopy Register';
+      } else if (tpl.includes('circuits') || tpl.includes('instrumentacion') || tpl.includes('opamps') || tpl.includes('electronica') || tpl.includes('filters') || tpl.includes('adc_dac')) {
+        assetKey = 'science_circuits';
+        spineColor = '#0d1f14';
+        seamColor = '#295238';
+        fallbackBg = '#122619';
+        bookTitle = 'ELECTRONIC INSTRUMENTATION';
+        editionTag = 'Circuit Design & Laboratory Dossier';
+      } else if (tpl.includes('morris') || tpl.includes('strawberry') || tpl.includes('botanical')) {
         assetKey = 'comp_morris';
         spineColor = '#122036';      // Deep Victorian Indigo
         seamColor = '#2d3b50';
@@ -2325,7 +2382,16 @@
       }
       ctx.stroke();
 
-      ctx.font = '700 15px "Times New Roman", Times, Georgia, serif';
+      let headSize = 15;
+      ctx.font = `700 ${headSize}px "Times New Roman", Times, Georgia, serif`;
+      if (ctx.measureText(bookTitle).width > (badgeW - 28)) {
+        headSize = 12;
+        ctx.font = `700 ${headSize}px "Times New Roman", Times, Georgia, serif`;
+        if (ctx.measureText(bookTitle).width > (badgeW - 28)) {
+          headSize = 10.5;
+          ctx.font = `700 ${headSize}px "Times New Roman", Times, Georgia, serif`;
+        }
+      }
       ctx.fillStyle = textHeadColor;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'alphabetic';
@@ -2375,7 +2441,7 @@
       ctx.fillText('9 3/4 in × 7 1/2 in (24.7cm × 19cm)', visibleCenterX, badgeY + badgeH - 24);
       ctx.font = '700 6.5px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = textMetaDark;
-      ctx.fillText('Archival Edition', visibleCenterX, badgeY + badgeH - 12);
+      ctx.fillText(editionTag, visibleCenterX, badgeY + badgeH - 12);
       ctx.restore();
 
     } else {

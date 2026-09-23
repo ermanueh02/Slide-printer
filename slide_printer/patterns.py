@@ -1872,14 +1872,71 @@ def generate_cover_page(
                  "comp_ukiyoe", "ukiyoe", "japanese", "sakura", "woodblock",
                  "comp_flora", "flora", "still_life", "dutch_flora", "bouquet", "baroque_flora",
                  "comp_pastoral", "pastoral", "landscape", "oil_landscape", "romantic_landscape",
-                 "comp_marbled", "marbled", "florentine_stone", "ebru_stone"):
+                 "comp_marbled", "marbled", "florentine_stone", "ebru_stone",
+                 "biophysics_ml", "biophysics", "biofisica", "biofisica_ml", "alphafold", "neural_bio",
+                 "atmospheric_chaos", "atmospheric", "atmosferica", "complex_systems", "sistemas_complejos", "chaos", "lorenz",
+                 "fortran_materials", "fortran", "materiales", "materials_sim", "computational_materials", "f77", "f90",
+                 "nuclear_particles", "nuclear", "particulas", "particle_physics", "cern", "lhc", "feynman",
+                 "solid_state", "estado_solido", "solido", "condensed_matter", "brillouin", "fermi_surface",
+                 "atomic_physics", "atomic", "atomica", "quantum_atomic", "spectroscopy", "rydberg",
+                 "circuits_instrumentation", "circuits", "instrumentacion", "opamps", "electronica", "filters", "adc_dac"):
         asset_key = "composition"
         spine_color = Color(0.08, 0.08, 0.09, alpha=1.0)
         seam_color = Color(0.20, 0.20, 0.22, alpha=1.0)
         fallback_bg = Color(0.11, 0.11, 0.12, alpha=1.0)
         book_title = "COMPOSITION BOOK"
+        edition_tag = "Archival Edition"
 
-        if any(k in tpl for k in ("morris", "strawberry", "botanical")):
+        if any(k in tpl for k in ("biophysics", "biofisica", "alphafold", "neural_bio")):
+            asset_key = "science_biophysics"
+            spine_color = Color(0.04, 0.12, 0.16, alpha=1.0)  # Bioluminescent Marine #0a1f29
+            seam_color = Color(0.10, 0.32, 0.38, alpha=1.0)   # Cyan Accent #1a5261
+            fallback_bg = Color(0.06, 0.15, 0.20, alpha=1.0)
+            book_title = "BIOPHYSICS & MACHINE LEARNING"
+            edition_tag = "Computational Biophysics Dossier"
+        elif any(k in tpl for k in ("atmospheric", "atmosferica", "complex_systems", "sistemas_complejos", "chaos", "lorenz")):
+            asset_key = "science_atmospheric"
+            spine_color = Color(0.07, 0.11, 0.18, alpha=1.0)  # Deep Storm Navy #121c2e
+            seam_color = Color(0.18, 0.28, 0.40, alpha=1.0)   # Storm Slate #2e4766
+            fallback_bg = Color(0.09, 0.14, 0.22, alpha=1.0)
+            book_title = "ATMOSPHERIC & COMPLEX SYSTEMS"
+            edition_tag = "Nonlinear Dynamics & Climate Archive"
+        elif any(k in tpl for k in ("fortran", "materiales", "materials_sim", "computational_materials", "f77", "f90")):
+            asset_key = "science_fortran"
+            spine_color = Color(0.08, 0.11, 0.09, alpha=1.0)  # Mainframe Dark Phosphor Charcoal #141c17
+            seam_color = Color(0.18, 0.28, 0.20, alpha=1.0)   # Terminal Green #2e4733
+            fallback_bg = Color(0.10, 0.14, 0.11, alpha=1.0)
+            book_title = "COMPUTATIONAL MATERIALS"
+            edition_tag = "Materials Simulation Archive · Fortran"
+        elif any(k in tpl for k in ("nuclear", "particulas", "particle_physics", "cern", "lhc", "feynman")):
+            asset_key = "science_nuclear"
+            spine_color = Color(0.08, 0.06, 0.12, alpha=1.0)  # Deep Cosmic Obsidian #140f1f
+            seam_color = Color(0.25, 0.18, 0.34, alpha=1.0)   # Collider Violet #402e57
+            fallback_bg = Color(0.09, 0.07, 0.14, alpha=1.0)
+            book_title = "NUCLEAR & PARTICLE PHYSICS"
+            edition_tag = "High-Energy Physics Compendium"
+        elif any(k in tpl for k in ("solid_state", "estado_solido", "solido", "condensed_matter", "brillouin", "fermi_surface")):
+            asset_key = "science_solid_state"
+            spine_color = Color(0.07, 0.11, 0.16, alpha=1.0)  # Cobalt Steel #121c29
+            seam_color = Color(0.20, 0.28, 0.38, alpha=1.0)   # Reciprocal K-space Slate #334761
+            fallback_bg = Color(0.09, 0.14, 0.20, alpha=1.0)
+            book_title = "SOLID STATE PHYSICS"
+            edition_tag = "Condensed Matter Laboratory Log"
+        elif any(k in tpl for k in ("atomic", "atomica", "quantum_atomic", "spectroscopy", "rydberg")):
+            asset_key = "science_atomic"
+            spine_color = Color(0.10, 0.05, 0.14, alpha=1.0)  # Deep Quantum Violet #1a0d24
+            seam_color = Color(0.28, 0.17, 0.38, alpha=1.0)   # Spectroscopy Plum #472b61
+            fallback_bg = Color(0.12, 0.07, 0.17, alpha=1.0)
+            book_title = "ATOMIC & QUANTUM OPTICS"
+            edition_tag = "Quantum Spectroscopy Register"
+        elif any(k in tpl for k in ("circuits", "instrumentacion", "opamps", "electronica", "filters", "adc_dac")):
+            asset_key = "science_circuits"
+            spine_color = Color(0.05, 0.12, 0.08, alpha=1.0)  # Dark PCB Solder Mask #0d1f14
+            seam_color = Color(0.16, 0.32, 0.22, alpha=1.0)   # Circuit Copper Green #295238
+            fallback_bg = Color(0.07, 0.14, 0.10, alpha=1.0)
+            book_title = "ELECTRONIC INSTRUMENTATION"
+            edition_tag = "Circuit Design & Laboratory Dossier"
+        elif any(k in tpl for k in ("morris", "strawberry", "botanical")):
             asset_key = "comp_morris"
             spine_color = Color(0.07, 0.12, 0.21, alpha=1.0)  # Deep Victorian Indigo #122036
             seam_color = Color(0.18, 0.23, 0.31, alpha=1.0)   # #2d3b50
@@ -1986,7 +2043,13 @@ def generate_cover_page(
         c.setLineWidth(0.8)
         c.roundRect(badge_x + 4.5, badge_y + 4.5, badge_w - 9.0, badge_h - 9.0, 8.5, fill=0, stroke=1)
 
-        c.setFont("Times-Bold", 15.0)
+        # Dynamic header text size to prevent truncation of long discipline titles
+        head_font_size = 15.0
+        if c.stringWidth(book_title, "Times-Bold", head_font_size) > (badge_w - 28.0):
+            head_font_size = 12.0
+            if c.stringWidth(book_title, "Times-Bold", head_font_size) > (badge_w - 28.0):
+                head_font_size = 10.5
+        c.setFont("Times-Bold", head_font_size)
         c.setFillColor(text_head_color)
         c.drawCentredString(visible_center_x, badge_y + badge_h - 32.0, book_title)
 
@@ -2030,7 +2093,7 @@ def generate_cover_page(
         c.drawCentredString(visible_center_x, badge_y + 24.0, "9 3/4 in × 7 1/2 in (24.7cm × 19cm)")
         c.setFont("Helvetica-Bold", 6.5)
         c.setFillColor(text_meta_dark)
-        c.drawCentredString(visible_center_x, badge_y + 12.0, "Archival Edition")
+        c.drawCentredString(visible_center_x, badge_y + 12.0, edition_tag)
 
     else:
         # Default: Atelier Notebook (Zara Home Classic)

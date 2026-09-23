@@ -62,7 +62,15 @@ Each page of your presentation is placed on the sheet, followed by a customizabl
   - **Spiral / Coil Binding (`--binding spiral` / `--spiral`)**: +8 mm (+22 pt) margin optimized for spiral wire-o and coil combs, saving 3 mm of slide space.
   - **Hole & Spiral Guides (`--hole-guides`)**: Prints subtle punch targets (crosshair circles at ISO 838 centers) or spiral coil clearance ticks.
   - **Duplex Intelligence (`--duplex`)**: Shifts odd sheets (recto) to the right (left gutter) and even sheets (verso) to the left (right gutter) so punched holes never bite into content.
-- **15+ Editorial Cover Templates (`--generate-cover`, `--cover-template`)**:
+- **22+ Editorial Cover Templates (`--generate-cover`, `--cover-template`)**:
+  - **Scientific & Physics Laboratory Dossiers (New)**:
+    - **Biophysics & Machine Learning (`biophysics_ml` / `biofisica` / `alphafold`)**: AlphaFold 3D protein folding ribbon structures interwoven with bioluminescent neural network graph nodes and deep marine cyan spine.
+    - **Atmospheric Physics & Complex Systems (`atmospheric_chaos` / `atmosferica` / `lorenz`)**: Lorenz strange attractor streamlines, barometric isobars, convection turbulence, and storm navy spine.
+    - **Materials Simulation in Fortran (`fortran_materials` / `fortran` / `materiales`)**: 3D crystal lattice unit cells (FCC/BCC), molecular dynamics velocity trajectories, Voronoi grain boundaries, and vintage mainframe terminal phosphor green spine.
+    - **Nuclear & Particle Physics (`nuclear_particles` / `nuclear` / `cern`)**: High-energy collider collision jets, bubble chamber particle spirals, Feynman propagators, and cosmic obsidian spine.
+    - **Solid State Physics (`solid_state` / `estado_solido` / `brillouin`)**: First Brillouin zone polyhedron, Fermi surface topologies, reciprocal $k$-space vectors, and cobalt steel spine.
+    - **Atomic Physics & Quantum Optics (`atomic_physics` / `atomica` / `quantum_atomic`)**: Electron orbital probability wavefunctions, Rydberg transition ladders, laser spectroscopy interference, and deep quantum violet spine.
+    - **Electronic Instrumentation (`circuits_instrumentation` / `opamps` / `electronica`)**: Opamp differential schematics, Bode magnitude/phase plots, DAC/ADC ladder networks, oscilloscope phosphor traces, and dark PCB solder mask green spine.
   - **Notebooks & Marbled Papers**:
     - **Academic Peacock (`academic_green` / `peacock`)**: Florentine combed peacock marbling in red, yellow, and green with forest green cloth spine and ivory Academic label.
     - **Academic Ebru (`academic_teal` / `ebru`)**: Turkish stone/bubble marbling in slate and ochre with petroleum teal spine and ivory Academic label.

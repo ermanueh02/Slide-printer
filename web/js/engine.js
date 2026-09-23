@@ -2804,14 +2804,71 @@
                tpl === 'comp_ukiyoe' || tpl === 'ukiyoe' || tpl === 'japanese' || tpl === 'sakura' || tpl === 'woodblock' ||
                tpl === 'comp_flora' || tpl === 'flora' || tpl === 'still_life' || tpl === 'dutch_flora' || tpl === 'bouquet' || tpl === 'baroque_flora' ||
                tpl === 'comp_pastoral' || tpl === 'pastoral' || tpl === 'landscape' || tpl === 'oil_landscape' || tpl === 'romantic_landscape' ||
-               tpl === 'comp_marbled' || tpl === 'marbled' || tpl === 'florentine_stone' || tpl === 'ebru_stone') {
+               tpl === 'comp_marbled' || tpl === 'marbled' || tpl === 'florentine_stone' || tpl === 'ebru_stone' ||
+               tpl.includes('biophysics') || tpl.includes('biofisica') || tpl.includes('alphafold') || tpl.includes('neural_bio') ||
+               tpl.includes('atmospheric') || tpl.includes('atmosferica') || tpl.includes('complex_systems') || tpl.includes('sistemas_complejos') || tpl.includes('chaos') || tpl.includes('lorenz') ||
+               tpl.includes('fortran') || tpl.includes('materiales') || tpl.includes('materials_sim') || tpl.includes('computational_materials') || tpl.includes('f77') || tpl.includes('f90') ||
+               tpl.includes('nuclear') || tpl.includes('particulas') || tpl.includes('particle_physics') || tpl.includes('cern') || tpl.includes('lhc') || tpl.includes('feynman') ||
+               tpl.includes('solid_state') || tpl.includes('estado_solido') || tpl.includes('solido') || tpl.includes('condensed_matter') || tpl.includes('brillouin') || tpl.includes('fermi_surface') ||
+               tpl.includes('atomic') || tpl.includes('atomica') || tpl.includes('quantum_atomic') || tpl.includes('spectroscopy') || tpl.includes('rydberg') ||
+               tpl.includes('circuits') || tpl.includes('instrumentacion') || tpl.includes('opamps') || tpl.includes('electronica') || tpl.includes('filters') || tpl.includes('adc_dac')) {
       let assetKey = 'composition';
       let spineColor = rgb(0.08, 0.08, 0.09); // #141416
       let seamColor = rgb(0.20, 0.20, 0.22);  // #333338
       let fallbackBg = rgb(0.11, 0.11, 0.12);
       let bookTitle = 'COMPOSITION BOOK';
+      let editionTag = 'Archival Edition';
 
-      if (tpl.includes('morris') || tpl.includes('strawberry') || tpl.includes('botanical')) {
+      if (tpl.includes('biophysics') || tpl.includes('biofisica') || tpl.includes('alphafold') || tpl.includes('neural_bio')) {
+        assetKey = 'science_biophysics';
+        spineColor = rgb(0.04, 0.12, 0.16);  // Bioluminescent Marine #0a1f29
+        seamColor = rgb(0.10, 0.32, 0.38);   // Cyan Accent #1a5261
+        fallbackBg = rgb(0.06, 0.15, 0.20);
+        bookTitle = 'BIOPHYSICS & MACHINE LEARNING';
+        editionTag = 'Computational Biophysics Dossier';
+      } else if (tpl.includes('atmospheric') || tpl.includes('atmosferica') || tpl.includes('complex_systems') || tpl.includes('sistemas_complejos') || tpl.includes('chaos') || tpl.includes('lorenz')) {
+        assetKey = 'science_atmospheric';
+        spineColor = rgb(0.07, 0.11, 0.18);  // Deep Storm Navy #121c2e
+        seamColor = rgb(0.18, 0.28, 0.40);   // Storm Slate #2e4766
+        fallbackBg = rgb(0.09, 0.14, 0.22);
+        bookTitle = 'ATMOSPHERIC & COMPLEX SYSTEMS';
+        editionTag = 'Nonlinear Dynamics & Climate Archive';
+      } else if (tpl.includes('fortran') || tpl.includes('materiales') || tpl.includes('materials_sim') || tpl.includes('computational_materials') || tpl.includes('f77') || tpl.includes('f90')) {
+        assetKey = 'science_fortran';
+        spineColor = rgb(0.08, 0.11, 0.09);  // Mainframe Dark Phosphor Charcoal #141c17
+        seamColor = rgb(0.18, 0.28, 0.20);   // Terminal Green #2e4733
+        fallbackBg = rgb(0.10, 0.14, 0.11);
+        bookTitle = 'COMPUTATIONAL MATERIALS';
+        editionTag = 'Materials Simulation Archive · Fortran';
+      } else if (tpl.includes('nuclear') || tpl.includes('particulas') || tpl.includes('particle_physics') || tpl.includes('cern') || tpl.includes('lhc') || tpl.includes('feynman')) {
+        assetKey = 'science_nuclear';
+        spineColor = rgb(0.08, 0.06, 0.12);  // Deep Cosmic Obsidian #140f1f
+        seamColor = rgb(0.25, 0.18, 0.34);   // Collider Violet #402e57
+        fallbackBg = rgb(0.09, 0.07, 0.14);
+        bookTitle = 'NUCLEAR & PARTICLE PHYSICS';
+        editionTag = 'High-Energy Physics Compendium';
+      } else if (tpl.includes('solid_state') || tpl.includes('estado_solido') || tpl.includes('solido') || tpl.includes('condensed_matter') || tpl.includes('brillouin') || tpl.includes('fermi_surface')) {
+        assetKey = 'science_solid_state';
+        spineColor = rgb(0.07, 0.11, 0.16);  // Cobalt Steel #121c29
+        seamColor = rgb(0.20, 0.28, 0.38);   // Reciprocal K-space Slate #334761
+        fallbackBg = rgb(0.09, 0.14, 0.20);
+        bookTitle = 'SOLID STATE PHYSICS';
+        editionTag = 'Condensed Matter Laboratory Log';
+      } else if (tpl.includes('atomic') || tpl.includes('atomica') || tpl.includes('quantum_atomic') || tpl.includes('spectroscopy') || tpl.includes('rydberg')) {
+        assetKey = 'science_atomic';
+        spineColor = rgb(0.10, 0.05, 0.14);  // Deep Quantum Violet #1a0d24
+        seamColor = rgb(0.28, 0.17, 0.38);   // Spectroscopy Plum #472b61
+        fallbackBg = rgb(0.12, 0.07, 0.17);
+        bookTitle = 'ATOMIC & QUANTUM OPTICS';
+        editionTag = 'Quantum Spectroscopy Register';
+      } else if (tpl.includes('circuits') || tpl.includes('instrumentacion') || tpl.includes('opamps') || tpl.includes('electronica') || tpl.includes('filters') || tpl.includes('adc_dac')) {
+        assetKey = 'science_circuits';
+        spineColor = rgb(0.05, 0.12, 0.08);  // Dark PCB Solder Mask #0d1f14
+        seamColor = rgb(0.16, 0.32, 0.22);   // Circuit Copper Green #295238
+        fallbackBg = rgb(0.07, 0.14, 0.10);
+        bookTitle = 'ELECTRONIC INSTRUMENTATION';
+        editionTag = 'Circuit Design & Laboratory Dossier';
+      } else if (tpl.includes('morris') || tpl.includes('strawberry') || tpl.includes('botanical')) {
         assetKey = 'comp_morris';
         spineColor = rgb(0.07, 0.12, 0.21);  // Deep Victorian Indigo #122036
         seamColor = rgb(0.18, 0.23, 0.31);   // #2d3b50
@@ -2923,8 +2980,15 @@
       });
 
       if (timesBold) {
-        const headW = timesBold.widthOfTextAtSize(bookTitle, 15);
-        page.drawText(bookTitle, { x: visibleCenterX - headW / 2, y: badgeY + badgeH - 32, size: 15, font: timesBold, color: textHeadColor });
+        let headSize = 15;
+        if (timesBold.widthOfTextAtSize(bookTitle, headSize) > (badgeW - 28)) {
+          headSize = 12;
+          if (timesBold.widthOfTextAtSize(bookTitle, headSize) > (badgeW - 28)) {
+            headSize = 10.5;
+          }
+        }
+        const headW = timesBold.widthOfTextAtSize(bookTitle, headSize);
+        page.drawText(bookTitle, { x: visibleCenterX - headW / 2, y: badgeY + badgeH - 32, size: headSize, font: timesBold, color: textHeadColor });
       }
 
       const lineW = badgeW - 40;
@@ -2981,8 +3045,8 @@
         page.drawText(dimStr, { x: visibleCenterX - dW / 2, y: badgeY + 24, size: 6.5, font: helveticaFont, color: textMetaMuted });
       }
       if (helveticaBold) {
-        const rW = helveticaBold.widthOfTextAtSize('Archival Edition', 6.5);
-        page.drawText('Archival Edition', { x: visibleCenterX - rW / 2, y: badgeY + 12, size: 6.5, font: helveticaBold, color: textMetaDark });
+        const rW = helveticaBold.widthOfTextAtSize(editionTag, 6.5);
+        page.drawText(editionTag, { x: visibleCenterX - rW / 2, y: badgeY + 12, size: 6.5, font: helveticaBold, color: textMetaDark });
       }
 
     } else {

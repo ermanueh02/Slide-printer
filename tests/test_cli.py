@@ -497,3 +497,35 @@ def test_cli_notebooks_cover_template_flags(sample_slide_pdf, tmp_path):
         assert len(reader.pages) == 3
         cover_text = reader.pages[0].extract_text()
         assert f"Notebook {tmpl}" in cover_text
+
+
+def test_cli_science_cover_templates(sample_slide_pdf, tmp_path):
+    science_templates = [
+        "biophysics_ml",
+        "atmospheric_chaos",
+        "fortran_materials",
+        "nuclear_particles",
+        "solid_state",
+        "atomic_physics",
+        "circuits_instrumentation",
+    ]
+    for tmpl in science_templates:
+        out_dir = str(tmp_path / f"cli_sci_{tmpl}")
+        code = main([
+            "-i", sample_slide_pdf,
+            "-s", "grid",
+            "--cover-template", tmpl,
+            "--cover-title", f"Science {tmpl}",
+            "--cover-author", "Prof. Dirac",
+            "-o", out_dir,
+            "-q",
+        ])
+        assert code == 0
+        base = os.path.splitext(os.path.basename(sample_slide_pdf))[0]
+        out_pdf = tmp_path / f"cli_sci_{tmpl}" / "grid" / f"{base}_grid.pdf"
+        assert out_pdf.exists()
+        reader = PdfReader(str(out_pdf))
+        assert len(reader.pages) == 3
+        cover_text = reader.pages[0].extract_text()
+        assert f"Science {tmpl}" in cover_text
+
