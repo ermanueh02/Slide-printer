@@ -62,15 +62,23 @@ Each page of your presentation is placed on the sheet, followed by a customizabl
   - **Spiral / Coil Binding (`--binding spiral` / `--spiral`)**: +8 mm (+22 pt) margin optimized for spiral wire-o and coil combs, saving 3 mm of slide space.
   - **Hole & Spiral Guides (`--hole-guides`)**: Prints subtle punch targets (crosshair circles at ISO 838 centers) or spiral coil clearance ticks.
   - **Duplex Intelligence (`--duplex`)**: Shifts odd sheets (recto) to the right (left gutter) and even sheets (verso) to the left (right gutter) so punched holes never bite into content.
-- **22+ Editorial Cover Templates (`--generate-cover`, `--cover-template`)**:
-  - **Scientific & Physics Laboratory Dossiers (New)**:
-    - **Biophysics & Machine Learning (`biophysics_ml` / `biofisica` / `alphafold`)**: AlphaFold 3D protein folding ribbon structures interwoven with bioluminescent neural network graph nodes and deep marine cyan spine.
-    - **Atmospheric Physics & Complex Systems (`atmospheric_chaos` / `atmosferica` / `lorenz`)**: Lorenz strange attractor streamlines, barometric isobars, convection turbulence, and storm navy spine.
-    - **Materials Simulation in Fortran (`fortran_materials` / `fortran` / `materiales`)**: 3D crystal lattice unit cells (FCC/BCC), molecular dynamics velocity trajectories, Voronoi grain boundaries, and vintage mainframe terminal phosphor green spine.
-    - **Nuclear & Particle Physics (`nuclear_particles` / `nuclear` / `cern`)**: High-energy collider collision jets, bubble chamber particle spirals, Feynman propagators, and cosmic obsidian spine.
-    - **Solid State Physics (`solid_state` / `estado_solido` / `brillouin`)**: First Brillouin zone polyhedron, Fermi surface topologies, reciprocal $k$-space vectors, and cobalt steel spine.
-    - **Atomic Physics & Quantum Optics (`atomic_physics` / `atomica` / `quantum_atomic`)**: Electron orbital probability wavefunctions, Rydberg transition ladders, laser spectroscopy interference, and deep quantum violet spine.
-    - **Electronic Instrumentation (`circuits_instrumentation` / `opamps` / `electronica`)**: Opamp differential schematics, Bode magnitude/phase plots, DAC/ADC ladder networks, oscilloscope phosphor traces, and dark PCB solder mask green spine.
+- **35+ Editorial Cover Templates (`--generate-cover`, `--cover-template`)**:
+  - **Scientific & Physics Flat 90s Minimalist (Pure Vector Line Art)**:
+    - **Mecánica Cuántica III (`quantum_flat` / `mecanica_cuantica_3_flat`)**: Harmonic oscillator parabolic well, quantized energy levels ($E_0 \dots E_3$), Hermite wavefunction curves, and Schrödinger monograph header.
+    - **Biofísica (`biophysics_flat` / `biofisica_flat`)**: Interlaced double helix backbone ribbons, base-pair rungs, thermodynamic identity header, and 3.4 nm pitch scale bar.
+    - **Física de los Sistemas Complejos (`complex_systems_flat` / `sistemas_complejos_flat`)**: Lorenz strange attractor butterfly orbits, coordinate axes, and differential equations header.
+    - **Simulación en Física de Materiales (`materials_sim_flat` / `simulacion_materiales_flat`)**: Isometric 3D FCC crystal unit cell wireframe, atom spheres, interatomic potential force formula, and MPI Fortran footer.
+    - **Física del Estado Sólido (`solid_state_flat` / `estado_solido_flat`)**: 1st Brillouin zone hexagon, reciprocal lattice vectors $\mathbf{b}_1, \mathbf{b}_2$, symmetry points ($\Gamma, K, M$), and Fermi surface sphere.
+    - **Fundamentos de Instrumentación Electrónica (`circuits_flat` / `fundamentos_instrumentacion_flat`)**: Inverting Op-Amp circuit schematic ($R_{in}, R_f$), ground terminals, transfer equation, and IEEE bench metadata.
+    - **Física Nuclear & de Partículas (`nuclear_flat` / `particulas_flat`)**: $e^+ e^- \to \gamma^*/Z^0 \to q \bar{q}$ Feynman diagram, gauge propagator wavy line, vertex nodes, and 4π detector chamber arcs.
+  - **Scientific & Physics Composition Books (AI Illustrated Textures)**:
+    - **Biofísica (`biophysics_ml` / `biofisica` / `alphafold`)**: AlphaFold 3D protein folding ribbon structures interwoven with bioluminescent neural network graph nodes and deep marine cyan spine.
+    - **Física de los Sistemas Complejos (`atmospheric_chaos` / `sistemas_complejos` / `lorenz`)**: Lorenz strange attractor streamlines, barometric isobars, convection turbulence, and storm navy spine.
+    - **Simulación en Física de Materiales (`fortran_materials` / `simulacion_materiales` / `fortran`)**: 3D crystal lattice unit cells (FCC/BCC), molecular dynamics velocity trajectories, and vintage mainframe terminal phosphor green spine.
+    - **Física Nuclear & de Partículas (`nuclear_particles` / `nuclear` / `cern`)**: High-energy collider collision jets, bubble chamber particle spirals, Feynman propagators, and cosmic obsidian spine.
+    - **Física del Estado Sólido (`solid_state` / `estado_solido` / `brillouin`)**: First Brillouin zone polyhedron, Fermi surface topologies, reciprocal $k$-space vectors, and cobalt steel spine.
+    - **Mecánica Cuántica III (`atomic_physics` / `mecanica_cuantica_3` / `spectroscopy`)**: Electron orbital probability wavefunctions, Rydberg transition ladders, laser spectroscopy interference, and deep quantum violet spine.
+    - **Fundamentos de Instrumentación Electrónica (`circuits_instrumentation` / `fundamentos_instrumentacion` / `opamps`)**: Opamp differential schematics, Bode magnitude/phase plots, DAC/ADC ladder networks, oscilloscope phosphor traces, and dark PCB solder mask green spine.
   - **Notebooks & Marbled Papers**:
     - **Academic Peacock (`academic_green` / `peacock`)**: Florentine combed peacock marbling in red, yellow, and green with forest green cloth spine and ivory Academic label.
     - **Academic Ebru (`academic_teal` / `ebru`)**: Turkish stone/bubble marbling in slate and ochre with petroleum teal spine and ivory Academic label.
@@ -205,7 +213,7 @@ slide-printer --dry-run -i presentation.pdf -s all
 | `--duplex` / `--simplex` | Alternate gutter margin on odd/even sheets for 2-sided printing | `--simplex` |
 | `--clean-cover` | Use 1st slide as title cover without note lines or dividers | `False` |
 | `--generate-cover` | Generate an editorial title cover page before slides | `False` |
-| `--cover-template` | Cover design: `atelier`, `academic_green`, `academic_teal`, `academic_wave`, `composition`, `george`, `monograph`, `bauhaus`, `fifties`, `sixties`, `seventies`, `eighties`, `nineties`, `natural`, `polo`, `equestrian` | `atelier` |
+| `--cover-template` | Cover design: `atelier`, `quantum_flat`, `biophysics_flat`, `complex_systems_flat`, `materials_sim_flat`, `solid_state_flat`, `circuits_flat`, `nuclear_flat`, `academic_green`, `academic_teal`, `academic_wave`, `composition`, `george`, `monograph`, `bauhaus`, `fifties`, `sixties`, `seventies`, `eighties`, `nineties`, `natural`, `polo`, `equestrian` | `atelier` |
 | `--cover-title` | Title for generated cover page | Presentation name |
 | `--cover-author` | Author/Student/Topic for generated cover page | — |
 | `--study-header` | Add top metadata bar with subject fill-in and date line | `False` |

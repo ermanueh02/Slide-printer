@@ -2796,7 +2796,871 @@
         page.drawText(dTxt, { x: centerX - dW / 2, y: metaY - 2, size: 8.5, font: serifItalic, color: saddleTan });
       }
 
-    } else if (tpl === 'composition' || tpl === 'compbook' || tpl === 'composition_book' || tpl === 'comp_classic' || tpl === 'marble_bw' || tpl === 'cuaderno' || tpl === 'compo' ||
+    } else if (tpl === 'quantum_flat' || tpl === 'mecanica_cuantica_flat' || tpl === 'mecanica_cuantica_3_flat' || tpl === 'cuantica_flat' || tpl === 'cuantica3_flat' || tpl === 'mq3_flat' || tpl === 'atomic_flat') {
+      // Scientific & Physics Notebooks — Flat 90s Minimalist: Mecánica Cuántica III
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: rgb(0.980, 0.976, 0.965) });
+
+      const m = 44.0;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      const inkDark = rgb(0.12, 0.11, 0.29);    // Quantum Indigo #1e1b4b
+      const inkViolet = rgb(0.43, 0.16, 0.85);  // Electric Violet #6d28d9
+      const inkMuted = rgb(0.42, 0.45, 0.50);   // Slate Lavender #6b7280
+      const hairline = rgb(0.12, 0.11, 0.29);
+
+      // 1. Corner registration marks
+      for (const [cx, cy] of [[x1, ph - m], [x2, ph - m], [x1, m], [x2, m]]) {
+        page.drawCircle({ x: cx, y: cy, size: 3.5, borderColor: hairline, borderWidth: 0.5, opacity: 0.35 });
+        page.drawLine({ start: { x: cx - 7, y: cy }, end: { x: cx + 7, y: cy }, thickness: 0.5, color: hairline, opacity: 0.35 });
+        page.drawLine({ start: { x: cx, y: cy - 7 }, end: { x: cx, y: cy + 7 }, thickness: 0.5, color: hairline, opacity: 0.35 });
+      }
+
+      // 2. Outer hairline framing rule
+      page.drawRectangle({ x: x1, y: m, width: w, height: ph - 2 * m, borderColor: hairline, borderWidth: 1.0, opacity: 0.25 });
+      page.drawRectangle({ x: x1 + 3.5, y: m + 3.5, width: w - 7.0, height: ph - 2 * m - 7.0, borderColor: hairline, borderWidth: 0.5, opacity: 0.25 });
+
+      // 3. Header band: Series stamp & Schrödinger equation
+      const headY = ph - m - 22.0;
+      if (courierBold) {
+        page.drawText('[ THEORETICAL PHYSICS // MONOGRAPH PREPRINT ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkViolet });
+      }
+      if (timesItalic || timesFont) {
+        const fItalic = timesItalic || timesFont;
+        const eqStr = 'H |ψ⟩ = E |ψ⟩  ·  [x, p] = iħ';
+        const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
+        page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkViolet });
+      }
+      page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.25 });
+
+      // 4. Title block
+      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'MECÁNICA CUÁNTICA III');
+      const lines = wrapText(helveticaBold, dispTitle, 26.0, w - 28.0);
+      let curY = ph - m - 62.0;
+      for (const line of lines) {
+        page.drawText(line, { x: x1 + 14.0, y: curY, size: 26.0, font: helveticaBold, color: inkDark });
+        curY -= 32.0;
+      }
+      const dispSub = options.studyTitle || options.subtitle || 'Estados Cuánticos · Operadores y Matrices · Perturbaciones';
+      if (timesItalic) {
+        page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
+      }
+
+      // 5. Scientific Vector Illustration: Quantum Harmonic Oscillator & Hermite Wavefunctions
+      const diagCy = ph * 0.44;
+      const diagW = w - 80.0;
+      const diagX1 = centerX - diagW / 2.0;
+      const diagX2 = centerX + diagW / 2.0;
+
+      // Parabolic potential well V(x) = 1/2 m omega^2 x^2
+      const steps = 40;
+      for (let s = 0; s < steps; s++) {
+        const t1 = (s / steps) * 2.0 - 1.0;
+        const t2 = ((s + 1) / steps) * 2.0 - 1.0;
+        const px1 = centerX + t1 * (diagW * 0.42);
+        const py1 = diagCy - 70.0 + (t1 * t1) * 130.0;
+        const px2 = centerX + t2 * (diagW * 0.42);
+        const py2 = diagCy - 70.0 + (t2 * t2) * 130.0;
+        page.drawLine({ start: { x: px1, y: py1 }, end: { x: px2, y: py2 }, thickness: 1.2, color: hairline, opacity: 0.4 });
+      }
+
+      // Quantized Energy Levels (n = 0, 1, 2, 3) and Eigen-wavefunctions psi_n(x)
+      const levelLabels = ['E0 = (1/2)ħω', 'E1 = (3/2)ħω', 'E2 = (5/2)ħω', 'E3 = (7/2)ħω'];
+      for (let n = 0; n < 4; n++) {
+        const ly = diagCy - 50.0 + n * 32.0;
+        const lw = diagW * (0.35 + n * 0.14);
+        const lx1 = centerX - lw / 2.0;
+        const lx2 = centerX + lw / 2.0;
+        page.drawLine({ start: { x: lx1, y: ly }, end: { x: lx2, y: ly }, thickness: 0.5, color: inkMuted, opacity: 0.6 });
+
+        if (courierBold) {
+          page.drawText(levelLabels[n], { x: lx2 + 6.0, y: ly - 2.5, size: 7.0, font: courierBold, color: inkViolet });
+        }
+
+        const wSteps = 36;
+        for (let ws = 0; ws < wSteps; ws++) {
+          const wt1 = (ws / wSteps) * 2.0 - 1.0;
+          const wt2 = ((ws + 1) / wSteps) * 2.0 - 1.0;
+          const wx1 = centerX + wt1 * (lw * 0.46);
+          const wx2 = centerX + wt2 * (lw * 0.46);
+          const env1 = Math.exp(-2.5 * wt1 * wt1);
+          const env2 = Math.exp(-2.5 * wt2 * wt2);
+          let a1 = 0, a2 = 0;
+          if (n === 0) {
+            a1 = 14.0 * env1; a2 = 14.0 * env2;
+          } else if (n === 1) {
+            a1 = 16.0 * (wt1 * 2.0) * env1; a2 = 16.0 * (wt2 * 2.0) * env2;
+          } else if (n === 2) {
+            a1 = 14.0 * (4.0 * wt1 * wt1 - 1.0) * env1; a2 = 14.0 * (4.0 * wt2 * wt2 - 1.0) * env2;
+          } else {
+            a1 = 14.0 * (8.0 * Math.pow(wt1, 3) - 6.0 * wt1) * 0.5 * env1;
+            a2 = 14.0 * (8.0 * Math.pow(wt2, 3) - 6.0 * wt2) * 0.5 * env2;
+          }
+          page.drawLine({
+            start: { x: wx1, y: ly + a1 },
+            end: { x: wx2, y: ly + a2 },
+            thickness: (n === 0 || n === 1) ? 1.0 : 0.7,
+            color: inkViolet,
+          });
+        }
+      }
+
+      // Measurement axis
+      page.drawLine({ start: { x: diagX1 + 10.0, y: diagCy - 70.0 }, end: { x: diagX2 - 10.0, y: diagCy - 70.0 }, thickness: 0.8, color: inkDark });
+      if (timesItalic) {
+        const xLbl = 'x (Posición / Coordenada Espacial)';
+        const xW = timesItalic.widthOfTextAtSize(xLbl, 8.0);
+        page.drawText(xLbl, { x: centerX - xW / 2, y: diagCy - 82.0, size: 8.0, font: timesItalic, color: inkDark });
+        page.drawText('+∞', { x: diagX2 - 22.0, y: diagCy - 82.0, size: 8.0, font: timesItalic, color: inkDark });
+        page.drawText('-∞', { x: diagX1 + 10.0, y: diagCy - 82.0, size: 8.0, font: timesItalic, color: inkDark });
+      }
+
+      // 6. Lower Technical Metadata Grid
+      const metaY = m + 28.0;
+      page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.25 });
+
+      if (courierBold) {
+        page.drawText('CURATOR / ESTUDIANTE', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
+        page.drawText('FECHA / CONVOCATORIA', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
+        page.drawText('VOLUMEN / REF', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
+      }
+      if (timesBold) {
+        const authTxt = options.coverAuthor || options.author || 'Departamento de Física Teórica';
+        page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const dateTxt = todayStr || 'Semestre Académico';
+        page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const slideCount = options.totalSlides || options.numSlides;
+        const slideTxt = slideCount ? `${slideCount} Diapositivas` : 'Fascículo Completo';
+        page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+      }
+
+    } else if (tpl === 'biophysics_flat' || tpl === 'biofisica_flat' || tpl === 'bio_flat' || tpl === 'alphafold_flat') {
+      // Scientific & Physics Notebooks — Flat 90s Minimalist: Biofísica
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: rgb(0.968, 0.980, 0.976) });
+
+      const m = 44.0;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      const inkDark = rgb(0.02, 0.31, 0.23);    // Deep Forest Cyan #064e3b
+      const inkTeal = rgb(0.05, 0.58, 0.53);    // Bright Teal #0d9488
+      const inkMuted = rgb(0.39, 0.45, 0.55);   // Sage Slate #64748b
+      const hairline = rgb(0.02, 0.31, 0.23);
+
+      // 1. Corner registration marks
+      for (const [cx, cy] of [[x1, ph - m], [x2, ph - m], [x1, m], [x2, m]]) {
+        page.drawCircle({ x: cx, y: cy, size: 3.5, borderColor: hairline, borderWidth: 0.5, opacity: 0.35 });
+        page.drawLine({ start: { x: cx - 7, y: cy }, end: { x: cx + 7, y: cy }, thickness: 0.5, color: hairline, opacity: 0.35 });
+        page.drawLine({ start: { x: cx, y: cy - 7 }, end: { x: cx, y: cy + 7 }, thickness: 0.5, color: hairline, opacity: 0.35 });
+      }
+
+      // 2. Framing rule
+      page.drawRectangle({ x: x1, y: m, width: w, height: ph - 2 * m, borderColor: hairline, borderWidth: 1.0, opacity: 0.22 });
+      page.drawRectangle({ x: x1 + 3.5, y: m + 3.5, width: w - 7.0, height: ph - 2 * m - 7.0, borderColor: hairline, borderWidth: 0.5, opacity: 0.22 });
+
+      // 3. Header band: Series stamp & thermodynamic identity
+      const headY = ph - m - 22.0;
+      if (courierBold) {
+        page.drawText('[ MOLECULAR BIOPHYSICS // MONOGRAPH DOSSIER ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkTeal });
+      }
+      if (timesItalic || timesFont) {
+        const fItalic = timesItalic || timesFont;
+        const eqStr = 'ΔG = ΔH - TΔS  ·  k_B T ln(K_eq)';
+        const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
+        page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkTeal });
+      }
+      page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
+
+      // 4. Title block
+      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'BIOFÍSICA');
+      const lines = wrapText(helveticaBold, dispTitle, 26.0, w - 28.0);
+      let curY = ph - m - 62.0;
+      for (const line of lines) {
+        page.drawText(line, { x: x1 + 14.0, y: curY, size: 26.0, font: helveticaBold, color: inkDark });
+        curY -= 32.0;
+      }
+      const dispSub = options.studyTitle || options.subtitle || 'Estructura Macromolecular · Termodinámica · Conformación Proteica';
+      if (timesItalic) {
+        page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
+      }
+
+      // 5. Scientific Vector Illustration: Interlaced DNA Double Helix
+      const diagCy = ph * 0.44;
+      const helixH = 160.0;
+      const helixW = 70.0;
+      const helixBot = diagCy - helixH / 2.0;
+      const numTurns = 2.5;
+      const rungs = 14;
+
+      for (let r = 0; r <= rungs; r++) {
+        const ry = helixBot + (r / rungs) * helixH;
+        const phase = (r / rungs) * numTurns * 2.0 * Math.PI;
+        const rx1 = centerX + Math.sin(phase) * (helixW / 2.0);
+        const rx2 = centerX - Math.sin(phase) * (helixW / 2.0);
+        page.drawLine({ start: { x: rx1, y: ry }, end: { x: rx2, y: ry }, thickness: 1.0, color: inkTeal });
+        page.drawCircle({ x: rx1, y: ry, size: 2.0, color: inkDark });
+        page.drawCircle({ x: rx2, y: ry, size: 2.0, color: inkDark });
+      }
+
+      for (let strand = 0; strand < 2; strand++) {
+        const sPts = 60;
+        const strColor = (strand === 0) ? inkDark : inkTeal;
+        for (let sp = 0; sp < sPts; sp++) {
+          const py1 = helixBot + (sp / sPts) * helixH;
+          const py2 = helixBot + ((sp + 1) / sPts) * helixH;
+          const ph1 = (sp / sPts) * numTurns * 2.0 * Math.PI + (strand === 0 ? 0 : Math.PI);
+          const ph2 = ((sp + 1) / sPts) * numTurns * 2.0 * Math.PI + (strand === 0 ? 0 : Math.PI);
+          const px1 = centerX + Math.sin(ph1) * (helixW / 2.0);
+          const px2 = centerX + Math.sin(ph2) * (helixW / 2.0);
+          page.drawLine({ start: { x: px1, y: py1 }, end: { x: px2, y: py2 }, thickness: 1.6, color: strColor });
+        }
+      }
+
+      const scaleX = centerX + helixW / 2.0 + 28.0;
+      page.drawLine({ start: { x: scaleX, y: diagCy - 40.0 }, end: { x: scaleX, y: diagCy + 40.0 }, thickness: 0.6, color: inkMuted });
+      page.drawLine({ start: { x: scaleX - 3.0, y: diagCy - 40.0 }, end: { x: scaleX + 3.0, y: diagCy - 40.0 }, thickness: 0.6, color: inkMuted });
+      page.drawLine({ start: { x: scaleX - 3.0, y: diagCy + 40.0 }, end: { x: scaleX + 3.0, y: diagCy + 40.0 }, thickness: 0.6, color: inkMuted });
+      if (courierBold) {
+        page.drawText('PITCH: 3.4 nm (10 pb)', { x: scaleX + 6.0, y: diagCy - 2.5, size: 7.0, font: courierBold, color: inkMuted });
+      }
+
+      // 6. Lower Technical Metadata Grid
+      const metaY = m + 28.0;
+      page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
+
+      if (courierBold) {
+        page.drawText('INVESTIGADOR / ALUMNO', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkTeal });
+        page.drawText('FECHA DE REGISTRO', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkTeal });
+        page.drawText('EXPEDIENTE / FOLIOS', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkTeal });
+      }
+      if (timesBold) {
+        const authTxt = options.coverAuthor || options.author || 'Laboratorio de Biofísica';
+        page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const dateTxt = todayStr || 'Archivo de Investigación';
+        page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const slideCount = options.totalSlides || options.numSlides;
+        const slideTxt = slideCount ? `${slideCount} Diapositivas` : 'Dossier Completo';
+        page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+      }
+
+    } else if (tpl === 'complex_systems_flat' || tpl === 'sistemas_complejos_flat' || tpl === 'chaos_flat' || tpl === 'atmospheric_flat' || tpl === 'atmosferica_flat') {
+      // Scientific & Physics Notebooks — Flat 90s Minimalist: Física de los Sistemas Complejos
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: rgb(0.972, 0.980, 0.988) });
+
+      const m = 44.0;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      const inkDark = rgb(0.06, 0.09, 0.16);     // Obsidian Slate #0f172a
+      const inkAmber = rgb(0.85, 0.47, 0.02);    // Electric Amber #d97706
+      const inkMuted = rgb(0.39, 0.45, 0.55);    // Storm Slate #64748b
+      const hairline = rgb(0.06, 0.09, 0.16);
+
+      // 1. Corner registration marks
+      for (const [cx, cy] of [[x1, ph - m], [x2, ph - m], [x1, m], [x2, m]]) {
+        page.drawCircle({ x: cx, y: cy, size: 3.5, borderColor: hairline, borderWidth: 0.5, opacity: 0.35 });
+        page.drawLine({ start: { x: cx - 7, y: cy }, end: { x: cx + 7, y: cy }, thickness: 0.5, color: hairline, opacity: 0.35 });
+        page.drawLine({ start: { x: cx, y: cy - 7 }, end: { x: cx, y: cy + 7 }, thickness: 0.5, color: hairline, opacity: 0.35 });
+      }
+
+      // 2. Framing rule
+      page.drawRectangle({ x: x1, y: m, width: w, height: ph - 2 * m, borderColor: hairline, borderWidth: 1.0, opacity: 0.22 });
+      page.drawRectangle({ x: x1 + 3.5, y: m + 3.5, width: w - 7.0, height: ph - 2 * m - 7.0, borderColor: hairline, borderWidth: 0.5, opacity: 0.22 });
+
+      // 3. Header band: Series stamp & Lorenz differential equations
+      const headY = ph - m - 22.0;
+      if (courierBold) {
+        page.drawText('[ NONLINEAR DYNAMICS // COMPLEX SYSTEMS ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkAmber });
+      }
+      if (timesItalic || timesFont) {
+        const fItalic = timesItalic || timesFont;
+        const eqStr = 'ẋ=σ(y-x) · ẏ=x(ρ-z)-y · ż=xy-βz';
+        const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
+        page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkAmber });
+      }
+      page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
+
+      // 4. Title block
+      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'FÍSICA DE LOS SISTEMAS COMPLEJOS');
+      const lines = wrapText(helveticaBold, dispTitle, 24.0, w - 28.0);
+      let curY = ph - m - 62.0;
+      for (const line of lines) {
+        page.drawText(line, { x: x1 + 14.0, y: curY, size: 24.0, font: helveticaBold, color: inkDark });
+        curY -= 30.0;
+      }
+      const dispSub = options.studyTitle || options.subtitle || 'Dinámica No Lineal · Atractores Extraños · Caos Determinista';
+      if (timesItalic) {
+        page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
+      }
+
+      // 5. Scientific Vector Illustration: Lorenz Strange Attractor Butterfly Orbits
+      const diagCy = ph * 0.44;
+      page.drawLine({ start: { x: centerX - 120.0, y: diagCy }, end: { x: centerX + 120.0, y: diagCy }, thickness: 0.5, color: hairline, opacity: 0.22 });
+      page.drawLine({ start: { x: centerX, y: diagCy - 70.0 }, end: { x: centerX, y: diagCy + 75.0 }, thickness: 0.5, color: hairline, opacity: 0.22 });
+      if (courierBold) {
+        page.drawText('X', { x: centerX + 122.0, y: diagCy - 2.5, size: 7.0, font: courierBold, color: inkMuted });
+        page.drawText('Z', { x: centerX - 3.0, y: diagCy + 78.0, size: 7.0, font: courierBold, color: inkMuted });
+      }
+
+      // Butterfly lobes
+      for (let loop = 0; loop < 4; loop++) {
+        const th = (loop === 3) ? 0.9 : 0.6;
+        const rx = (42.0 + loop * 14.0) * 0.6;
+        const ry = (35.0 + loop * 9.0) * 0.6;
+        const clx = centerX - 48.0;
+        const crx = centerX + 48.0;
+        const segs = 32;
+        for (let i = 0; i < segs; i++) {
+          const a1 = (i / segs) * Math.PI * 2.0;
+          const a2 = ((i + 1) / segs) * Math.PI * 2.0;
+          page.drawLine({
+            start: { x: clx + rx * Math.cos(a1), y: diagCy + ry * Math.sin(a1) },
+            end: { x: clx + rx * Math.cos(a2), y: diagCy + ry * Math.sin(a2) },
+            thickness: th,
+            color: (loop % 2 === 1) ? inkAmber : inkDark,
+          });
+          page.drawLine({
+            start: { x: crx + rx * Math.cos(a1), y: diagCy + ry * Math.sin(a1) },
+            end: { x: crx + rx * Math.cos(a2), y: diagCy + ry * Math.sin(a2) },
+            thickness: th,
+            color: (loop % 2 === 0) ? inkAmber : inkDark,
+          });
+        }
+      }
+
+      page.drawCircle({ x: centerX - 48.0, y: diagCy + 5.0, size: 3.0, color: inkAmber });
+      page.drawCircle({ x: centerX + 48.0, y: diagCy + 5.0, size: 3.0, color: inkAmber });
+
+      if (courierBold) {
+        const stamp = 'LORENZ (1963) · σ = 10.0 · ρ = 28.0 · β = 8/3 · DIM = 2.06';
+        const stW = courierBold.widthOfTextAtSize(stamp, 7.5);
+        page.drawText(stamp, { x: centerX - stW / 2, y: diagCy - 68.0, size: 7.5, font: courierBold, color: inkMuted });
+      }
+
+      // 6. Lower Technical Metadata Grid
+      const metaY = m + 28.0;
+      page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
+
+      if (courierBold) {
+        page.drawText('OPERADOR / INVESTIGADOR', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkAmber });
+        page.drawText('FECHA / ARCHIVO', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkAmber });
+        page.drawText('DIAPOSITIVAS / EXP', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkAmber });
+      }
+      if (timesBold) {
+        const authTxt = options.coverAuthor || options.author || 'Grupo de Sistemas Complejos';
+        page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const dateTxt = todayStr || 'Registro de Caos';
+        page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const slideCount = options.totalSlides || options.numSlides;
+        const slideTxt = slideCount ? `${slideCount} Diapositivas` : 'Cuaderno Teórico';
+        page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+      }
+
+    } else if (tpl === 'materials_sim_flat' || tpl === 'simulacion_materiales_flat' || tpl === 'simulacion_fisica_materiales_flat' || tpl === 'fortran_flat' || tpl === 'materiales_flat') {
+      // Scientific & Physics Notebooks — Flat 90s Minimalist: Simulación en Física de Materiales
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: rgb(0.965, 0.973, 0.965) });
+
+      const m = 44.0;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      const inkDark = rgb(0.09, 0.09, 0.11);     // Mainframe Charcoal #18181b
+      const inkGreen = rgb(0.08, 0.50, 0.24);    // Phosphor Green #15803d
+      const inkMuted = rgb(0.44, 0.44, 0.48);    // Terminal Steel #71717a
+      const hairline = rgb(0.09, 0.09, 0.11);
+
+      // 1. Corner registration marks
+      for (const [cx, cy] of [[x1, ph - m], [x2, ph - m], [x1, m], [x2, m]]) {
+        page.drawCircle({ x: cx, y: cy, size: 3.5, borderColor: hairline, borderWidth: 0.5, opacity: 0.35 });
+        page.drawLine({ start: { x: cx - 7, y: cy }, end: { x: cx + 7, y: cy }, thickness: 0.5, color: hairline, opacity: 0.35 });
+        page.drawLine({ start: { x: cx, y: cy - 7 }, end: { x: cx, y: cy + 7 }, thickness: 0.5, color: hairline, opacity: 0.35 });
+      }
+
+      // 2. Framing rule
+      page.drawRectangle({ x: x1, y: m, width: w, height: ph - 2 * m, borderColor: hairline, borderWidth: 1.0, opacity: 0.22 });
+      page.drawRectangle({ x: x1 + 3.5, y: m + 3.5, width: w - 7.0, height: ph - 2 * m - 7.0, borderColor: hairline, borderWidth: 0.5, opacity: 0.22 });
+
+      // 3. Header band: Series stamp & interatomic force formula
+      const headY = ph - m - 22.0;
+      if (courierBold) {
+        page.drawText('[ HPC SIMULATION // COMPUTATIONAL MATERIALS ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkGreen });
+      }
+      if (timesItalic || timesFont) {
+        const fItalic = timesItalic || timesFont;
+        const eqStr = 'F_i = -∇_i V(r_ij)  ·  Δt = 1.0 fs';
+        const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
+        page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkGreen });
+      }
+      page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
+
+      // 4. Title block
+      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'SIMULACIÓN EN FÍSICA DE MATERIALES');
+      const lines = wrapText(helveticaBold, dispTitle, 23.0, w - 28.0);
+      let curY = ph - m - 62.0;
+      for (const line of lines) {
+        page.drawText(line, { x: x1 + 14.0, y: curY, size: 23.0, font: helveticaBold, color: inkDark });
+        curY -= 29.0;
+      }
+      const dispSub = options.studyTitle || options.subtitle || 'Dinámica Molecular · Teoría del Funcional de la Densidad · Redes Cristalinas';
+      if (timesItalic) {
+        page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
+      }
+
+      // 5. Scientific Vector Illustration: 3D Isometric FCC Unit Cell & Lattice Vectors
+      const diagCy = ph * 0.44;
+      const boxS = 60.0;
+      const vx = [boxS * 0.866, boxS * 0.5];
+      const vy = [-boxS * 0.866, boxS * 0.5];
+      const vz = [0.0, boxS];
+
+      const corners = [];
+      for (const dx of [0, 1]) {
+        for (const dy of [0, 1]) {
+          for (const dz of [0, 1]) {
+            const px = centerX + dx * vx[0] + dy * vy[0] + dz * vz[0] - (vx[0] + vy[0]) / 2.0;
+            const py = diagCy - 40.0 + dx * vx[1] + dy * vy[1] + dz * vz[1] - (vx[1] + vy[1] + vz[1]) / 2.0;
+            corners.push([px, py]);
+          }
+        }
+      }
+
+      const cubeEdges = [
+        [0, 1], [0, 2], [1, 3], [2, 3],
+        [4, 5], [4, 6], [5, 7], [6, 7],
+        [0, 4], [1, 5], [2, 6], [3, 7],
+      ];
+      for (const [i1, i2] of cubeEdges) {
+        page.drawLine({ start: { x: corners[i1][0], y: corners[i1][1] }, end: { x: corners[i2][0], y: corners[i2][1] }, thickness: 0.7, color: inkMuted });
+      }
+
+      for (const [px, py] of corners) {
+        page.drawCircle({ x: px, y: py, size: 3.5, color: inkDark });
+      }
+
+      const faceCenters = [
+        [(corners[0][0] + corners[3][0]) / 2.0, (corners[0][1] + corners[3][1]) / 2.0],
+        [(corners[4][0] + corners[7][0]) / 2.0, (corners[4][0] + corners[7][1]) / 2.0],
+        [(corners[0][0] + corners[5][0]) / 2.0, (corners[0][1] + corners[5][1]) / 2.0],
+        [(corners[2][0] + corners[7][0]) / 2.0, (corners[2][1] + corners[7][1]) / 2.0],
+      ];
+      for (const [fx, fy] of faceCenters) {
+        page.drawCircle({ x: fx, y: fy, size: 4.5, color: inkGreen });
+      }
+
+      if (courierBold) {
+        const stamp = 'FCC CRYSTAL LATTICE · LENNARD-JONES · MPI FORTRAN 90';
+        const stW = courierBold.widthOfTextAtSize(stamp, 7.5);
+        page.drawText(stamp, { x: centerX - stW / 2, y: diagCy - 72.0, size: 7.5, font: courierBold, color: inkGreen });
+      }
+
+      // 6. Lower Technical Metadata Grid
+      const metaY = m + 28.0;
+      page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
+
+      if (courierBold) {
+        page.drawText('PROGRAMADOR / ALUMNO', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+        page.drawText('FECHA DE COMPILACIÓN', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+        page.drawText('DATASET / DIAPOSITIVAS', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+      }
+      if (timesBold) {
+        const authTxt = options.coverAuthor || options.author || 'Supercomputación y Materiales';
+        page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const dateTxt = todayStr || 'Fortran Archive';
+        page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const slideCount = options.totalSlides || options.numSlides;
+        const slideTxt = slideCount ? `${slideCount} Diapositivas` : 'Código y Memoria';
+        page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+      }
+
+    } else if (tpl === 'circuits_flat' || tpl === 'circuitos_flat' || tpl === 'instrumentacion_flat' || tpl === 'fundamentos_instrumentacion_flat' || tpl === 'electronica_flat') {
+      // Scientific & Physics Notebooks — Flat 90s Minimalist: Fundamentos de Instrumentación Electrónica
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: rgb(0.988, 0.984, 0.976) });
+
+      const m = 44.0;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      const inkDark = rgb(0.12, 0.16, 0.23);     // Instrument Slate #1e293b
+      const inkGreen = rgb(0.02, 0.47, 0.34);    // Circuit PCB Green #047857
+      const inkMuted = rgb(0.39, 0.45, 0.55);    // Precision Gray #64748b
+      const hairline = rgb(0.12, 0.16, 0.23);
+
+      // 1. Corner registration marks
+      for (const [cx, cy] of [[x1, ph - m], [x2, ph - m], [x1, m], [x2, m]]) {
+        page.drawCircle({ x: cx, y: cy, size: 3.5, borderColor: hairline, borderWidth: 0.5, opacity: 0.35 });
+        page.drawLine({ start: { x: cx - 7, y: cy }, end: { x: cx + 7, y: cy }, thickness: 0.5, color: hairline, opacity: 0.35 });
+        page.drawLine({ start: { x: cx, y: cy - 7 }, end: { x: cx, y: cy + 7 }, thickness: 0.5, color: hairline, opacity: 0.35 });
+      }
+
+      // 2. Framing rule
+      page.drawRectangle({ x: x1, y: m, width: w, height: ph - 2 * m, borderColor: hairline, borderWidth: 1.0, opacity: 0.22 });
+      page.drawRectangle({ x: x1 + 3.5, y: m + 3.5, width: w - 7.0, height: ph - 2 * m - 7.0, borderColor: hairline, borderWidth: 0.5, opacity: 0.22 });
+
+      // 3. Header band: Series stamp & Op-Amp transfer equation
+      const headY = ph - m - 22.0;
+      if (courierBold) {
+        page.drawText('[ IEEE INSTRUMENTATION // ANALOG FRONT-END ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkGreen });
+      }
+      if (timesItalic || timesFont) {
+        const fItalic = timesItalic || timesFont;
+        const eqStr = 'V_out = -(R_f / R_in) V_in  ·  CMRR > 120 dB';
+        const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
+        page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkGreen });
+      }
+      page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
+
+      // 4. Title block
+      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'FUNDAMENTOS DE INSTRUMENTACIÓN ELECTRÓNICA');
+      const lines = wrapText(helveticaBold, dispTitle, 22.0, w - 28.0);
+      let curY = ph - m - 62.0;
+      for (const line of lines) {
+        page.drawText(line, { x: x1 + 14.0, y: curY, size: 22.0, font: helveticaBold, color: inkDark });
+        curY -= 28.0;
+      }
+      const dispSub = options.studyTitle || options.subtitle || 'Amplificadores Operacionales · Sensores y Acondicionamiento · Conversión ADC/DAC';
+      if (timesItalic) {
+        page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.0, font: timesItalic, color: inkMuted });
+      }
+
+      // 5. Scientific Vector Illustration: Op-Amp Inverting Amplifier Schematic
+      const diagCy = ph * 0.44;
+      const triW = 60.0;
+      const triH = 70.0;
+      const triX = centerX - 10.0;
+
+      // Triangle body
+      page.drawLine({ start: { x: triX, y: diagCy - triH / 2.0 }, end: { x: triX, y: diagCy + triH / 2.0 }, thickness: 1.4, color: inkDark });
+      page.drawLine({ start: { x: triX, y: diagCy + triH / 2.0 }, end: { x: triX + triW, y: diagCy }, thickness: 1.4, color: inkDark });
+      page.drawLine({ start: { x: triX + triW, y: diagCy }, end: { x: triX, y: diagCy - triH / 2.0 }, thickness: 1.4, color: inkDark });
+
+      if (helveticaBold) {
+        page.drawText('-', { x: triX + 6.0, y: diagCy + 14.0, size: 10.0, font: helveticaBold, color: inkDark });
+        page.drawText('+', { x: triX + 6.0, y: diagCy - 22.0, size: 10.0, font: helveticaBold, color: inkDark });
+      }
+
+      // Input circuit with Rin
+      page.drawLine({ start: { x: triX - 80.0, y: diagCy + 18.0 }, end: { x: triX - 50.0, y: diagCy + 18.0 }, thickness: 1.0, color: inkDark });
+      page.drawRectangle({ x: triX - 50.0, y: diagCy + 12.0, width: 26.0, height: 12.0, borderColor: inkDark, borderWidth: 1.0 });
+      if (courierBold) {
+        page.drawText('R_in', { x: triX - 46.0, y: diagCy + 27.0, size: 6.5, font: courierBold, color: inkDark });
+      }
+      page.drawLine({ start: { x: triX - 24.0, y: diagCy + 18.0 }, end: { x: triX, y: diagCy + 18.0 }, thickness: 1.0, color: inkDark });
+
+      // Feedback circuit with Rf
+      page.drawLine({ start: { x: triX - 12.0, y: diagCy + 18.0 }, end: { x: triX - 12.0, y: diagCy + 52.0 }, thickness: 1.0, color: inkDark });
+      page.drawLine({ start: { x: triX - 12.0, y: diagCy + 52.0 }, end: { x: triX + 10.0, y: diagCy + 52.0 }, thickness: 1.0, color: inkDark });
+      page.drawRectangle({ x: triX + 10.0, y: diagCy + 46.0, width: 26.0, height: 12.0, borderColor: inkDark, borderWidth: 1.0 });
+      if (courierBold) {
+        page.drawText('R_f', { x: triX + 16.0, y: diagCy + 61.0, size: 6.5, font: courierBold, color: inkDark });
+      }
+      page.drawLine({ start: { x: triX + 36.0, y: diagCy + 52.0 }, end: { x: triX + 75.0, y: diagCy + 52.0 }, thickness: 1.0, color: inkDark });
+      page.drawLine({ start: { x: triX + 75.0, y: diagCy + 52.0 }, end: { x: triX + 75.0, y: diagCy }, thickness: 1.0, color: inkDark });
+
+      // Ground on positive terminal
+      page.drawLine({ start: { x: triX, y: diagCy - 18.0 }, end: { x: triX - 24.0, y: diagCy - 18.0 }, thickness: 1.0, color: inkDark });
+      page.drawLine({ start: { x: triX - 24.0, y: diagCy - 18.0 }, end: { x: triX - 24.0, y: diagCy - 30.0 }, thickness: 1.0, color: inkDark });
+      page.drawLine({ start: { x: triX - 30.0, y: diagCy - 30.0 }, end: { x: triX - 18.0, y: diagCy - 30.0 }, thickness: 1.0, color: inkDark });
+      page.drawLine({ start: { x: triX - 28.0, y: diagCy - 33.0 }, end: { x: triX - 20.0, y: diagCy - 33.0 }, thickness: 1.0, color: inkDark });
+      page.drawLine({ start: { x: triX - 26.0, y: diagCy - 36.0 }, end: { x: triX - 22.0, y: diagCy - 36.0 }, thickness: 1.0, color: inkDark });
+
+      // Output wire & terminal
+      page.drawLine({ start: { x: triX + triW, y: diagCy }, end: { x: triX + triW + 35.0, y: diagCy }, thickness: 1.0, color: inkDark });
+      page.drawCircle({ x: triX + triW + 35.0, y: diagCy, size: 2.5, color: inkDark });
+      if (courierBold) {
+        page.drawText('V_out', { x: triX + triW + 42.0, y: diagCy - 3.0, size: 7.5, font: courierBold, color: inkDark });
+      }
+
+      // Input terminal
+      page.drawCircle({ x: triX - 80.0, y: diagCy + 18.0, size: 2.5, color: inkDark });
+      if (courierBold) {
+        page.drawText('V_in', { x: triX - 105.0, y: diagCy + 15.0, size: 7.5, font: courierBold, color: inkDark });
+      }
+
+      if (courierBold) {
+        const stamp = 'ANALOG CIRCUITS · TEKTRONIX BENCH · LAB STANDARD';
+        const stW = courierBold.widthOfTextAtSize(stamp, 7.5);
+        page.drawText(stamp, { x: centerX - stW / 2, y: diagCy - 68.0, size: 7.5, font: courierBold, color: inkGreen });
+      }
+
+      // 6. Lower Technical Metadata Grid
+      const metaY = m + 28.0;
+      page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
+
+      if (courierBold) {
+        page.drawText('INGENIERO / ESTUDIANTE', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+        page.drawText('BANCO DE TRABAJO / FECHA', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+        page.drawText('MEMORIA / DIAPOSITIVAS', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+      }
+      if (timesBold) {
+        const authTxt = options.coverAuthor || options.author || 'Laboratorio de Instrumentación';
+        page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const dateTxt = todayStr || 'Registro de Calibración';
+        page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const slideCount = options.totalSlides || options.numSlides;
+        const slideTxt = slideCount ? `${slideCount} Diapositivas` : 'Manual de Laboratorio';
+        page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+      }
+
+    } else if (tpl === 'solid_state_flat' || tpl === 'estado_solido_flat' || tpl === 'solido_flat' || tpl === 'condensed_matter_flat') {
+      // Scientific & Physics Notebooks — Flat 90s Minimalist: Física del Estado Sólido
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: rgb(0.984, 0.980, 0.969) });
+
+      const m = 44.0;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      const inkDark = rgb(0.09, 0.15, 0.33);     // Prussian Cobalt #172554
+      const inkCopper = rgb(0.71, 0.33, 0.04);   // Copper Bronze #b45309
+      const inkMuted = rgb(0.39, 0.45, 0.55);    // Reciprocal Slate #64748b
+      const hairline = rgb(0.09, 0.15, 0.33);
+
+      // 1. Corner registration marks
+      for (const [cx, cy] of [[x1, ph - m], [x2, ph - m], [x1, m], [x2, m]]) {
+        page.drawCircle({ x: cx, y: cy, size: 3.5, borderColor: hairline, borderWidth: 0.5, opacity: 0.35 });
+        page.drawLine({ start: { x: cx - 7, y: cy }, end: { x: cx + 7, y: cy }, thickness: 0.5, color: hairline, opacity: 0.35 });
+        page.drawLine({ start: { x: cx, y: cy - 7 }, end: { x: cx, y: cy + 7 }, thickness: 0.5, color: hairline, opacity: 0.35 });
+      }
+
+      // 2. Framing rule
+      page.drawRectangle({ x: x1, y: m, width: w, height: ph - 2 * m, borderColor: hairline, borderWidth: 1.0, opacity: 0.22 });
+      page.drawRectangle({ x: x1 + 3.5, y: m + 3.5, width: w - 7.0, height: ph - 2 * m - 7.0, borderColor: hairline, borderWidth: 0.5, opacity: 0.22 });
+
+      // 3. Header band: Series stamp & Bloch wave theorem
+      const headY = ph - m - 22.0;
+      if (courierBold) {
+        page.drawText('[ CONDENSED MATTER // SOLID STATE PHYSICS ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkCopper });
+      }
+      if (timesItalic || timesFont) {
+        const fItalic = timesItalic || timesFont;
+        const eqStr = 'ψ_k(r) = e^{ik·r} u_k(r)  ·  E_F = ħ²k_F² / 2m';
+        const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
+        page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkCopper });
+      }
+      page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
+
+      // 4. Title block
+      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'FÍSICA DEL ESTADO SÓLIDO');
+      const lines = wrapText(helveticaBold, dispTitle, 26.0, w - 28.0);
+      let curY = ph - m - 62.0;
+      for (const line of lines) {
+        page.drawText(line, { x: x1 + 14.0, y: curY, size: 26.0, font: helveticaBold, color: inkDark });
+        curY -= 32.0;
+      }
+      const dispSub = options.studyTitle || options.subtitle || 'Zonas de Brillouin · Superficie de Fermi · Fonones y Bandas Electrónicas';
+      if (timesItalic) {
+        page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
+      }
+
+      // 5. Scientific Vector Illustration: 1st Brillouin Zone Hexagon & Reciprocal Space
+      const diagCy = ph * 0.44;
+      const hexR = 55.0;
+
+      for (let i = 0; i < 6; i++) {
+        const a1 = (i / 6.0) * 2.0 * Math.PI;
+        const a2 = ((i + 1) / 6.0) * 2.0 * Math.PI;
+        page.drawLine({
+          start: { x: centerX + hexR * Math.cos(a1), y: diagCy + hexR * Math.sin(a1) },
+          end: { x: centerX + hexR * Math.cos(a2), y: diagCy + hexR * Math.sin(a2) },
+          thickness: 1.2,
+          color: inkDark,
+        });
+      }
+
+      // Reciprocal vectors
+      page.drawLine({ start: { x: centerX, y: diagCy }, end: { x: centerX + hexR * 0.9, y: diagCy }, thickness: 1.0, color: inkCopper });
+      page.drawLine({ start: { x: centerX, y: diagCy }, end: { x: centerX + hexR * 0.45, y: diagCy + hexR * 0.78 }, thickness: 1.0, color: inkCopper });
+
+      // Symmetry points
+      page.drawCircle({ x: centerX, y: diagCy, size: 2.5, color: inkDark });
+      if (timesBold) {
+        page.drawText('Γ', { x: centerX - 12.0, y: diagCy - 2.0, size: 9.0, font: timesBold, color: inkDark });
+      }
+      page.drawCircle({ x: centerX + hexR, y: diagCy, size: 2.0, color: inkDark });
+      if (timesBold) {
+        page.drawText('K', { x: centerX + hexR + 4.0, y: diagCy - 3.0, size: 9.0, font: timesBold, color: inkDark });
+      }
+      const mx = centerX + hexR * 0.866 * Math.cos(Math.PI / 6);
+      const my = diagCy + hexR * 0.866 * Math.sin(Math.PI / 6);
+      page.drawCircle({ x: mx, y: my, size: 2.0, color: inkDark });
+      if (timesBold) {
+        page.drawText('M', { x: mx + 4.0, y: my + 2.0, size: 9.0, font: timesBold, color: inkDark });
+      }
+
+      // Fermi surface contour circle
+      page.drawCircle({ x: centerX, y: diagCy, size: hexR * 0.62, borderColor: inkCopper, borderWidth: 0.8 });
+
+      if (courierBold) {
+        const stamp = 'RECIPROCAL SPACE · 1ST BRILLOUIN ZONE · FERMI SPHERE';
+        const stW = courierBold.widthOfTextAtSize(stamp, 7.5);
+        page.drawText(stamp, { x: centerX - stW / 2, y: diagCy - 72.0, size: 7.5, font: courierBold, color: inkCopper });
+      }
+
+      // 6. Lower Technical Metadata Grid
+      const metaY = m + 28.0;
+      page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
+
+      if (courierBold) {
+        page.drawText('CATEDRÁTICO / ALUMNO', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkCopper });
+        page.drawText('CURSO / PERÍODO', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkCopper });
+        page.drawText('VOLUMEN / HOJAS', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkCopper });
+      }
+      if (timesBold) {
+        const authTxt = options.coverAuthor || options.author || 'Departamento de Materia Condensada';
+        page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const dateTxt = todayStr || 'Curso Académico';
+        page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const slideCount = options.totalSlides || options.numSlides;
+        const slideTxt = slideCount ? `${slideCount} Diapositivas` : 'Monografía Teórica';
+        page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+      }
+
+    } else if (tpl === 'nuclear_flat' || tpl === 'particulas_flat' || tpl === 'nuclear_particles_flat' || tpl === 'particle_physics_flat') {
+      // Scientific & Physics Notebooks — Flat 90s Minimalist: Física Nuclear y de Partículas
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: rgb(0.980, 0.980, 0.976) });
+
+      const m = 44.0;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      const inkDark = rgb(0.06, 0.09, 0.16);     // Collider Obsidian #0f172a
+      const inkViolet = rgb(0.39, 0.40, 0.95);   // High-Energy Violet #6366f1
+      const inkMuted = rgb(0.39, 0.45, 0.55);    // Detector Slate #64748b
+      const hairline = rgb(0.06, 0.09, 0.16);
+
+      // 1. Corner registration marks
+      for (const [cx, cy] of [[x1, ph - m], [x2, ph - m], [x1, m], [x2, m]]) {
+        page.drawCircle({ x: cx, y: cy, size: 3.5, borderColor: hairline, borderWidth: 0.5, opacity: 0.35 });
+        page.drawLine({ start: { x: cx - 7, y: cy }, end: { x: cx + 7, y: cy }, thickness: 0.5, color: hairline, opacity: 0.35 });
+        page.drawLine({ start: { x: cx, y: cy - 7 }, end: { x: cx, y: cy + 7 }, thickness: 0.5, color: hairline, opacity: 0.35 });
+      }
+
+      // 2. Framing rule
+      page.drawRectangle({ x: x1, y: m, width: w, height: ph - 2 * m, borderColor: hairline, borderWidth: 1.0, opacity: 0.22 });
+      page.drawRectangle({ x: x1 + 3.5, y: m + 3.5, width: w - 7.0, height: ph - 2 * m - 7.0, borderColor: hairline, borderWidth: 0.5, opacity: 0.22 });
+
+      // 3. Header band: Series stamp & Standard Model gauge group
+      const headY = ph - m - 22.0;
+      if (courierBold) {
+        page.drawText('[ HIGH ENERGY PHYSICS // CERN-SLAC PREPRINT ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkViolet });
+      }
+      if (timesItalic || timesFont) {
+        const fItalic = timesItalic || timesFont;
+        const eqStr = 'SU(3)_C × SU(2)_L × U(1)_Y  ·  √s = 14 TeV';
+        const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
+        page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkViolet });
+      }
+      page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
+
+      // 4. Title block
+      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'FÍSICA NUCLEAR & DE PARTÍCULAS');
+      const lines = wrapText(helveticaBold, dispTitle, 23.0, w - 28.0);
+      let curY = ph - m - 62.0;
+      for (const line of lines) {
+        page.drawText(line, { x: x1 + 14.0, y: curY, size: 23.0, font: helveticaBold, color: inkDark });
+        curY -= 29.0;
+      }
+      const dispSub = options.studyTitle || options.subtitle || 'Diagramas de Feynman · Modelo Estándar · Colisionadores y Detectores';
+      if (timesItalic) {
+        page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
+      }
+
+      // 5. Scientific Vector Illustration: e+ e- -> Z0/gamma* -> q qbar Feynman Diagram
+      const diagCy = ph * 0.44;
+      const v1x = centerX - 30.0;
+      const v2x = centerX + 30.0;
+
+      // Incoming electron and positron
+      page.drawLine({ start: { x: v1x - 60.0, y: diagCy + 40.0 }, end: { x: v1x, y: diagCy }, thickness: 1.2, color: inkDark });
+      page.drawLine({ start: { x: v1x - 60.0, y: diagCy - 40.0 }, end: { x: v1x, y: diagCy }, thickness: 1.2, color: inkDark });
+      if (timesItalic) {
+        page.drawText('e⁻', { x: v1x - 72.0, y: diagCy + 38.0, size: 9.0, font: timesItalic, color: inkDark });
+        page.drawText('e⁺', { x: v1x - 72.0, y: diagCy - 42.0, size: 9.0, font: timesItalic, color: inkDark });
+      }
+
+      // Gauge boson propagator wavy line
+      const wSteps = 24;
+      for (let ws = 0; ws < wSteps; ws++) {
+        const wx1 = v1x + (ws / wSteps) * (v2x - v1x);
+        const wx2 = v1x + ((ws + 1) / wSteps) * (v2x - v1x);
+        const wy1 = diagCy + 5.0 * Math.sin((ws / wSteps) * 4.0 * Math.PI);
+        const wy2 = diagCy + 5.0 * Math.sin(((ws + 1) / wSteps) * 4.0 * Math.PI);
+        page.drawLine({ start: { x: wx1, y: wy1 }, end: { x: wx2, y: wy2 }, thickness: 1.4, color: inkViolet });
+      }
+      if (courierBold) {
+        const bLabel = 'γ* / Z⁰';
+        const bW = courierBold.widthOfTextAtSize(bLabel, 7.5);
+        page.drawText(bLabel, { x: centerX - bW / 2, y: diagCy + 10.0, size: 7.5, font: courierBold, color: inkViolet });
+      }
+
+      // Outgoing quarks
+      page.drawLine({ start: { x: v2x, y: diagCy }, end: { x: v2x + 60.0, y: diagCy + 40.0 }, thickness: 1.2, color: inkDark });
+      page.drawLine({ start: { x: v2x, y: diagCy }, end: { x: v2x + 60.0, y: diagCy - 40.0 }, thickness: 1.2, color: inkDark });
+      if (timesItalic) {
+        page.drawText('q', { x: v2x + 66.0, y: diagCy + 38.0, size: 9.0, font: timesItalic, color: inkDark });
+        page.drawText('q̄', { x: v2x + 66.0, y: diagCy - 42.0, size: 9.0, font: timesItalic, color: inkDark });
+      }
+
+      // Vertex interaction nodes
+      page.drawCircle({ x: v1x, y: diagCy, size: 3.0, color: inkDark });
+      page.drawCircle({ x: v2x, y: diagCy, size: 3.0, color: inkDark });
+
+      // Detector chamber concentric arcs
+      const arcR = 85.0;
+      for (const startAngle of [30, 210]) {
+        const aSteps = 12;
+        for (let a = 0; a < aSteps; a++) {
+          const deg1 = (startAngle + (a / aSteps) * 60) * (Math.PI / 180);
+          const deg2 = (startAngle + ((a + 1) / aSteps) * 60) * (Math.PI / 180);
+          page.drawLine({
+            start: { x: centerX + arcR * Math.cos(deg1), y: diagCy + arcR * Math.sin(deg1) },
+            end: { x: centerX + arcR * Math.cos(deg2), y: diagCy + arcR * Math.sin(deg2) },
+            thickness: 0.5,
+            color: hairline,
+            opacity: 0.22,
+          });
+        }
+      }
+
+      if (courierBold) {
+        const stamp = 'ELECTROWEAK ANNIHILATION · FEYNMAN DIAGRAM · 4π DETECTOR';
+        const stW = courierBold.widthOfTextAtSize(stamp, 7.5);
+        page.drawText(stamp, { x: centerX - stW / 2, y: diagCy - 68.0, size: 7.5, font: courierBold, color: inkViolet });
+      }
+
+      // 6. Lower Technical Metadata Grid
+      const metaY = m + 28.0;
+      page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
+
+      if (courierBold) {
+        page.drawText('FÍSICO / INVESTIGADOR', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
+        page.drawText('COLABORACIÓN / FECHA', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
+        page.drawText('ARCHIVADOR / DIAPOS', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
+      }
+      if (timesBold) {
+        const authTxt = options.coverAuthor || options.author || 'Colaboración de Altas Energías';
+        page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const dateTxt = todayStr || 'Preprint de Investigación';
+        page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const slideCount = options.totalSlides || options.numSlides;
+        const slideTxt = slideCount ? `${slideCount} Diapositivas` : 'Fascículo de Partículas';
+        page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+      }
+
+    } else if ((tpl === 'composition' || tpl === 'compbook' || tpl === 'composition_book' || tpl === 'comp_classic' || tpl === 'marble_bw' || tpl === 'cuaderno' || tpl === 'compo' ||
                tpl === 'comp_blue' || tpl === 'comp_ocean' || tpl === 'comp_wave' || tpl === 'academic_wave' || tpl === 'suminagashi' || tpl === 'ocean_wave' || tpl === 'academic_navy' || tpl === 'academic_burgundy' ||
                tpl === 'comp_coral' || tpl === 'comp_terracotta' || tpl === 'comp_slate' || tpl === 'academic_teal' || tpl === 'ebru' || tpl === 'bubble' || tpl === 'academic_ebru' || tpl === 'academic_stone' || tpl === 'academic_blue' ||
                tpl === 'comp_amber' || tpl === 'comp_gold' || tpl === 'comp_onyx' || tpl === 'academic_green' || tpl === 'academic' || tpl === 'peacock' || tpl === 'florentine' || tpl === 'academic_peacock' || tpl === 'academic_yellow' ||
@@ -2810,8 +3674,8 @@
                tpl.includes('fortran') || tpl.includes('materiales') || tpl.includes('materials_sim') || tpl.includes('computational_materials') || tpl.includes('f77') || tpl.includes('f90') ||
                tpl.includes('nuclear') || tpl.includes('particulas') || tpl.includes('particle_physics') || tpl.includes('cern') || tpl.includes('lhc') || tpl.includes('feynman') ||
                tpl.includes('solid_state') || tpl.includes('estado_solido') || tpl.includes('solido') || tpl.includes('condensed_matter') || tpl.includes('brillouin') || tpl.includes('fermi_surface') ||
-               tpl.includes('atomic') || tpl.includes('atomica') || tpl.includes('quantum_atomic') || tpl.includes('spectroscopy') || tpl.includes('rydberg') ||
-               tpl.includes('circuits') || tpl.includes('instrumentacion') || tpl.includes('opamps') || tpl.includes('electronica') || tpl.includes('filters') || tpl.includes('adc_dac')) {
+               tpl.includes('atomic') || tpl.includes('atomica') || tpl.includes('quantum') || tpl.includes('cuantica') || tpl.includes('spectroscopy') || tpl.includes('rydberg') ||
+               tpl.includes('circuits') || tpl.includes('instrumentacion') || tpl.includes('opamps') || tpl.includes('electronica') || tpl.includes('filters') || tpl.includes('adc_dac')) && !tpl.includes('_flat')) {
       let assetKey = 'composition';
       let spineColor = rgb(0.08, 0.08, 0.09); // #141416
       let seamColor = rgb(0.20, 0.20, 0.22);  // #333338
@@ -2824,22 +3688,22 @@
         spineColor = rgb(0.04, 0.12, 0.16);  // Bioluminescent Marine #0a1f29
         seamColor = rgb(0.10, 0.32, 0.38);   // Cyan Accent #1a5261
         fallbackBg = rgb(0.06, 0.15, 0.20);
-        bookTitle = 'BIOPHYSICS & MACHINE LEARNING';
-        editionTag = 'Computational Biophysics Dossier';
+        bookTitle = 'BIOFÍSICA';
+        editionTag = 'Biophysics Dossier · Molecular Dynamics';
       } else if (tpl.includes('atmospheric') || tpl.includes('atmosferica') || tpl.includes('complex_systems') || tpl.includes('sistemas_complejos') || tpl.includes('chaos') || tpl.includes('lorenz')) {
         assetKey = 'science_atmospheric';
         spineColor = rgb(0.07, 0.11, 0.18);  // Deep Storm Navy #121c2e
         seamColor = rgb(0.18, 0.28, 0.40);   // Storm Slate #2e4766
         fallbackBg = rgb(0.09, 0.14, 0.22);
-        bookTitle = 'ATMOSPHERIC & COMPLEX SYSTEMS';
-        editionTag = 'Nonlinear Dynamics & Climate Archive';
+        bookTitle = 'FÍSICA DE LOS SISTEMAS COMPLEJOS';
+        editionTag = 'Nonlinear Dynamics & Complex Systems Archive';
       } else if (tpl.includes('fortran') || tpl.includes('materiales') || tpl.includes('materials_sim') || tpl.includes('computational_materials') || tpl.includes('f77') || tpl.includes('f90')) {
         assetKey = 'science_fortran';
         spineColor = rgb(0.08, 0.11, 0.09);  // Mainframe Dark Phosphor Charcoal #141c17
         seamColor = rgb(0.18, 0.28, 0.20);   // Terminal Green #2e4733
         fallbackBg = rgb(0.10, 0.14, 0.11);
-        bookTitle = 'COMPUTATIONAL MATERIALS';
-        editionTag = 'Materials Simulation Archive · Fortran';
+        bookTitle = 'SIMULACIÓN EN FÍSICA DE MATERIALES';
+        editionTag = 'Materials Simulation Archive · Computational Physics';
       } else if (tpl.includes('nuclear') || tpl.includes('particulas') || tpl.includes('particle_physics') || tpl.includes('cern') || tpl.includes('lhc') || tpl.includes('feynman')) {
         assetKey = 'science_nuclear';
         spineColor = rgb(0.08, 0.06, 0.12);  // Deep Cosmic Obsidian #140f1f
@@ -2854,20 +3718,20 @@
         fallbackBg = rgb(0.09, 0.14, 0.20);
         bookTitle = 'SOLID STATE PHYSICS';
         editionTag = 'Condensed Matter Laboratory Log';
-      } else if (tpl.includes('atomic') || tpl.includes('atomica') || tpl.includes('quantum_atomic') || tpl.includes('spectroscopy') || tpl.includes('rydberg')) {
+      } else if (tpl.includes('atomic') || tpl.includes('atomica') || tpl.includes('quantum') || tpl.includes('cuantica') || tpl.includes('spectroscopy') || tpl.includes('rydberg')) {
         assetKey = 'science_atomic';
         spineColor = rgb(0.10, 0.05, 0.14);  // Deep Quantum Violet #1a0d24
         seamColor = rgb(0.28, 0.17, 0.38);   // Spectroscopy Plum #472b61
         fallbackBg = rgb(0.12, 0.07, 0.17);
-        bookTitle = 'ATOMIC & QUANTUM OPTICS';
-        editionTag = 'Quantum Spectroscopy Register';
+        bookTitle = 'MECÁNICA CUÁNTICA III';
+        editionTag = 'Quantum Mechanics III · Spectroscopy Register';
       } else if (tpl.includes('circuits') || tpl.includes('instrumentacion') || tpl.includes('opamps') || tpl.includes('electronica') || tpl.includes('filters') || tpl.includes('adc_dac')) {
         assetKey = 'science_circuits';
         spineColor = rgb(0.05, 0.12, 0.08);  // Dark PCB Solder Mask #0d1f14
         seamColor = rgb(0.16, 0.32, 0.22);   // Circuit Copper Green #295238
         fallbackBg = rgb(0.07, 0.14, 0.10);
-        bookTitle = 'ELECTRONIC INSTRUMENTATION';
-        editionTag = 'Circuit Design & Laboratory Dossier';
+        bookTitle = 'FUNDAMENTOS DE INSTRUMENTACIÓN ELECTRÓNICA';
+        editionTag = 'Electronic Instrumentation & Laboratory Dossier';
       } else if (tpl.includes('morris') || tpl.includes('strawberry') || tpl.includes('botanical')) {
         assetKey = 'comp_morris';
         spineColor = rgb(0.07, 0.12, 0.21);  // Deep Victorian Indigo #122036
@@ -2981,11 +3845,8 @@
 
       if (timesBold) {
         let headSize = 15;
-        if (timesBold.widthOfTextAtSize(bookTitle, headSize) > (badgeW - 28)) {
-          headSize = 12;
-          if (timesBold.widthOfTextAtSize(bookTitle, headSize) > (badgeW - 28)) {
-            headSize = 10.5;
-          }
+        while (headSize > 7.5 && timesBold.widthOfTextAtSize(bookTitle, headSize) > (badgeW - 28)) {
+          headSize -= 0.5;
         }
         const headW = timesBold.widthOfTextAtSize(bookTitle, headSize);
         page.drawText(bookTitle, { x: visibleCenterX - headW / 2, y: badgeY + badgeH - 32, size: headSize, font: timesBold, color: textHeadColor });

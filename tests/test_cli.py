@@ -529,3 +529,35 @@ def test_cli_science_cover_templates(sample_slide_pdf, tmp_path):
         cover_text = reader.pages[0].extract_text()
         assert f"Science {tmpl}" in cover_text
 
+
+def test_cli_science_flat_cover_templates(sample_slide_pdf, tmp_path):
+    flat_science_templates = [
+        "quantum_flat",
+        "biophysics_flat",
+        "complex_systems_flat",
+        "materials_sim_flat",
+        "solid_state_flat",
+        "circuits_flat",
+        "nuclear_flat",
+    ]
+    for tmpl in flat_science_templates:
+        out_dir = str(tmp_path / f"cli_flat_{tmpl}")
+        code = main([
+            "-i", sample_slide_pdf,
+            "-s", "grid",
+            "--cover-template", tmpl,
+            "--cover-title", f"Flat Science {tmpl}",
+            "--cover-author", "Prof. Feynman",
+            "-o", out_dir,
+            "-q",
+        ])
+        assert code == 0
+        base = os.path.splitext(os.path.basename(sample_slide_pdf))[0]
+        out_pdf = tmp_path / f"cli_flat_{tmpl}" / "grid" / f"{base}_grid.pdf"
+        assert out_pdf.exists()
+        reader = PdfReader(str(out_pdf))
+        assert len(reader.pages) == 3
+        cover_text = reader.pages[0].extract_text()
+        assert f"Flat Science {tmpl}" in cover_text
+
+

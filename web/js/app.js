@@ -109,10 +109,26 @@
       coverTemplateLabel: "Cover Template Style",
       groupClassics: "Classics / Zara",
       groupNotebooks: "Composition Books",
+      groupScienceFlat: "Physics & Sciences (Flat 90s Minimalist)",
+      groupScience: "Physics & Sciences (AI Illustrated)",
       groupDecades: "Decades",
       groupSeasons: "Seasons",
       groupRalphLauren: "Ralph Lauren",
       groupNature: "Nature",
+      optTemplateQuantumFlat: "Quantum Mechanics III (Flat Minimalist · 90s Monograph)",
+      optTemplateBiophysicsFlat: "Biophysics (Flat Minimalist · Molecular 90s)",
+      optTemplateComplexSystemsFlat: "Complex Systems Physics (Flat Minimalist · Chaos Attractor)",
+      optTemplateMaterialsSimFlat: "Materials Simulation (Flat Minimalist · HPC Lattice)",
+      optTemplateSolidStateFlat: "Solid State Physics (Flat Minimalist · Brillouin Zone)",
+      optTemplateCircuitsFlat: "Electronic Instrumentation (Flat Minimalist · Schematics)",
+      optTemplateNuclearFlat: "Nuclear & Particle Physics (Flat Minimalist · Feynman)",
+      optTemplateBiophysics: "Biophysics (Illustrated · AlphaFold Cyan)",
+      optTemplateAtmospheric: "Complex Systems Physics (Illustrated · Lorenz Storm)",
+      optTemplateFortran: "Materials Simulation (Illustrated · Terminal Phosphor)",
+      optTemplateNuclear: "Nuclear & Particle Physics (Illustrated · Collider Cosmic)",
+      optTemplateSolidState: "Solid State Physics (Illustrated · Brillouin Zone)",
+      optTemplateAtomic: "Quantum Mechanics III (Illustrated · Spectroscopy Violet)",
+      optTemplateCircuits: "Electronic Instrumentation (Illustrated · PCB Green)",
       optTemplateComposition: "Composition Book (Classic B&W)",
       optTemplateCompBlue: "Composition Book (Blue & Gold Wave)",
       optTemplateCompCoral: "Composition Book (Coral & Slate Swirl)",
@@ -257,10 +273,26 @@
       coverTemplateLabel: "Estilo de portada editorial",
       groupClassics: "Clásicos / Zara",
       groupNotebooks: "Composition Book",
+      groupScienceFlat: "Física y Ciencias (Diseño Plano 90s)",
+      groupScience: "Física y Ciencias (Ilustrada IA)",
       groupDecades: "Décadas",
       groupSeasons: "Estaciones",
       groupRalphLauren: "Ralph Lauren",
       groupNature: "Naturaleza",
+      optTemplateQuantumFlat: "Mecánica Cuántica III (Diseño Plano · Monografía 90s)",
+      optTemplateBiophysicsFlat: "Biofísica (Diseño Plano · Molecular 90s)",
+      optTemplateComplexSystemsFlat: "Física de los Sistemas Complejos (Diseño Plano · Atractor Caos)",
+      optTemplateMaterialsSimFlat: "Simulación en Física de Materiales (Diseño Plano · Red HPC)",
+      optTemplateSolidStateFlat: "Física del Estado Sólido (Diseño Plano · Zona de Brillouin)",
+      optTemplateCircuitsFlat: "Fundamentos de Instrumentación Electrónica (Diseño Plano · Esquemas)",
+      optTemplateNuclearFlat: "Física Nuclear & de Partículas (Diseño Plano · Feynman)",
+      optTemplateBiophysics: "Biofísica (Ilustrada · AlphaFold Cyan)",
+      optTemplateAtmospheric: "Física de los Sistemas Complejos (Ilustrada · Lorenz Storm)",
+      optTemplateFortran: "Simulación en Física de Materiales (Ilustrada · Terminal Phosphor)",
+      optTemplateNuclear: "Física Nuclear & de Partículas (Ilustrada · Collider Cosmic)",
+      optTemplateSolidState: "Física del Estado Sólido (Ilustrada · Brillouin Zone)",
+      optTemplateAtomic: "Mecánica Cuántica III (Ilustrada · Espectroscopía Violeta)",
+      optTemplateCircuits: "Fundamentos de Instrumentación Electrónica (Ilustrada · PCB Verde)",
       optTemplateComposition: "Composition Book (Clásico B&N)",
       optTemplateCompBlue: "Composition Book (Azul y Dorado)",
       optTemplateCompCoral: "Composition Book (Coral y Pizarra)",
@@ -405,10 +437,26 @@
       coverTemplateLabel: "Estilo de portada editorial",
       groupClassics: "Clásicos / Zara",
       groupNotebooks: "Composition Book",
+      groupScienceFlat: "Física e Ciencias (Deseño Plano 90s)",
+      groupScience: "Física e Ciencias (Ilustrada IA)",
       groupDecades: "Décadas",
       groupSeasons: "Estacións",
       groupRalphLauren: "Ralph Lauren",
       groupNature: "Natureza",
+      optTemplateQuantumFlat: "Mecánica Cuántica III (Deseño Plano · Monografía 90s)",
+      optTemplateBiophysicsFlat: "Biofísica (Deseño Plano · Molecular 90s)",
+      optTemplateComplexSystemsFlat: "Física dos Sistemas Complexos (Deseño Plano · Atractor Caos)",
+      optTemplateMaterialsSimFlat: "Simulación en Física de Materiais (Deseño Plano · Rede HPC)",
+      optTemplateSolidStateFlat: "Física do Estado Sólido (Deseño Plano · Zona de Brillouin)",
+      optTemplateCircuitsFlat: "Fundamentos de Instrumentación Electrónica (Deseño Plano · Esquemas)",
+      optTemplateNuclearFlat: "Física Nuclear e de Partículas (Deseño Plano · Feynman)",
+      optTemplateBiophysics: "Biofísica (Ilustrada · AlphaFold Cyan)",
+      optTemplateAtmospheric: "Física dos Sistemas Complexos (Ilustrada · Lorenz Storm)",
+      optTemplateFortran: "Simulación en Física de Materiais (Ilustrada · Terminal Phosphor)",
+      optTemplateNuclear: "Física Nuclear e de Partículas (Ilustrada · Collider Cosmic)",
+      optTemplateSolidState: "Física do Estado Sólido (Ilustrada · Brillouin Zone)",
+      optTemplateAtomic: "Mecánica Cuántica III (Ilustrada · Espectroscopía Violeta)",
+      optTemplateCircuits: "Fundamentos de Instrumentación Electrónica (Ilustrada · PCB Verde)",
       optTemplateComposition: "Composition Book (Clásico B&N)",
       optTemplateCompBlue: "Composition Book (Azul e Dourado)",
       optTemplateCompCoral: "Composition Book (Coral e Lousa)",
@@ -774,10 +822,27 @@
     };
     setOptgroupLabel('groupClassics', dict.groupClassics);
     setOptgroupLabel('groupNotebooks', dict.groupNotebooks);
+    setOptgroupLabel('groupScienceFlat', dict.groupScienceFlat);
+    setOptgroupLabel('groupScience', dict.groupScience);
     setOptgroupLabel('groupDecades', dict.groupDecades);
     setOptgroupLabel('groupSeasons', dict.groupSeasons);
     setOptgroupLabel('groupRalphLauren', dict.groupRalphLauren);
     setOptgroupLabel('groupNature', dict.groupNature);
+
+    setText('optTemplateQuantumFlat', dict.optTemplateQuantumFlat);
+    setText('optTemplateBiophysicsFlat', dict.optTemplateBiophysicsFlat);
+    setText('optTemplateComplexSystemsFlat', dict.optTemplateComplexSystemsFlat);
+    setText('optTemplateMaterialsSimFlat', dict.optTemplateMaterialsSimFlat);
+    setText('optTemplateSolidStateFlat', dict.optTemplateSolidStateFlat);
+    setText('optTemplateCircuitsFlat', dict.optTemplateCircuitsFlat);
+    setText('optTemplateNuclearFlat', dict.optTemplateNuclearFlat);
+    setText('optTemplateBiophysics', dict.optTemplateBiophysics);
+    setText('optTemplateAtmospheric', dict.optTemplateAtmospheric);
+    setText('optTemplateFortran', dict.optTemplateFortran);
+    setText('optTemplateNuclear', dict.optTemplateNuclear);
+    setText('optTemplateSolidState', dict.optTemplateSolidState);
+    setText('optTemplateAtomic', dict.optTemplateAtomic);
+    setText('optTemplateCircuits', dict.optTemplateCircuits);
 
     setText('optTemplateComposition', dict.optTemplateComposition);
     setText('optTemplateCompBlue', dict.optTemplateCompBlue);

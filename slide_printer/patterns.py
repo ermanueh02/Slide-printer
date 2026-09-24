@@ -1864,6 +1864,879 @@ def generate_cover_page(
             c.setFillColor(brass)
             c.drawCentredString(center_x, meta_y - 16.0, f"{num_slides} {s_word} registered")
 
+    elif tpl in ("quantum_flat", "mecanica_cuantica_flat", "mecanica_cuantica_3_flat", "cuantica_flat", "cuantica3_flat", "mq3_flat", "atomic_flat"):
+        # Scientific & Physics Notebooks — Flat 90s Minimalist: Mecánica Cuántica III
+        # Theme: 90s Theoretical Physics Monograph (CUP / Princeton Preprint)
+        c.setFillColor(Color(0.980, 0.976, 0.965, alpha=1.0))
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = 44.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        ink_dark = Color(0.12, 0.11, 0.29, alpha=1.0)     # Quantum Indigo #1e1b4b
+        ink_violet = Color(0.43, 0.16, 0.85, alpha=1.0)   # Electric Violet #6d28d9
+        ink_muted = Color(0.42, 0.45, 0.50, alpha=0.9)    # Slate Lavender #6b7280
+        hairline = Color(0.12, 0.11, 0.29, alpha=0.25)
+
+        # 1. Corner registration marks (90s technical lookbook)
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.5)
+        for cx, cy in [(x1, ph - m), (x2, ph - m), (x1, m), (x2, m)]:
+            c.circle(cx, cy, 3.5, stroke=1, fill=0)
+            c.line(cx - 7.0, cy, cx + 7.0, cy)
+            c.line(cx, cy - 7.0, cx, cy + 7.0)
+
+        # 2. Outer hairline framing rule
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
+        c.rect(x1 + 3.5, m + 3.5, w - 7.0, ph - 2 * m - 7.0, stroke=1, fill=0)
+
+        # 3. Header band: Series stamp & fundamental eigenvalue equation
+        head_y = ph - m - 22.0
+        c.setFont("Courier-Bold", 8.0)
+        c.setFillColor(ink_violet)
+        c.drawString(x1 + 14.0, head_y, "[ PREPRINT QM-III // THEORETICAL PHYSICS ]")
+        c.setFont("Times-BoldItalic", 9.0)
+        c.drawRightString(x2 - 14.0, head_y, "Ĥ |ψ⟩ = E |ψ⟩  ·  ⟨ψ|ψ⟩ = 1")
+
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.6)
+        c.line(x1 + 14.0, head_y - 8.0, x2 - 14.0, head_y - 8.0)
+
+        # 4. Title block
+        disp_title = clean_title if clean_title != "Presentation" else "MECÁNICA CUÁNTICA III"
+        c.setFont("Helvetica-Bold", 26.0)
+        c.setFillColor(ink_dark)
+        lines = wrap_text_lines(disp_title, "Helvetica-Bold", 26.0, w - 28.0, c)
+        cur_y = ph - m - 62.0
+        for line in lines:
+            c.drawString(x1 + 14.0, cur_y, line)
+            cur_y -= 32.0
+
+        disp_sub = subtitle or "Operadores Hermitianos · Estados Estacionarios · Teoría de Perturbaciones"
+        c.setFont("Times-Italic", 11.5)
+        c.setFillColor(ink_muted)
+        c.drawString(x1 + 14.0, cur_y - 4.0, disp_sub)
+
+        # 5. Scientific Vector Illustration: Quantum Harmonic Oscillator Well & Wavefunctions
+        diag_cy = ph * 0.44
+        diag_w = min(w * 0.78, 300.0)
+        diag_x1 = center_x - diag_w / 2.0
+        diag_x2 = center_x + diag_w / 2.0
+
+        # Parabolic Potential Well V(x) = 1/2 m w^2 x^2
+        c.setStrokeColor(hairline)
+        c.setLineWidth(1.2)
+        p_path = c.beginPath()
+        steps = 40
+        for s in range(steps + 1):
+            t = (s / steps) * 2.0 - 1.0
+            px = center_x + t * (diag_w * 0.42)
+            py = diag_cy - 70.0 + (t ** 2) * 130.0
+            if s == 0:
+                p_path.moveTo(px, py)
+            else:
+                p_path.lineTo(px, py)
+        c.drawPath(p_path, stroke=1, fill=0)
+
+        # Quantized Energy Levels (n = 0, 1, 2, 3) and Eigen-wavefunctions psi_n(x)
+        level_labels = ["E₀ = ½ħω", "E₁ = ³⁄₂ħω", "E₂ = ⁵⁄₂ħω", "E₃ = ⁷⁄₂ħω"]
+        for n in range(4):
+            ly = diag_cy - 50.0 + n * 32.0
+            lw = diag_w * (0.35 + n * 0.14)
+            lx1 = center_x - lw / 2.0
+            lx2 = center_x + lw / 2.0
+            c.setStrokeColor(ink_muted)
+            c.setLineWidth(0.5)
+            c.line(lx1, ly, lx2, ly)
+
+            c.setFont("Courier-Bold", 7.0)
+            c.setFillColor(ink_violet)
+            c.drawString(lx2 + 6.0, ly - 2.5, level_labels[n])
+
+            # Wavefunction curve superimposed on level
+            c.setStrokeColor(ink_violet)
+            c.setLineWidth(1.0 if n == 0 or n == 1 else 0.7)
+            w_path = c.beginPath()
+            w_steps = 36
+            for ws in range(w_steps + 1):
+                wt = (ws / w_steps) * 2.0 - 1.0
+                wx = center_x + wt * (lw * 0.46)
+                envelope = math.exp(-2.5 * (wt ** 2))
+                if n == 0:
+                    amp = 14.0 * envelope
+                elif n == 1:
+                    amp = 16.0 * (wt * 2.0) * envelope
+                elif n == 2:
+                    amp = 14.0 * (4.0 * (wt ** 2) - 1.0) * envelope
+                else:
+                    amp = 14.0 * (8.0 * (wt ** 3) - 6.0 * wt) * 0.5 * envelope
+                wy = ly + amp
+                if ws == 0:
+                    w_path.moveTo(wx, wy)
+                else:
+                    w_path.lineTo(wx, wy)
+            c.drawPath(w_path, stroke=1, fill=0)
+
+        # Measurement axis
+        c.setStrokeColor(ink_dark)
+        c.setLineWidth(0.8)
+        c.line(diag_x1 + 10.0, diag_cy - 70.0, diag_x2 - 10.0, diag_cy - 70.0)
+        c.setFont("Times-Italic", 8.0)
+        c.setFillColor(ink_dark)
+        c.drawCentredString(center_x, diag_cy - 82.0, "x (Posición / Coordenada Espacial)")
+        c.drawRightString(diag_x2 - 10.0, diag_cy - 82.0, "+∞")
+        c.drawString(diag_x1 + 10.0, diag_cy - 82.0, "-∞")
+
+        # 6. Lower Technical Metadata Grid
+        meta_y = m + 28.0
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.6)
+        c.line(x1 + 14.0, meta_y + 44.0, x2 - 14.0, meta_y + 44.0)
+
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(ink_violet)
+        c.drawString(x1 + 14.0, meta_y + 30.0, "CURATOR / ESTUDIANTE")
+        c.drawString(x1 + w * 0.42, meta_y + 30.0, "FECHA / CONVOCATORIA")
+        c.drawString(x1 + w * 0.75, meta_y + 30.0, "VOLUMEN / REF")
+
+        c.setFont("Times-Bold", 10.0)
+        c.setFillColor(ink_dark)
+        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Departamento de Física Teórica")
+        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Semestre Académico")
+        s_count = f"{num_slides} Diapositivas" if num_slides else "Fascículo Completo"
+        c.drawString(x1 + w * 0.75, meta_y + 14.0, s_count)
+
+    elif tpl in ("biophysics_flat", "biofisica_flat", "bio_flat", "alphafold_flat"):
+        # Scientific & Physics Notebooks — Flat 90s Minimalist: Biofísica
+        # Theme: 90s Molecular Biophysics Review (Cold Spring Harbor / Cambridge)
+        c.setFillColor(Color(0.968, 0.980, 0.976, alpha=1.0))
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = 44.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        ink_dark = Color(0.02, 0.31, 0.23, alpha=1.0)     # Deep Forest Cyan #064e3b
+        ink_teal = Color(0.05, 0.58, 0.53, alpha=1.0)     # Bright Teal #0d9488
+        ink_muted = Color(0.39, 0.45, 0.55, alpha=0.9)    # Sage Slate #64748b
+        hairline = Color(0.02, 0.31, 0.23, alpha=0.22)
+
+        # 1. Corner registration marks
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.5)
+        for cx, cy in [(x1, ph - m), (x2, ph - m), (x1, m), (x2, m)]:
+            c.circle(cx, cy, 3.5, stroke=1, fill=0)
+            c.line(cx - 7.0, cy, cx + 7.0, cy)
+            c.line(cx, cy - 7.0, cx, cy + 7.0)
+
+        # 2. Outer hairline framing rule
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
+        c.rect(x1 + 3.5, m + 3.5, w - 7.0, ph - 2 * m - 7.0, stroke=1, fill=0)
+
+        # 3. Header band: Series stamp & thermodynamic identity
+        head_y = ph - m - 22.0
+        c.setFont("Courier-Bold", 8.0)
+        c.setFillColor(ink_teal)
+        c.drawString(x1 + 14.0, head_y, "[ MOLECULAR BIOPHYSICS // MONOGRAPH DOSSIER ]")
+        c.setFont("Times-BoldItalic", 9.0)
+        c.drawRightString(x2 - 14.0, head_y, "ΔG = ΔH - TΔS  ·  k_B T ln(K_eq)")
+
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.6)
+        c.line(x1 + 14.0, head_y - 8.0, x2 - 14.0, head_y - 8.0)
+
+        # 4. Title block
+        disp_title = clean_title if clean_title != "Presentation" else "BIOFÍSICA"
+        c.setFont("Helvetica-Bold", 26.0)
+        c.setFillColor(ink_dark)
+        lines = wrap_text_lines(disp_title, "Helvetica-Bold", 26.0, w - 28.0, c)
+        cur_y = ph - m - 62.0
+        for line in lines:
+            c.drawString(x1 + 14.0, cur_y, line)
+            cur_y -= 32.0
+
+        disp_sub = subtitle or "Estructura Macromolecular · Termodinámica · Conformación Proteica"
+        c.setFont("Times-Italic", 11.5)
+        c.setFillColor(ink_muted)
+        c.drawString(x1 + 14.0, cur_y - 4.0, disp_sub)
+
+        # 5. Scientific Vector Illustration: Interlaced DNA Double Helix & Base Pair Ladder
+        diag_cy = ph * 0.44
+        helix_h = 160.0
+        helix_w = 70.0
+        helix_bot = diag_cy - helix_h / 2.0
+        num_turns = 2.5
+        rungs = 14
+
+        # Draw rungs (base-pairs) connecting the two strands
+        for r in range(rungs + 1):
+            ry = helix_bot + (r / rungs) * helix_h
+            phase = (r / rungs) * num_turns * 2.0 * math.pi
+            rx1 = center_x + math.sin(phase) * (helix_w / 2.0)
+            rx2 = center_x - math.sin(phase) * (helix_w / 2.0)
+            c.setStrokeColor(ink_teal)
+            c.setLineWidth(1.0)
+            c.line(rx1, ry, rx2, ry)
+            c.setFillColor(ink_dark)
+            c.circle(rx1, ry, 2.0, fill=1, stroke=0)
+            c.circle(rx2, ry, 2.0, fill=1, stroke=0)
+
+        # Draw the two continuous backbone sinusoidal ribbons
+        for strand in (0, 1):
+            c.setStrokeColor(ink_dark if strand == 0 else ink_teal)
+            c.setLineWidth(1.6)
+            s_path = c.beginPath()
+            s_pts = 60
+            for sp in range(s_pts + 1):
+                py = helix_bot + (sp / s_pts) * helix_h
+                phase = (sp / s_pts) * num_turns * 2.0 * math.pi + (0 if strand == 0 else math.pi)
+                px = center_x + math.sin(phase) * (helix_w / 2.0)
+                if sp == 0:
+                    s_path.moveTo(px, py)
+                else:
+                    s_path.lineTo(px, py)
+            c.drawPath(s_path, stroke=1, fill=0)
+
+        # Dimension scale annotation (10 Angstroms / 3.4 nm pitch)
+        scale_x = center_x + helix_w / 2.0 + 28.0
+        c.setStrokeColor(ink_muted)
+        c.setLineWidth(0.6)
+        c.line(scale_x, diag_cy - 40.0, scale_x, diag_cy + 40.0)
+        c.line(scale_x - 3.0, diag_cy - 40.0, scale_x + 3.0, diag_cy - 40.0)
+        c.line(scale_x - 3.0, diag_cy + 40.0, scale_x + 3.0, diag_cy + 40.0)
+        c.setFont("Courier-Bold", 7.0)
+        c.setFillColor(ink_muted)
+        c.drawString(scale_x + 6.0, diag_cy - 2.5, "PITCH: 3.4 nm (10 pb)")
+
+        # 6. Lower Technical Metadata Grid
+        meta_y = m + 28.0
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.6)
+        c.line(x1 + 14.0, meta_y + 44.0, x2 - 14.0, meta_y + 44.0)
+
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(ink_teal)
+        c.drawString(x1 + 14.0, meta_y + 30.0, "INVESTIGADOR / ALUMNO")
+        c.drawString(x1 + w * 0.42, meta_y + 30.0, "FECHA DE REGISTRO")
+        c.drawString(x1 + w * 0.75, meta_y + 30.0, "EXPEDIENTE / FOLIOS")
+
+        c.setFont("Times-Bold", 10.0)
+        c.setFillColor(ink_dark)
+        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Laboratorio de Biofísica")
+        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Archivo de Investigación")
+        s_count = f"{num_slides} Diapositivas" if num_slides else "Dossier Completo"
+        c.drawString(x1 + w * 0.75, meta_y + 14.0, s_count)
+
+    elif tpl in ("complex_systems_flat", "sistemas_complejos_flat", "chaos_flat", "atmospheric_flat", "atmosferica_flat"):
+        # Scientific & Physics Notebooks — Flat 90s Minimalist: Física de los Sistemas Complejos
+        # Theme: Santa Fe Institute / 1990s Nonlinear Dynamics & Chaos Monograph
+        c.setFillColor(Color(0.972, 0.980, 0.988, alpha=1.0))
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = 44.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        ink_dark = Color(0.06, 0.09, 0.16, alpha=1.0)     # Obsidian Slate #0f172a
+        ink_amber = Color(0.85, 0.47, 0.02, alpha=1.0)    # Electric Amber #d97706
+        ink_muted = Color(0.39, 0.45, 0.55, alpha=0.9)    # Storm Slate #64748b
+        hairline = Color(0.06, 0.09, 0.16, alpha=0.22)
+
+        # 1. Corner registration marks
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.5)
+        for cx, cy in [(x1, ph - m), (x2, ph - m), (x1, m), (x2, m)]:
+            c.circle(cx, cy, 3.5, stroke=1, fill=0)
+            c.line(cx - 7.0, cy, cx + 7.0, cy)
+            c.line(cx, cy - 7.0, cx, cy + 7.0)
+
+        # 2. Outer hairline framing rule
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
+        c.rect(x1 + 3.5, m + 3.5, w - 7.0, ph - 2 * m - 7.0, stroke=1, fill=0)
+
+        # 3. Header band: Series stamp & Lorenz differential equations
+        head_y = ph - m - 22.0
+        c.setFont("Courier-Bold", 8.0)
+        c.setFillColor(ink_amber)
+        c.drawString(x1 + 14.0, head_y, "[ NONLINEAR DYNAMICS // COMPLEX SYSTEMS ]")
+        c.setFont("Times-BoldItalic", 9.0)
+        c.drawRightString(x2 - 14.0, head_y, "ẋ=σ(y-x) · ẏ=x(ρ-z)-y · ż=xy-βz")
+
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.6)
+        c.line(x1 + 14.0, head_y - 8.0, x2 - 14.0, head_y - 8.0)
+
+        # 4. Title block
+        disp_title = clean_title if clean_title != "Presentation" else "FÍSICA DE LOS SISTEMAS COMPLEJOS"
+        c.setFont("Helvetica-Bold", 24.0)
+        c.setFillColor(ink_dark)
+        lines = wrap_text_lines(disp_title, "Helvetica-Bold", 24.0, w - 28.0, c)
+        cur_y = ph - m - 62.0
+        for line in lines:
+            c.drawString(x1 + 14.0, cur_y, line)
+            cur_y -= 30.0
+
+        disp_sub = subtitle or "Dinámica No Lineal · Atractores Extraños · Caos Determinista"
+        c.setFont("Times-Italic", 11.5)
+        c.setFillColor(ink_muted)
+        c.drawString(x1 + 14.0, cur_y - 4.0, disp_sub)
+
+        # 5. Scientific Vector Illustration: Lorenz Strange Attractor Butterfly Orbits
+        diag_cy = ph * 0.44
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.5)
+        c.line(center_x - 120.0, diag_cy, center_x + 120.0, diag_cy)
+        c.line(center_x, diag_cy - 70.0, center_x, diag_cy + 75.0)
+        c.setFont("Courier-Bold", 7.0)
+        c.setFillColor(ink_muted)
+        c.drawString(center_x + 122.0, diag_cy - 2.5, "X")
+        c.drawString(center_x - 3.0, diag_cy + 78.0, "Z")
+
+        # Two butterfly lobes (Lorenz orbits)
+        for loop in range(4):
+            c.setStrokeColor(ink_amber if loop % 2 == 1 else ink_dark)
+            c.setLineWidth(0.9 if loop == 3 else 0.6)
+            radius_x = 42.0 + loop * 14.0
+            radius_y = 35.0 + loop * 9.0
+            center_lx = center_x - 48.0
+            c.ellipse(center_lx - radius_x * 0.6, diag_cy - radius_y * 0.5,
+                      center_lx + radius_x * 0.6, diag_cy + radius_y * 0.7)
+
+        for loop in range(4):
+            c.setStrokeColor(ink_amber if loop % 2 == 0 else ink_dark)
+            c.setLineWidth(0.9 if loop == 3 else 0.6)
+            radius_x = 42.0 + loop * 14.0
+            radius_y = 35.0 + loop * 9.0
+            center_rx = center_x + 48.0
+            c.ellipse(center_rx - radius_x * 0.6, diag_cy - radius_y * 0.5,
+                      center_rx + radius_x * 0.6, diag_cy + radius_y * 0.7)
+
+        c.setFillColor(ink_amber)
+        c.circle(center_x - 48.0, diag_cy + 5.0, 3.0, fill=1, stroke=0)
+        c.circle(center_x + 48.0, diag_cy + 5.0, 3.0, fill=1, stroke=0)
+
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(ink_muted)
+        c.drawCentredString(center_x, diag_cy - 68.0, "LORENZ (1963) · σ = 10.0 · ρ = 28.0 · β = 8/3 · DIM = 2.06")
+
+        # 6. Lower Technical Metadata Grid
+        meta_y = m + 28.0
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.6)
+        c.line(x1 + 14.0, meta_y + 44.0, x2 - 14.0, meta_y + 44.0)
+
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(ink_amber)
+        c.drawString(x1 + 14.0, meta_y + 30.0, "OPERADOR / INVESTIGADOR")
+        c.drawString(x1 + w * 0.42, meta_y + 30.0, "FECHA / ARCHIVO")
+        c.drawString(x1 + w * 0.75, meta_y + 30.0, "DIAPOSITIVAS / EXP")
+
+        c.setFont("Times-Bold", 10.0)
+        c.setFillColor(ink_dark)
+        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Grupo de Sistemas Complejos")
+        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Registro de Caos")
+        s_count = f"{num_slides} Diapositivas" if num_slides else "Cuaderno Teórico"
+        c.drawString(x1 + w * 0.75, meta_y + 14.0, s_count)
+
+    elif tpl in ("materials_sim_flat", "simulacion_materiales_flat", "simulacion_fisica_materiales_flat", "fortran_flat", "materiales_flat"):
+        # Scientific & Physics Notebooks — Flat 90s Minimalist: Simulación en Física de Materiales
+        # Theme: 90s High Performance Computing / Fortran Materials Simulation
+        c.setFillColor(Color(0.965, 0.973, 0.965, alpha=1.0))
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = 44.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        ink_dark = Color(0.09, 0.09, 0.11, alpha=1.0)     # Mainframe Charcoal #18181b
+        ink_green = Color(0.08, 0.50, 0.24, alpha=1.0)    # Phosphor Green #15803d
+        ink_muted = Color(0.44, 0.44, 0.48, alpha=0.9)    # Terminal Steel #71717a
+        hairline = Color(0.09, 0.09, 0.11, alpha=0.22)
+
+        # 1. Corner registration marks
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.5)
+        for cx, cy in [(x1, ph - m), (x2, ph - m), (x1, m), (x2, m)]:
+            c.circle(cx, cy, 3.5, stroke=1, fill=0)
+            c.line(cx - 7.0, cy, cx + 7.0, cy)
+            c.line(cx, cy - 7.0, cx, cy + 7.0)
+
+        # 2. Outer hairline framing rule
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
+        c.rect(x1 + 3.5, m + 3.5, w - 7.0, ph - 2 * m - 7.0, stroke=1, fill=0)
+
+        # 3. Header band: Series stamp & interatomic force formula
+        head_y = ph - m - 22.0
+        c.setFont("Courier-Bold", 8.0)
+        c.setFillColor(ink_green)
+        c.drawString(x1 + 14.0, head_y, "[ HPC SIMULATION // COMPUTATIONAL MATERIALS ]")
+        c.setFont("Times-BoldItalic", 9.0)
+        c.drawRightString(x2 - 14.0, head_y, "F_i = -∇_i V(r_ij)  ·  Δt = 1.0 fs")
+
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.6)
+        c.line(x1 + 14.0, head_y - 8.0, x2 - 14.0, head_y - 8.0)
+
+        # 4. Title block
+        disp_title = clean_title if clean_title != "Presentation" else "SIMULACIÓN EN FÍSICA DE MATERIALES"
+        c.setFont("Helvetica-Bold", 23.0)
+        c.setFillColor(ink_dark)
+        lines = wrap_text_lines(disp_title, "Helvetica-Bold", 23.0, w - 28.0, c)
+        cur_y = ph - m - 62.0
+        for line in lines:
+            c.drawString(x1 + 14.0, cur_y, line)
+            cur_y -= 29.0
+
+        disp_sub = subtitle or "Dinámica Molecular · Teoría del Funcional de la Densidad · Redes Cristalinas"
+        c.setFont("Times-Italic", 11.5)
+        c.setFillColor(ink_muted)
+        c.drawString(x1 + 14.0, cur_y - 4.0, disp_sub)
+
+        # 5. Scientific Vector Illustration: 3D Isometric FCC Unit Cell & Lattice Vectors
+        diag_cy = ph * 0.44
+        box_s = 60.0
+        vx = (box_s * 0.866, box_s * 0.5)
+        vy = (-box_s * 0.866, box_s * 0.5)
+        vz = (0.0, box_s)
+
+        c.setStrokeColor(ink_muted)
+        c.setLineWidth(0.7)
+        corners = []
+        for dx in (0, 1):
+            for dy in (0, 1):
+                for dz in (0, 1):
+                    px = center_x + dx * vx[0] + dy * vy[0] + dz * vz[0] - (vx[0] + vy[0]) / 2.0
+                    py = diag_cy - 40.0 + dx * vx[1] + dy * vy[1] + dz * vz[1] - (vx[1] + vy[1] + vz[1]) / 2.0
+                    corners.append((px, py))
+
+        cube_edges = [
+            (0, 1), (0, 2), (1, 3), (2, 3),
+            (4, 5), (4, 6), (5, 7), (6, 7),
+            (0, 4), (1, 5), (2, 6), (3, 7),
+        ]
+        for i1, i2 in cube_edges:
+            c.line(corners[i1][0], corners[i1][1], corners[i2][0], corners[i2][1])
+
+        c.setFillColor(ink_dark)
+        for px, py in corners:
+            c.circle(px, py, 3.5, fill=1, stroke=0)
+
+        face_centers = [
+            ((corners[0][0] + corners[3][0]) / 2.0, (corners[0][1] + corners[3][1]) / 2.0),
+            ((corners[4][0] + corners[7][0]) / 2.0, (corners[4][1] + corners[7][1]) / 2.0),
+            ((corners[0][0] + corners[5][0]) / 2.0, (corners[0][1] + corners[5][1]) / 2.0),
+            ((corners[2][0] + corners[7][0]) / 2.0, (corners[2][1] + corners[7][1]) / 2.0),
+        ]
+        c.setFillColor(ink_green)
+        for fx, fy in face_centers:
+            c.circle(fx, fy, 4.5, fill=1, stroke=0)
+
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(ink_green)
+        c.drawCentredString(center_x, diag_cy - 72.0, "FCC CRYSTAL LATTICE · LENNARD-JONES · MPI FORTRAN 90")
+
+        # 6. Lower Technical Metadata Grid
+        meta_y = m + 28.0
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.6)
+        c.line(x1 + 14.0, meta_y + 44.0, x2 - 14.0, meta_y + 44.0)
+
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(ink_green)
+        c.drawString(x1 + 14.0, meta_y + 30.0, "PROGRAMADOR / ALUMNO")
+        c.drawString(x1 + w * 0.42, meta_y + 30.0, "FECHA DE COMPILACIÓN")
+        c.drawString(x1 + w * 0.75, meta_y + 30.0, "DATASET / DIAPOSITIVAS")
+
+        c.setFont("Times-Bold", 10.0)
+        c.setFillColor(ink_dark)
+        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Supercomputación y Materiales")
+        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Fortran Archive")
+        s_count = f"{num_slides} Diapositivas" if num_slides else "Código y Memoria"
+        c.drawString(x1 + w * 0.75, meta_y + 14.0, s_count)
+
+    elif tpl in ("circuits_flat", "circuitos_flat", "instrumentacion_flat", "fundamentos_instrumentacion_flat", "electronica_flat"):
+        # Scientific & Physics Notebooks — Flat 90s Minimalist: Fundamentos de Instrumentación Electrónica
+        # Theme: 90s IEEE Laboratory Reference & Tektronix / HP Instrumentation Manual
+        c.setFillColor(Color(0.988, 0.984, 0.976, alpha=1.0))
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = 44.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        ink_dark = Color(0.12, 0.16, 0.23, alpha=1.0)     # Instrument Slate #1e293b
+        ink_green = Color(0.02, 0.47, 0.34, alpha=1.0)    # Circuit PCB Green #047857
+        ink_muted = Color(0.39, 0.45, 0.55, alpha=0.9)    # Precision Gray #64748b
+        hairline = Color(0.12, 0.16, 0.23, alpha=0.22)
+
+        # 1. Corner registration marks
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.5)
+        for cx, cy in [(x1, ph - m), (x2, ph - m), (x1, m), (x2, m)]:
+            c.circle(cx, cy, 3.5, stroke=1, fill=0)
+            c.line(cx - 7.0, cy, cx + 7.0, cy)
+            c.line(cx, cy - 7.0, cx, cy + 7.0)
+
+        # 2. Outer hairline framing rule
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
+        c.rect(x1 + 3.5, m + 3.5, w - 7.0, ph - 2 * m - 7.0, stroke=1, fill=0)
+
+        # 3. Header band: Series stamp & Op-Amp transfer equation
+        head_y = ph - m - 22.0
+        c.setFont("Courier-Bold", 8.0)
+        c.setFillColor(ink_green)
+        c.drawString(x1 + 14.0, head_y, "[ IEEE INSTRUMENTATION // ANALOG FRONT-END ]")
+        c.setFont("Times-BoldItalic", 9.0)
+        c.drawRightString(x2 - 14.0, head_y, "V_out = -(R_f / R_in) V_in  ·  CMRR > 120 dB")
+
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.6)
+        c.line(x1 + 14.0, head_y - 8.0, x2 - 14.0, head_y - 8.0)
+
+        # 4. Title block
+        disp_title = clean_title if clean_title != "Presentation" else "FUNDAMENTOS DE INSTRUMENTACIÓN ELECTRÓNICA"
+        c.setFont("Helvetica-Bold", 22.0)
+        c.setFillColor(ink_dark)
+        lines = wrap_text_lines(disp_title, "Helvetica-Bold", 22.0, w - 28.0, c)
+        cur_y = ph - m - 62.0
+        for line in lines:
+            c.drawString(x1 + 14.0, cur_y, line)
+            cur_y -= 28.0
+
+        disp_sub = subtitle or "Amplificadores Operacionales · Sensores y Acondicionamiento · Conversión ADC/DAC"
+        c.setFont("Times-Italic", 11.0)
+        c.setFillColor(ink_muted)
+        c.drawString(x1 + 14.0, cur_y - 4.0, disp_sub)
+
+        # 5. Scientific Vector Illustration: Op-Amp Inverting Amplifier Schematic & Test Waveform
+        diag_cy = ph * 0.44
+        c.setStrokeColor(ink_dark)
+        c.setLineWidth(1.4)
+        c.setFillColor(Color(0.95, 0.97, 0.95, alpha=1.0))
+        tri_w = 60.0
+        tri_h = 70.0
+        tri_x = center_x - 10.0
+        t_path = c.beginPath()
+        t_path.moveTo(tri_x, diag_cy - tri_h / 2.0)
+        t_path.lineTo(tri_x, diag_cy + tri_h / 2.0)
+        t_path.lineTo(tri_x + tri_w, diag_cy)
+        t_path.close()
+        c.drawPath(t_path, fill=1, stroke=1)
+
+        c.setFont("Helvetica-Bold", 10.0)
+        c.setFillColor(ink_dark)
+        c.drawString(tri_x + 6.0, diag_cy + 14.0, "-")
+        c.drawString(tri_x + 6.0, diag_cy - 22.0, "+")
+
+        c.setLineWidth(1.0)
+        c.line(tri_x - 80.0, diag_cy + 18.0, tri_x - 50.0, diag_cy + 18.0)
+        c.rect(tri_x - 50.0, diag_cy + 12.0, 26.0, 12.0, fill=0, stroke=1)
+        c.setFont("Courier-Bold", 6.5)
+        c.drawString(tri_x - 46.0, diag_cy + 27.0, "R_in")
+        c.line(tri_x - 24.0, diag_cy + 18.0, tri_x, diag_cy + 18.0)
+
+        c.line(tri_x - 12.0, diag_cy + 18.0, tri_x - 12.0, diag_cy + 52.0)
+        c.line(tri_x - 12.0, diag_cy + 52.0, tri_x + 10.0, diag_cy + 52.0)
+        c.rect(tri_x + 10.0, diag_cy + 46.0, 26.0, 12.0, fill=0, stroke=1)
+        c.drawString(tri_x + 16.0, diag_cy + 61.0, "R_f")
+        c.line(tri_x + 36.0, diag_cy + 52.0, tri_x + 75.0, diag_cy + 52.0)
+        c.line(tri_x + 75.0, diag_cy + 52.0, tri_x + 75.0, diag_cy)
+
+        c.line(tri_x, diag_cy - 18.0, tri_x - 24.0, diag_cy - 18.0)
+        c.line(tri_x - 24.0, diag_cy - 18.0, tri_x - 24.0, diag_cy - 30.0)
+        c.line(tri_x - 30.0, diag_cy - 30.0, tri_x - 18.0, diag_cy - 30.0)
+        c.line(tri_x - 28.0, diag_cy - 33.0, tri_x - 20.0, diag_cy - 33.0)
+        c.line(tri_x - 26.0, diag_cy - 36.0, tri_x - 22.0, diag_cy - 36.0)
+
+        c.line(tri_x + tri_w, diag_cy, tri_x + tri_w + 35.0, diag_cy)
+        c.circle(tri_x + tri_w + 35.0, diag_cy, 2.5, fill=1, stroke=0)
+        c.drawString(tri_x + tri_w + 42.0, diag_cy - 3.0, "V_out")
+
+        c.circle(tri_x - 80.0, diag_cy + 18.0, 2.5, fill=1, stroke=0)
+        c.drawString(tri_x - 105.0, diag_cy + 15.0, "V_in")
+
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(ink_green)
+        c.drawCentredString(center_x, diag_cy - 68.0, "ANALOG CIRCUITS · TEKTRONIX BENCH · LAB STANDARD")
+
+        # 6. Lower Technical Metadata Grid
+        meta_y = m + 28.0
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.6)
+        c.line(x1 + 14.0, meta_y + 44.0, x2 - 14.0, meta_y + 44.0)
+
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(ink_green)
+        c.drawString(x1 + 14.0, meta_y + 30.0, "INGENIERO / ESTUDIANTE")
+        c.drawString(x1 + w * 0.42, meta_y + 30.0, "BANCO DE TRABAJO / FECHA")
+        c.drawString(x1 + w * 0.75, meta_y + 30.0, "MEMORIA / DIAPOSITIVAS")
+
+        c.setFont("Times-Bold", 10.0)
+        c.setFillColor(ink_dark)
+        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Laboratorio de Instrumentación")
+        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Registro de Calibración")
+        s_count = f"{num_slides} Diapositivas" if num_slides else "Manual de Laboratorio"
+        c.drawString(x1 + w * 0.75, meta_y + 14.0, s_count)
+
+    elif tpl in ("solid_state_flat", "estado_solido_flat", "solido_flat", "condensed_matter_flat"):
+        # Scientific & Physics Notebooks — Flat 90s Minimalist: Física del Estado Sólido
+        # Theme: 90s Ashcroft & Mermin / Kittel Solid State Classic Editorial
+        c.setFillColor(Color(0.984, 0.980, 0.969, alpha=1.0))
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = 44.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        ink_dark = Color(0.09, 0.15, 0.33, alpha=1.0)     # Prussian Cobalt #172554
+        ink_copper = Color(0.71, 0.33, 0.04, alpha=1.0)   # Copper Bronze #b45309
+        ink_muted = Color(0.39, 0.45, 0.55, alpha=0.9)    # Reciprocal Slate #64748b
+        hairline = Color(0.09, 0.15, 0.33, alpha=0.22)
+
+        # 1. Corner registration marks
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.5)
+        for cx, cy in [(x1, ph - m), (x2, ph - m), (x1, m), (x2, m)]:
+            c.circle(cx, cy, 3.5, stroke=1, fill=0)
+            c.line(cx - 7.0, cy, cx + 7.0, cy)
+            c.line(cx, cy - 7.0, cx, cy + 7.0)
+
+        # 2. Outer hairline framing rule
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
+        c.rect(x1 + 3.5, m + 3.5, w - 7.0, ph - 2 * m - 7.0, stroke=1, fill=0)
+
+        # 3. Header band: Series stamp & Bloch wave theorem
+        head_y = ph - m - 22.0
+        c.setFont("Courier-Bold", 8.0)
+        c.setFillColor(ink_copper)
+        c.drawString(x1 + 14.0, head_y, "[ CONDENSED MATTER // SOLID STATE PHYSICS ]")
+        c.setFont("Times-BoldItalic", 9.0)
+        c.drawRightString(x2 - 14.0, head_y, "ψ_k(r) = e^{ik·r} u_k(r)  ·  E_F = ħ²k_F² / 2m")
+
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.6)
+        c.line(x1 + 14.0, head_y - 8.0, x2 - 14.0, head_y - 8.0)
+
+        # 4. Title block
+        disp_title = clean_title if clean_title != "Presentation" else "FÍSICA DEL ESTADO SÓLIDO"
+        c.setFont("Helvetica-Bold", 26.0)
+        c.setFillColor(ink_dark)
+        lines = wrap_text_lines(disp_title, "Helvetica-Bold", 26.0, w - 28.0, c)
+        cur_y = ph - m - 62.0
+        for line in lines:
+            c.drawString(x1 + 14.0, cur_y, line)
+            cur_y -= 32.0
+
+        disp_sub = subtitle or "Zonas de Brillouin · Superficie de Fermi · Fonones y Bandas Electrónicas"
+        c.setFont("Times-Italic", 11.5)
+        c.setFillColor(ink_muted)
+        c.drawString(x1 + 14.0, cur_y - 4.0, disp_sub)
+
+        # 5. Scientific Vector Illustration: 1st Brillouin Zone Hexagon & Band Dispersion
+        diag_cy = ph * 0.44
+        hex_r = 55.0
+        c.setStrokeColor(ink_dark)
+        c.setLineWidth(1.2)
+        h_path = c.beginPath()
+        for i in range(6):
+            ang = (i / 6.0) * 2.0 * math.pi
+            hx = center_x + hex_r * math.cos(ang)
+            hy = diag_cy + hex_r * math.sin(ang)
+            if i == 0:
+                h_path.moveTo(hx, hy)
+            else:
+                h_path.lineTo(hx, hy)
+        h_path.close()
+        c.drawPath(h_path, stroke=1, fill=0)
+
+        # Reciprocal lattice vectors b1, b2
+        c.setStrokeColor(ink_copper)
+        c.setLineWidth(1.0)
+        c.line(center_x, diag_cy, center_x + hex_r * 0.9, diag_cy)
+        c.line(center_x, diag_cy, center_x + hex_r * 0.45, diag_cy + hex_r * 0.78)
+
+        # Symmetry points: Gamma, K, M
+        c.setFillColor(ink_dark)
+        c.circle(center_x, diag_cy, 2.5, fill=1, stroke=0)
+        c.setFont("Times-BoldItalic", 9.0)
+        c.drawString(center_x - 12.0, diag_cy - 2.0, "Γ")
+        c.circle(center_x + hex_r, diag_cy, 2.0, fill=1, stroke=0)
+        c.drawString(center_x + hex_r + 4.0, diag_cy - 3.0, "K")
+        c.circle(center_x + hex_r * 0.866 * math.cos(math.pi / 6), diag_cy + hex_r * 0.866 * math.sin(math.pi / 6), 2.0, fill=1, stroke=0)
+        c.drawString(center_x + hex_r * 0.866 * math.cos(math.pi / 6) + 4.0, diag_cy + hex_r * 0.866 * math.sin(math.pi / 6) + 2.0, "M")
+
+        # Fermi surface contour circle
+        c.setStrokeColor(ink_copper)
+        c.setLineWidth(0.8)
+        c.circle(center_x, diag_cy, hex_r * 0.62, stroke=1, fill=0)
+
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(ink_copper)
+        c.drawCentredString(center_x, diag_cy - 72.0, "RECIPROCAL SPACE · 1ST BRILLOUIN ZONE · FERMI SPHERE")
+
+        # 6. Lower Technical Metadata Grid
+        meta_y = m + 28.0
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.6)
+        c.line(x1 + 14.0, meta_y + 44.0, x2 - 14.0, meta_y + 44.0)
+
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(ink_copper)
+        c.drawString(x1 + 14.0, meta_y + 30.0, "CATEDRÁTICO / ALUMNO")
+        c.drawString(x1 + w * 0.42, meta_y + 30.0, "CURSO / PERÍODO")
+        c.drawString(x1 + w * 0.75, meta_y + 30.0, "VOLUMEN / HOJAS")
+
+        c.setFont("Times-Bold", 10.0)
+        c.setFillColor(ink_dark)
+        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Departamento de Materia Condensada")
+        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Curso Académico")
+        s_count = f"{num_slides} Diapositivas" if num_slides else "Monografía Teórica"
+        c.drawString(x1 + w * 0.75, meta_y + 14.0, s_count)
+
+    elif tpl in ("nuclear_flat", "particulas_flat", "nuclear_particles_flat", "particle_physics_flat"):
+        # Scientific & Physics Notebooks — Flat 90s Minimalist: Física Nuclear y de Partículas
+        # Theme: 90s CERN / SLAC / Particle Data Group (PDG) Monograph
+        c.setFillColor(Color(0.980, 0.980, 0.976, alpha=1.0))
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = 44.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        ink_dark = Color(0.06, 0.09, 0.16, alpha=1.0)     # Collider Obsidian #0f172a
+        ink_violet = Color(0.39, 0.40, 0.95, alpha=1.0)   # High-Energy Violet #6366f1
+        ink_muted = Color(0.39, 0.45, 0.55, alpha=0.9)    # Detector Slate #64748b
+        hairline = Color(0.06, 0.09, 0.16, alpha=0.22)
+
+        # 1. Corner registration marks
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.5)
+        for cx, cy in [(x1, ph - m), (x2, ph - m), (x1, m), (x2, m)]:
+            c.circle(cx, cy, 3.5, stroke=1, fill=0)
+            c.line(cx - 7.0, cy, cx + 7.0, cy)
+            c.line(cx, cy - 7.0, cx, cy + 7.0)
+
+        # 2. Outer hairline framing rule
+        c.rect(x1, m, w, ph - 2 * m, stroke=1, fill=0)
+        c.rect(x1 + 3.5, m + 3.5, w - 7.0, ph - 2 * m - 7.0, stroke=1, fill=0)
+
+        # 3. Header band: Series stamp & Standard Model gauge group
+        head_y = ph - m - 22.0
+        c.setFont("Courier-Bold", 8.0)
+        c.setFillColor(ink_violet)
+        c.drawString(x1 + 14.0, head_y, "[ HIGH ENERGY PHYSICS // CERN-SLAC PREPRINT ]")
+        c.setFont("Times-BoldItalic", 9.0)
+        c.drawRightString(x2 - 14.0, head_y, "SU(3)_C × SU(2)_L × U(1)_Y  ·  √s = 14 TeV")
+
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.6)
+        c.line(x1 + 14.0, head_y - 8.0, x2 - 14.0, head_y - 8.0)
+
+        # 4. Title block
+        disp_title = clean_title if clean_title != "Presentation" else "FÍSICA NUCLEAR & DE PARTÍCULAS"
+        c.setFont("Helvetica-Bold", 23.0)
+        c.setFillColor(ink_dark)
+        lines = wrap_text_lines(disp_title, "Helvetica-Bold", 23.0, w - 28.0, c)
+        cur_y = ph - m - 62.0
+        for line in lines:
+            c.drawString(x1 + 14.0, cur_y, line)
+            cur_y -= 29.0
+
+        disp_sub = subtitle or "Diagramas de Feynman · Modelo Estándar · Colisionadores y Detectores"
+        c.setFont("Times-Italic", 11.5)
+        c.setFillColor(ink_muted)
+        c.drawString(x1 + 14.0, cur_y - 4.0, disp_sub)
+
+        # 5. Scientific Vector Illustration: e+ e- -> Z0/gamma* -> q qbar Feynman Diagram
+        diag_cy = ph * 0.44
+        v1_x = center_x - 30.0
+        v2_x = center_x + 30.0
+
+        # Incoming electron (e-) and positron (e+)
+        c.setStrokeColor(ink_dark)
+        c.setLineWidth(1.2)
+        c.line(v1_x - 60.0, diag_cy + 40.0, v1_x, diag_cy)
+        c.line(v1_x - 60.0, diag_cy - 40.0, v1_x, diag_cy)
+        c.setFont("Times-Italic", 9.0)
+        c.drawString(v1_x - 72.0, diag_cy + 38.0, "e⁻")
+        c.drawString(v1_x - 72.0, diag_cy - 42.0, "e⁺")
+
+        # Gauge boson propagator (Z0 / gamma*) wavy line
+        c.setStrokeColor(ink_violet)
+        c.setLineWidth(1.4)
+        w_path = c.beginPath()
+        w_steps = 24
+        for ws in range(w_steps + 1):
+            wx = v1_x + (ws / w_steps) * (v2_x - v1_x)
+            wy = diag_cy + 5.0 * math.sin((ws / w_steps) * 4.0 * math.pi)
+            if ws == 0:
+                w_path.moveTo(wx, wy)
+            else:
+                w_path.lineTo(wx, wy)
+        c.drawPath(w_path, stroke=1, fill=0)
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(ink_violet)
+        c.drawCentredString(center_x, diag_cy + 10.0, "γ* / Z⁰")
+
+        # Outgoing quarks (q, q-bar)
+        c.setStrokeColor(ink_dark)
+        c.setLineWidth(1.2)
+        c.line(v2_x, diag_cy, v2_x + 60.0, diag_cy + 40.0)
+        c.line(v2_x, diag_cy, v2_x + 60.0, diag_cy - 40.0)
+        c.setFont("Times-Italic", 9.0)
+        c.drawString(v2_x + 66.0, diag_cy + 38.0, "q")
+        c.drawString(v2_x + 66.0, diag_cy - 42.0, "q̄")
+
+        # Vertex interaction nodes
+        c.setFillColor(ink_dark)
+        c.circle(v1_x, diag_cy, 3.0, fill=1, stroke=0)
+        c.circle(v2_x, diag_cy, 3.0, fill=1, stroke=0)
+
+        # Concentric detector drift chamber arcs
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.5)
+        c.arc(center_x - 85.0, diag_cy - 85.0, center_x + 85.0, diag_cy + 85.0, 30, 60)
+        c.arc(center_x - 85.0, diag_cy - 85.0, center_x + 85.0, diag_cy + 85.0, 210, 60)
+
+        # Stamp box
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(ink_violet)
+        c.drawCentredString(center_x, diag_cy - 68.0, "ELECTROWEAK ANNIHILATION · FEYNMAN DIAGRAM · 4π DETECTOR")
+
+        # 6. Lower Technical Metadata Grid
+        meta_y = m + 28.0
+        c.setStrokeColor(hairline)
+        c.setLineWidth(0.6)
+        c.line(x1 + 14.0, meta_y + 44.0, x2 - 14.0, meta_y + 44.0)
+
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(ink_violet)
+        c.drawString(x1 + 14.0, meta_y + 30.0, "FÍSICO / INVESTIGADOR")
+        c.drawString(x1 + w * 0.42, meta_y + 30.0, "COLABORACIÓN / FECHA")
+        c.drawString(x1 + w * 0.75, meta_y + 30.0, "ARCHIVADOR / DIAPOS")
+
+        c.setFont("Times-Bold", 10.0)
+        c.setFillColor(ink_dark)
+        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Colaboración de Altas Energías")
+        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Preprint de Investigación")
+        s_count = f"{num_slides} Diapositivas" if num_slides else "Fascículo de Partículas"
+        c.drawString(x1 + w * 0.75, meta_y + 14.0, s_count)
+
     elif tpl in ("composition", "compbook", "composition_book", "comp_classic", "marble_bw", "cuaderno", "compo",
                  "comp_blue", "comp_ocean", "comp_wave", "academic_wave", "suminagashi", "ocean_wave", "academic_navy", "academic_burgundy",
                  "comp_coral", "comp_terracotta", "comp_slate", "academic_teal", "ebru", "bubble", "academic_ebru", "academic_stone", "academic_blue",
@@ -1892,22 +2765,22 @@ def generate_cover_page(
             spine_color = Color(0.04, 0.12, 0.16, alpha=1.0)  # Bioluminescent Marine #0a1f29
             seam_color = Color(0.10, 0.32, 0.38, alpha=1.0)   # Cyan Accent #1a5261
             fallback_bg = Color(0.06, 0.15, 0.20, alpha=1.0)
-            book_title = "BIOPHYSICS & MACHINE LEARNING"
-            edition_tag = "Computational Biophysics Dossier"
+            book_title = "BIOFÍSICA"
+            edition_tag = "Biophysics Dossier · Molecular Dynamics"
         elif any(k in tpl for k in ("atmospheric", "atmosferica", "complex_systems", "sistemas_complejos", "chaos", "lorenz")):
             asset_key = "science_atmospheric"
             spine_color = Color(0.07, 0.11, 0.18, alpha=1.0)  # Deep Storm Navy #121c2e
             seam_color = Color(0.18, 0.28, 0.40, alpha=1.0)   # Storm Slate #2e4766
             fallback_bg = Color(0.09, 0.14, 0.22, alpha=1.0)
-            book_title = "ATMOSPHERIC & COMPLEX SYSTEMS"
-            edition_tag = "Nonlinear Dynamics & Climate Archive"
-        elif any(k in tpl for k in ("fortran", "materiales", "materials_sim", "computational_materials", "f77", "f90")):
+            book_title = "FÍSICA DE LOS SISTEMAS COMPLEJOS"
+            edition_tag = "Nonlinear Dynamics & Complex Systems Archive"
+        elif any(k in tpl for k in ("fortran", "materiales", "materials_sim", "computational_materials", "simulacion_materiales", "simulacion_fisica_materiales", "f77", "f90")):
             asset_key = "science_fortran"
             spine_color = Color(0.08, 0.11, 0.09, alpha=1.0)  # Mainframe Dark Phosphor Charcoal #141c17
             seam_color = Color(0.18, 0.28, 0.20, alpha=1.0)   # Terminal Green #2e4733
             fallback_bg = Color(0.10, 0.14, 0.11, alpha=1.0)
-            book_title = "COMPUTATIONAL MATERIALS"
-            edition_tag = "Materials Simulation Archive · Fortran"
+            book_title = "SIMULACIÓN EN FÍSICA DE MATERIALES"
+            edition_tag = "Materials Simulation Archive · Computational Physics"
         elif any(k in tpl for k in ("nuclear", "particulas", "particle_physics", "cern", "lhc", "feynman")):
             asset_key = "science_nuclear"
             spine_color = Color(0.08, 0.06, 0.12, alpha=1.0)  # Deep Cosmic Obsidian #140f1f
@@ -1922,20 +2795,20 @@ def generate_cover_page(
             fallback_bg = Color(0.09, 0.14, 0.20, alpha=1.0)
             book_title = "SOLID STATE PHYSICS"
             edition_tag = "Condensed Matter Laboratory Log"
-        elif any(k in tpl for k in ("atomic", "atomica", "quantum_atomic", "spectroscopy", "rydberg")):
+        elif any(k in tpl for k in ("atomic", "atomica", "quantum_atomic", "spectroscopy", "rydberg", "mecanica_cuantica", "cuantica", "quantum")):
             asset_key = "science_atomic"
             spine_color = Color(0.10, 0.05, 0.14, alpha=1.0)  # Deep Quantum Violet #1a0d24
             seam_color = Color(0.28, 0.17, 0.38, alpha=1.0)   # Spectroscopy Plum #472b61
             fallback_bg = Color(0.12, 0.07, 0.17, alpha=1.0)
-            book_title = "ATOMIC & QUANTUM OPTICS"
-            edition_tag = "Quantum Spectroscopy Register"
-        elif any(k in tpl for k in ("circuits", "instrumentacion", "opamps", "electronica", "filters", "adc_dac")):
+            book_title = "MECÁNICA CUÁNTICA III"
+            edition_tag = "Quantum Mechanics III · Spectroscopy Register"
+        elif any(k in tpl for k in ("circuits", "instrumentacion", "fundamentos_instrumentacion", "opamps", "electronica", "filters", "adc_dac")):
             asset_key = "science_circuits"
             spine_color = Color(0.05, 0.12, 0.08, alpha=1.0)  # Dark PCB Solder Mask #0d1f14
             seam_color = Color(0.16, 0.32, 0.22, alpha=1.0)   # Circuit Copper Green #295238
             fallback_bg = Color(0.07, 0.14, 0.10, alpha=1.0)
-            book_title = "ELECTRONIC INSTRUMENTATION"
-            edition_tag = "Circuit Design & Laboratory Dossier"
+            book_title = "FUNDAMENTOS DE INSTRUMENTACIÓN ELECTRÓNICA"
+            edition_tag = "Electronic Instrumentation & Laboratory Dossier"
         elif any(k in tpl for k in ("morris", "strawberry", "botanical")):
             asset_key = "comp_morris"
             spine_color = Color(0.07, 0.12, 0.21, alpha=1.0)  # Deep Victorian Indigo #122036
@@ -2044,11 +2917,9 @@ def generate_cover_page(
         c.roundRect(badge_x + 4.5, badge_y + 4.5, badge_w - 9.0, badge_h - 9.0, 8.5, fill=0, stroke=1)
 
         # Dynamic header text size to prevent truncation of long discipline titles
-        head_font_size = 15.0
-        if c.stringWidth(book_title, "Times-Bold", head_font_size) > (badge_w - 28.0):
-            head_font_size = 12.0
-            if c.stringWidth(book_title, "Times-Bold", head_font_size) > (badge_w - 28.0):
-                head_font_size = 10.5
+        head_font_size = 14.5
+        while head_font_size > 7.5 and c.stringWidth(book_title, "Times-Bold", head_font_size) > (badge_w - 24.0):
+            head_font_size -= 0.5
         c.setFont("Times-Bold", head_font_size)
         c.setFillColor(text_head_color)
         c.drawCentredString(visible_center_x, badge_y + badge_h - 32.0, book_title)
