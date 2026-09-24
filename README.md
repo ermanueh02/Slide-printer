@@ -62,7 +62,16 @@ Each page of your presentation is placed on the sheet, followed by a customizabl
   - **Spiral / Coil Binding (`--binding spiral` / `--spiral`)**: +8 mm (+22 pt) margin optimized for spiral wire-o and coil combs, saving 3 mm of slide space.
   - **Hole & Spiral Guides (`--hole-guides`)**: Prints subtle punch targets (crosshair circles at ISO 838 centers) or spiral coil clearance ticks.
   - **Duplex Intelligence (`--duplex`)**: Shifts odd sheets (recto) to the right (left gutter) and even sheets (verso) to the left (right gutter) so punched holes never bite into content.
-- **35+ Editorial Cover Templates (`--generate-cover`, `--cover-template`)**:
+- **45+ Editorial Cover Templates (`--generate-cover`, `--cover-template`)**:
+  - **Standard Editorial & Classic Presses (Literary & Stationery Heritage)**:
+    - **Penguin Classics (`penguin` / `penguin_classics`)**: 1935 Allen Lane tri-band horizontal layout in vintage mandarin orange and warm cream, complete with the oval Penguin publisher badge and classic Gill Sans typography.
+    - **Gallimard NRF Blanche (`gallimard` / `nrf` / `collection_blanche`)**: Iconic 1911 French vellum monograph featuring double carmine-red border rules, Garamond serif typography, and the historic NRF monogram medallion.
+    - **Oxford Academic Press (`oxford_press` / `oxford` / `clarendon`)**: Clarendon scholarly monograph featuring deep Oxford navy double rules, antique gold rosettes, open-book heraldic shield, and *DOMINUS ILLUMINATIO MEA* rubric.
+    - **Cahier d'Écolier (`cahier` / `seyes` / `ecolier`)**: Authentic French school notebook in royal blue with black cloth spine tape, white die-cut label with lavender Seyès grid, and French cursive fill-in prompts.
+    - **Midori MD Minimalist (`midori` / `midori_md` / `japanese_minimal`)**: Japanese paper craft aesthetic with warm vellum canvas, olive spine tape, vermilion cinnabar red square chop seal (hanko stamp), and quiet micro-grid metadata.
+    - **Cyanotype Blueprint (`blueprint` / `cyanotype` / `drafting`)**: Prussian blueprint cyanotype with precision white drafting grid, coordinate ruler ticks, 8-point compass rose, and an ISO technical drawing docket block.
+    - **Celestial Star Atlas (`celestial` / `star_atlas` / `harmonia`)**: 17th-century Harmonia Macrocosmica celestial chart in deep midnight blue with gold armillary coordinate rings, constellation nodes, and banner cartouche.
+    - **Field Notes Utility (`field_notes` / `kraft_field` / `industrial_notes`)**: Industrial kraft paper notebook with safety orange header block, dot matrix field, bold utility typography, and a technical specifications rubric table.
   - **Scientific & Physics Flat 90s Minimalist (Pure Vector Line Art)**:
     - **Mecánica Cuántica III (`quantum_flat` / `mecanica_cuantica_3_flat`)**: Harmonic oscillator parabolic well, quantized energy levels ($E_0 \dots E_3$), Hermite wavefunction curves, and Schrödinger monograph header.
     - **Biofísica (`biophysics_flat` / `biofisica_flat`)**: Interlaced double helix backbone ribbons, base-pair rungs, thermodynamic identity header, and 3.4 nm pitch scale bar.
@@ -213,7 +222,7 @@ slide-printer --dry-run -i presentation.pdf -s all
 | `--duplex` / `--simplex` | Alternate gutter margin on odd/even sheets for 2-sided printing | `--simplex` |
 | `--clean-cover` | Use 1st slide as title cover without note lines or dividers | `False` |
 | `--generate-cover` | Generate an editorial title cover page before slides | `False` |
-| `--cover-template` | Cover design: `atelier`, `quantum_flat`, `biophysics_flat`, `complex_systems_flat`, `materials_sim_flat`, `solid_state_flat`, `circuits_flat`, `nuclear_flat`, `academic_green`, `academic_teal`, `academic_wave`, `composition`, `george`, `monograph`, `bauhaus`, `fifties`, `sixties`, `seventies`, `eighties`, `nineties`, `natural`, `polo`, `equestrian` | `atelier` |
+| `--cover-template` | Cover design: `penguin`, `gallimard`, `oxford_press`, `cahier`, `midori`, `blueprint`, `celestial`, `field_notes`, `atelier`, `quantum_flat`, `biophysics_flat`, `complex_systems_flat`, `materials_sim_flat`, `solid_state_flat`, `circuits_flat`, `nuclear_flat`, `composition`, `george`, `monograph`, `bauhaus`, `fifties`, `sixties`, `seventies`, `eighties`, `nineties`, `natural`, `polo`, `equestrian` | `atelier` |
 | `--cover-title` | Title for generated cover page | Presentation name |
 | `--cover-author` | Author/Student/Topic for generated cover page | — |
 | `--study-header` | Add top metadata bar with subject fill-in and date line | `False` |

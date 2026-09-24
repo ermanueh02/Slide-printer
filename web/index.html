@@ -379,6 +379,7 @@
                 <!-- Category Filter Pills -->
                 <div class="cover-filter-row" role="group" aria-label="Cover Categories">
                   <button type="button" class="cover-cat-pill active" data-cover-cat="all">All</button>
+                  <button type="button" class="cover-cat-pill" data-cover-cat="groupEditorialStandard">Editorial &amp; Presses</button>
                   <button type="button" class="cover-cat-pill" data-cover-cat="groupScienceFlat">USC Flat 90s</button>
                   <button type="button" class="cover-cat-pill" data-cover-cat="groupScience">USC Illustrated</button>
                   <button type="button" class="cover-cat-pill" data-cover-cat="groupNotebooks">Composition</button>
@@ -387,6 +388,16 @@
                   <button type="button" class="cover-cat-pill" data-cover-cat="groupSeasons">Seasons</button>
                 </div>
                 <select id="coverTemplateSelect" class="form-select" style="margin-bottom: 0.35rem;">
+                  <optgroup label="Edición Estándar &amp; Editoriales Clásicas (Editorial Presses &amp; Notebooks)" id="groupEditorialStandard">
+                    <option value="penguin" id="optTemplatePenguin">Penguin Classics (1935 Tri-Band Vintage)</option>
+                    <option value="gallimard" id="optTemplateGallimard">Gallimard NRF (Collection Blanche &amp; Filets)</option>
+                    <option value="oxford_press" id="optTemplateOxfordPress">Oxford Academic Press (Clarendon Monograph)</option>
+                    <option value="cahier" id="optTemplateCahier">Cahier d'Écolier (French Seyès Notebook)</option>
+                    <option value="midori" id="optTemplateMidori">Midori MD (Japanese Minimalist &amp; Hanko)</option>
+                    <option value="blueprint" id="optTemplateBlueprint">Cyanotype Blueprint (Architectural Drafting)</option>
+                    <option value="celestial" id="optTemplateCelestial">Celestial Star Atlas (Harmonia Macrocosmica)</option>
+                    <option value="field_notes" id="optTemplateFieldNotes">Field Notes (Industrial Utility &amp; Rubric)</option>
+                  </optgroup>
                   <optgroup label="Clásicos / Zara" id="groupClassics">
                     <option value="atelier" id="optTemplateAtelier" selected>Atelier Notebook (Zara Home Classic)</option>
                     <option value="george" id="optTemplateGeorge">George 90s (JFK Jr Executive)</option>

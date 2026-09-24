@@ -3421,6 +3421,699 @@
       ctx.fillText(editionTag, visibleCenterX, badgeY + badgeH - 12);
       ctx.restore();
 
+    } else if (tpl === 'penguin' || tpl.includes('penguin') || tpl === 'triband' || tpl === 'orange_classic') {
+      // Penguin Classics Tri-Band
+      ctx.save();
+      const bandX1 = leftGutter;
+      const bandW = pw - gutterMargin;
+      const bandCenterX = bandX1 + bandW / 2;
+
+      const topH = ph * 0.32;
+      const midH = ph * 0.40;
+      const botH = ph * 0.28;
+
+      ctx.fillStyle = '#eb6128';
+      ctx.fillRect(bandX1, 0, bandW, topH);
+
+      ctx.fillStyle = '#faf5e8';
+      ctx.fillRect(bandX1, topH, bandW, midH);
+
+      ctx.fillStyle = '#eb6128';
+      ctx.fillRect(bandX1, topH + midH, bandW, botH);
+
+      ctx.strokeStyle = '#1e1e24';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.moveTo(bandX1, topH); ctx.lineTo(bandX1 + bandW, topH);
+      ctx.moveTo(bandX1, topH + midH); ctx.lineTo(bandX1 + bandW, topH + midH);
+      ctx.stroke();
+
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(bandX1, topH - 4); ctx.lineTo(bandX1 + bandW, topH - 4);
+      ctx.moveTo(bandX1, topH + midH + 4); ctx.lineTo(bandX1 + bandW, topH + midH + 4);
+      ctx.stroke();
+
+      ctx.font = '700 10px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText('S L I D E — P R I N T E R   C L A S S I C S', bandCenterX, topH * 0.42);
+      ctx.font = 'italic 9px "Times New Roman", Times, Georgia, serif';
+      ctx.fillText('COMPLETE & UNABRIDGED STUDY COMPENDIUM', bandCenterX, topH * 0.58);
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+      ctx.lineWidth = 0.6;
+      ctx.strokeRect(bandCenterX - 140, topH * 0.30, 280, topH * 0.38);
+
+      ctx.font = '700 24px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#141416';
+      ctx.textAlign = 'center';
+      const endTitleY = drawWrappedText(ctx, titleText, bandCenterX, topH + midH * 0.34, bandW - 70, 30, 'center');
+
+      if (options.studyTitle) {
+        ctx.font = 'italic 12.5px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#4b5563';
+        ctx.fillText(options.studyTitle, bandCenterX, endTitleY + 22);
+      }
+
+      ctx.font = '500 11px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#374151';
+      ctx.fillText(options.coverAuthor || 'Dedicated Study Edition', bandCenterX, topH + midH - 44);
+      ctx.font = 'italic 9px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#6b7280';
+      ctx.fillText(dateFormatted, bandCenterX, topH + midH - 26);
+
+      const badgeY = topH + midH + botH * 0.48;
+      ctx.fillStyle = '#faf5e8';
+      ctx.strokeStyle = '#1e1e24';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.ellipse(bandCenterX, badgeY, 22, 30, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#1e1e24';
+      ctx.beginPath();
+      ctx.arc(bandCenterX, badgeY - 10, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillRect(bandCenterX - 8, badgeY - 6, 16, 24);
+      ctx.fillStyle = '#faf5e8';
+      ctx.beginPath();
+      ctx.arc(bandCenterX, badgeY + 6, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#eb6128';
+      ctx.beginPath();
+      ctx.moveTo(bandCenterX + 3, badgeY - 10);
+      ctx.lineTo(bandCenterX + 10, badgeY - 8);
+      ctx.lineTo(bandCenterX + 3, badgeY - 6);
+      ctx.fill();
+
+      ctx.font = '700 8px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('PENGUIN BOOKS', bandCenterX, ph - 34);
+      ctx.font = 'italic 7.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.fillText(`${options.numSlides || 1} slides · study notes edition`, bandCenterX, ph - 20);
+      ctx.restore();
+
+    } else if (tpl === 'gallimard' || tpl.includes('gallimard') || tpl === 'nrf' || tpl === 'blanche') {
+      // Gallimard Blanche NRF
+      ctx.save();
+      ctx.fillStyle = '#fcf9f1';
+      ctx.fillRect(leftGutter, 0, pw - gutterMargin, ph);
+
+      const frameInset = 40;
+      const fx1 = leftGutter + frameInset;
+      const fx2 = pw - rightGutter - frameInset;
+      const fw = fx2 - fx1;
+      const fCenter = fx1 + fw / 2;
+
+      const redInk = '#c22429';
+      ctx.strokeStyle = redInk;
+      ctx.lineWidth = 1.4;
+      ctx.strokeRect(fx1, frameInset, fw, ph - 2 * frameInset);
+      ctx.lineWidth = 0.4;
+      ctx.strokeRect(fx1 + 4.5, frameInset + 4.5, fw - 9, ph - 2 * (frameInset + 4.5));
+
+      ctx.font = '700 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = redInk;
+      ctx.textAlign = 'center';
+      ctx.fillText('C O L L E C T I O N   B L A N C H E', fCenter, frameInset + 36);
+
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(fCenter - 28, frameInset + 44);
+      ctx.lineTo(fCenter + 28, frameInset + 44);
+      ctx.stroke();
+
+      ctx.font = '500 12px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#1e1e24';
+      ctx.fillText((options.coverAuthor || 'AUTEUR INCONNU').toUpperCase(), fCenter, ph * 0.28);
+
+      ctx.font = '700 26px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#0f0f11';
+      const endTitleY = drawWrappedText(ctx, titleText, fCenter, ph * 0.44, fw - 40, 34, 'center');
+
+      if (options.studyTitle) {
+        ctx.font = 'italic 13px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#4b5563';
+        ctx.fillText(options.studyTitle, fCenter, endTitleY + 22);
+      }
+
+      const emblemY = ph * 0.72;
+      ctx.strokeStyle = redInk;
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.arc(fCenter, emblemY, 16, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.font = '700 10px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = redInk;
+      ctx.fillText('nrf', fCenter, emblemY + 4);
+
+      ctx.font = '700 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#1e1e24';
+      ctx.fillText("É D I T I O N S   D E   L ' A T E L I E R", fCenter, ph - frameInset - 34);
+      ctx.font = '500 7.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#6b7280';
+      ctx.fillText(`PARIS · ${dateFormatted}`, fCenter, ph - frameInset - 20);
+      ctx.restore();
+
+    } else if (tpl === 'oxford_press' || tpl.includes('oxford') || tpl.includes('cambridge') || tpl === 'academic_press') {
+      // Oxford Academic Press
+      ctx.save();
+      ctx.fillStyle = '#faf8f5';
+      ctx.fillRect(leftGutter, 0, pw - gutterMargin, ph);
+
+      const inset = 38;
+      const x1 = leftGutter + inset;
+      const x2 = pw - rightGutter - inset;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      const navyColor = '#142952';
+      const goldColor = '#b89447';
+
+      ctx.strokeStyle = navyColor;
+      ctx.lineWidth = 1.6;
+      ctx.strokeRect(x1, inset, w, ph - 2 * inset);
+      ctx.lineWidth = 0.5;
+      ctx.strokeRect(x1 + 4, inset + 4, w - 8, ph - 2 * (inset + 4));
+
+      ctx.fillStyle = goldColor;
+      for (const [cx, cy] of [[x1 + 4, inset + 4], [x2 - 4, inset + 4], [x1 + 4, ph - inset - 4], [x2 - 4, ph - inset - 4]]) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.fillStyle = navyColor;
+      ctx.fillRect(centerX - 140, inset + 22, 280, 20);
+      ctx.font = '700 8px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText('OXFORD SCHOLARLY COMPENDIUM', centerX, inset + 35);
+
+      const emblemY = ph * 0.28;
+      ctx.strokeStyle = navyColor;
+      ctx.lineWidth = 1.0;
+      ctx.strokeRect(centerX - 16, emblemY - 12, 32, 24);
+      ctx.beginPath();
+      ctx.moveTo(centerX, emblemY - 12); ctx.lineTo(centerX, emblemY + 12);
+      ctx.stroke();
+      ctx.fillStyle = goldColor;
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillText('DOM', centerX - 8, emblemY + 3);
+      ctx.fillText('ILL', centerX + 8, emblemY + 3);
+
+      ctx.font = '700 24px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = navyColor;
+      const endTitleY = drawWrappedText(ctx, titleText, centerX, ph * 0.44, w - 40, 32, 'center');
+
+      if (options.studyTitle) {
+        ctx.font = 'italic 12.5px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#4b5563';
+        ctx.fillText(options.studyTitle, centerX, endTitleY + 22);
+      }
+
+      ctx.strokeStyle = goldColor;
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(centerX - 60, endTitleY + 44);
+      ctx.lineTo(centerX + 60, endTitleY + 44);
+      ctx.stroke();
+      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = goldColor;
+      ctx.fillText('Dominus Illuminatio Mea · Sapientia et Doctrina', centerX, endTitleY + 58);
+
+      ctx.font = '500 10px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = navyColor;
+      ctx.fillText(options.coverAuthor || 'Scholarly Edition', centerX, ph - inset - 46);
+      ctx.font = 'italic 8.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#6b7280';
+      ctx.fillText(`Published ${dateFormatted} · At the Clarendon Press`, centerX, ph - inset - 32);
+      ctx.restore();
+
+    } else if (tpl === 'cahier' || tpl.includes('cahier') || tpl === 'seyes' || tpl === 'french_notebook') {
+      // Cahier d'Écolier
+      ctx.save();
+      ctx.fillStyle = '#24528c';
+      ctx.fillRect(leftGutter, 0, pw - gutterMargin, ph);
+
+      const tapeW = 34;
+      ctx.fillStyle = '#141418';
+      ctx.fillRect(leftGutter, 0, tapeW, ph);
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+      ctx.lineWidth = 0.6;
+      ctx.setLineDash([2, 4]);
+      ctx.beginPath();
+      ctx.moveTo(leftGutter + tapeW - 5, 0); ctx.lineTo(leftGutter + tapeW - 5, ph);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      const availX1 = leftGutter + tapeW;
+      const availW = pw - rightGutter - availX1;
+      const centerX = availX1 + availW / 2;
+
+      const lblW = Math.min(availW - 48, 380);
+      const lblH = 240;
+      const lblX = centerX - lblW / 2;
+      const lblY = ph * 0.34;
+
+      ctx.fillStyle = 'rgba(10, 24, 40, 0.35)';
+      ctx.beginPath();
+      ctx.roundRect(lblX + 2, lblY + 3, lblW, lblH, 6);
+      ctx.fill();
+
+      ctx.fillStyle = '#fdfdfb';
+      ctx.strokeStyle = '#2b3a4a';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.roundRect(lblX, lblY, lblW, lblH, 6);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.lineWidth = 0.4;
+      ctx.beginPath();
+      ctx.roundRect(lblX + 3.5, lblY + 3.5, lblW - 7, lblH - 7, 4);
+      ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(180, 170, 215, 0.45)';
+      ctx.lineWidth = 0.4;
+      for (let ly = lblY + 60; ly <= lblY + lblH - 20; ly += 16) {
+        ctx.beginPath();
+        ctx.moveTo(lblX + 14, ly); ctx.lineTo(lblX + lblW - 14, ly);
+        ctx.stroke();
+      }
+
+      ctx.font = '700 8.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#2b3a4a';
+      ctx.textAlign = 'left';
+      ctx.fillText('CAHIER DE :', lblX + 18, lblY + 28);
+
+      ctx.font = '700 18px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#141e28';
+      const endTitleY = drawWrappedText(ctx, titleText, lblX + 18, lblY + 54, lblW - 40, 22);
+
+      if (options.studyTitle) {
+        ctx.font = 'italic 11px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#374151';
+        ctx.fillText(`Matière : ${options.studyTitle}`, lblX + 18, endTitleY + 20);
+      }
+
+      ctx.font = '700 7.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#4b5563';
+      ctx.fillText('Appartenant à :', lblX + 18, lblY + lblH - 40);
+      ctx.font = '500 10.5px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#141e28';
+      ctx.fillText(options.coverAuthor || 'Étudiant', lblX + 95, lblY + lblH - 40);
+
+      ctx.font = '700 7.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#4b5563';
+      ctx.fillText('Année scolaire :', lblX + 18, lblY + lblH - 20);
+      ctx.font = '500 10px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#141e28';
+      ctx.fillText(dateFormatted, lblX + 95, lblY + lblH - 20);
+
+      ctx.font = '700 7.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+      ctx.textAlign = 'center';
+      ctx.fillText(`GRAND FORMAT · GRANDS CARREAUX SEYÈS · ${options.numSlides || 100} PAGES`, centerX, ph - 30);
+      ctx.restore();
+
+    } else if (tpl === 'midori' || tpl.includes('midori') || tpl === 'japanese_minimalist' || tpl === 'wabi_sabi') {
+      // Midori MD Minimalist
+      ctx.save();
+      ctx.fillStyle = '#f7f5ed';
+      ctx.fillRect(leftGutter, 0, pw - gutterMargin, ph);
+
+      const spineW = 18;
+      ctx.fillStyle = '#dcdfc8';
+      ctx.fillRect(leftGutter, 0, spineW, ph);
+
+      const m = 48;
+      const x1 = leftGutter + spineW + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+
+      const hankoSize = 28;
+      const hankoX = x2 - hankoSize;
+      const hankoY = m;
+      ctx.fillStyle = '#c63827';
+      ctx.beginPath();
+      ctx.roundRect(hankoX, hankoY, hankoSize, hankoSize, 3);
+      ctx.fill();
+      ctx.font = '700 8px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText('NOTE', hankoX + hankoSize / 2, hankoY + 13);
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillText('MD', hankoX + hankoSize / 2, hankoY + 23);
+
+      ctx.font = '500 7.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#6b7280';
+      ctx.textAlign = 'left';
+      ctx.fillText('MD PAPER NOTEBOOK · COTTON ARCHIVE', x1, m + 14);
+
+      ctx.strokeStyle = 'rgba(30, 30, 36, 0.18)';
+      ctx.lineWidth = 0.4;
+      ctx.beginPath();
+      ctx.moveTo(x1, m + 22); ctx.lineTo(x2 - 36, m + 22);
+      ctx.stroke();
+
+      ctx.font = '700 24px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#1e1e24';
+      const endTitleY = drawWrappedText(ctx, titleText, x1, ph * 0.36, w - 20, 34);
+
+      if (options.studyTitle) {
+        ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#4b5563';
+        ctx.fillText(options.studyTitle, x1, endTitleY + 20);
+      }
+
+      ctx.strokeStyle = '#c63827';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(x1, endTitleY + 36); ctx.lineTo(x1 + 40, endTitleY + 36);
+      ctx.stroke();
+
+      const gridY = ph * 0.78;
+      ctx.strokeStyle = 'rgba(30, 30, 36, 0.15)';
+      ctx.lineWidth = 0.4;
+      ctx.beginPath();
+      ctx.moveTo(x1, gridY); ctx.lineTo(x2, gridY);
+      ctx.moveTo(x1, gridY + 36); ctx.lineTo(x2, gridY + 36);
+      ctx.stroke();
+
+      ctx.font = '700 6.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#6b7280';
+      ctx.fillText('NO. 01 / TITLE', x1, gridY + 12);
+      ctx.fillText('NO. 02 / COMPILER', x1 + w * 0.50, gridY + 12);
+
+      ctx.font = '500 10px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#1e1e24';
+      ctx.fillText(titleText.slice(0, 32), x1, gridY + 26);
+      ctx.fillText(options.coverAuthor || 'Personal Notebook', x1 + w * 0.50, gridY + 26);
+
+      ctx.font = '700 6.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#6b7280';
+      ctx.fillText('NO. 03 / DATE', x1, gridY + 48);
+      ctx.fillText('NO. 04 / FORMAT', x1 + w * 0.50, gridY + 48);
+
+      ctx.font = '500 10px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#1e1e24';
+      ctx.fillText(dateFormatted, x1, gridY + 62);
+      ctx.fillText(`${options.numSlides || 1} Slides Bound`, x1 + w * 0.50, gridY + 62);
+      ctx.restore();
+
+    } else if (tpl === 'blueprint' || tpl.includes('blueprint') || tpl === 'cyanotype' || tpl === 'drafting') {
+      // Cyanotype Blueprint Docket
+      ctx.save();
+      ctx.fillStyle = '#0f2947';
+      ctx.fillRect(leftGutter, 0, pw - gutterMargin, ph);
+
+      const m = 32;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.lineWidth = 0.3;
+      const gridStep = 20;
+      for (let gx = x1; gx <= x2; gx += gridStep) {
+        ctx.beginPath(); ctx.moveTo(gx, m); ctx.lineTo(gx, ph - m); ctx.stroke();
+      }
+      for (let gy = m; gy <= ph - m; gy += gridStep) {
+        ctx.beginPath(); ctx.moveTo(x1, gy); ctx.lineTo(x2, gy); ctx.stroke();
+      }
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+      ctx.lineWidth = 1.4;
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
+      ctx.lineWidth = 0.4;
+      ctx.strokeRect(x1 + 4, m + 4, w - 8, ph - 2 * (m + 4));
+
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.textAlign = 'center';
+      ['A', 'B', 'C', 'D'].forEach((lbl, idx) => {
+        ctx.fillText(lbl, x1 + (idx + 0.5) * (w / 4), m - 6);
+        ctx.fillText(lbl, x1 + (idx + 0.5) * (w / 4), ph - m + 14);
+      });
+
+      const compassX = x1 + 36;
+      const compassY = m + 46;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.arc(compassX, compassY, 18, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(compassX, compassY - 18);
+      ctx.lineTo(compassX + 4, compassY);
+      ctx.lineTo(compassX, compassY + 18);
+      ctx.lineTo(compassX - 4, compassY);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('N', compassX, compassY - 22);
+
+      ctx.font = '700 26px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'left';
+      const endTitleY = drawWrappedText(ctx, titleText, x1 + 24, ph * 0.38, w - 80, 34);
+
+      if (options.studyTitle) {
+        ctx.font = 'italic 13px system-ui, -apple-system, sans-serif';
+        ctx.fillStyle = '#b3dcff';
+        ctx.fillText(options.studyTitle, x1 + 24, endTitleY + 22);
+      }
+
+      const tbW = Math.min(w - 20, 360);
+      const tbH = 100;
+      const tbX = x2 - 4 - tbW;
+      const tbY = ph - m - 4 - tbH;
+
+      ctx.fillStyle = 'rgba(8, 22, 40, 0.95)';
+      ctx.fillRect(tbX, tbY, tbW, tbH);
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.0;
+      ctx.strokeRect(tbX, tbY, tbW, tbH);
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(tbX, tbY + 40); ctx.lineTo(tbX + tbW, tbY + 40);
+      ctx.moveTo(tbX, tbY + 70); ctx.lineTo(tbX + tbW, tbY + 70);
+      ctx.moveTo(tbX + tbW * 0.60, tbY + 40); ctx.lineTo(tbX + tbW * 0.60, tbY + tbH);
+      ctx.stroke();
+
+      ctx.font = '700 6.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#a6d4ff';
+      ctx.fillText('PROJECT / DRAWING TITLE', tbX + 8, tbY + 14);
+      ctx.font = '700 10.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(titleText.slice(0, 32), tbX + 8, tbY + 30);
+
+      ctx.font = '700 6px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#a6d4ff';
+      ctx.fillText('ENGINEER / AUTHOR', tbX + 8, tbY + 52);
+      ctx.fillText('DATE OF ISSUE', tbX + tbW * 0.60 + 8, tbY + 52);
+
+      ctx.font = '500 9px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(options.coverAuthor || 'Technical Office', tbX + 8, tbY + 64);
+      ctx.fillText(dateFormatted, tbX + tbW * 0.60 + 8, tbY + 64);
+
+      ctx.font = '700 6px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#a6d4ff';
+      ctx.fillText('SCALE: N.T.S.', tbX + 8, tbY + 84);
+      ctx.fillText(`SHEETS: ${options.numSlides || 1}`, tbX + tbW * 0.35, tbY + 84);
+      ctx.fillText('DWG NO. SLP-001  REV: A', tbX + tbW * 0.60 + 8, tbY + 84);
+      ctx.restore();
+
+    } else if (tpl === 'celestial' || tpl.includes('celestial') || tpl === 'star_atlas' || tpl === 'uranometria') {
+      // Celestial Star Atlas
+      ctx.save();
+      ctx.fillStyle = '#080d1e';
+      ctx.fillRect(leftGutter, 0, pw - gutterMargin, ph);
+
+      const m = 36;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      const goldColor = '#d6c285';
+      const goldFaint = 'rgba(214, 194, 133, 0.25)';
+
+      ctx.strokeStyle = goldColor;
+      ctx.lineWidth = 1.4;
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
+      ctx.lineWidth = 0.4;
+      ctx.strokeRect(x1 + 5, m + 5, w - 10, ph - 2 * (m + 5));
+
+      const sphereY = ph * 0.42;
+      const sphereR = Math.min(w / 2 - 20, 160);
+      ctx.strokeStyle = goldFaint;
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.arc(centerX, sphereY, sphereR, 0, Math.PI * 2);
+      ctx.arc(centerX, sphereY, sphereR * 0.70, 0, Math.PI * 2);
+      ctx.arc(centerX, sphereY, sphereR * 0.40, 0, Math.PI * 2);
+      ctx.stroke();
+
+      for (let a = 0; a < 360; a += 30) {
+        const rad = (a * Math.PI) / 180;
+        ctx.beginPath();
+        ctx.moveTo(centerX, sphereY);
+        ctx.lineTo(centerX + sphereR * Math.cos(rad), sphereY + sphereR * Math.sin(rad));
+        ctx.stroke();
+      }
+
+      const pts = [
+        [centerX - 70, sphereY - 40],
+        [centerX - 35, sphereY - 85],
+        [centerX + 15, sphereY - 70],
+        [centerX + 60, sphereY - 95],
+        [centerX + 85, sphereY - 35],
+        [centerX + 30, sphereY - 10],
+        [centerX - 20, sphereY - 25]
+      ];
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+      ctx.stroke();
+
+      pts.forEach(([px, py]) => {
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.arc(px, py, 2.2, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.beginPath(); ctx.arc(px, py, 5.0, 0, Math.PI * 2); ctx.fill();
+      });
+
+      const bannerW = 260;
+      const bannerH = 24;
+      ctx.fillStyle = '#080d1e';
+      ctx.strokeStyle = goldColor;
+      ctx.lineWidth = 0.8;
+      ctx.fillRect(centerX - bannerW / 2, m + 18, bannerW, bannerH);
+      ctx.strokeRect(centerX - bannerW / 2, m + 18, bannerW, bannerH);
+
+      ctx.font = '700 8px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = goldColor;
+      ctx.textAlign = 'center';
+      ctx.fillText('ATLAS COELESTIS · HARMONIA MACROCOSMICA', centerX, m + 34);
+
+      ctx.font = '700 24px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = goldColor;
+      const endTitleY = drawWrappedText(ctx, titleText, centerX, ph * 0.62, w - 50, 30, 'center');
+
+      if (options.studyTitle) {
+        ctx.font = 'italic 12px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = '#e5dcc0';
+        ctx.fillText(options.studyTitle, centerX, endTitleY + 20);
+      }
+
+      ctx.font = '500 10px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = goldColor;
+      ctx.fillText(options.coverAuthor || 'Observatorium Astronomicum', centerX, ph - m - 40);
+      ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
+      ctx.fillStyle = '#b8a97c';
+      ctx.fillText(`Observationes ${dateFormatted} · ${options.numSlides || 'Omnia'} Folia`, centerX, ph - m - 24);
+      ctx.restore();
+
+    } else if (tpl === 'field_notes' || tpl.includes('fieldnotes') || tpl === 'expedition' || tpl === 'utilitarian') {
+      // Field Notes Utility & Rubric
+      ctx.save();
+      ctx.fillStyle = '#e0d6c2';
+      ctx.fillRect(leftGutter, 0, pw - gutterMargin, ph);
+
+      const m = 38;
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      const topBarH = 56;
+      ctx.fillStyle = '#f56b23';
+      ctx.fillRect(leftGutter, 0, pw - gutterMargin, topBarH);
+
+      ctx.font = '700 14px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#141416';
+      ctx.textAlign = 'left';
+      ctx.fillText('FIELD NOTES', x1, 35);
+      ctx.font = '700 7.5px system-ui, -apple-system, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText('PRACTICAL APPLICATIONS', x2, 35);
+
+      ctx.fillStyle = 'rgba(40, 36, 30, 0.22)';
+      const dotStep = 14;
+      for (let dy = topBarH + 20; dy <= ph * 0.36; dy += dotStep) {
+        for (let dx = x1; dx <= x2; dx += dotStep) {
+          ctx.beginPath(); ctx.arc(dx, dy, 0.8, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+
+      ctx.font = '700 26px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#141416';
+      ctx.textAlign = 'left';
+      const endTitleY = drawWrappedText(ctx, titleText, x1, ph * 0.46, w - 20, 34);
+
+      if (options.studyTitle) {
+        ctx.font = '700 11.5px system-ui, -apple-system, sans-serif';
+        ctx.fillStyle = '#f56b23';
+        ctx.fillText(options.studyTitle.toUpperCase(), x1, endTitleY + 22);
+      }
+
+      const tblH = 130;
+      const tblY = ph - m - tblH;
+
+      ctx.strokeStyle = '#141416';
+      ctx.lineWidth = 1.2;
+      ctx.strokeRect(x1, tblY, w, tblH);
+
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(x1, tblY + 28); ctx.lineTo(x2, tblY + 28);
+      ctx.moveTo(x1, tblY + 62); ctx.lineTo(x2, tblY + 62);
+      ctx.moveTo(x1, tblY + 96); ctx.lineTo(x2, tblY + 96);
+      ctx.moveTo(x1 + w * 0.50, tblY + 28); ctx.lineTo(x1 + w * 0.50, tblY + tblH);
+      ctx.stroke();
+
+      ctx.fillStyle = '#141416';
+      ctx.fillRect(x1, tblY, w, 28);
+      ctx.font = '700 8px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('DOCUMENT SPECIFICATIONS & STUDY MEMORANDUM', x1 + 10, tblY + 18);
+
+      ctx.font = '700 6.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#5c574e';
+      ctx.fillText('SUBJECT / PROJECT', x1 + 10, tblY + 42);
+      ctx.fillText('RECORDED BY', x1 + w * 0.50 + 10, tblY + 42);
+
+      ctx.font = '700 9px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#141416';
+      ctx.fillText(titleText.slice(0, 24), x1 + 10, tblY + 54);
+      ctx.fillText(options.coverAuthor || 'Field Researcher', x1 + w * 0.50 + 10, tblY + 54);
+
+      ctx.font = '700 6.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#5c574e';
+      ctx.fillText('DATE OF ENTRY', x1 + 10, tblY + 76);
+      ctx.fillText('TOTAL EXTENT', x1 + w * 0.50 + 10, tblY + 76);
+
+      ctx.font = '500 9px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#141416';
+      ctx.fillText(dateFormatted, x1 + 10, tblY + 88);
+      ctx.fillText(`${options.numSlides || 1} Slides with dedicated notes`, x1 + w * 0.50 + 10, tblY + 88);
+
+      ctx.font = '500 6.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#6e685e';
+      ctx.textAlign = 'center';
+      ctx.fillText('DURABLE BOUND EDITION · PRINTED IN GALICIA · SLIDE-PRINTER STANDARD', centerX, tblY + 114);
+      ctx.restore();
+
     } else {
       // Default: Atelier Notebook (Zara Home Classic)
       const inset = 36;

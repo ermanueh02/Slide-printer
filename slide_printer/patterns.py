@@ -2968,6 +2968,683 @@ def generate_cover_page(
         c.setFillColor(text_meta_dark)
         c.drawCentredString(visible_center_x, badge_y + 12.0, edition_tag)
 
+    elif tpl in ("penguin", "penguin_classics", "triband", "orange_classic"):
+        # Penguin Classics Tri-Band (1935 Edward Young & Allen Lane)
+        band_x1 = left_gutter
+        band_x2 = pw - right_gutter
+        band_w = band_x2 - band_x1
+        band_center_x = band_x1 + band_w / 2.0
+
+        top_h = ph * 0.32
+        mid_h = ph * 0.40
+        bot_h = ph * 0.28
+
+        y_bot_top = bot_h
+        y_mid_top = bot_h + mid_h
+
+        # Top Band: Classic Vintage Penguin Orange
+        c.setFillColor(Color(0.92, 0.38, 0.16, alpha=1.0))
+        c.rect(band_x1, y_mid_top, band_w, top_h, fill=1, stroke=0)
+
+        # Center Band: Ivory / Cream paper
+        c.setFillColor(Color(0.985, 0.965, 0.925, alpha=1.0))
+        c.rect(band_x1, y_bot_top, band_w, mid_h, fill=1, stroke=0)
+
+        # Bottom Band: Matching Vintage Orange
+        c.setFillColor(Color(0.92, 0.38, 0.16, alpha=1.0))
+        c.rect(band_x1, 0, band_w, bot_h, fill=1, stroke=0)
+
+        # Divider Lines (Bold charcoal rules)
+        c.setStrokeColor(Color(0.12, 0.12, 0.14, alpha=1.0))
+        c.setLineWidth(2.2)
+        c.line(band_x1, y_mid_top, band_x2, y_mid_top)
+        c.line(band_x1, y_bot_top, band_x2, y_bot_top)
+
+        # Hairline inner rules
+        c.setLineWidth(0.5)
+        c.line(band_x1, y_mid_top + 4.0, band_x2, y_mid_top + 4.0)
+        c.line(band_x1, y_bot_top - 4.0, band_x2, y_bot_top - 4.0)
+
+        # Top Band Text: White small-caps rubric
+        c.setFont("Helvetica-Bold", 10.0)
+        c.setFillColor(Color(1.0, 1.0, 1.0, alpha=0.98))
+        c.drawCentredString(band_center_x, ph - 68.0, "S L I D E — P R I N T E R   C L A S S I C S")
+        c.setFont("Times-Italic", 9.0)
+        c.drawCentredString(band_center_x, ph - 84.0, "COMPLETE & UNABRIDGED STUDY COMPENDIUM")
+
+        c.setStrokeColor(Color(1.0, 1.0, 1.0, alpha=0.45))
+        c.setLineWidth(0.6)
+        c.rect(band_center_x - 140.0, ph - 92.0, 280.0, 36.0, fill=0, stroke=1)
+
+        # Middle Band: Main Title & Typography
+        c.setFont("Times-Bold", 24)
+        c.setFillColor(Color(0.10, 0.10, 0.12, alpha=1.0))
+        lines = wrap_text_lines(clean_title, "Times-Bold", 24, band_w - 70.0, c)
+        title_y = y_bot_top + mid_h * 0.62 + (len(lines) - 1) * 15.0
+        for line in lines:
+            c.drawCentredString(band_center_x, title_y, line)
+            title_y -= 30.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 12.5)
+            c.setFillColor(Color(0.32, 0.32, 0.36, alpha=0.95))
+            c.drawCentredString(band_center_x, title_y - 8.0, subtitle)
+            title_y -= 26.0
+
+        # Author in center band
+        c.setFont("Times-Roman", 11.0)
+        c.setFillColor(Color(0.20, 0.20, 0.22, alpha=0.9))
+        c.drawCentredString(band_center_x, y_bot_top + 46.0, author or "Dedicated Study Edition")
+
+        c.setFont("Times-Italic", 9.0)
+        c.setFillColor(Color(0.45, 0.45, 0.48, alpha=0.85))
+        c.drawCentredString(band_center_x, y_bot_top + 28.0, date_str or "Archival Reissue")
+
+        # Bottom Band: Oval badge & penguin icon
+        badge_y = y_bot_top * 0.48
+        c.setFillColor(Color(0.985, 0.965, 0.925, alpha=1.0))
+        c.setStrokeColor(Color(0.12, 0.12, 0.14, alpha=1.0))
+        c.setLineWidth(1.2)
+        c.ellipse(band_center_x - 22.0, badge_y - 30.0, band_center_x + 22.0, badge_y + 30.0, fill=1, stroke=1)
+
+        c.setFillColor(Color(0.12, 0.12, 0.14, alpha=1.0))
+        c.circle(band_center_x, badge_y + 10.0, 7.0, fill=1, stroke=0)
+        c.rect(band_center_x - 8.0, badge_y - 18.0, 16.0, 24.0, fill=1, stroke=0)
+        c.setFillColor(Color(0.985, 0.965, 0.925, alpha=1.0))
+        c.circle(band_center_x, badge_y - 6.0, 5.0, fill=1, stroke=0)
+        c.setFillColor(Color(0.92, 0.38, 0.16, alpha=1.0))
+        p_beak = c.beginPath()
+        p_beak.moveTo(band_center_x + 3.0, badge_y + 10.0)
+        p_beak.lineTo(band_center_x + 9.0, badge_y + 8.0)
+        p_beak.lineTo(band_center_x + 3.0, badge_y + 6.0)
+        p_beak.close()
+        c.drawPath(p_beak, fill=1, stroke=0)
+
+        c.setFont("Helvetica-Bold", 8.0)
+        c.setFillColor(Color(1.0, 1.0, 1.0, alpha=0.95))
+        c.drawCentredString(band_center_x, 34.0, "PENGUIN BOOKS")
+        if num_slides is not None:
+            c.setFont("Times-Italic", 7.5)
+            c.setFillColor(Color(1.0, 1.0, 1.0, alpha=0.8))
+            s_word = "slide" if num_slides == 1 else "slides"
+            c.drawCentredString(band_center_x, 20.0, f"{num_slides} {s_word} · study notes edition")
+
+    elif tpl in ("gallimard", "gallimard_blanche", "nrf", "blanche"):
+        # Gallimard Blanche NRF (Éditions Gallimard, Paris)
+        c.setFillColor(Color(0.988, 0.980, 0.953, alpha=1.0))
+        c.rect(left_gutter, 0, pw - gutter_margin, ph, fill=1, stroke=0)
+
+        frame_inset = 40.0
+        fx1 = left_gutter + frame_inset
+        fx2 = pw - right_gutter - frame_inset
+        fw = fx2 - fx1
+        f_center = fx1 + fw / 2.0
+
+        red_ink = Color(0.76, 0.14, 0.16, alpha=1.0)
+        c.setStrokeColor(red_ink)
+        c.setLineWidth(1.4)
+        c.rect(fx1, frame_inset, fw, ph - 2 * frame_inset)
+
+        c.setLineWidth(0.4)
+        c.rect(fx1 + 4.5, frame_inset + 4.5, fw - 9.0, ph - 2 * (frame_inset + 4.5))
+
+        c.setFont("Times-Bold", 8.5)
+        c.setFillColor(red_ink)
+        c.drawCentredString(f_center, ph - frame_inset - 36.0, "C O L L E C T I O N   B L A N C H E")
+
+        c.setStrokeColor(red_ink)
+        c.setLineWidth(0.5)
+        c.line(f_center - 28.0, ph - frame_inset - 44.0, f_center + 28.0, ph - frame_inset - 44.0)
+
+        c.setFont("Times-Roman", 12.0)
+        c.setFillColor(Color(0.12, 0.12, 0.14, alpha=1.0))
+        c.drawCentredString(f_center, ph * 0.70, (author or "AUTEUR INCONNU").upper())
+
+        c.setFont("Times-Bold", 26)
+        c.setFillColor(Color(0.08, 0.08, 0.10, alpha=1.0))
+        lines = wrap_text_lines(clean_title, "Times-Bold", 26, fw - 40.0, c)
+        title_y = ph * 0.54 + (len(lines) - 1) * 16.0
+        for line in lines:
+            c.drawCentredString(f_center, title_y, line)
+            title_y -= 34.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 13.0)
+            c.setFillColor(Color(0.35, 0.35, 0.38, alpha=0.9))
+            c.drawCentredString(f_center, title_y - 10.0, subtitle)
+
+        emblem_y = ph * 0.28
+        c.setStrokeColor(red_ink)
+        c.setLineWidth(0.8)
+        c.circle(f_center, emblem_y, 16.0, fill=0, stroke=1)
+        c.setFont("Times-Bold", 10.0)
+        c.setFillColor(red_ink)
+        c.drawCentredString(f_center, emblem_y - 3.5, "nrf")
+
+        c.setFont("Times-Bold", 8.5)
+        c.setFillColor(Color(0.12, 0.12, 0.14, alpha=0.95))
+        c.drawCentredString(f_center, frame_inset + 34.0, "É D I T I O N S   D E   L ' A T E L I E R")
+        c.setFont("Times-Roman", 7.5)
+        c.setFillColor(Color(0.45, 0.45, 0.48, alpha=0.85))
+        c.drawCentredString(f_center, frame_inset + 20.0, f"PARIS · {date_str or 'ANNÉE UNIVERSITAIRE'}")
+
+    elif tpl in ("oxford_press", "oxford", "cambridge", "academic_press"):
+        # Oxford / Cambridge Academic Press (Clarendon Monograph)
+        c.setFillColor(Color(0.99, 0.985, 0.97, alpha=1.0))
+        c.rect(left_gutter, 0, pw - gutter_margin, ph, fill=1, stroke=0)
+
+        inset = 38.0
+        x1 = left_gutter + inset
+        x2 = pw - right_gutter - inset
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        navy_color = Color(0.08, 0.16, 0.32, alpha=1.0)
+        gold_color = Color(0.72, 0.58, 0.28, alpha=1.0)
+
+        c.setStrokeColor(navy_color)
+        c.setLineWidth(1.6)
+        c.rect(x1, inset, w, ph - 2 * inset)
+        c.setLineWidth(0.5)
+        c.rect(x1 + 4.0, inset + 4.0, w - 8.0, ph - 2 * (inset + 4.0))
+
+        for cx, cy in [(x1 + 4.0, inset + 4.0), (x2 - 4.0, inset + 4.0), (x1 + 4.0, ph - inset - 4.0), (x2 - 4.0, ph - inset - 4.0)]:
+            c.setFillColor(gold_color)
+            c.circle(cx, cy, 2.5, fill=1, stroke=0)
+
+        c.setFillColor(navy_color)
+        c.rect(center_x - 140.0, ph - inset - 38.0, 280.0, 20.0, fill=1, stroke=0)
+        c.setFont("Times-Bold", 8.0)
+        c.setFillColor(Color(1.0, 1.0, 1.0, alpha=1.0))
+        c.drawCentredString(center_x, ph - inset - 32.0, "OXFORD SCHOLARLY COMPENDIUM")
+
+        emblem_y = ph * 0.72
+        c.setStrokeColor(navy_color)
+        c.setLineWidth(1.0)
+        c.rect(center_x - 16.0, emblem_y - 12.0, 32.0, 24.0, fill=0, stroke=1)
+        c.setLineWidth(0.5)
+        c.line(center_x, emblem_y - 12.0, center_x, emblem_y + 12.0)
+        c.setFillColor(gold_color)
+        c.setFont("Times-Bold", 7.0)
+        c.drawCentredString(center_x - 8.0, emblem_y - 2.0, "DOM")
+        c.drawCentredString(center_x + 8.0, emblem_y - 2.0, "ILL")
+
+        c.setFont("Times-Bold", 24)
+        c.setFillColor(navy_color)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 24, w - 40.0, c)
+        title_y = ph * 0.52 + (len(lines) - 1) * 15.0
+        for line in lines:
+            c.drawCentredString(center_x, title_y, line)
+            title_y -= 32.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 12.5)
+            c.setFillColor(Color(0.28, 0.32, 0.40, alpha=0.95))
+            c.drawCentredString(center_x, title_y - 8.0, subtitle)
+            title_y -= 24.0
+
+        c.setStrokeColor(gold_color)
+        c.setLineWidth(0.6)
+        c.line(center_x - 60.0, title_y - 14.0, center_x + 60.0, title_y - 14.0)
+        c.setFont("Times-Italic", 8.5)
+        c.setFillColor(gold_color)
+        c.drawCentredString(center_x, title_y - 26.0, "Dominus Illuminatio Mea · Sapientia et Doctrina")
+
+        meta_y = inset + 32.0
+        c.setFont("Times-Roman", 10.0)
+        c.setFillColor(navy_color)
+        c.drawCentredString(center_x, meta_y + 24.0, author or "Scholarly Edition")
+        c.setFont("Times-Italic", 8.5)
+        c.setFillColor(Color(0.42, 0.45, 0.52, alpha=0.85))
+        c.drawCentredString(center_x, meta_y + 10.0, f"Published {date_str or 'Academic Year'} · At the Clarendon Press")
+
+    elif tpl in ("cahier", "cahier_ecolier", "seyes", "french_notebook"):
+        # Cahier d'Écolier (French Seyès Vintage School Notebook)
+        c.setFillColor(Color(0.14, 0.32, 0.55, alpha=1.0))
+        c.rect(left_gutter, 0, pw - gutter_margin, ph, fill=1, stroke=0)
+
+        tape_w = 34.0
+        c.setFillColor(Color(0.10, 0.10, 0.12, alpha=1.0))
+        c.rect(left_gutter, 0, tape_w, ph, fill=1, stroke=0)
+
+        c.setStrokeColor(Color(0.85, 0.85, 0.85, alpha=0.35))
+        c.setLineWidth(0.6)
+        c.setDash(2, 4)
+        c.line(left_gutter + tape_w - 5.0, 0, left_gutter + tape_w - 5.0, ph)
+        c.setDash()
+
+        avail_x1 = left_gutter + tape_w
+        avail_w = pw - right_gutter - avail_x1
+        center_x = avail_x1 + avail_w / 2.0
+
+        lbl_w = min(avail_w - 48.0, 380.0)
+        lbl_h = 240.0
+        lbl_x = center_x - lbl_w / 2.0
+        lbl_y = ph * 0.42
+
+        c.setFillColor(Color(0.06, 0.14, 0.24, alpha=0.35))
+        c.roundRect(lbl_x + 2.0, lbl_y - 3.0, lbl_w, lbl_h, 6.0, fill=1, stroke=0)
+
+        c.setFillColor(Color(0.99, 0.99, 0.98, alpha=1.0))
+        c.setStrokeColor(Color(0.18, 0.24, 0.32, alpha=0.9))
+        c.setLineWidth(1.2)
+        c.roundRect(lbl_x, lbl_y, lbl_w, lbl_h, 6.0, fill=1, stroke=1)
+
+        c.setLineWidth(0.4)
+        c.roundRect(lbl_x + 3.5, lbl_y + 3.5, lbl_w - 7.0, lbl_h - 7.0, 4.0, fill=0, stroke=1)
+
+        seyes_color = Color(0.72, 0.68, 0.86, alpha=0.45)
+        c.setStrokeColor(seyes_color)
+        c.setLineWidth(0.4)
+        line_spacing = 16.0
+        curr_y = lbl_y + 24.0
+        while curr_y <= lbl_y + lbl_h - 40.0:
+            c.line(lbl_x + 14.0, curr_y, lbl_x + lbl_w - 14.0, curr_y)
+            curr_y += line_spacing
+
+        c.setFont("Helvetica-Bold", 8.5)
+        c.setFillColor(Color(0.18, 0.22, 0.30, alpha=1.0))
+        c.drawString(lbl_x + 18.0, lbl_y + lbl_h - 26.0, "CAHIER DE :")
+
+        c.setFont("Times-Bold", 18.0)
+        c.setFillColor(Color(0.08, 0.12, 0.20, alpha=1.0))
+        lines = wrap_text_lines(clean_title, "Times-Bold", 18.0, lbl_w - 40.0, c)
+        t_y = lbl_y + lbl_h - 52.0
+        for line in lines[:3]:
+            c.drawString(lbl_x + 18.0, t_y, line)
+            t_y -= 22.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 11.0)
+            c.setFillColor(Color(0.25, 0.28, 0.35, alpha=0.95))
+            c.drawString(lbl_x + 18.0, t_y - 4.0, f"Matière : {subtitle}")
+            t_y -= 20.0
+
+        c.setFont("Helvetica-Bold", 7.5)
+        c.setFillColor(Color(0.35, 0.38, 0.45, alpha=0.9))
+        c.drawString(lbl_x + 18.0, lbl_y + 44.0, "Appartenant à :")
+        c.setFont("Times-Roman", 10.5)
+        c.setFillColor(Color(0.10, 0.12, 0.18, alpha=1.0))
+        c.drawString(lbl_x + 95.0, lbl_y + 44.0, author or "Étudiant")
+
+        c.setFont("Helvetica-Bold", 7.5)
+        c.setFillColor(Color(0.35, 0.38, 0.45, alpha=0.9))
+        c.drawString(lbl_x + 18.0, lbl_y + 24.0, "Année scolaire :")
+        c.setFont("Times-Roman", 10.0)
+        c.setFillColor(Color(0.10, 0.12, 0.18, alpha=1.0))
+        c.drawString(lbl_x + 95.0, lbl_y + 24.0, date_str or "2026-2027")
+
+        c.setFont("Helvetica-Bold", 7.5)
+        c.setFillColor(Color(1.0, 1.0, 1.0, alpha=0.85))
+        c.drawCentredString(center_x, 30.0, f"GRAND FORMAT · GRANDS CARREAUX SEYÈS · {num_slides or 100} PAGES")
+
+    elif tpl in ("midori", "midori_md", "japanese_minimalist", "wabi_sabi"):
+        # Midori MD Minimalist (Japanese Paper Craft & Hanko)
+        c.setFillColor(Color(0.975, 0.965, 0.940, alpha=1.0))
+        c.rect(left_gutter, 0, pw - gutter_margin, ph, fill=1, stroke=0)
+
+        spine_w = 18.0
+        c.setFillColor(Color(0.86, 0.88, 0.82, alpha=1.0))
+        c.rect(left_gutter, 0, spine_w, ph, fill=1, stroke=0)
+
+        m = 48.0
+        x1 = left_gutter + spine_w + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        hanko_size = 28.0
+        hanko_x = x2 - hanko_size
+        hanko_y = ph - m - hanko_size
+        c.setFillColor(Color(0.78, 0.22, 0.16, alpha=0.95))
+        c.roundRect(hanko_x, hanko_y, hanko_size, hanko_size, 3.0, fill=1, stroke=0)
+        c.setFont("Helvetica-Bold", 8.0)
+        c.setFillColor(Color(1.0, 1.0, 1.0, alpha=0.98))
+        c.drawCentredString(hanko_x + hanko_size / 2.0, hanko_y + 15.0, "NOTE")
+        c.setFont("Helvetica-Bold", 7.0)
+        c.drawCentredString(hanko_x + hanko_size / 2.0, hanko_y + 5.0, "MD")
+
+        c.setFont("Helvetica", 7.5)
+        c.setFillColor(Color(0.45, 0.45, 0.48, alpha=0.8))
+        c.drawString(x1, ph - m - 12.0, "MD PAPER NOTEBOOK · COTTON ARCHIVE")
+
+        c.setStrokeColor(Color(0.20, 0.20, 0.22, alpha=0.18))
+        c.setLineWidth(0.4)
+        c.line(x1, ph - m - 20.0, x2 - 36.0, ph - m - 20.0)
+
+        c.setFont("Times-Bold", 24)
+        c.setFillColor(Color(0.12, 0.12, 0.14, alpha=1.0))
+        lines = wrap_text_lines(clean_title, "Times-Bold", 24, w - 20.0, c)
+        title_y = ph * 0.58 + (len(lines) - 1) * 16.0
+        for line in lines:
+            c.drawString(x1, title_y, line)
+            title_y -= 34.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 12.0)
+            c.setFillColor(Color(0.40, 0.40, 0.42, alpha=0.9))
+            c.drawString(x1, title_y - 6.0, subtitle)
+            title_y -= 26.0
+
+        c.setStrokeColor(Color(0.78, 0.22, 0.16, alpha=0.35))
+        c.setLineWidth(0.6)
+        c.line(x1, title_y - 14.0, x1 + 40.0, title_y - 14.0)
+
+        grid_y = ph * 0.18
+        c.setStrokeColor(Color(0.20, 0.20, 0.22, alpha=0.15))
+        c.setLineWidth(0.4)
+        c.line(x1, grid_y + 40.0, x2, grid_y + 40.0)
+
+        c.setFont("Helvetica-Bold", 6.5)
+        c.setFillColor(Color(0.48, 0.48, 0.50, alpha=0.85))
+        c.drawString(x1, grid_y + 28.0, "NO. 01 / TITLE")
+        c.drawString(x1 + w * 0.50, grid_y + 28.0, "NO. 02 / COMPILER")
+
+        c.setFont("Times-Roman", 10.0)
+        c.setFillColor(Color(0.14, 0.14, 0.16, alpha=1.0))
+        c.drawString(x1, grid_y + 14.0, clean_title[:32])
+        c.drawString(x1 + w * 0.50, grid_y + 14.0, author or "Personal Notebook")
+
+        c.setStrokeColor(Color(0.20, 0.20, 0.22, alpha=0.12))
+        c.line(x1, grid_y + 4.0, x2, grid_y + 4.0)
+
+        c.setFont("Helvetica-Bold", 6.5)
+        c.setFillColor(Color(0.48, 0.48, 0.50, alpha=0.85))
+        c.drawString(x1, grid_y - 8.0, "NO. 03 / DATE")
+        c.drawString(x1 + w * 0.50, grid_y - 8.0, "NO. 04 / FORMAT")
+
+        c.setFont("Times-Roman", 10.0)
+        c.setFillColor(Color(0.14, 0.14, 0.16, alpha=1.0))
+        c.drawString(x1, grid_y - 22.0, date_str or "Archival")
+        c.drawString(x1 + w * 0.50, grid_y - 22.0, f"{num_slides or 1} Slides Bound")
+
+    elif tpl in ("blueprint", "cyanotype", "drafting", "architectural"):
+        # Cyanotype Blueprint Docket (Architectural & Engineering Drawing)
+        c.setFillColor(Color(0.06, 0.16, 0.28, alpha=1.0))
+        c.rect(left_gutter, 0, pw - gutter_margin, ph, fill=1, stroke=0)
+
+        m = 32.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        minor_grid_color = Color(1.0, 1.0, 1.0, alpha=0.08)
+        grid_step = 20.0
+
+        c.setLineWidth(0.3)
+        c.setStrokeColor(minor_grid_color)
+        gx = x1
+        while gx <= x2:
+            c.line(gx, m, gx, ph - m)
+            gx += grid_step
+
+        gy = m
+        while gy <= ph - m:
+            c.line(x1, gy, x2, gy)
+            gy += grid_step
+
+        c.setStrokeColor(Color(1.0, 1.0, 1.0, alpha=0.85))
+        c.setLineWidth(1.4)
+        c.rect(x1, m, w, ph - 2 * m)
+
+        c.setLineWidth(0.4)
+        c.rect(x1 + 4.0, m + 4.0, w - 8.0, ph - 2 * (m + 4.0))
+
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(Color(1.0, 1.0, 1.0, alpha=0.7))
+        for idx, lbl in enumerate(["A", "B", "C", "D"]):
+            c.drawCentredString(x1 + (idx + 0.5) * (w / 4.0), ph - m + 6.0, lbl)
+            c.drawCentredString(x1 + (idx + 0.5) * (w / 4.0), m - 14.0, lbl)
+
+        for idx, lbl in enumerate(["1", "2", "3", "4"]):
+            c.drawRightString(x1 - 6.0, m + (idx + 0.5) * ((ph - 2 * m) / 4.0) - 2.5, lbl)
+            c.drawString(x2 + 6.0, m + (idx + 0.5) * ((ph - 2 * m) / 4.0) - 2.5, lbl)
+
+        compass_x = x1 + 36.0
+        compass_y = ph - m - 46.0
+        c.setStrokeColor(Color(1.0, 1.0, 1.0, alpha=0.6))
+        c.setLineWidth(0.6)
+        c.circle(compass_x, compass_y, 18.0, fill=0, stroke=1)
+        p_needle = c.beginPath()
+        p_needle.moveTo(compass_x, compass_y + 18.0)
+        p_needle.lineTo(compass_x + 4.0, compass_y)
+        p_needle.lineTo(compass_x, compass_y - 18.0)
+        p_needle.lineTo(compass_x - 4.0, compass_y)
+        p_needle.close()
+        c.drawPath(p_needle, fill=0, stroke=1)
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(Color(1.0, 1.0, 1.0, alpha=0.9))
+        c.drawCentredString(compass_x, compass_y + 22.0, "N")
+
+        c.setFont("Helvetica-Bold", 26)
+        c.setFillColor(Color(1.0, 1.0, 1.0, alpha=0.98))
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 26, w - 80.0, c)
+        title_y = ph * 0.56 + (len(lines) - 1) * 16.0
+        for line in lines:
+            c.drawString(x1 + 24.0, title_y, line)
+            title_y -= 34.0
+
+        if subtitle:
+            c.setFont("Helvetica-Oblique", 13.0)
+            c.setFillColor(Color(0.70, 0.88, 1.0, alpha=0.9))
+            c.drawString(x1 + 24.0, title_y - 8.0, subtitle)
+
+        tb_w = min(w - 20.0, 360.0)
+        tb_h = 100.0
+        tb_x = x2 - 4.0 - tb_w
+        tb_y = m + 4.0
+
+        c.setFillColor(Color(0.04, 0.12, 0.22, alpha=0.95))
+        c.rect(tb_x, tb_y, tb_w, tb_h, fill=1, stroke=0)
+        c.setStrokeColor(Color(1.0, 1.0, 1.0, alpha=0.85))
+        c.setLineWidth(1.0)
+        c.rect(tb_x, tb_y, tb_w, tb_h, fill=0, stroke=1)
+
+        c.setLineWidth(0.5)
+        c.line(tb_x, tb_y + 60.0, tb_x + tb_w, tb_y + 60.0)
+        c.line(tb_x, tb_y + 30.0, tb_x + tb_w, tb_y + 30.0)
+        c.line(tb_x + tb_w * 0.60, tb_y, tb_x + tb_w * 0.60, tb_y + 60.0)
+
+        c.setFont("Helvetica-Bold", 6.5)
+        c.setFillColor(Color(0.65, 0.82, 0.95, alpha=0.85))
+        c.drawString(tb_x + 8.0, tb_y + 88.0, "PROJECT / DRAWING TITLE")
+        c.setFont("Helvetica-Bold", 10.5)
+        c.setFillColor(Color(1.0, 1.0, 1.0, alpha=1.0))
+        c.drawString(tb_x + 8.0, tb_y + 70.0, clean_title[:32])
+
+        c.setFont("Helvetica-Bold", 6.0)
+        c.setFillColor(Color(0.65, 0.82, 0.95, alpha=0.85))
+        c.drawString(tb_x + 8.0, tb_y + 48.0, "ENGINEER / AUTHOR")
+        c.drawString(tb_x + tb_w * 0.60 + 8.0, tb_y + 48.0, "DATE OF ISSUE")
+
+        c.setFont("Helvetica", 9.0)
+        c.setFillColor(Color(1.0, 1.0, 1.0, alpha=0.95))
+        c.drawString(tb_x + 8.0, tb_y + 36.0, author or "Technical Office")
+        c.drawString(tb_x + tb_w * 0.60 + 8.0, tb_y + 36.0, date_str or "2026-09-24")
+
+        c.setFont("Helvetica-Bold", 6.0)
+        c.setFillColor(Color(0.65, 0.82, 0.95, alpha=0.85))
+        c.drawString(tb_x + 8.0, tb_y + 18.0, "SCALE: N.T.S.")
+        c.drawString(tb_x + tb_w * 0.35, tb_y + 18.0, f"SHEETS: {num_slides or 1}")
+        c.drawString(tb_x + tb_w * 0.60 + 8.0, tb_y + 18.0, "DWG NO. SLP-001  REV: A")
+
+    elif tpl in ("celestial", "star_atlas", "uranometria", "astronomy"):
+        # Celestial Star Atlas (Uranometria Antiqua & Harmonia Macrocosmica)
+        c.setFillColor(Color(0.04, 0.06, 0.14, alpha=1.0))
+        c.rect(left_gutter, 0, pw - gutter_margin, ph, fill=1, stroke=0)
+
+        m = 36.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        gold_color = Color(0.85, 0.74, 0.48, alpha=1.0)
+        gold_faint = Color(0.85, 0.74, 0.48, alpha=0.25)
+        star_white = Color(1.0, 1.0, 1.0, alpha=0.9)
+
+        c.setStrokeColor(gold_color)
+        c.setLineWidth(1.4)
+        c.rect(x1, m, w, ph - 2 * m)
+        c.setLineWidth(0.4)
+        c.rect(x1 + 5.0, m + 5.0, w - 10.0, ph - 2 * (m + 5.0))
+
+        sphere_y = ph * 0.58
+        sphere_r = min(w / 2.0 - 20.0, 160.0)
+
+        c.setStrokeColor(gold_faint)
+        c.setLineWidth(0.6)
+        c.circle(center_x, sphere_y, sphere_r, fill=0, stroke=1)
+        c.circle(center_x, sphere_y, sphere_r * 0.70, fill=0, stroke=1)
+        c.circle(center_x, sphere_y, sphere_r * 0.40, fill=0, stroke=1)
+
+        for angle_deg in range(0, 360, 30):
+            rad = math.radians(angle_deg)
+            rx = center_x + sphere_r * math.cos(rad)
+            ry = sphere_y + sphere_r * math.sin(rad)
+            c.line(center_x, sphere_y, rx, ry)
+
+        constellation_points = [
+            (center_x - 70.0, sphere_y + 40.0),
+            (center_x - 35.0, sphere_y + 85.0),
+            (center_x + 15.0, sphere_y + 70.0),
+            (center_x + 60.0, sphere_y + 95.0),
+            (center_x + 85.0, sphere_y + 35.0),
+            (center_x + 30.0, sphere_y + 10.0),
+            (center_x - 20.0, sphere_y + 25.0),
+        ]
+        c.setStrokeColor(Color(1.0, 1.0, 1.0, alpha=0.45))
+        c.setLineWidth(0.6)
+        for i in range(len(constellation_points) - 1):
+            c.line(constellation_points[i][0], constellation_points[i][1], constellation_points[i+1][0], constellation_points[i+1][1])
+
+        for px, py in constellation_points:
+            c.setFillColor(star_white)
+            c.circle(px, py, 2.2, fill=1, stroke=0)
+            c.setFillColor(Color(1.0, 1.0, 1.0, alpha=0.15))
+            c.circle(px, py, 5.0, fill=1, stroke=0)
+
+        banner_w = 260.0
+        banner_h = 24.0
+        c.setFillColor(Color(0.04, 0.06, 0.14, alpha=0.95))
+        c.setStrokeColor(gold_color)
+        c.setLineWidth(0.8)
+        c.rect(center_x - banner_w / 2.0, ph - m - 42.0, banner_w, banner_h, fill=1, stroke=1)
+        c.setFont("Times-Bold", 8.0)
+        c.setFillColor(gold_color)
+        c.drawCentredString(center_x, ph - m - 34.0, "ATLAS COELESTIS · HARMONIA MACROCOSMICA")
+
+        c.setFont("Times-Bold", 24)
+        c.setFillColor(gold_color)
+        lines = wrap_text_lines(clean_title, "Times-Bold", 24, w - 50.0, c)
+        title_y = ph * 0.38 + (len(lines) - 1) * 15.0
+        for line in lines:
+            c.drawCentredString(center_x, title_y, line)
+            title_y -= 30.0
+
+        if subtitle:
+            c.setFont("Times-Italic", 12.0)
+            c.setFillColor(Color(0.9, 0.88, 0.78, alpha=0.9))
+            c.drawCentredString(center_x, title_y - 6.0, subtitle)
+            title_y -= 22.0
+
+        meta_y = m + 36.0
+        c.setFont("Times-Roman", 10.0)
+        c.setFillColor(gold_color)
+        c.drawCentredString(center_x, meta_y + 16.0, author or "Observatorium Astronomicum")
+        c.setFont("Times-Italic", 8.0)
+        c.setFillColor(Color(0.85, 0.78, 0.65, alpha=0.75))
+        c.drawCentredString(center_x, meta_y + 2.0, f"Observationes {date_str or 'Anno Domini MMXXVI'} · {num_slides or 'Omnia'} Folia")
+
+    elif tpl in ("field_notes", "fieldnotes", "expedition", "utilitarian"):
+        # Field Notes Utility & Rubric (Industrial Heavy Duty)
+        c.setFillColor(Color(0.88, 0.84, 0.76, alpha=1.0))
+        c.rect(left_gutter, 0, pw - gutter_margin, ph, fill=1, stroke=0)
+
+        m = 38.0
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        top_bar_h = 56.0
+        c.setFillColor(Color(0.96, 0.42, 0.14, alpha=1.0))
+        c.rect(left_gutter, ph - top_bar_h, pw - gutter_margin, top_bar_h, fill=1, stroke=0)
+
+        c.setFont("Helvetica-Bold", 14.0)
+        c.setFillColor(Color(0.08, 0.08, 0.10, alpha=1.0))
+        c.drawString(x1, ph - 36.0, "FIELD NOTES")
+        c.setFont("Helvetica-Bold", 7.5)
+        c.drawRightString(x2, ph - 34.0, "PRACTICAL APPLICATIONS")
+
+        dot_color = Color(0.25, 0.22, 0.18, alpha=0.22)
+        c.setFillColor(dot_color)
+        dot_step = 14.0
+        d_y = ph - top_bar_h - 20.0
+        while d_y >= ph * 0.64:
+            d_x = x1
+            while d_x <= x2:
+                c.circle(d_x, d_y, 0.8, fill=1, stroke=0)
+                d_x += dot_step
+            d_y -= dot_step
+
+        c.setFont("Helvetica-Bold", 26)
+        c.setFillColor(Color(0.10, 0.10, 0.12, alpha=1.0))
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", 26, w - 20.0, c)
+        title_y = ph * 0.52 + (len(lines) - 1) * 16.0
+        for line in lines:
+            c.drawString(x1, title_y, line)
+            title_y -= 34.0
+
+        if subtitle:
+            c.setFont("Helvetica-Bold", 11.5)
+            c.setFillColor(Color(0.96, 0.42, 0.14, alpha=1.0))
+            c.drawString(x1, title_y - 6.0, subtitle.upper())
+
+        tbl_y = m + 140.0
+        tbl_h = 130.0
+
+        c.setStrokeColor(Color(0.12, 0.12, 0.14, alpha=1.0))
+        c.setLineWidth(1.2)
+        c.rect(x1, tbl_y - tbl_h, w, tbl_h)
+
+        c.setLineWidth(0.6)
+        c.line(x1, tbl_y - 28.0, x2, tbl_y - 28.0)
+        c.line(x1, tbl_y - 62.0, x2, tbl_y - 62.0)
+        c.line(x1, tbl_y - 96.0, x2, tbl_y - 96.0)
+        c.line(x1 + w * 0.50, tbl_y - tbl_h, x1 + w * 0.50, tbl_y - 28.0)
+
+        c.setFillColor(Color(0.12, 0.12, 0.14, alpha=1.0))
+        c.rect(x1, tbl_y - 28.0, w, 28.0, fill=1, stroke=0)
+        c.setFont("Helvetica-Bold", 8.0)
+        c.setFillColor(Color(1.0, 1.0, 1.0, alpha=1.0))
+        c.drawString(x1 + 10.0, tbl_y - 18.0, "DOCUMENT SPECIFICATIONS & STUDY MEMORANDUM")
+
+        c.setFont("Helvetica-Bold", 6.5)
+        c.setFillColor(Color(0.40, 0.38, 0.34, alpha=0.9))
+        c.drawString(x1 + 10.0, tbl_y - 40.0, "SUBJECT / PROJECT")
+        c.drawString(x1 + w * 0.50 + 10.0, tbl_y - 40.0, "RECORDED BY")
+
+        c.setFont("Helvetica-Bold", 9.0)
+        c.setFillColor(Color(0.12, 0.12, 0.14, alpha=1.0))
+        c.drawString(x1 + 10.0, tbl_y - 54.0, clean_title[:24])
+        c.drawString(x1 + w * 0.50 + 10.0, tbl_y - 54.0, author or "Field Researcher")
+
+        c.setFont("Helvetica-Bold", 6.5)
+        c.setFillColor(Color(0.40, 0.38, 0.34, alpha=0.9))
+        c.drawString(x1 + 10.0, tbl_y - 74.0, "DATE OF ENTRY")
+        c.drawString(x1 + w * 0.50 + 10.0, tbl_y - 74.0, "TOTAL EXTENT")
+
+        c.setFont("Helvetica", 9.0)
+        c.setFillColor(Color(0.12, 0.12, 0.14, alpha=1.0))
+        c.drawString(x1 + 10.0, tbl_y - 88.0, date_str or "2026-09-24")
+        c.drawString(x1 + w * 0.50 + 10.0, tbl_y - 88.0, f"{num_slides or 1} Slides with dedicated notes")
+
+        c.setFont("Helvetica", 6.5)
+        c.setFillColor(Color(0.45, 0.42, 0.38, alpha=0.85))
+        c.drawCentredString(center_x, tbl_y - 116.0, "DURABLE BOUND EDITION · PRINTED IN GALICIA · SLIDE-PRINTER STANDARD")
+
     else:
         # Default: Atelier Notebook (Zara Home Classic)
         inset = 36.0

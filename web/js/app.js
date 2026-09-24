@@ -141,6 +141,14 @@
       optTemplateAcademicGreen: "Composition Book (Amber Onyx)",
       optTemplateAcademicTeal: "Composition Book (Coral & Slate Swirl)",
       optTemplateAcademicWave: "Composition Book (Blue & Gold Wave)",
+      optTemplatePenguin: "Penguin Classics (1935 Tri-Band Vintage)",
+      optTemplateGallimard: "Gallimard NRF (Collection Blanche & Red Rules)",
+      optTemplateOxfordPress: "Oxford Scholarly Press (Clarendon Monograph)",
+      optTemplateCahier: "Cahier d'Écolier (French Seyès Notebook)",
+      optTemplateMidori: "Midori MD (Japanese Minimalist & Hanko)",
+      optTemplateBlueprint: "Cyanotype Blueprint (Architectural Drafting)",
+      optTemplateCelestial: "Celestial Star Atlas (Harmonia Macrocosmica)",
+      optTemplateFieldNotes: "Field Notes (Industrial Utility & Rubric)",
       optTemplateAtelier: "Atelier Notebook (Zara Home Classic)",
       optTemplateGeorge: "George 90s (JFK Jr Executive)",
       optTemplateMonograph: "Archival Monograph (Heritage Bookplate)",
@@ -305,6 +313,14 @@
       optTemplateAcademicGreen: "Composition Book (Ámbar y Ónix)",
       optTemplateAcademicTeal: "Composition Book (Coral y Pizarra)",
       optTemplateAcademicWave: "Composition Book (Azul y Dorado)",
+      optTemplatePenguin: "Penguin Classics (1935 Tri-Band Vintage)",
+      optTemplateGallimard: "Gallimard NRF (Collection Blanche & Filetes Rojos)",
+      optTemplateOxfordPress: "Oxford Scholarly Press (Monografía Clarendon)",
+      optTemplateCahier: "Cahier d'Écolier (Cuaderno Francés Seyès)",
+      optTemplateMidori: "Midori MD (Minimalista Japonés & Hanko)",
+      optTemplateBlueprint: "Cianotipia Blueprint (Plano Técnico de Arquitectura)",
+      optTemplateCelestial: "Atlas Celestial (Harmonia Macrocosmica & Esferas)",
+      optTemplateFieldNotes: "Field Notes (Cuaderno Industrial & Rúbrica)",
       optTemplateAtelier: "Cuaderno Atelier (Zara Home / Clásico)",
       optTemplateGeorge: "George años 90 (JFK Jr / Ejecutivo)",
       optTemplateMonograph: "Monografía de archivo (Ex libris)",
@@ -469,6 +485,14 @@
       optTemplateAcademicGreen: "Composition Book (Ámbar e Ónix)",
       optTemplateAcademicTeal: "Composition Book (Coral e Lousa)",
       optTemplateAcademicWave: "Composition Book (Azul e Dourado)",
+      optTemplatePenguin: "Penguin Classics (1935 Tri-Band Vintage)",
+      optTemplateGallimard: "Gallimard NRF (Collection Blanche & Filetes Vermellos)",
+      optTemplateOxfordPress: "Oxford Scholarly Press (Monografía Clarendon)",
+      optTemplateCahier: "Cahier d'Écolier (Caderno Francés Seyès)",
+      optTemplateMidori: "Midori MD (Minimalista Xaponés & Hanko)",
+      optTemplateBlueprint: "Cianotipia Blueprint (Plano Técnico de Arquitectura)",
+      optTemplateCelestial: "Atlas Celestial (Harmonia Macrocosmica & Esferas)",
+      optTemplateFieldNotes: "Field Notes (Caderno Industrial & Rúbrica)",
       optTemplateAtelier: "Caderno Atelier (Zara Home / Clásico)",
       optTemplateGeorge: "George anos 90 (JFK Jr / Executivo)",
       optTemplateMonograph: "Monografía de arquivo (Ex libris)",
@@ -859,6 +883,14 @@
     setText('optTemplateAcademicGreen', dict.optTemplateAcademicGreen);
     setText('optTemplateAcademicTeal', dict.optTemplateAcademicTeal);
     setText('optTemplateAcademicWave', dict.optTemplateAcademicWave);
+    setText('optTemplatePenguin', dict.optTemplatePenguin);
+    setText('optTemplateGallimard', dict.optTemplateGallimard);
+    setText('optTemplateOxfordPress', dict.optTemplateOxfordPress);
+    setText('optTemplateCahier', dict.optTemplateCahier);
+    setText('optTemplateMidori', dict.optTemplateMidori);
+    setText('optTemplateBlueprint', dict.optTemplateBlueprint);
+    setText('optTemplateCelestial', dict.optTemplateCelestial);
+    setText('optTemplateFieldNotes', dict.optTemplateFieldNotes);
     setText('optTemplateAtelier', dict.optTemplateAtelier);
     setText('optTemplateGeorge', dict.optTemplateGeorge);
     setText('optTemplateMonograph', dict.optTemplateMonograph);

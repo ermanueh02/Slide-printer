@@ -129,4 +129,55 @@ def test_college_alias_and_composition_badge():
     assert isinstance(cover_cream, PageObject)
 
 
+def test_standard_editorial_templates_and_aliases():
+    from slide_printer.constants import COVER_TEMPLATES, COVER_TEMPLATE_ALIASES
+    from slide_printer.patterns import generate_cover_page
+
+    new_standards = [
+        "penguin",
+        "gallimard",
+        "oxford_press",
+        "cahier",
+        "midori",
+        "blueprint",
+        "celestial",
+        "field_notes",
+    ]
+    for std in new_standards:
+        assert std in COVER_TEMPLATES
+
+    alias_map = {
+        "penguin_classics": "penguin",
+        "nrf": "gallimard",
+        "collection_blanche": "gallimard",
+        "oxford": "oxford_press",
+        "clarendon": "oxford_press",
+        "seyes": "cahier",
+        "ecolier": "cahier",
+        "midori_md": "midori",
+        "japanese_minimal": "midori",
+        "cyanotype": "blueprint",
+        "star_atlas": "celestial",
+        "harmonia": "celestial",
+        "kraft_field": "field_notes",
+        "industrial_notes": "field_notes",
+    }
+    for alias, target in alias_map.items():
+        assert COVER_TEMPLATE_ALIASES.get(alias) == target
+
+    a4_size = PAPER_SIZES["a4"]
+    for alias in ["penguin_classics", "nrf", "oxford", "seyes", "midori_md", "cyanotype", "star_atlas", "kraft_field"]:
+        cover = generate_cover_page(
+            page_size=a4_size,
+            title="Standard Editorial Monograph",
+            subtitle="Heritage & Design",
+            author="Manuel E.",
+            date_str="2026-09-24",
+            num_slides=24,
+            template=alias,
+        )
+        assert isinstance(cover, PageObject)
+
+
+
 
