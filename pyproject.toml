@@ -47,6 +47,15 @@ slide-printer = "slide_printer.cli:main"
 where = ["."]
 include = ["slide_printer*"]
 
+[tool.setuptools.package-data]
+slide_printer = [
+    "assets/**/*",
+    "assets/*",
+    "web/**/*",
+    "web/*",
+]
+
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]

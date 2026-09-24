@@ -836,34 +836,90 @@ def launch_web_ui(port: int = 8000) -> int:
     from functools import partial
 
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    web_dir = os.path.join(base_dir, "web")
-    if not os.path.isdir(web_dir):
-        web_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "web")
-    if not os.path.isdir(web_dir):
-        print(f"Error: Web directory not found at '{web_dir}'.", file=sys.stderr)
+    candidates = [
+        # In packaged installation (site-packages/slide_printer/web)
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "web"),
+        # In developer checkout repo root
+        os.path.join(base_dir, "web"),
+        # Current working directory (if run from repo root)
+        os.path.join(os.getcwd(), "web"),
+        os.path.join(os.getcwd(), "slide_printer", "web"),
+    ]
+
+    web_dir = None
+    for cand in candidates:
+        if os.path.isdir(cand) and os.path.isfile(os.path.join(cand, "index.html")):
+            web_dir = os.path.abspath(cand)
+            break
+
+    if not web_dir:
+        print(
+            red(
+                "Error: Web directory not found.\n"
+                "Expected 'index.html' inside one of the following locations:\n"
+                + "\n".join(f"  • {c}" for c in candidates)
+            ),
+            file=sys.stderr,
+        )
         return 1
 
-    handler = partial(http.server.SimpleHTTPRequestHandler, directory=web_dir)
+    class StudioHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
+        extensions_map = {
+            **http.server.SimpleHTTPRequestHandler.extensions_map,
+            ".js": "text/javascript",
+            ".mjs": "text/javascript",
+            ".css": "text/css",
+            ".json": "application/json",
+            ".wasm": "application/wasm",
+            ".svg": "image/svg+xml",
+        }
+
+        def log_message(self, format, *args):
+            # Suppress normal 200/304 request spam to keep terminal UI pristine
+            if args and len(args) > 1 and str(args[1]) in ("200", "304"):
+                return
+            super().log_message(format, *args)
+
+    handler = partial(StudioHTTPRequestHandler, directory=web_dir)
     socketserver.TCPServer.allow_reuse_address = True
-    try:
-        with socketserver.TCPServer(("127.0.0.1", port), handler) as httpd:
-            url = f"http://127.0.0.1:{port}"
-            web_hdr = f"Slide-Printer Web Studio · {url}"
-            box_w = max(len(web_hdr) + 4, 60)
-            print(bold(f"\n╭{'─' * box_w}╮"))
-            print(bold(f"│ {web_hdr.center(box_w - 2)} │"))
-            print(bold(f"╰{'─' * box_w}╯"))
-            print(dim("100% Private · Zero cloud uploads · Running locally."))
-            print(dim("Press Ctrl+C to stop the server.\n"))
-            webbrowser.open(url)
-            try:
-                httpd.serve_forever()
-            except KeyboardInterrupt:
-                print(dim("\nServer stopped."))
-                return 0
-    except OSError as e:
-        print(red(f"Could not bind to port {port}: {e}"), file=sys.stderr)
+
+    # Attempt to bind; if port 8000 is occupied, auto-fallback up to port + 10
+    httpd = None
+    target_port = port
+    max_attempts = 10 if port == 8000 else 1
+
+    for offset in range(max_attempts):
+        curr_port = port + offset
+        try:
+            httpd = socketserver.TCPServer(("127.0.0.1", curr_port), handler)
+            target_port = curr_port
+            break
+        except OSError as e:
+            if max_attempts == 1:
+                print(red(f"Could not bind to port {port}: {e}"), file=sys.stderr)
+                return 1
+            continue
+
+    if httpd is None:
+        print(red(f"Could not bind to any port in range {port}–{port + max_attempts - 1}."), file=sys.stderr)
         return 1
+
+    with httpd:
+        url = f"http://127.0.0.1:{target_port}"
+        web_hdr = f"Slide-Printer Web Studio · {url}"
+        box_w = max(len(web_hdr) + 4, 60)
+        print(bold(f"\n╭{'─' * box_w}╮"))
+        print(bold(f"│ {web_hdr.center(box_w - 2)} │"))
+        print(bold(f"╰{'─' * box_w}╯"))
+        print(dim("100% Private · Zero cloud uploads · Running locally."))
+        print(dim("Press Ctrl+C to stop the server.\n"))
+        webbrowser.open(url)
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print(dim("\nServer stopped."))
+            return 0
+
 
 
 # --- Main Application Execution ---

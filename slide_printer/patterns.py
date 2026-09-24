@@ -17,7 +17,9 @@ def _get_cover_texture_path(template_name: str) -> Optional[str]:
     pkg_dir = os.path.dirname(os.path.abspath(__file__))
     candidates = [
         os.path.join(pkg_dir, "assets", "covers", f"{template_name}.jpg"),
+        os.path.join(pkg_dir, "web", "covers", f"{template_name}.jpg"),
         os.path.join(pkg_dir, "..", "web", "covers", f"{template_name}.jpg"),
+        os.path.join(os.getcwd(), "web", "covers", f"{template_name}.jpg"),
     ]
     for p in candidates:
         if os.path.exists(p):

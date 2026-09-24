@@ -81,6 +81,71 @@ def test_cli_parse_web_args():
     assert args.port == 8080
 
 
+def test_cli_launch_web_ui_success(monkeypatch):
+    from slide_printer.cli import launch_web_ui
+
+    opened_urls = []
+    monkeypatch.setattr("webbrowser.open", lambda url: opened_urls.append(url))
+
+    class MockServer:
+        def __init__(self, addr, handler):
+            self.addr = addr
+            self.handler = handler
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            pass
+        def serve_forever(self):
+            # Simulate immediate exit or single request
+            raise KeyboardInterrupt()
+
+    monkeypatch.setattr("socketserver.TCPServer", MockServer)
+
+    rc = launch_web_ui(port=8000)
+    assert rc == 0
+    assert len(opened_urls) == 1
+    assert "http://127.0.0.1:8000" in opened_urls[0]
+
+
+def test_cli_launch_web_ui_port_fallback(monkeypatch):
+    from slide_printer.cli import launch_web_ui
+
+    opened_urls = []
+    monkeypatch.setattr("webbrowser.open", lambda url: opened_urls.append(url))
+
+    attempts = []
+
+    class MockServerWithConflict:
+        def __init__(self, addr, handler):
+            attempts.append(addr[1])
+            if addr[1] == 8000:
+                raise OSError("Address already in use")
+            self.addr = addr
+            self.handler = handler
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            pass
+        def serve_forever(self):
+            raise KeyboardInterrupt()
+
+    monkeypatch.setattr("socketserver.TCPServer", MockServerWithConflict)
+
+    rc = launch_web_ui(port=8000)
+    assert rc == 0
+    assert attempts == [8000, 8001]
+    assert "http://127.0.0.1:8001" in opened_urls[0]
+
+
+def test_cli_main_web_flag(monkeypatch):
+    called = []
+    monkeypatch.setattr("slide_printer.cli.launch_web_ui", lambda port: called.append(port) or 0)
+    rc = main(["--web", "--port", "8888"])
+    assert rc == 0
+    assert called == [8888]
+
+
+
 def test_check_pptx_detection(tmp_path):
     pptx_path = str(tmp_path / "presentation.pptx")
     with open(pptx_path, "w") as f:
