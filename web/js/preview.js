@@ -2217,10 +2217,10 @@
       ctx.font = '700 8px monospace, monospace';
       ctx.fillStyle = inkViolet;
       ctx.textAlign = 'left';
-      ctx.fillText('[ PREPRINT QM-III // THEORETICAL PHYSICS ]', x1 + 14, m + 22);
+      ctx.fillText('[ PREPRINT QM-III // THEORETICAL & ATOMIC PHYSICS ]', x1 + 14, m + 22);
       ctx.font = 'italic 700 9px "Times New Roman", Times, Georgia, serif';
       ctx.textAlign = 'right';
-      ctx.fillText('Ĥ |ψ⟩ = E |ψ⟩  ·  ⟨ψ|ψ⟩ = 1', x2 - 14, m + 22);
+      ctx.fillText('Ĥ |ψ⟩ = E |ψ⟩  ·  L⃗·S⃗  ·  σ_tot = (4π/k) Im f(0)', x2 - 14, m + 22);
 
       ctx.strokeStyle = hairline;
       ctx.lineWidth = 0.6;
@@ -2232,10 +2232,10 @@
       ctx.font = '700 26px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = inkDark;
       ctx.textAlign = 'left';
-      const qmTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : 'MECÁNICA CUÁNTICA III';
+      const qmTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : 'QUANTUM MECHANICS III';
       const endTitleY = drawWrappedText(ctx, qmTitle, x1 + 14, m + 68, w - 28, 32);
 
-      const qmSub = options.studyTitle || 'Operadores Hermitianos · Estados Estacionarios · Teoría de Perturbaciones';
+      const qmSub = options.studyTitle || 'Dirac Fine Structure · Hyperfine Interactions · Hartree-Fock · Collision Theory';
       ctx.font = 'italic 11.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkMuted;
       ctx.fillText(qmSub, x1 + 14, endTitleY + 22);
@@ -2306,7 +2306,7 @@
       ctx.font = 'italic 8px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkDark;
       ctx.textAlign = 'center';
-      ctx.fillText('x (Posición / Coordenada Espacial)', centerX, diagCy + 84);
+      ctx.fillText('x (Position / Spatial Coordinate)', centerX, diagCy + 84);
       ctx.textAlign = 'right';
       ctx.fillText('+∞', diagX2 - 10, diagCy + 84);
       ctx.textAlign = 'left';
@@ -2323,15 +2323,15 @@
       ctx.font = '700 7.5px monospace, monospace';
       ctx.fillStyle = inkViolet;
       ctx.textAlign = 'left';
-      ctx.fillText('CURATOR / ESTUDIANTE', x1 + 14, metaY + 16);
-      ctx.fillText('FECHA / CONVOCATORIA', x1 + w * 0.42, metaY + 16);
-      ctx.fillText('VOLUMEN / REF', x1 + w * 0.75, metaY + 16);
+      ctx.fillText('CURATOR / STUDENT', x1 + 14, metaY + 16);
+      ctx.fillText('TERM / CONVOCATION', x1 + w * 0.42, metaY + 16);
+      ctx.fillText('VOLUME / REF', x1 + w * 0.75, metaY + 16);
 
       ctx.font = '700 10px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkDark;
-      ctx.fillText(options.coverAuthor || 'Departamento de Física Teórica', x1 + 14, metaY + 32);
-      ctx.fillText(dateFormatted || 'Semestre Académico', x1 + w * 0.42, metaY + 32);
-      ctx.fillText('Fascículo Completo', x1 + w * 0.75, metaY + 32);
+      ctx.fillText(options.coverAuthor || 'Department of Theoretical Physics', x1 + 14, metaY + 32);
+      ctx.fillText(dateFormatted || 'Academic Semester', x1 + w * 0.42, metaY + 32);
+      ctx.fillText('Complete Dossier', x1 + w * 0.75, metaY + 32);
 
     } else if (tpl === 'biophysics_flat' || tpl.includes('biophysics_flat') || tpl.includes('biofisica_flat') || tpl.includes('alphafold_flat')) {
       // Flat 90s Minimalist: Biofísica
@@ -2386,10 +2386,10 @@
       ctx.font = '700 26px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = inkDark;
       ctx.textAlign = 'left';
-      const bioTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : 'BIOFÍSICA';
+      const bioTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : 'BIOPHYSICS';
       const endTitleY = drawWrappedText(ctx, bioTitle, x1 + 14, m + 68, w - 28, 32);
 
-      const bioSub = options.studyTitle || 'Estructura Macromolecular · Termodinámica · Conformación Proteica';
+      const bioSub = options.studyTitle || 'Macromolecular Thermodynamics · Machine Learning · Turing Patterns · Hodgkin-Huxley';
       ctx.font = 'italic 11.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkMuted;
       ctx.fillText(bioSub, x1 + 14, endTitleY + 22);
@@ -2445,7 +2445,7 @@
       ctx.font = '700 7px monospace, monospace';
       ctx.fillStyle = inkMuted;
       ctx.textAlign = 'left';
-      ctx.fillText('PITCH: 3.4 nm (10 pb)', scaleX + 6, diagCy + 2.5);
+      ctx.fillText('PITCH: 3.4 nm (10 bp)', scaleX + 6, diagCy + 2.5);
 
       // 6. Lower Technical Metadata Grid
       const metaY = ph - m - 44;
@@ -2458,15 +2458,15 @@
       ctx.font = '700 7.5px monospace, monospace';
       ctx.fillStyle = inkTeal;
       ctx.textAlign = 'left';
-      ctx.fillText('INVESTIGADOR / ALUMNO', x1 + 14, metaY + 16);
-      ctx.fillText('FECHA DE REGISTRO', x1 + w * 0.42, metaY + 16);
-      ctx.fillText('EXPEDIENTE / FOLIOS', x1 + w * 0.75, metaY + 16);
+      ctx.fillText('INVESTIGATOR / SCHOLAR', x1 + 14, metaY + 16);
+      ctx.fillText('REGISTRATION DATE', x1 + w * 0.42, metaY + 16);
+      ctx.fillText('DOSSIER / PAGES', x1 + w * 0.75, metaY + 16);
 
       ctx.font = '700 10px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkDark;
-      ctx.fillText(options.coverAuthor || 'Laboratorio de Biofísica', x1 + 14, metaY + 32);
-      ctx.fillText(dateFormatted || 'Archivo de Investigación', x1 + w * 0.42, metaY + 32);
-      ctx.fillText('Dossier Completo', x1 + w * 0.75, metaY + 32);
+      ctx.fillText(options.coverAuthor || 'Biophysics Laboratory', x1 + 14, metaY + 32);
+      ctx.fillText(dateFormatted || 'Research Archive', x1 + w * 0.42, metaY + 32);
+      ctx.fillText('Complete Dossier', x1 + w * 0.75, metaY + 32);
 
     } else if (tpl === 'complex_systems_flat' || tpl.includes('complex_systems_flat') || tpl.includes('sistemas_complejos_flat') || tpl.includes('chaos_flat') || tpl.includes('atmospheric_flat') || tpl.includes('atmosferica_flat')) {
       // Flat 90s Minimalist: Física de los Sistemas Complejos
@@ -2506,10 +2506,10 @@
       ctx.font = '700 8px monospace, monospace';
       ctx.fillStyle = inkAmber;
       ctx.textAlign = 'left';
-      ctx.fillText('[ NONLINEAR DYNAMICS // COMPLEX SYSTEMS ]', x1 + 14, m + 22);
+      ctx.fillText('[ NONLINEAR DYNAMICS // COMPLEX SYSTEMS & CHAOS ]', x1 + 14, m + 22);
       ctx.font = 'italic 700 9px "Times New Roman", Times, Georgia, serif';
       ctx.textAlign = 'right';
-      ctx.fillText('ẋ=σ(y-x) · ẏ=x(ρ-z)-y · ż=xy-βz', x2 - 14, m + 22);
+      ctx.fillText('ẋ=σ(y-x) · ẏ=x(ρ-z)-y · ż=xy-βz · δ≈4.6692', x2 - 14, m + 22);
 
       ctx.strokeStyle = hairline;
       ctx.lineWidth = 0.6;
@@ -2521,10 +2521,10 @@
       ctx.font = '700 24px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = inkDark;
       ctx.textAlign = 'left';
-      const cTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : 'FÍSICA DE LOS SISTEMAS COMPLEJOS';
+      const cTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : 'PHYSICS OF COMPLEX SYSTEMS';
       const endTitleY = drawWrappedText(ctx, cTitle, x1 + 14, m + 68, w - 28, 30);
 
-      const cSub = options.studyTitle || 'Dinámica No Lineal · Atractores Extraños · Caos Determinista';
+      const cSub = options.studyTitle || 'Nonlinear Dynamics · Lorenz Strange Attractor · Complex Networks · Criticality';
       ctx.font = 'italic 11.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkMuted;
       ctx.fillText(cSub, x1 + 14, endTitleY + 22);
@@ -2584,15 +2584,15 @@
       ctx.font = '700 7.5px monospace, monospace';
       ctx.fillStyle = inkAmber;
       ctx.textAlign = 'left';
-      ctx.fillText('OPERADOR / INVESTIGADOR', x1 + 14, metaY + 16);
-      ctx.fillText('FECHA / ARCHIVO', x1 + w * 0.42, metaY + 16);
-      ctx.fillText('DIAPOSITIVAS / EXP', x1 + w * 0.75, metaY + 16);
+      ctx.fillText('OPERATOR / RESEARCHER', x1 + 14, metaY + 16);
+      ctx.fillText('DATE / REGISTER', x1 + w * 0.42, metaY + 16);
+      ctx.fillText('VOLUME / DOSSIER', x1 + w * 0.75, metaY + 16);
 
       ctx.font = '700 10px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkDark;
-      ctx.fillText(options.coverAuthor || 'Grupo de Sistemas Complejos', x1 + 14, metaY + 32);
-      ctx.fillText(dateFormatted || 'Registro de Caos', x1 + w * 0.42, metaY + 32);
-      ctx.fillText('Cuaderno Teórico', x1 + w * 0.75, metaY + 32);
+      ctx.fillText(options.coverAuthor || 'Complex Systems Research Group', x1 + 14, metaY + 32);
+      ctx.fillText(dateFormatted || 'Chaos & Dynamics Log', x1 + w * 0.42, metaY + 32);
+      ctx.fillText('Theoretical Fascicle', x1 + w * 0.75, metaY + 32);
 
     } else if (tpl === 'materials_sim_flat' || tpl.includes('materials_sim_flat') || tpl.includes('simulacion_materiales_flat') || tpl.includes('simulacion_fisica_materiales_flat') || tpl.includes('fortran_flat') || tpl.includes('materiales_flat')) {
       // Flat 90s Minimalist: Simulación en Física de Materiales
@@ -2632,10 +2632,10 @@
       ctx.font = '700 8px monospace, monospace';
       ctx.fillStyle = inkGreen;
       ctx.textAlign = 'left';
-      ctx.fillText('[ HPC SIMULATION // COMPUTATIONAL MATERIALS ]', x1 + 14, m + 22);
+      ctx.fillText('[ HPC SIMULATION // COMPUTATIONAL MATERIALS & MOLECULAR DYNAMICS ]', x1 + 14, m + 22);
       ctx.font = 'italic 700 9px "Times New Roman", Times, Georgia, serif';
       ctx.textAlign = 'right';
-      ctx.fillText('F_i = -∇_i V(r_ij)  ·  Δt = 1.0 fs', x2 - 14, m + 22);
+      ctx.fillText('F_i = -∇_i V(r_ij)  ·  Δt = 1.0 fs  ·  D = ⅙ lim d⟨Δr²⟩/dt', x2 - 14, m + 22);
 
       ctx.strokeStyle = hairline;
       ctx.lineWidth = 0.6;
@@ -2647,10 +2647,10 @@
       ctx.font = '700 23px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = inkDark;
       ctx.textAlign = 'left';
-      const matTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : 'SIMULACIÓN EN FÍSICA DE MATERIALES';
+      const matTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : 'MATERIALS PHYSICS SIMULATION';
       const endTitleY = drawWrappedText(ctx, matTitle, x1 + 14, m + 68, w - 28, 29);
 
-      const matSub = options.studyTitle || 'Dinámica Molecular · Teoría del Funcional de la Densidad · Redes Cristalinas';
+      const matSub = options.studyTitle || 'Molecular Dynamics · Monte Carlo & Metropolis · Lennard-Jones · Transport';
       ctx.font = 'italic 11.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkMuted;
       ctx.fillText(matSub, x1 + 14, endTitleY + 22);
@@ -2662,8 +2662,6 @@
       const vy = [-boxS * 0.866, -boxS * 0.5];
       const vz = [0, -boxS];
 
-      ctx.strokeStyle = inkMuted;
-      ctx.lineWidth = 0.7;
       const corners3D = [];
       for (let dx = 0; dx <= 1; dx++) {
         for (let dy = 0; dy <= 1; dy++) {
@@ -2719,15 +2717,15 @@
       ctx.font = '700 7.5px monospace, monospace';
       ctx.fillStyle = inkGreen;
       ctx.textAlign = 'left';
-      ctx.fillText('PROGRAMADOR / ALUMNO', x1 + 14, metaY + 16);
-      ctx.fillText('FECHA DE COMPILACIÓN', x1 + w * 0.42, metaY + 16);
-      ctx.fillText('DATASET / DIAPOSITIVAS', x1 + w * 0.75, metaY + 16);
+      ctx.fillText('SCIENTIST / PROGRAMMER', x1 + 14, metaY + 16);
+      ctx.fillText('COMPILATION TIMESTAMP', x1 + w * 0.42, metaY + 16);
+      ctx.fillText('RUN ARCHIVE / SLIDES', x1 + w * 0.75, metaY + 16);
 
       ctx.font = '700 10px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkDark;
-      ctx.fillText(options.coverAuthor || 'Supercomputación y Materiales', x1 + 14, metaY + 32);
-      ctx.fillText(dateFormatted || 'Fortran Archive', x1 + w * 0.42, metaY + 32);
-      ctx.fillText('Código y Memoria', x1 + w * 0.75, metaY + 32);
+      ctx.fillText(options.coverAuthor || 'Computational Materials Lab', x1 + 14, metaY + 32);
+      ctx.fillText(dateFormatted || 'High-Performance Computing Cluster', x1 + w * 0.42, metaY + 32);
+      ctx.fillText('Simulation Dossier', x1 + w * 0.75, metaY + 32);
 
     } else if (tpl === 'circuits_flat' || tpl.includes('circuits_flat') || tpl.includes('circuitos_flat') || tpl.includes('instrumentacion_flat') || tpl.includes('fundamentos_instrumentacion_flat') || tpl.includes('electronica_flat')) {
       // Flat 90s Minimalist: Fundamentos de Instrumentación Electrónica
@@ -2767,10 +2765,10 @@
       ctx.font = '700 8px monospace, monospace';
       ctx.fillStyle = inkGreen;
       ctx.textAlign = 'left';
-      ctx.fillText('[ IEEE INSTRUMENTATION // ANALOG FRONT-END ]', x1 + 14, m + 22);
+      ctx.fillText('[ IEEE INSTRUMENTATION // ANALOG FRONT-END & DAQ ]', x1 + 14, m + 22);
       ctx.font = 'italic 700 9px "Times New Roman", Times, Georgia, serif';
       ctx.textAlign = 'right';
-      ctx.fillText('V_out = -(R_f / R_in) V_in  ·  CMRR > 120 dB', x2 - 14, m + 22);
+      ctx.fillText('V_out = -(R_f / R_in) V_in  ·  CMRR > 120 dB  ·  f_s ≥ 2·f_max', x2 - 14, m + 22);
 
       ctx.strokeStyle = hairline;
       ctx.lineWidth = 0.6;
@@ -2782,10 +2780,10 @@
       ctx.font = '700 22px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = inkDark;
       ctx.textAlign = 'left';
-      const instTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : 'FUNDAMENTOS DE INSTRUMENTACIÓN ELECTRÓNICA';
+      const instTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : 'FUNDAMENTALS OF ELECTRONIC INSTRUMENTATION';
       const endTitleY = drawWrappedText(ctx, instTitle, x1 + 14, m + 68, w - 28, 28);
 
-      const instSub = options.studyTitle || 'Amplificadores Operacionales · Sensores y Acondicionamiento · Conversión ADC/DAC';
+      const instSub = options.studyTitle || 'Operational Amplifiers · Active Filter Design · ADC/DAC Conversion · DAQ & LabVIEW';
       ctx.font = 'italic 11px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkMuted;
       ctx.fillText(instSub, x1 + 14, endTitleY + 22);
@@ -2871,15 +2869,15 @@
       ctx.font = '700 7.5px monospace, monospace';
       ctx.fillStyle = inkGreen;
       ctx.textAlign = 'left';
-      ctx.fillText('INGENIERO / ESTUDIANTE', x1 + 14, metaY + 16);
-      ctx.fillText('BANCO DE TRABAJO / FECHA', x1 + w * 0.42, metaY + 16);
-      ctx.fillText('MEMORIA / DIAPOSITIVAS', x1 + w * 0.75, metaY + 16);
+      ctx.fillText('LEAD ENGINEER / STUDENT', x1 + 14, metaY + 16);
+      ctx.fillText('TESTBENCH / CALIBRATION', x1 + w * 0.42, metaY + 16);
+      ctx.fillText('INSTRUMENTATION REPORT', x1 + w * 0.75, metaY + 16);
 
       ctx.font = '700 10px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkDark;
-      ctx.fillText(options.coverAuthor || 'Laboratorio de Instrumentación', x1 + 14, metaY + 32);
-      ctx.fillText(dateFormatted || 'Registro de Calibración', x1 + w * 0.42, metaY + 32);
-      ctx.fillText('Manual de Laboratorio', x1 + w * 0.75, metaY + 32);
+      ctx.fillText(options.coverAuthor || 'Electronic Instrumentation Group', x1 + 14, metaY + 32);
+      ctx.fillText(dateFormatted || 'National Instruments GPIB / DAQ', x1 + w * 0.42, metaY + 32);
+      ctx.fillText('Laboratory Log', x1 + w * 0.75, metaY + 32);
 
     } else if (tpl === 'solid_state_flat' || tpl.includes('solid_state_flat') || tpl.includes('estado_solido_flat') || tpl.includes('condensed_matter_flat')) {
       // Flat 90s Minimalist: Física del Estado Sólido
@@ -2919,10 +2917,10 @@
       ctx.font = '700 8px monospace, monospace';
       ctx.fillStyle = inkCopper;
       ctx.textAlign = 'left';
-      ctx.fillText('[ CONDENSED MATTER // SOLID STATE PHYSICS ]', x1 + 14, m + 22);
+      ctx.fillText('[ CONDENSED MATTER // SOLID STATE & BRILLOUIN ARCHIVE ]', x1 + 14, m + 22);
       ctx.font = 'italic 700 9px "Times New Roman", Times, Georgia, serif';
       ctx.textAlign = 'right';
-      ctx.fillText('ψ_k(r) = e^{ik·r} u_k(r)  ·  E_F = ħ²k_F² / 2m', x2 - 14, m + 22);
+      ctx.fillText('ψ_k(r) = e^{ik·r} u_k(r)  ·  E_F = ħ²k_F² / 2m*  ·  Φ_0 = h/2e', x2 - 14, m + 22);
 
       ctx.strokeStyle = hairline;
       ctx.lineWidth = 0.6;
@@ -2934,10 +2932,10 @@
       ctx.font = '700 26px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = inkDark;
       ctx.textAlign = 'left';
-      const ssTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : 'FÍSICA DEL ESTADO SÓLIDO';
+      const ssTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : 'SOLID STATE PHYSICS';
       const endTitleY = drawWrappedText(ctx, ssTitle, x1 + 14, m + 68, w - 28, 32);
 
-      const ssSub = options.studyTitle || 'Zonas de Brillouin · Superficie de Fermi · Fonones y Bandas Electrónicas';
+      const ssSub = options.studyTitle || 'Crystal Lattices & Reciprocal Space · Phonons · Bloch Bands · Superconductivity & BCS';
       ctx.font = 'italic 11.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkMuted;
       ctx.fillText(ssSub, x1 + 14, endTitleY + 22);
@@ -3000,15 +2998,15 @@
       ctx.font = '700 7.5px monospace, monospace';
       ctx.fillStyle = inkCopper;
       ctx.textAlign = 'left';
-      ctx.fillText('CATEDRÁTICO / ALUMNO', x1 + 14, metaY + 16);
-      ctx.fillText('CURSO / PERÍODO', x1 + w * 0.42, metaY + 16);
-      ctx.fillText('VOLUMEN / HOJAS', x1 + w * 0.75, metaY + 16);
+      ctx.fillText('PROFESSOR / SCHOLAR', x1 + 14, metaY + 16);
+      ctx.fillText('ACADEMIC TERM', x1 + w * 0.42, metaY + 16);
+      ctx.fillText('VOLUME / RECORD', x1 + w * 0.75, metaY + 16);
 
       ctx.font = '700 10px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkDark;
-      ctx.fillText(options.coverAuthor || 'Departamento de Materia Condensada', x1 + 14, metaY + 32);
-      ctx.fillText(dateFormatted || 'Curso Académico', x1 + w * 0.42, metaY + 32);
-      ctx.fillText('Monografía Teórica', x1 + w * 0.75, metaY + 32);
+      ctx.fillText(options.coverAuthor || 'Condensed Matter Physics Group', x1 + 14, metaY + 32);
+      ctx.fillText(dateFormatted || 'Academic Year', x1 + w * 0.42, metaY + 32);
+      ctx.fillText('Theoretical Monograph', x1 + w * 0.75, metaY + 32);
 
     } else if (tpl === 'nuclear_flat' || tpl.includes('nuclear_flat') || tpl.includes('particulas_flat') || tpl.includes('nuclear_particles_flat') || tpl.includes('particle_physics_flat')) {
       // Flat 90s Minimalist: Física Nuclear y de Partículas
@@ -3048,10 +3046,10 @@
       ctx.font = '700 8px monospace, monospace';
       ctx.fillStyle = inkViolet;
       ctx.textAlign = 'left';
-      ctx.fillText('[ HIGH ENERGY PHYSICS // CERN-SLAC PREPRINT ]', x1 + 14, m + 22);
+      ctx.fillText('[ HIGH ENERGY PHYSICS // CERN-SLAC COLLIDER ARCHIVE ]', x1 + 14, m + 22);
       ctx.font = 'italic 700 9px "Times New Roman", Times, Georgia, serif';
       ctx.textAlign = 'right';
-      ctx.fillText('SU(3)_C × SU(2)_L × U(1)_Y  ·  √s = 14 TeV', x2 - 14, m + 22);
+      ctx.fillText('SU(3)_C × SU(2)_L × U(1)_Y  ·  B(A,Z)  ·  √s = 14 TeV', x2 - 14, m + 22);
 
       ctx.strokeStyle = hairline;
       ctx.lineWidth = 0.6;
@@ -3063,10 +3061,10 @@
       ctx.font = '700 23px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = inkDark;
       ctx.textAlign = 'left';
-      const nucTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : 'FÍSICA NUCLEAR & DE PARTÍCULAS';
+      const nucTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : 'NUCLEAR & PARTICLE PHYSICS';
       const endTitleY = drawWrappedText(ctx, nucTitle, x1 + 14, m + 68, w - 28, 29);
 
-      const nucSub = options.studyTitle || 'Diagramas de Feynman · Modelo Estándar · Colisionadores y Detectores';
+      const nucSub = options.studyTitle || 'Nuclear Shell Model · Radioactive Decay · Quark Model & QCD · Electroweak Model';
       ctx.font = 'italic 11.5px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkMuted;
       ctx.fillText(nucSub, x1 + 14, endTitleY + 22);
@@ -3150,15 +3148,15 @@
       ctx.font = '700 7.5px monospace, monospace';
       ctx.fillStyle = inkViolet;
       ctx.textAlign = 'left';
-      ctx.fillText('FÍSICO / INVESTIGADOR', x1 + 14, metaY + 16);
-      ctx.fillText('COLABORACIÓN / FECHA', x1 + w * 0.42, metaY + 16);
-      ctx.fillText('ARCHIVADOR / DIAPOS', x1 + w * 0.75, metaY + 16);
+      ctx.fillText('PHYSICIST / EXPERIMENTER', x1 + 14, metaY + 16);
+      ctx.fillText('COLLABORATION / DATE', x1 + w * 0.42, metaY + 16);
+      ctx.fillText('ARCHIVE / DATASET', x1 + w * 0.75, metaY + 16);
 
       ctx.font = '700 10px "Times New Roman", Times, Georgia, serif';
       ctx.fillStyle = inkDark;
-      ctx.fillText(options.coverAuthor || 'Colaboración de Altas Energías', x1 + 14, metaY + 32);
-      ctx.fillText(dateFormatted || 'Preprint de Investigación', x1 + w * 0.42, metaY + 32);
-      ctx.fillText('Fascículo de Partículas', x1 + w * 0.75, metaY + 32);
+      ctx.fillText(options.coverAuthor || 'High Energy Physics Collaboration', x1 + 14, metaY + 32);
+      ctx.fillText(dateFormatted || 'Research Preprint', x1 + w * 0.42, metaY + 32);
+      ctx.fillText('Particle Physics Monograph', x1 + w * 0.75, metaY + 32);
 
     } else if (tpl === 'composition' || tpl === 'compbook' || tpl === 'composition_book' || tpl === 'comp_classic' || tpl === 'marble_bw' || tpl === 'cuaderno' || tpl === 'compo' ||
                tpl === 'comp_blue' || tpl === 'comp_ocean' || tpl === 'comp_wave' || tpl === 'academic_wave' || tpl === 'suminagashi' || tpl === 'ocean_wave' || tpl === 'academic_navy' || tpl === 'academic_burgundy' ||
@@ -3190,21 +3188,21 @@
         spineColor = '#0a1f29';
         seamColor = '#1a5261';
         fallbackBg = '#0f2633';
-        bookTitle = 'BIOFÍSICA';
+        bookTitle = 'BIOPHYSICS';
         editionTag = 'Biophysics Dossier · Molecular Dynamics';
       } else if (tpl.includes('atmospheric') || tpl.includes('atmosferica') || tpl.includes('complex_systems') || tpl.includes('sistemas_complejos') || tpl.includes('chaos') || tpl.includes('lorenz')) {
         assetKey = 'science_atmospheric';
         spineColor = '#121c2e';
         seamColor = '#2e4766';
         fallbackBg = '#16233b';
-        bookTitle = 'FÍSICA DE LOS SISTEMAS COMPLEJOS';
+        bookTitle = 'PHYSICS OF COMPLEX SYSTEMS';
         editionTag = 'Nonlinear Dynamics & Complex Systems Archive';
       } else if (tpl.includes('fortran') || tpl.includes('materiales') || tpl.includes('materials_sim') || tpl.includes('computational_materials') || tpl.includes('simulacion_materiales') || tpl.includes('f77') || tpl.includes('f90')) {
         assetKey = 'science_fortran';
         spineColor = '#141c17';
         seamColor = '#2e4733';
         fallbackBg = '#19241d';
-        bookTitle = 'SIMULACIÓN EN FÍSICA DE MATERIALES';
+        bookTitle = 'MATERIALS PHYSICS SIMULATION';
         editionTag = 'Materials Simulation Archive · Computational Physics';
       } else if (tpl.includes('nuclear') || tpl.includes('particulas') || tpl.includes('particle_physics') || tpl.includes('cern') || tpl.includes('lhc') || tpl.includes('feynman')) {
         assetKey = 'science_nuclear';
@@ -3225,14 +3223,14 @@
         spineColor = '#1a0d24';
         seamColor = '#472b61';
         fallbackBg = '#1f102b';
-        bookTitle = 'MECÁNICA CUÁNTICA III';
+        bookTitle = 'QUANTUM MECHANICS III';
         editionTag = 'Quantum Mechanics III · Spectroscopy Register';
       } else if (tpl.includes('circuits') || tpl.includes('instrumentacion') || tpl.includes('fundamentos_instrumentacion') || tpl.includes('opamps') || tpl.includes('electronica') || tpl.includes('filters') || tpl.includes('adc_dac')) {
         assetKey = 'science_circuits';
         spineColor = '#0d1f14';
         seamColor = '#295238';
         fallbackBg = '#122619';
-        bookTitle = 'FUNDAMENTOS DE INSTRUMENTACIÓN ELECTRÓNICA';
+        bookTitle = 'FUNDAMENTALS OF ELECTRONIC INSTRUMENTATION';
         editionTag = 'Electronic Instrumentation & Laboratory Dossier';
       } else if (tpl.includes('morris') || tpl.includes('strawberry') || tpl.includes('botanical')) {
         assetKey = 'comp_morris';

@@ -1899,16 +1899,16 @@ def generate_cover_page(
         head_y = ph - m - 22.0
         c.setFont("Courier-Bold", 8.0)
         c.setFillColor(ink_violet)
-        c.drawString(x1 + 14.0, head_y, "[ PREPRINT QM-III // THEORETICAL PHYSICS ]")
+        c.drawString(x1 + 14.0, head_y, "[ PREPRINT QM-III // THEORETICAL & ATOMIC PHYSICS ]")
         c.setFont("Times-BoldItalic", 9.0)
-        c.drawRightString(x2 - 14.0, head_y, "Ĥ |ψ⟩ = E |ψ⟩  ·  ⟨ψ|ψ⟩ = 1")
+        c.drawRightString(x2 - 14.0, head_y, "Ĥ |ψ⟩ = E |ψ⟩  ·  L⃗·S⃗  ·  σ_tot = (4π/k) Im f(0)")
 
         c.setStrokeColor(hairline)
         c.setLineWidth(0.6)
         c.line(x1 + 14.0, head_y - 8.0, x2 - 14.0, head_y - 8.0)
 
         # 4. Title block
-        disp_title = clean_title if clean_title != "Presentation" else "MECÁNICA CUÁNTICA III"
+        disp_title = clean_title if clean_title != "Presentation" else "QUANTUM MECHANICS III"
         c.setFont("Helvetica-Bold", 26.0)
         c.setFillColor(ink_dark)
         lines = wrap_text_lines(disp_title, "Helvetica-Bold", 26.0, w - 28.0, c)
@@ -1917,7 +1917,7 @@ def generate_cover_page(
             c.drawString(x1 + 14.0, cur_y, line)
             cur_y -= 32.0
 
-        disp_sub = subtitle or "Operadores Hermitianos · Estados Estacionarios · Teoría de Perturbaciones"
+        disp_sub = subtitle or "Dirac Fine Structure · Hyperfine Interactions · Hartree-Fock · Collision Theory"
         c.setFont("Times-Italic", 11.5)
         c.setFillColor(ink_muted)
         c.drawString(x1 + 14.0, cur_y - 4.0, disp_sub)
@@ -1988,7 +1988,7 @@ def generate_cover_page(
         c.line(diag_x1 + 10.0, diag_cy - 70.0, diag_x2 - 10.0, diag_cy - 70.0)
         c.setFont("Times-Italic", 8.0)
         c.setFillColor(ink_dark)
-        c.drawCentredString(center_x, diag_cy - 82.0, "x (Posición / Coordenada Espacial)")
+        c.drawCentredString(center_x, diag_cy - 82.0, "x (Position / Spatial Coordinate)")
         c.drawRightString(diag_x2 - 10.0, diag_cy - 82.0, "+∞")
         c.drawString(diag_x1 + 10.0, diag_cy - 82.0, "-∞")
 
@@ -2000,15 +2000,15 @@ def generate_cover_page(
 
         c.setFont("Courier-Bold", 7.5)
         c.setFillColor(ink_violet)
-        c.drawString(x1 + 14.0, meta_y + 30.0, "CURATOR / ESTUDIANTE")
-        c.drawString(x1 + w * 0.42, meta_y + 30.0, "FECHA / CONVOCATORIA")
-        c.drawString(x1 + w * 0.75, meta_y + 30.0, "VOLUMEN / REF")
+        c.drawString(x1 + 14.0, meta_y + 30.0, "CURATOR / STUDENT")
+        c.drawString(x1 + w * 0.42, meta_y + 30.0, "TERM / CONVOCATION")
+        c.drawString(x1 + w * 0.75, meta_y + 30.0, "VOLUME / REF")
 
         c.setFont("Times-Bold", 10.0)
         c.setFillColor(ink_dark)
-        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Departamento de Física Teórica")
-        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Semestre Académico")
-        s_count = f"{num_slides} Diapositivas" if num_slides else "Fascículo Completo"
+        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Department of Theoretical Physics")
+        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Academic Semester")
+        s_count = f"{num_slides} Slides" if num_slides else "Complete Dossier"
         c.drawString(x1 + w * 0.75, meta_y + 14.0, s_count)
 
     elif tpl in ("biophysics_flat", "biofisica_flat", "bio_flat", "alphafold_flat"):
@@ -2053,7 +2053,7 @@ def generate_cover_page(
         c.line(x1 + 14.0, head_y - 8.0, x2 - 14.0, head_y - 8.0)
 
         # 4. Title block
-        disp_title = clean_title if clean_title != "Presentation" else "BIOFÍSICA"
+        disp_title = clean_title if clean_title != "Presentation" else "BIOPHYSICS"
         c.setFont("Helvetica-Bold", 26.0)
         c.setFillColor(ink_dark)
         lines = wrap_text_lines(disp_title, "Helvetica-Bold", 26.0, w - 28.0, c)
@@ -2062,7 +2062,7 @@ def generate_cover_page(
             c.drawString(x1 + 14.0, cur_y, line)
             cur_y -= 32.0
 
-        disp_sub = subtitle or "Estructura Macromolecular · Termodinámica · Conformación Proteica"
+        disp_sub = subtitle or "Macromolecular Thermodynamics · Machine Learning · Turing Patterns · Hodgkin-Huxley"
         c.setFont("Times-Italic", 11.5)
         c.setFillColor(ink_muted)
         c.drawString(x1 + 14.0, cur_y - 4.0, disp_sub)
@@ -2113,7 +2113,7 @@ def generate_cover_page(
         c.line(scale_x - 3.0, diag_cy + 40.0, scale_x + 3.0, diag_cy + 40.0)
         c.setFont("Courier-Bold", 7.0)
         c.setFillColor(ink_muted)
-        c.drawString(scale_x + 6.0, diag_cy - 2.5, "PITCH: 3.4 nm (10 pb)")
+        c.drawString(scale_x + 6.0, diag_cy - 2.5, "PITCH: 3.4 nm (10 bp)")
 
         # 6. Lower Technical Metadata Grid
         meta_y = m + 28.0
@@ -2123,15 +2123,15 @@ def generate_cover_page(
 
         c.setFont("Courier-Bold", 7.5)
         c.setFillColor(ink_teal)
-        c.drawString(x1 + 14.0, meta_y + 30.0, "INVESTIGADOR / ALUMNO")
-        c.drawString(x1 + w * 0.42, meta_y + 30.0, "FECHA DE REGISTRO")
-        c.drawString(x1 + w * 0.75, meta_y + 30.0, "EXPEDIENTE / FOLIOS")
+        c.drawString(x1 + 14.0, meta_y + 30.0, "INVESTIGATOR / STUDENT")
+        c.drawString(x1 + w * 0.42, meta_y + 30.0, "REGISTRATION DATE")
+        c.drawString(x1 + w * 0.75, meta_y + 30.0, "RECORD / FOLIOS")
 
         c.setFont("Times-Bold", 10.0)
         c.setFillColor(ink_dark)
-        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Laboratorio de Biofísica")
-        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Archivo de Investigación")
-        s_count = f"{num_slides} Diapositivas" if num_slides else "Dossier Completo"
+        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Laboratory of Biophysics")
+        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Research Archive")
+        s_count = f"{num_slides} Slides" if num_slides else "Complete Dossier"
         c.drawString(x1 + w * 0.75, meta_y + 14.0, s_count)
 
     elif tpl in ("complex_systems_flat", "sistemas_complejos_flat", "chaos_flat", "atmospheric_flat", "atmosferica_flat"):
@@ -2167,16 +2167,16 @@ def generate_cover_page(
         head_y = ph - m - 22.0
         c.setFont("Courier-Bold", 8.0)
         c.setFillColor(ink_amber)
-        c.drawString(x1 + 14.0, head_y, "[ NONLINEAR DYNAMICS // COMPLEX SYSTEMS ]")
+        c.drawString(x1 + 14.0, head_y, "[ NONLINEAR DYNAMICS // COMPLEX SYSTEMS & CHAOS ]")
         c.setFont("Times-BoldItalic", 9.0)
-        c.drawRightString(x2 - 14.0, head_y, "ẋ=σ(y-x) · ẏ=x(ρ-z)-y · ż=xy-βz")
+        c.drawRightString(x2 - 14.0, head_y, "ẋ=σ(y-x) · ẏ=x(ρ-z)-y · ż=xy-βz · δ≈4.6692")
 
         c.setStrokeColor(hairline)
         c.setLineWidth(0.6)
         c.line(x1 + 14.0, head_y - 8.0, x2 - 14.0, head_y - 8.0)
 
         # 4. Title block
-        disp_title = clean_title if clean_title != "Presentation" else "FÍSICA DE LOS SISTEMAS COMPLEJOS"
+        disp_title = clean_title if clean_title != "Presentation" else "PHYSICS OF COMPLEX SYSTEMS"
         c.setFont("Helvetica-Bold", 24.0)
         c.setFillColor(ink_dark)
         lines = wrap_text_lines(disp_title, "Helvetica-Bold", 24.0, w - 28.0, c)
@@ -2185,7 +2185,7 @@ def generate_cover_page(
             c.drawString(x1 + 14.0, cur_y, line)
             cur_y -= 30.0
 
-        disp_sub = subtitle or "Dinámica No Lineal · Atractores Extraños · Caos Determinista"
+        disp_sub = subtitle or "Nonlinear Dynamics · Lorenz Strange Attractor · Complex Networks · Criticality"
         c.setFont("Times-Italic", 11.5)
         c.setFillColor(ink_muted)
         c.drawString(x1 + 14.0, cur_y - 4.0, disp_sub)
@@ -2236,15 +2236,15 @@ def generate_cover_page(
 
         c.setFont("Courier-Bold", 7.5)
         c.setFillColor(ink_amber)
-        c.drawString(x1 + 14.0, meta_y + 30.0, "OPERADOR / INVESTIGADOR")
-        c.drawString(x1 + w * 0.42, meta_y + 30.0, "FECHA / ARCHIVO")
-        c.drawString(x1 + w * 0.75, meta_y + 30.0, "DIAPOSITIVAS / EXP")
+        c.drawString(x1 + 14.0, meta_y + 30.0, "OPERATOR / INVESTIGATOR")
+        c.drawString(x1 + w * 0.42, meta_y + 30.0, "DATE / ARCHIVE")
+        c.drawString(x1 + w * 0.75, meta_y + 30.0, "SLIDES / RECORD")
 
         c.setFont("Times-Bold", 10.0)
         c.setFillColor(ink_dark)
-        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Grupo de Sistemas Complejos")
-        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Registro de Caos")
-        s_count = f"{num_slides} Diapositivas" if num_slides else "Cuaderno Teórico"
+        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Complex Systems Group")
+        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Chaos Dynamics Archive")
+        s_count = f"{num_slides} Slides" if num_slides else "Theoretical Monograph"
         c.drawString(x1 + w * 0.75, meta_y + 14.0, s_count)
 
     elif tpl in ("materials_sim_flat", "simulacion_materiales_flat", "simulacion_fisica_materiales_flat", "fortran_flat", "materiales_flat"):
@@ -2280,16 +2280,16 @@ def generate_cover_page(
         head_y = ph - m - 22.0
         c.setFont("Courier-Bold", 8.0)
         c.setFillColor(ink_green)
-        c.drawString(x1 + 14.0, head_y, "[ HPC SIMULATION // COMPUTATIONAL MATERIALS ]")
+        c.drawString(x1 + 14.0, head_y, "[ HPC SIMULATION // COMPUTATIONAL MATERIALS & MOLECULAR DYNAMICS ]")
         c.setFont("Times-BoldItalic", 9.0)
-        c.drawRightString(x2 - 14.0, head_y, "F_i = -∇_i V(r_ij)  ·  Δt = 1.0 fs")
+        c.drawRightString(x2 - 14.0, head_y, "F_i = -∇_i V(r_ij)  ·  Δt = 1.0 fs  ·  D = ⅙ lim d⟨Δr²⟩/dt")
 
         c.setStrokeColor(hairline)
         c.setLineWidth(0.6)
         c.line(x1 + 14.0, head_y - 8.0, x2 - 14.0, head_y - 8.0)
 
         # 4. Title block
-        disp_title = clean_title if clean_title != "Presentation" else "SIMULACIÓN EN FÍSICA DE MATERIALES"
+        disp_title = clean_title if clean_title != "Presentation" else "MATERIALS PHYSICS SIMULATION"
         c.setFont("Helvetica-Bold", 23.0)
         c.setFillColor(ink_dark)
         lines = wrap_text_lines(disp_title, "Helvetica-Bold", 23.0, w - 28.0, c)
@@ -2298,7 +2298,7 @@ def generate_cover_page(
             c.drawString(x1 + 14.0, cur_y, line)
             cur_y -= 29.0
 
-        disp_sub = subtitle or "Dinámica Molecular · Teoría del Funcional de la Densidad · Redes Cristalinas"
+        disp_sub = subtitle or "Molecular Dynamics · Monte Carlo & Metropolis · Lennard-Jones · Transport"
         c.setFont("Times-Italic", 11.5)
         c.setFillColor(ink_muted)
         c.drawString(x1 + 14.0, cur_y - 4.0, disp_sub)
@@ -2354,15 +2354,15 @@ def generate_cover_page(
 
         c.setFont("Courier-Bold", 7.5)
         c.setFillColor(ink_green)
-        c.drawString(x1 + 14.0, meta_y + 30.0, "PROGRAMADOR / ALUMNO")
-        c.drawString(x1 + w * 0.42, meta_y + 30.0, "FECHA DE COMPILACIÓN")
-        c.drawString(x1 + w * 0.75, meta_y + 30.0, "DATASET / DIAPOSITIVAS")
+        c.drawString(x1 + 14.0, meta_y + 30.0, "PROGRAMMER / STUDENT")
+        c.drawString(x1 + w * 0.42, meta_y + 30.0, "COMPILATION DATE")
+        c.drawString(x1 + w * 0.75, meta_y + 30.0, "DATASET / SLIDES")
 
         c.setFont("Times-Bold", 10.0)
         c.setFillColor(ink_dark)
-        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Supercomputación y Materiales")
-        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Fortran Archive")
-        s_count = f"{num_slides} Diapositivas" if num_slides else "Código y Memoria"
+        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Supercomputing & Materials Physics")
+        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Fortran 90 / HPC Archive")
+        s_count = f"{num_slides} Slides" if num_slides else "Code & Monograph"
         c.drawString(x1 + w * 0.75, meta_y + 14.0, s_count)
 
     elif tpl in ("circuits_flat", "circuitos_flat", "instrumentacion_flat", "fundamentos_instrumentacion_flat", "electronica_flat"):
@@ -2398,16 +2398,16 @@ def generate_cover_page(
         head_y = ph - m - 22.0
         c.setFont("Courier-Bold", 8.0)
         c.setFillColor(ink_green)
-        c.drawString(x1 + 14.0, head_y, "[ IEEE INSTRUMENTATION // ANALOG FRONT-END ]")
+        c.drawString(x1 + 14.0, head_y, "[ IEEE INSTRUMENTATION // ANALOG FRONT-END & DAQ ]")
         c.setFont("Times-BoldItalic", 9.0)
-        c.drawRightString(x2 - 14.0, head_y, "V_out = -(R_f / R_in) V_in  ·  CMRR > 120 dB")
+        c.drawRightString(x2 - 14.0, head_y, "V_out = -(R_f / R_in) V_in  ·  CMRR > 120 dB  ·  f_s ≥ 2·f_max")
 
         c.setStrokeColor(hairline)
         c.setLineWidth(0.6)
         c.line(x1 + 14.0, head_y - 8.0, x2 - 14.0, head_y - 8.0)
 
         # 4. Title block
-        disp_title = clean_title if clean_title != "Presentation" else "FUNDAMENTOS DE INSTRUMENTACIÓN ELECTRÓNICA"
+        disp_title = clean_title if clean_title != "Presentation" else "FUNDAMENTALS OF ELECTRONIC INSTRUMENTATION"
         c.setFont("Helvetica-Bold", 22.0)
         c.setFillColor(ink_dark)
         lines = wrap_text_lines(disp_title, "Helvetica-Bold", 22.0, w - 28.0, c)
@@ -2416,7 +2416,7 @@ def generate_cover_page(
             c.drawString(x1 + 14.0, cur_y, line)
             cur_y -= 28.0
 
-        disp_sub = subtitle or "Amplificadores Operacionales · Sensores y Acondicionamiento · Conversión ADC/DAC"
+        disp_sub = subtitle or "Operational Amplifiers · Active Filter Design · ADC/DAC Conversion · DAQ & LabVIEW"
         c.setFont("Times-Italic", 11.0)
         c.setFillColor(ink_muted)
         c.drawString(x1 + 14.0, cur_y - 4.0, disp_sub)
@@ -2480,15 +2480,15 @@ def generate_cover_page(
 
         c.setFont("Courier-Bold", 7.5)
         c.setFillColor(ink_green)
-        c.drawString(x1 + 14.0, meta_y + 30.0, "INGENIERO / ESTUDIANTE")
-        c.drawString(x1 + w * 0.42, meta_y + 30.0, "BANCO DE TRABAJO / FECHA")
-        c.drawString(x1 + w * 0.75, meta_y + 30.0, "MEMORIA / DIAPOSITIVAS")
+        c.drawString(x1 + 14.0, meta_y + 30.0, "ENGINEER / STUDENT")
+        c.drawString(x1 + w * 0.42, meta_y + 30.0, "WORKBENCH / DATE")
+        c.drawString(x1 + w * 0.75, meta_y + 30.0, "DOSSIER / SLIDES")
 
         c.setFont("Times-Bold", 10.0)
         c.setFillColor(ink_dark)
-        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Laboratorio de Instrumentación")
-        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Registro de Calibración")
-        s_count = f"{num_slides} Diapositivas" if num_slides else "Manual de Laboratorio"
+        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Instrumentation Laboratory")
+        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Calibration & Test Bench")
+        s_count = f"{num_slides} Slides" if num_slides else "Laboratory Manual"
         c.drawString(x1 + w * 0.75, meta_y + 14.0, s_count)
 
     elif tpl in ("solid_state_flat", "estado_solido_flat", "solido_flat", "condensed_matter_flat"):
@@ -2524,16 +2524,16 @@ def generate_cover_page(
         head_y = ph - m - 22.0
         c.setFont("Courier-Bold", 8.0)
         c.setFillColor(ink_copper)
-        c.drawString(x1 + 14.0, head_y, "[ CONDENSED MATTER // SOLID STATE PHYSICS ]")
+        c.drawString(x1 + 14.0, head_y, "[ CONDENSED MATTER // SOLID STATE & BRILLOUIN ARCHIVE ]")
         c.setFont("Times-BoldItalic", 9.0)
-        c.drawRightString(x2 - 14.0, head_y, "ψ_k(r) = e^{ik·r} u_k(r)  ·  E_F = ħ²k_F² / 2m")
+        c.drawRightString(x2 - 14.0, head_y, "ψ_k(r) = e^{ik·r} u_k(r)  ·  E_F = ħ²k_F² / 2m*  ·  Φ_0 = h/2e")
 
         c.setStrokeColor(hairline)
         c.setLineWidth(0.6)
         c.line(x1 + 14.0, head_y - 8.0, x2 - 14.0, head_y - 8.0)
 
         # 4. Title block
-        disp_title = clean_title if clean_title != "Presentation" else "FÍSICA DEL ESTADO SÓLIDO"
+        disp_title = clean_title if clean_title != "Presentation" else "SOLID STATE PHYSICS"
         c.setFont("Helvetica-Bold", 26.0)
         c.setFillColor(ink_dark)
         lines = wrap_text_lines(disp_title, "Helvetica-Bold", 26.0, w - 28.0, c)
@@ -2542,7 +2542,7 @@ def generate_cover_page(
             c.drawString(x1 + 14.0, cur_y, line)
             cur_y -= 32.0
 
-        disp_sub = subtitle or "Zonas de Brillouin · Superficie de Fermi · Fonones y Bandas Electrónicas"
+        disp_sub = subtitle or "Crystal Lattices & Reciprocal Space · Phonons · Bloch Bands · Superconductivity & BCS"
         c.setFont("Times-Italic", 11.5)
         c.setFillColor(ink_muted)
         c.drawString(x1 + 14.0, cur_y - 4.0, disp_sub)
@@ -2597,15 +2597,15 @@ def generate_cover_page(
 
         c.setFont("Courier-Bold", 7.5)
         c.setFillColor(ink_copper)
-        c.drawString(x1 + 14.0, meta_y + 30.0, "CATEDRÁTICO / ALUMNO")
-        c.drawString(x1 + w * 0.42, meta_y + 30.0, "CURSO / PERÍODO")
-        c.drawString(x1 + w * 0.75, meta_y + 30.0, "VOLUMEN / HOJAS")
+        c.drawString(x1 + 14.0, meta_y + 30.0, "PROFESSOR / STUDENT")
+        c.drawString(x1 + w * 0.42, meta_y + 30.0, "TERM / ACADEMIC YEAR")
+        c.drawString(x1 + w * 0.75, meta_y + 30.0, "VOLUME / FOLIOS")
 
         c.setFont("Times-Bold", 10.0)
         c.setFillColor(ink_dark)
-        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Departamento de Materia Condensada")
-        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Curso Académico")
-        s_count = f"{num_slides} Diapositivas" if num_slides else "Monografía Teórica"
+        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Department of Condensed Matter")
+        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Academic Session")
+        s_count = f"{num_slides} Slides" if num_slides else "Theoretical Monograph"
         c.drawString(x1 + w * 0.75, meta_y + 14.0, s_count)
 
     elif tpl in ("nuclear_flat", "particulas_flat", "nuclear_particles_flat", "particle_physics_flat"):
@@ -2641,16 +2641,16 @@ def generate_cover_page(
         head_y = ph - m - 22.0
         c.setFont("Courier-Bold", 8.0)
         c.setFillColor(ink_violet)
-        c.drawString(x1 + 14.0, head_y, "[ HIGH ENERGY PHYSICS // CERN-SLAC PREPRINT ]")
+        c.drawString(x1 + 14.0, head_y, "[ HIGH ENERGY PHYSICS // CERN-SLAC COLLIDER ARCHIVE ]")
         c.setFont("Times-BoldItalic", 9.0)
-        c.drawRightString(x2 - 14.0, head_y, "SU(3)_C × SU(2)_L × U(1)_Y  ·  √s = 14 TeV")
+        c.drawRightString(x2 - 14.0, head_y, "SU(3)_C × SU(2)_L × U(1)_Y  ·  B(A,Z)  ·  √s = 14 TeV")
 
         c.setStrokeColor(hairline)
         c.setLineWidth(0.6)
         c.line(x1 + 14.0, head_y - 8.0, x2 - 14.0, head_y - 8.0)
 
         # 4. Title block
-        disp_title = clean_title if clean_title != "Presentation" else "FÍSICA NUCLEAR & DE PARTÍCULAS"
+        disp_title = clean_title if clean_title != "Presentation" else "NUCLEAR & PARTICLE PHYSICS"
         c.setFont("Helvetica-Bold", 23.0)
         c.setFillColor(ink_dark)
         lines = wrap_text_lines(disp_title, "Helvetica-Bold", 23.0, w - 28.0, c)
@@ -2659,7 +2659,7 @@ def generate_cover_page(
             c.drawString(x1 + 14.0, cur_y, line)
             cur_y -= 29.0
 
-        disp_sub = subtitle or "Diagramas de Feynman · Modelo Estándar · Colisionadores y Detectores"
+        disp_sub = subtitle or "Nuclear Shell Model · Radioactive Decay · Quark Model & QCD · Electroweak Model"
         c.setFont("Times-Italic", 11.5)
         c.setFillColor(ink_muted)
         c.drawString(x1 + 14.0, cur_y - 4.0, disp_sub)
@@ -2728,15 +2728,15 @@ def generate_cover_page(
 
         c.setFont("Courier-Bold", 7.5)
         c.setFillColor(ink_violet)
-        c.drawString(x1 + 14.0, meta_y + 30.0, "FÍSICO / INVESTIGADOR")
-        c.drawString(x1 + w * 0.42, meta_y + 30.0, "COLABORACIÓN / FECHA")
-        c.drawString(x1 + w * 0.75, meta_y + 30.0, "ARCHIVADOR / DIAPOS")
+        c.drawString(x1 + 14.0, meta_y + 30.0, "PHYSICIST / RESEARCHER")
+        c.drawString(x1 + w * 0.42, meta_y + 30.0, "COLLABORATION / DATE")
+        c.drawString(x1 + w * 0.75, meta_y + 30.0, "ARCHIVE / SLIDES")
 
         c.setFont("Times-Bold", 10.0)
         c.setFillColor(ink_dark)
-        c.drawString(x1 + 14.0, meta_y + 14.0, author or "Colaboración de Altas Energías")
-        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Preprint de Investigación")
-        s_count = f"{num_slides} Diapositivas" if num_slides else "Fascículo de Partículas"
+        c.drawString(x1 + 14.0, meta_y + 14.0, author or "High-Energy Physics Collaboration")
+        c.drawString(x1 + w * 0.42, meta_y + 14.0, date_str or "Research Preprint Archive")
+        s_count = f"{num_slides} Slides" if num_slides else "Particle Physics Monograph"
         c.drawString(x1 + w * 0.75, meta_y + 14.0, s_count)
 
     elif tpl in ("composition", "compbook", "composition_book", "comp_classic", "marble_bw", "cuaderno", "compo",
@@ -2767,21 +2767,21 @@ def generate_cover_page(
             spine_color = Color(0.04, 0.12, 0.16, alpha=1.0)  # Bioluminescent Marine #0a1f29
             seam_color = Color(0.10, 0.32, 0.38, alpha=1.0)   # Cyan Accent #1a5261
             fallback_bg = Color(0.06, 0.15, 0.20, alpha=1.0)
-            book_title = "BIOFÍSICA"
+            book_title = "BIOPHYSICS"
             edition_tag = "Biophysics Dossier · Molecular Dynamics"
         elif any(k in tpl for k in ("atmospheric", "atmosferica", "complex_systems", "sistemas_complejos", "chaos", "lorenz")):
             asset_key = "science_atmospheric"
             spine_color = Color(0.07, 0.11, 0.18, alpha=1.0)  # Deep Storm Navy #121c2e
             seam_color = Color(0.18, 0.28, 0.40, alpha=1.0)   # Storm Slate #2e4766
             fallback_bg = Color(0.09, 0.14, 0.22, alpha=1.0)
-            book_title = "FÍSICA DE LOS SISTEMAS COMPLEJOS"
+            book_title = "PHYSICS OF COMPLEX SYSTEMS"
             edition_tag = "Nonlinear Dynamics & Complex Systems Archive"
         elif any(k in tpl for k in ("fortran", "materiales", "materials_sim", "computational_materials", "simulacion_materiales", "simulacion_fisica_materiales", "f77", "f90")):
             asset_key = "science_fortran"
             spine_color = Color(0.08, 0.11, 0.09, alpha=1.0)  # Mainframe Dark Phosphor Charcoal #141c17
             seam_color = Color(0.18, 0.28, 0.20, alpha=1.0)   # Terminal Green #2e4733
             fallback_bg = Color(0.10, 0.14, 0.11, alpha=1.0)
-            book_title = "SIMULACIÓN EN FÍSICA DE MATERIALES"
+            book_title = "MATERIALS PHYSICS SIMULATION"
             edition_tag = "Materials Simulation Archive · Computational Physics"
         elif any(k in tpl for k in ("nuclear", "particulas", "particle_physics", "cern", "lhc", "feynman")):
             asset_key = "science_nuclear"
@@ -2802,14 +2802,14 @@ def generate_cover_page(
             spine_color = Color(0.10, 0.05, 0.14, alpha=1.0)  # Deep Quantum Violet #1a0d24
             seam_color = Color(0.28, 0.17, 0.38, alpha=1.0)   # Spectroscopy Plum #472b61
             fallback_bg = Color(0.12, 0.07, 0.17, alpha=1.0)
-            book_title = "MECÁNICA CUÁNTICA III"
+            book_title = "QUANTUM MECHANICS III"
             edition_tag = "Quantum Mechanics III · Spectroscopy Register"
         elif any(k in tpl for k in ("circuits", "instrumentacion", "fundamentos_instrumentacion", "opamps", "electronica", "filters", "adc_dac")):
             asset_key = "science_circuits"
             spine_color = Color(0.05, 0.12, 0.08, alpha=1.0)  # Dark PCB Solder Mask #0d1f14
             seam_color = Color(0.16, 0.32, 0.22, alpha=1.0)   # Circuit Copper Green #295238
             fallback_bg = Color(0.07, 0.14, 0.10, alpha=1.0)
-            book_title = "FUNDAMENTOS DE INSTRUMENTACIÓN ELECTRÓNICA"
+            book_title = "FUNDAMENTALS OF ELECTRONIC INSTRUMENTATION"
             edition_tag = "Electronic Instrumentation & Laboratory Dossier"
         elif any(k in tpl for k in ("morris", "strawberry", "botanical")):
             asset_key = "comp_morris"

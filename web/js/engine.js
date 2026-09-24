@@ -2825,25 +2825,25 @@
       // 3. Header band: Series stamp & Schrödinger equation
       const headY = ph - m - 22.0;
       if (courierBold) {
-        page.drawText('[ THEORETICAL PHYSICS // MONOGRAPH PREPRINT ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkViolet });
+        page.drawText('[ PREPRINT QM-III // THEORETICAL & ATOMIC PHYSICS ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkViolet });
       }
       if (timesItalic || timesFont) {
         const fItalic = timesItalic || timesFont;
-        const eqStr = 'H |ψ⟩ = E |ψ⟩  ·  [x, p] = iħ';
+        const eqStr = 'Ĥ |ψ⟩ = E |ψ⟩  ·  L⃗·S⃗  ·  σ_tot = (4π/k) Im f(0)';
         const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
         page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkViolet });
       }
       page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.25 });
 
       // 4. Title block
-      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'MECÁNICA CUÁNTICA III');
+      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'QUANTUM MECHANICS III');
       const lines = wrapText(helveticaBold, dispTitle, 26.0, w - 28.0);
       let curY = ph - m - 62.0;
       for (const line of lines) {
         page.drawText(line, { x: x1 + 14.0, y: curY, size: 26.0, font: helveticaBold, color: inkDark });
         curY -= 32.0;
       }
-      const dispSub = options.studyTitle || options.subtitle || 'Estados Cuánticos · Operadores y Matrices · Perturbaciones';
+      const dispSub = options.studyTitle || options.subtitle || 'Dirac Fine Structure · Hyperfine Interactions · Hartree-Fock · Collision Theory';
       if (timesItalic) {
         page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
       }
@@ -2910,7 +2910,7 @@
       // Measurement axis
       page.drawLine({ start: { x: diagX1 + 10.0, y: diagCy - 70.0 }, end: { x: diagX2 - 10.0, y: diagCy - 70.0 }, thickness: 0.8, color: inkDark });
       if (timesItalic) {
-        const xLbl = 'x (Posición / Coordenada Espacial)';
+        const xLbl = 'x (Position / Spatial Coordinate)';
         const xW = timesItalic.widthOfTextAtSize(xLbl, 8.0);
         page.drawText(xLbl, { x: centerX - xW / 2, y: diagCy - 82.0, size: 8.0, font: timesItalic, color: inkDark });
         page.drawText('+∞', { x: diagX2 - 22.0, y: diagCy - 82.0, size: 8.0, font: timesItalic, color: inkDark });
@@ -2922,17 +2922,17 @@
       page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.25 });
 
       if (courierBold) {
-        page.drawText('CURATOR / ESTUDIANTE', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
-        page.drawText('FECHA / CONVOCATORIA', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
-        page.drawText('VOLUMEN / REF', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
+        page.drawText('CURATOR / STUDENT', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
+        page.drawText('TERM / CONVOCATION', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
+        page.drawText('VOLUME / REF', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
       }
       if (timesBold) {
-        const authTxt = options.coverAuthor || options.author || 'Departamento de Física Teórica';
+        const authTxt = options.coverAuthor || options.author || 'Department of Theoretical Physics';
         page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
-        const dateTxt = todayStr || 'Semestre Académico';
+        const dateTxt = todayStr || 'Academic Semester';
         page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
         const slideCount = options.totalSlides || options.numSlides;
-        const slideTxt = slideCount ? `${slideCount} Diapositivas` : 'Fascículo Completo';
+        const slideTxt = slideCount ? `${slideCount} Slides` : 'Complete Dossier';
         page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
       }
 
@@ -2976,14 +2976,14 @@
       page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
       // 4. Title block
-      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'BIOFÍSICA');
+      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'BIOPHYSICS');
       const lines = wrapText(helveticaBold, dispTitle, 26.0, w - 28.0);
       let curY = ph - m - 62.0;
       for (const line of lines) {
         page.drawText(line, { x: x1 + 14.0, y: curY, size: 26.0, font: helveticaBold, color: inkDark });
         curY -= 32.0;
       }
-      const dispSub = options.studyTitle || options.subtitle || 'Estructura Macromolecular · Termodinámica · Conformación Proteica';
+      const dispSub = options.studyTitle || options.subtitle || 'Macromolecular Thermodynamics · Machine Learning · Turing Patterns · Hodgkin-Huxley';
       if (timesItalic) {
         page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
       }
@@ -3025,7 +3025,7 @@
       page.drawLine({ start: { x: scaleX - 3.0, y: diagCy - 40.0 }, end: { x: scaleX + 3.0, y: diagCy - 40.0 }, thickness: 0.6, color: inkMuted });
       page.drawLine({ start: { x: scaleX - 3.0, y: diagCy + 40.0 }, end: { x: scaleX + 3.0, y: diagCy + 40.0 }, thickness: 0.6, color: inkMuted });
       if (courierBold) {
-        page.drawText('PITCH: 3.4 nm (10 pb)', { x: scaleX + 6.0, y: diagCy - 2.5, size: 7.0, font: courierBold, color: inkMuted });
+        page.drawText('PITCH: 3.4 nm (10 bp)', { x: scaleX + 6.0, y: diagCy - 2.5, size: 7.0, font: courierBold, color: inkMuted });
       }
 
       // 6. Lower Technical Metadata Grid
@@ -3033,17 +3033,17 @@
       page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
       if (courierBold) {
-        page.drawText('INVESTIGADOR / ALUMNO', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkTeal });
-        page.drawText('FECHA DE REGISTRO', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkTeal });
-        page.drawText('EXPEDIENTE / FOLIOS', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkTeal });
+        page.drawText('INVESTIGATOR / SCHOLAR', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkTeal });
+        page.drawText('REGISTRATION DATE', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkTeal });
+        page.drawText('DOSSIER / PAGES', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkTeal });
       }
       if (timesBold) {
-        const authTxt = options.coverAuthor || options.author || 'Laboratorio de Biofísica';
+        const authTxt = options.coverAuthor || options.author || 'Biophysics Laboratory';
         page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
-        const dateTxt = todayStr || 'Archivo de Investigación';
+        const dateTxt = todayStr || 'Research Archive';
         page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
         const slideCount = options.totalSlides || options.numSlides;
-        const slideTxt = slideCount ? `${slideCount} Diapositivas` : 'Dossier Completo';
+        const slideTxt = slideCount ? `${slideCount} Slides` : 'Complete Dossier';
         page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
       }
 
@@ -3076,25 +3076,25 @@
       // 3. Header band: Series stamp & Lorenz differential equations
       const headY = ph - m - 22.0;
       if (courierBold) {
-        page.drawText('[ NONLINEAR DYNAMICS // COMPLEX SYSTEMS ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkAmber });
+        page.drawText('[ NONLINEAR DYNAMICS // COMPLEX SYSTEMS & CHAOS ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkAmber });
       }
       if (timesItalic || timesFont) {
         const fItalic = timesItalic || timesFont;
-        const eqStr = 'ẋ=σ(y-x) · ẏ=x(ρ-z)-y · ż=xy-βz';
+        const eqStr = 'ẋ=σ(y-x) · ẏ=x(ρ-z)-y · ż=xy-βz · δ≈4.6692';
         const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
         page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkAmber });
       }
       page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
       // 4. Title block
-      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'FÍSICA DE LOS SISTEMAS COMPLEJOS');
+      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'PHYSICS OF COMPLEX SYSTEMS');
       const lines = wrapText(helveticaBold, dispTitle, 24.0, w - 28.0);
       let curY = ph - m - 62.0;
       for (const line of lines) {
         page.drawText(line, { x: x1 + 14.0, y: curY, size: 24.0, font: helveticaBold, color: inkDark });
         curY -= 30.0;
       }
-      const dispSub = options.studyTitle || options.subtitle || 'Dinámica No Lineal · Atractores Extraños · Caos Determinista';
+      const dispSub = options.studyTitle || options.subtitle || 'Nonlinear Dynamics · Lorenz Strange Attractor · Complex Networks · Criticality';
       if (timesItalic) {
         page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
       }
@@ -3148,17 +3148,17 @@
       page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
       if (courierBold) {
-        page.drawText('OPERADOR / INVESTIGADOR', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkAmber });
-        page.drawText('FECHA / ARCHIVO', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkAmber });
-        page.drawText('DIAPOSITIVAS / EXP', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkAmber });
+        page.drawText('OPERATOR / RESEARCHER', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkAmber });
+        page.drawText('DATE / REGISTER', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkAmber });
+        page.drawText('VOLUME / DOSSIER', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkAmber });
       }
       if (timesBold) {
-        const authTxt = options.coverAuthor || options.author || 'Grupo de Sistemas Complejos';
+        const authTxt = options.coverAuthor || options.author || 'Complex Systems Research Group';
         page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
-        const dateTxt = todayStr || 'Registro de Caos';
+        const dateTxt = todayStr || 'Chaos & Dynamics Log';
         page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
         const slideCount = options.totalSlides || options.numSlides;
-        const slideTxt = slideCount ? `${slideCount} Diapositivas` : 'Cuaderno Teórico';
+        const slideTxt = slideCount ? `${slideCount} Slides` : 'Theoretical Fascicle';
         page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
       }
 
@@ -3191,25 +3191,25 @@
       // 3. Header band: Series stamp & interatomic force formula
       const headY = ph - m - 22.0;
       if (courierBold) {
-        page.drawText('[ HPC SIMULATION // COMPUTATIONAL MATERIALS ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkGreen });
+        page.drawText('[ HPC SIMULATION // COMPUTATIONAL MATERIALS & MOLECULAR DYNAMICS ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkGreen });
       }
       if (timesItalic || timesFont) {
         const fItalic = timesItalic || timesFont;
-        const eqStr = 'F_i = -∇_i V(r_ij)  ·  Δt = 1.0 fs';
+        const eqStr = 'F_i = -∇_i V(r_ij)  ·  Δt = 1.0 fs  ·  D = ⅙ lim d⟨Δr²⟩/dt';
         const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
         page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkGreen });
       }
       page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
       // 4. Title block
-      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'SIMULACIÓN EN FÍSICA DE MATERIALES');
+      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'MATERIALS PHYSICS SIMULATION');
       const lines = wrapText(helveticaBold, dispTitle, 23.0, w - 28.0);
       let curY = ph - m - 62.0;
       for (const line of lines) {
         page.drawText(line, { x: x1 + 14.0, y: curY, size: 23.0, font: helveticaBold, color: inkDark });
         curY -= 29.0;
       }
-      const dispSub = options.studyTitle || options.subtitle || 'Dinámica Molecular · Teoría del Funcional de la Densidad · Redes Cristalinas';
+      const dispSub = options.studyTitle || options.subtitle || 'Molecular Dynamics · Monte Carlo & Metropolis · Lennard-Jones · Transport';
       if (timesItalic) {
         page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
       }
@@ -3266,17 +3266,17 @@
       page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
       if (courierBold) {
-        page.drawText('PROGRAMADOR / ALUMNO', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
-        page.drawText('FECHA DE COMPILACIÓN', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
-        page.drawText('DATASET / DIAPOSITIVAS', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+        page.drawText('SCIENTIST / PROGRAMMER', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+        page.drawText('COMPILATION TIMESTAMP', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+        page.drawText('RUN ARCHIVE / SLIDES', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
       }
       if (timesBold) {
-        const authTxt = options.coverAuthor || options.author || 'Supercomputación y Materiales';
+        const authTxt = options.coverAuthor || options.author || 'Computational Materials Lab';
         page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
-        const dateTxt = todayStr || 'Fortran Archive';
+        const dateTxt = todayStr || 'High-Performance Computing Cluster';
         page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
         const slideCount = options.totalSlides || options.numSlides;
-        const slideTxt = slideCount ? `${slideCount} Diapositivas` : 'Código y Memoria';
+        const slideTxt = slideCount ? `${slideCount} Slides` : 'Simulation Dossier';
         page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
       }
 
@@ -3309,25 +3309,25 @@
       // 3. Header band: Series stamp & Op-Amp transfer equation
       const headY = ph - m - 22.0;
       if (courierBold) {
-        page.drawText('[ IEEE INSTRUMENTATION // ANALOG FRONT-END ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkGreen });
+        page.drawText('[ IEEE INSTRUMENTATION // ANALOG FRONT-END & DAQ ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkGreen });
       }
       if (timesItalic || timesFont) {
         const fItalic = timesItalic || timesFont;
-        const eqStr = 'V_out = -(R_f / R_in) V_in  ·  CMRR > 120 dB';
+        const eqStr = 'V_out = -(R_f / R_in) V_in  ·  CMRR > 120 dB  ·  f_s ≥ 2·f_max';
         const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
         page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkGreen });
       }
       page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
       // 4. Title block
-      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'FUNDAMENTOS DE INSTRUMENTACIÓN ELECTRÓNICA');
+      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'FUNDAMENTALS OF ELECTRONIC INSTRUMENTATION');
       const lines = wrapText(helveticaBold, dispTitle, 22.0, w - 28.0);
       let curY = ph - m - 62.0;
       for (const line of lines) {
         page.drawText(line, { x: x1 + 14.0, y: curY, size: 22.0, font: helveticaBold, color: inkDark });
         curY -= 28.0;
       }
-      const dispSub = options.studyTitle || options.subtitle || 'Amplificadores Operacionales · Sensores y Acondicionamiento · Conversión ADC/DAC';
+      const dispSub = options.studyTitle || options.subtitle || 'Operational Amplifiers · Active Filter Design · ADC/DAC Conversion · DAQ & LabVIEW';
       if (timesItalic) {
         page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.0, font: timesItalic, color: inkMuted });
       }
@@ -3397,17 +3397,17 @@
       page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
       if (courierBold) {
-        page.drawText('INGENIERO / ESTUDIANTE', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
-        page.drawText('BANCO DE TRABAJO / FECHA', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
-        page.drawText('MEMORIA / DIAPOSITIVAS', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+        page.drawText('LEAD ENGINEER / STUDENT', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+        page.drawText('TESTBENCH / CALIBRATION', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+        page.drawText('INSTRUMENTATION REPORT', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
       }
       if (timesBold) {
-        const authTxt = options.coverAuthor || options.author || 'Laboratorio de Instrumentación';
+        const authTxt = options.coverAuthor || options.author || 'Electronic Instrumentation Group';
         page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
-        const dateTxt = todayStr || 'Registro de Calibración';
+        const dateTxt = todayStr || 'National Instruments GPIB / DAQ';
         page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
         const slideCount = options.totalSlides || options.numSlides;
-        const slideTxt = slideCount ? `${slideCount} Diapositivas` : 'Manual de Laboratorio';
+        const slideTxt = slideCount ? `${slideCount} Slides` : 'Laboratory Log';
         page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
       }
 
@@ -3440,25 +3440,25 @@
       // 3. Header band: Series stamp & Bloch wave theorem
       const headY = ph - m - 22.0;
       if (courierBold) {
-        page.drawText('[ CONDENSED MATTER // SOLID STATE PHYSICS ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkCopper });
+        page.drawText('[ CONDENSED MATTER // SOLID STATE & BRILLOUIN ARCHIVE ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkCopper });
       }
       if (timesItalic || timesFont) {
         const fItalic = timesItalic || timesFont;
-        const eqStr = 'ψ_k(r) = e^{ik·r} u_k(r)  ·  E_F = ħ²k_F² / 2m';
+        const eqStr = 'ψ_k(r) = e^{ik·r} u_k(r)  ·  E_F = ħ²k_F² / 2m*  ·  Φ_0 = h/2e';
         const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
         page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkCopper });
       }
       page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
       // 4. Title block
-      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'FÍSICA DEL ESTADO SÓLIDO');
+      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'SOLID STATE PHYSICS');
       const lines = wrapText(helveticaBold, dispTitle, 26.0, w - 28.0);
       let curY = ph - m - 62.0;
       for (const line of lines) {
         page.drawText(line, { x: x1 + 14.0, y: curY, size: 26.0, font: helveticaBold, color: inkDark });
         curY -= 32.0;
       }
-      const dispSub = options.studyTitle || options.subtitle || 'Zonas de Brillouin · Superficie de Fermi · Fonones y Bandas Electrónicas';
+      const dispSub = options.studyTitle || options.subtitle || 'Crystal Lattices & Reciprocal Space · Phonons · Bloch Bands · Superconductivity & BCS';
       if (timesItalic) {
         page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
       }
@@ -3512,17 +3512,17 @@
       page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
       if (courierBold) {
-        page.drawText('CATEDRÁTICO / ALUMNO', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkCopper });
-        page.drawText('CURSO / PERÍODO', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkCopper });
-        page.drawText('VOLUMEN / HOJAS', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkCopper });
+        page.drawText('PROFESSOR / SCHOLAR', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkCopper });
+        page.drawText('ACADEMIC TERM', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkCopper });
+        page.drawText('VOLUME / RECORD', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkCopper });
       }
       if (timesBold) {
-        const authTxt = options.coverAuthor || options.author || 'Departamento de Materia Condensada';
+        const authTxt = options.coverAuthor || options.author || 'Condensed Matter Physics Group';
         page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
-        const dateTxt = todayStr || 'Curso Académico';
+        const dateTxt = todayStr || 'Academic Year';
         page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
         const slideCount = options.totalSlides || options.numSlides;
-        const slideTxt = slideCount ? `${slideCount} Diapositivas` : 'Monografía Teórica';
+        const slideTxt = slideCount ? `${slideCount} Slides` : 'Theoretical Monograph';
         page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
       }
 
@@ -3555,25 +3555,25 @@
       // 3. Header band: Series stamp & Standard Model gauge group
       const headY = ph - m - 22.0;
       if (courierBold) {
-        page.drawText('[ HIGH ENERGY PHYSICS // CERN-SLAC PREPRINT ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkViolet });
+        page.drawText('[ HIGH ENERGY PHYSICS // CERN-SLAC COLLIDER ARCHIVE ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkViolet });
       }
       if (timesItalic || timesFont) {
         const fItalic = timesItalic || timesFont;
-        const eqStr = 'SU(3)_C × SU(2)_L × U(1)_Y  ·  √s = 14 TeV';
+        const eqStr = 'SU(3)_C × SU(2)_L × U(1)_Y  ·  B(A,Z)  ·  √s = 14 TeV';
         const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
         page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkViolet });
       }
       page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
       // 4. Title block
-      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'FÍSICA NUCLEAR & DE PARTÍCULAS');
+      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'NUCLEAR & PARTICLE PHYSICS');
       const lines = wrapText(helveticaBold, dispTitle, 23.0, w - 28.0);
       let curY = ph - m - 62.0;
       for (const line of lines) {
         page.drawText(line, { x: x1 + 14.0, y: curY, size: 23.0, font: helveticaBold, color: inkDark });
         curY -= 29.0;
       }
-      const dispSub = options.studyTitle || options.subtitle || 'Diagramas de Feynman · Modelo Estándar · Colisionadores y Detectores';
+      const dispSub = options.studyTitle || options.subtitle || 'Nuclear Shell Model · Radioactive Decay · Quark Model & QCD · Electroweak Model';
       if (timesItalic) {
         page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
       }
@@ -3646,17 +3646,17 @@
       page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
       if (courierBold) {
-        page.drawText('FÍSICO / INVESTIGADOR', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
-        page.drawText('COLABORACIÓN / FECHA', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
-        page.drawText('ARCHIVADOR / DIAPOS', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
+        page.drawText('PHYSICIST / EXPERIMENTER', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
+        page.drawText('COLLABORATION / DATE', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
+        page.drawText('ARCHIVE / DATASET', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkViolet });
       }
       if (timesBold) {
-        const authTxt = options.coverAuthor || options.author || 'Colaboración de Altas Energías';
+        const authTxt = options.coverAuthor || options.author || 'High Energy Physics Collaboration';
         page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
-        const dateTxt = todayStr || 'Preprint de Investigación';
+        const dateTxt = todayStr || 'Research Preprint';
         page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
         const slideCount = options.totalSlides || options.numSlides;
-        const slideTxt = slideCount ? `${slideCount} Diapositivas` : 'Fascículo de Partículas';
+        const slideTxt = slideCount ? `${slideCount} Slides` : 'Particle Physics Monograph';
         page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
       }
 
@@ -3688,21 +3688,21 @@
         spineColor = rgb(0.04, 0.12, 0.16);  // Bioluminescent Marine #0a1f29
         seamColor = rgb(0.10, 0.32, 0.38);   // Cyan Accent #1a5261
         fallbackBg = rgb(0.06, 0.15, 0.20);
-        bookTitle = 'BIOFÍSICA';
+        bookTitle = 'BIOPHYSICS';
         editionTag = 'Biophysics Dossier · Molecular Dynamics';
       } else if (tpl.includes('atmospheric') || tpl.includes('atmosferica') || tpl.includes('complex_systems') || tpl.includes('sistemas_complejos') || tpl.includes('chaos') || tpl.includes('lorenz')) {
         assetKey = 'science_atmospheric';
         spineColor = rgb(0.07, 0.11, 0.18);  // Deep Storm Navy #121c2e
         seamColor = rgb(0.18, 0.28, 0.40);   // Storm Slate #2e4766
         fallbackBg = rgb(0.09, 0.14, 0.22);
-        bookTitle = 'FÍSICA DE LOS SISTEMAS COMPLEJOS';
+        bookTitle = 'PHYSICS OF COMPLEX SYSTEMS';
         editionTag = 'Nonlinear Dynamics & Complex Systems Archive';
       } else if (tpl.includes('fortran') || tpl.includes('materiales') || tpl.includes('materials_sim') || tpl.includes('computational_materials') || tpl.includes('f77') || tpl.includes('f90')) {
         assetKey = 'science_fortran';
         spineColor = rgb(0.08, 0.11, 0.09);  // Mainframe Dark Phosphor Charcoal #141c17
         seamColor = rgb(0.18, 0.28, 0.20);   // Terminal Green #2e4733
         fallbackBg = rgb(0.10, 0.14, 0.11);
-        bookTitle = 'SIMULACIÓN EN FÍSICA DE MATERIALES';
+        bookTitle = 'MATERIALS PHYSICS SIMULATION';
         editionTag = 'Materials Simulation Archive · Computational Physics';
       } else if (tpl.includes('nuclear') || tpl.includes('particulas') || tpl.includes('particle_physics') || tpl.includes('cern') || tpl.includes('lhc') || tpl.includes('feynman')) {
         assetKey = 'science_nuclear';
@@ -3723,14 +3723,14 @@
         spineColor = rgb(0.10, 0.05, 0.14);  // Deep Quantum Violet #1a0d24
         seamColor = rgb(0.28, 0.17, 0.38);   // Spectroscopy Plum #472b61
         fallbackBg = rgb(0.12, 0.07, 0.17);
-        bookTitle = 'MECÁNICA CUÁNTICA III';
+        bookTitle = 'QUANTUM MECHANICS III';
         editionTag = 'Quantum Mechanics III · Spectroscopy Register';
       } else if (tpl.includes('circuits') || tpl.includes('instrumentacion') || tpl.includes('opamps') || tpl.includes('electronica') || tpl.includes('filters') || tpl.includes('adc_dac')) {
         assetKey = 'science_circuits';
         spineColor = rgb(0.05, 0.12, 0.08);  // Dark PCB Solder Mask #0d1f14
         seamColor = rgb(0.16, 0.32, 0.22);   // Circuit Copper Green #295238
         fallbackBg = rgb(0.07, 0.14, 0.10);
-        bookTitle = 'FUNDAMENTOS DE INSTRUMENTACIÓN ELECTRÓNICA';
+        bookTitle = 'FUNDAMENTALS OF ELECTRONIC INSTRUMENTATION';
         editionTag = 'Electronic Instrumentation & Laboratory Dossier';
       } else if (tpl.includes('morris') || tpl.includes('strawberry') || tpl.includes('botanical')) {
         assetKey = 'comp_morris';
