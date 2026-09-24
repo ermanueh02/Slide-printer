@@ -7,7 +7,7 @@
   <meta name="description" content="Convert PDF slide presentations into beautiful, printable study handouts with note-taking space: ruled lines, grid, bullet points, or blank.">
   
   <!-- PWA & Mobile Meta Tags -->
-  <meta name="theme-color" content="#141517" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -29,7 +29,7 @@
   <!-- App Header -->
   <header class="app-header">
     <div class="header-inner">
-      <a href="#" class="brand-group" id="brandHomeLink" title="Slide-Printer">
+      <a href="#" class="brand-group" id="brandHomeLink" title="Slide-Printer Web 2.0 OLED">
         <div class="brand-insignia" aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="18" height="18" rx="2"></rect>
@@ -38,7 +38,10 @@
           </svg>
         </div>
         <div class="brand-text-col">
-          <span class="brand-title">Slide—Printer</span>
+          <div style="display: flex; align-items: center;">
+            <span class="brand-title">Slide—Printer</span>
+            <span class="v2-badge"><span class="v2-pulse"></span>2.0 OLED</span>
+          </div>
           <span class="brand-subtitle" id="brandSubtitleText">Slides with notes</span>
         </div>
       </a>
@@ -62,6 +65,14 @@
         <button type="button" class="theme-mode-btn" id="themeToggleBtn" title="Theme: Auto (System preference)" aria-label="Toggle theme">
           <span id="themeModeIcon" aria-hidden="true">◐</span>
           <span id="themeModeText">System</span>
+        </button>
+
+        <!-- Keyboard Shortcuts Help -->
+        <button type="button" class="icon-btn" id="shortcutsBtn" title="Keyboard Shortcuts (?)" aria-label="Keyboard Shortcuts">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+            <path d="M6 8h.001M10 8h.001M14 8h.001M18 8h.001M6 12h.001M10 12h.001M14 12h.001M18 12h.001M7 16h10"></path>
+          </svg>
         </button>
 
         <!-- PWA Install Button (activated when installable) -->
@@ -88,7 +99,7 @@
 
     <!-- Hero / Initial State -->
     <section class="hero-section" id="initialHero">
-      <div class="hero-supertitle" id="heroSuperText">PDF Handout Generator</div>
+      <div class="hero-supertitle" id="heroSuperText">PDF Handout Generator · v2.0 OLED Edition</div>
       <h1 class="hero-title" id="heroTitleText">Print slides with dedicated note space</h1>
       <p class="hero-subtitle" id="heroSubText">
         Transform any presentation into clean, printable study handouts. Adds note-taking area beneath each slide while preserving aspect ratios and clickable links.
@@ -180,6 +191,34 @@
 
         <!-- Controls Column -->
         <aside class="controls-sidebar">
+
+          <!-- Web 2.0 Smart Presets Bar -->
+          <div class="smart-presets-card" id="smartPresetsCard">
+            <div class="smart-presets-header">
+              <div class="smart-presets-title">
+                <span>⚡ Smart Presets</span>
+              </div>
+              <span class="smart-presets-badge">1-Click</span>
+            </div>
+            <div class="smart-presets-grid">
+              <button type="button" class="preset-chip" id="presetStudentBtn" title="A4, 1-Up, Ruled lines, Ring Binder margin & cover">
+                <span class="preset-chip-title">🎓 Student</span>
+                <span class="preset-chip-desc">A4 · Lined · Binder · Cover</span>
+              </button>
+              <button type="button" class="preset-chip" id="presetStemBtn" title="A4, 1-Up, Math Grid, Study Header & Page numbers">
+                <span class="preset-chip-title">🔬 STEM &amp; Lab</span>
+                <span class="preset-chip-desc">A4 · Tech Grid · Header</span>
+              </button>
+              <button type="button" class="preset-chip" id="presetEcoBtn" title="A4, 2-Up, Blank notes, Grayscale ink saver">
+                <span class="preset-chip-title">🌱 Eco Compact</span>
+                <span class="preset-chip-desc">A4 · 2-Up · Blank · Eco</span>
+              </button>
+              <button type="button" class="preset-chip" id="presetDossierBtn" title="A4, 1-Up, Dot matrix, Spiral binding & Duplex">
+                <span class="preset-chip-title">📖 Archival</span>
+                <span class="preset-chip-desc">A4 · Dots · Spiral · Duplex</span>
+              </button>
+            </div>
+          </div>
 
           <!-- Section 01: Note Style Selection -->
           <div class="card">
@@ -337,6 +376,16 @@
               </select>
               <div id="coverMetaFields" class="sub-form-group" style="margin-top: 0.5rem;">
                 <label for="coverTemplateSelect" class="form-label" style="font-size: 0.75rem; margin-bottom: 0.25rem;"><span id="coverTemplateLabelText">Cover Style</span></label>
+                <!-- Category Filter Pills -->
+                <div class="cover-filter-row" role="group" aria-label="Cover Categories">
+                  <button type="button" class="cover-cat-pill active" data-cover-cat="all">All</button>
+                  <button type="button" class="cover-cat-pill" data-cover-cat="groupScienceFlat">USC Flat 90s</button>
+                  <button type="button" class="cover-cat-pill" data-cover-cat="groupScience">USC Illustrated</button>
+                  <button type="button" class="cover-cat-pill" data-cover-cat="groupNotebooks">Composition</button>
+                  <button type="button" class="cover-cat-pill" data-cover-cat="groupClassics">Classics</button>
+                  <button type="button" class="cover-cat-pill" data-cover-cat="groupDecades">Decades</button>
+                  <button type="button" class="cover-cat-pill" data-cover-cat="groupSeasons">Seasons</button>
+                </div>
                 <select id="coverTemplateSelect" class="form-select" style="margin-bottom: 0.35rem;">
                   <optgroup label="Clásicos / Zara" id="groupClassics">
                     <option value="atelier" id="optTemplateAtelier" selected>Atelier Notebook (Zara Home Classic)</option>
@@ -574,20 +623,39 @@
         <!-- Right Column: Live Handout Preview -->
         <section class="preview-pane">
 
-          <!-- Page Navigator Bar -->
-          <div class="page-navigator" role="navigation" aria-label="Slide navigation">
-            <button type="button" class="nav-btn" id="prevPageBtn" title="Previous page" aria-label="Previous page">←</button>
-            <div class="page-display">
-              <span id="slideFolioText">Slide</span>
-              <input type="number" id="pageInput" class="page-number-input" min="1" value="1" aria-label="Current sheet number">
-              <span><span id="slideOfText">of</span> <span id="totalPagesSpan" class="mono-val">1</span></span>
+          <!-- Web 2.0 Floating Interactive Preview Toolbar -->
+          <div class="preview-toolbar" role="toolbar" aria-label="Preview and navigation tools">
+            <!-- Left: Slide Navigation -->
+            <div class="toolbar-group">
+              <button type="button" class="nav-btn" id="prevPageBtn" title="Previous slide (← / Left Arrow)" aria-label="Previous page">←</button>
+              <div class="page-display">
+                <span id="slideFolioText">Slide</span>
+                <input type="number" id="pageInput" class="page-number-input" min="1" value="1" aria-label="Current sheet number">
+                <span><span id="slideOfText">of</span> <span id="totalPagesSpan" class="mono-val">1</span></span>
+              </div>
+              <button type="button" class="nav-btn" id="nextPageBtn" title="Next slide (→ / Right Arrow)" aria-label="Next page">→</button>
             </div>
-            <button type="button" class="nav-btn" id="nextPageBtn" title="Next page" aria-label="Next page">→</button>
+
+            <!-- Right: Zoom, Dark Paper & Fullscreen Controls -->
+            <div class="toolbar-group">
+              <button type="button" class="tool-btn" id="zoomOutBtn" title="Zoom Out (-)" aria-label="Zoom Out">−</button>
+              <span class="zoom-level-text" id="zoomLevelText">100%</span>
+              <button type="button" class="tool-btn" id="zoomInBtn" title="Zoom In (+)" aria-label="Zoom In">+</button>
+              <button type="button" class="tool-btn" id="zoomFitBtn" title="Fit Page (0)" aria-label="Fit Page">Fit</button>
+              <button type="button" class="tool-btn" id="darkPaperToggleBtn" title="Toggle Reading Mode / Dark Paper (I)" aria-label="Dark Paper Mode">🌙 Dark Paper</button>
+              <button type="button" class="tool-btn" id="filmstripToggleBtn" title="Toggle Slide Filmstrip Carousel" aria-label="Slide Strip">▦ Strip</button>
+              <button type="button" class="tool-btn" id="theaterBtn" title="Theater / Fullscreen Preview (F / Esc to exit)" aria-label="Theater Mode">⛶ Theater</button>
+            </div>
           </div>
 
           <!-- Simulated Paper Sheet Container -->
           <div class="paper-container" id="paperContainer">
             <canvas id="previewCanvas" width="595" height="842"></canvas>
+          </div>
+
+          <!-- Slide Filmstrip Drawer (Slide Carousel) -->
+          <div class="filmstrip-drawer hidden" id="filmstripDrawer">
+            <!-- Dynamically populated slide badges -->
           </div>
 
         </section>
@@ -609,6 +677,53 @@
       <div class="progress-percentage mono-val" id="progressText">0%</div>
     </div>
   </div>
+
+  <!-- Keyboard Shortcuts Modal -->
+  <div class="shortcuts-modal hidden" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+    <div class="shortcuts-card">
+      <div class="shortcuts-header">
+        <div class="shortcuts-title" id="shortcutsTitle">Keyboard Shortcuts</div>
+        <button type="button" class="icon-btn" id="closeShortcutsBtn" aria-label="Close">✕</button>
+      </div>
+      <div class="shortcuts-grid">
+        <div class="shortcut-row">
+          <span class="shortcut-desc">Next / Previous Slide</span>
+          <span class="shortcut-keys"><span class="shortcut-key">→</span> <span class="shortcut-key">←</span></span>
+        </div>
+        <div class="shortcut-row">
+          <span class="shortcut-desc">Zoom In / Zoom Out</span>
+          <span class="shortcut-keys"><span class="shortcut-key">+</span> <span class="shortcut-key">-</span></span>
+        </div>
+        <div class="shortcut-row">
+          <span class="shortcut-desc">Reset Zoom to Fit</span>
+          <span class="shortcut-keys"><span class="shortcut-key">0</span></span>
+        </div>
+        <div class="shortcut-row">
+          <span class="shortcut-desc">Download Handout PDF</span>
+          <span class="shortcut-keys"><span class="shortcut-key">D</span></span>
+        </div>
+        <div class="shortcut-row">
+          <span class="shortcut-desc">Print Handouts</span>
+          <span class="shortcut-keys"><span class="shortcut-key">P</span></span>
+        </div>
+        <div class="shortcut-row">
+          <span class="shortcut-desc">Cycle Theme (OLED / Light / Auto)</span>
+          <span class="shortcut-keys"><span class="shortcut-key">T</span></span>
+        </div>
+        <div class="shortcut-row">
+          <span class="shortcut-desc">Toggle Dark Paper Mode</span>
+          <span class="shortcut-keys"><span class="shortcut-key">I</span></span>
+        </div>
+        <div class="shortcut-row">
+          <span class="shortcut-desc">Close Modal / Exit Theater</span>
+          <span class="shortcut-keys"><span class="shortcut-key">Esc</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
   <!-- App Footer -->
   <footer class="app-footer">

@@ -13,10 +13,10 @@
       privacyBadge: "100% Private · In-Browser",
       themeAuto: "System",
       themeLight: "Light",
-      themeDark: "Dark",
+      themeDark: "OLED Dark",
       themeAutoTitle: "Theme: Auto (System preference)",
       themeLightTitle: "Theme: Light",
-      themeDarkTitle: "Theme: Dark",
+      themeDarkTitle: "Theme: OLED Pure Black (#000000)",
       installApp: "Install",
       installAppTitle: "Install Slide-Printer as App",
       heroSuper: "PDF Handout Generator",
@@ -181,10 +181,10 @@
       privacyBadge: "100% privado · En tu navegador",
       themeAuto: "Sistema",
       themeLight: "Claro",
-      themeDark: "Oscuro",
+      themeDark: "OLED Oscuro",
       themeAutoTitle: "Tema: Automático (Preferencia del sistema)",
       themeLightTitle: "Tema: Claro",
-      themeDarkTitle: "Tema: Oscuro",
+      themeDarkTitle: "Tema: Negro puro OLED (#000000)",
       installApp: "Instalar",
       installAppTitle: "Instalar Slide-Printer como aplicación",
       heroSuper: "Conversor de PDF a apuntes",
@@ -345,10 +345,10 @@
       privacyBadge: "100% privado · No navegador",
       themeAuto: "Sistema",
       themeLight: "Claro",
-      themeDark: "Escuro",
+      themeDark: "OLED Escuro",
       themeAutoTitle: "Tema: Automático (Preferencia do sistema)",
       themeLightTitle: "Tema: Claro",
-      themeDarkTitle: "Tema: Escuro",
+      themeDarkTitle: "Tema: Negro puro OLED (#000000)",
       installApp: "Instalar",
       installAppTitle: "Instalar Slide-Printer como aplicación",
       heroSuper: "Conversor de PDF a apuntamentos",
@@ -548,6 +548,9 @@
     pageNumbers: true,
     pageNumberFormat: 'total',
     ecoPrint: false,
+    zoom: 1.0,
+    darkPaper: false,
+    coverCategory: 'all',
     isProcessing: false,
     lang: 'en',
   };
@@ -1018,6 +1021,10 @@
     }
     updateThemeButtonUI();
 
+    if (mode === 'dark' || (mode === 'auto' && systemPrefersDark.matches)) {
+      showToast('🌙 OLED Pure Black (#000000) Mode Active');
+    }
+
     if (state.pdfjsDoc) {
       renderCurrentPreview();
     }
@@ -1480,6 +1487,11 @@
 
   // --- Controls & Options ---
   function setupControls() {
+    setupSmartPresets();
+    setupCoverFilter();
+    setupPreviewToolbar();
+    setupKeyboardShortcutsModal();
+
     const styleOptions = document.querySelectorAll('.style-card');
     const paperSelect = document.getElementById('paperSelect');
     const marginSlider = document.getElementById('marginSlider');
@@ -1995,6 +2007,7 @@
         slideFolioText.textContent = (state.lang === 'en' ? 'Page' : (state.lang === 'gl' ? 'Páxina' : 'Página'));
       }
     }
+    renderFilmstrip();
   }
 
   function setupPageNavigation() {
@@ -2034,10 +2047,58 @@
         return;
       }
       const totalSheets = getTotalSheets();
+      const shortcutsModal = document.getElementById('shortcutsModal');
+      const isModalOpen = shortcutsModal && !shortcutsModal.classList.contains('hidden');
+
+      if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+        e.preventDefault();
+        if (shortcutsModal) {
+          shortcutsModal.classList.toggle('hidden');
+        }
+        return;
+      }
+
+      if (e.key === 'Escape') {
+        if (isModalOpen) {
+          shortcutsModal.classList.add('hidden');
+        } else if (document.body.classList.contains('theater-active')) {
+          document.body.classList.remove('theater-active');
+          const theaterBtn = document.getElementById('theaterBtn');
+          if (theaterBtn) theaterBtn.classList.remove('active');
+          showToast('Exited Theater Mode');
+        }
+        return;
+      }
+
       if (e.key === 'ArrowLeft' && state.currentPage > 1) {
         goToPage(state.currentPage - 1);
       } else if (e.key === 'ArrowRight' && state.currentPage < totalSheets) {
         goToPage(state.currentPage + 1);
+      } else if (e.key === '+' || e.key === '=') {
+        state.zoom = Math.min(2.5, Math.round((state.zoom + 0.15) * 100) / 100);
+        applyZoom();
+      } else if (e.key === '-' || e.key === '_') {
+        state.zoom = Math.max(0.4, Math.round((state.zoom - 0.15) * 100) / 100);
+        applyZoom();
+      } else if (e.key === '0') {
+        state.zoom = 1.0;
+        applyZoom();
+        showToast('Zoom: 100% (Fit)');
+      } else if ((e.key === 'd' || e.key === 'D') && !e.ctrlKey && !e.metaKey) {
+        const downloadBtn = document.getElementById('downloadBtn');
+        if (downloadBtn && state.pdfBytes) downloadBtn.click();
+      } else if ((e.key === 'p' || e.key === 'P') && !e.ctrlKey && !e.metaKey) {
+        const printBtn = document.getElementById('printBtn');
+        if (printBtn && state.pdfBytes) printBtn.click();
+      } else if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.metaKey) {
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        if (themeToggleBtn) themeToggleBtn.click();
+      } else if ((e.key === 'i' || e.key === 'I') && !e.ctrlKey && !e.metaKey) {
+        const darkPaperToggleBtn = document.getElementById('darkPaperToggleBtn');
+        if (darkPaperToggleBtn) darkPaperToggleBtn.click();
+      } else if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey) {
+        const theaterBtn = document.getElementById('theaterBtn');
+        if (theaterBtn) theaterBtn.click();
       }
     });
   }
@@ -2047,6 +2108,7 @@
     state.currentPage = Math.max(1, Math.min(sheetNum, totalSheets));
     updatePageNavigatorUI();
     renderCurrentPreview();
+    updateFilmstripActive();
   }
 
   // --- Preview Rendering ---
@@ -2088,6 +2150,8 @@
         selectedIndices: selectedIndices,
       }
     );
+    applyZoom();
+    updateFilmstripActive();
   }
 
   // --- Action Handlers ---
@@ -2563,6 +2627,310 @@
       }
       console.log('Slide-Printer PWA successfully installed');
     });
+  }
+
+  // --- Toast Notification System ---
+  function showToast(message, duration = 3000) {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<span class="toast-dot" aria-hidden="true"></span><span>${message}</span>`;
+    container.appendChild(toast);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        toast.classList.add('show');
+      });
+    });
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.parentNode.removeChild(toast);
+        }
+      }, 300);
+    }, duration);
+  }
+
+  // --- Web 2.0: Smart Presets ---
+  function setupSmartPresets() {
+    const presetStudentBtn = document.getElementById('presetStudentBtn');
+    const presetStemBtn = document.getElementById('presetStemBtn');
+    const presetEcoBtn = document.getElementById('presetEcoBtn');
+    const presetDossierBtn = document.getElementById('presetDossierBtn');
+
+    if (presetStudentBtn) {
+      presetStudentBtn.addEventListener('click', () => {
+        state.paperSize = 'a4';
+        state.layout = '1-up';
+        state.style = 'lines';
+        state.selectedStyles = ['lines', 'grid'];
+        state.binding = 'binder';
+        state.hasGutter = true;
+        state.gutter = 40;
+        state.holeGuides = true;
+        state.coverMode = 'generate';
+        state.coverTemplate = 'atelier';
+        applyStateToDOM();
+        updateStyleSelectionUI();
+        savePresets();
+        goToPage(1);
+        showToast('🎓 <strong>Student Classic</strong> preset applied');
+      });
+    }
+
+    if (presetStemBtn) {
+      presetStemBtn.addEventListener('click', () => {
+        state.paperSize = 'a4';
+        state.layout = '1-up';
+        state.style = 'grid';
+        state.selectedStyles = ['grid'];
+        state.binding = 'none';
+        state.hasGutter = false;
+        state.gutter = 0;
+        state.holeGuides = false;
+        state.studyHeader = true;
+        state.pageNumbers = true;
+        state.pageNumberFormat = 'total';
+        state.coverMode = 'generate';
+        state.coverTemplate = 'quantum_flat';
+        applyStateToDOM();
+        updateStyleSelectionUI();
+        savePresets();
+        goToPage(1);
+        showToast('🔬 <strong>STEM &amp; Lab</strong> preset applied');
+      });
+    }
+
+    if (presetEcoBtn) {
+      presetEcoBtn.addEventListener('click', () => {
+        state.paperSize = 'a4';
+        state.layout = '2-up';
+        state.style = 'blank';
+        state.selectedStyles = ['blank'];
+        state.binding = 'none';
+        state.hasGutter = false;
+        state.gutter = 0;
+        state.holeGuides = false;
+        state.ecoPrint = true;
+        state.coverMode = 'none';
+        applyStateToDOM();
+        updateStyleSelectionUI();
+        savePresets();
+        goToPage(1);
+        showToast('🌱 <strong>Eco Compact (2-Up)</strong> preset applied');
+      });
+    }
+
+    if (presetDossierBtn) {
+      presetDossierBtn.addEventListener('click', () => {
+        state.paperSize = 'a4';
+        state.layout = '1-up';
+        state.style = 'dots';
+        state.selectedStyles = ['dots', 'grid'];
+        state.binding = 'spiral';
+        state.hasGutter = true;
+        state.gutter = 36;
+        state.holeGuides = false;
+        state.duplex = true;
+        state.coverMode = 'generate';
+        state.coverTemplate = 'monograph';
+        applyStateToDOM();
+        updateStyleSelectionUI();
+        savePresets();
+        goToPage(1);
+        showToast('📖 <strong>Archival Spiral</strong> preset applied');
+      });
+    }
+  }
+
+  // --- Web 2.0: Cover Category Filter ---
+  function setupCoverFilter() {
+    const pills = document.querySelectorAll('.cover-cat-pill');
+    const select = document.getElementById('coverTemplateSelect');
+    if (!select || pills.length === 0) return;
+
+    pills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        pills.forEach((p) => p.classList.remove('active'));
+        pill.classList.add('active');
+        const cat = pill.getAttribute('data-cover-cat');
+        state.coverCategory = cat;
+
+        const optgroups = select.querySelectorAll('optgroup');
+        optgroups.forEach((group) => {
+          if (cat === 'all' || group.id === cat) {
+            group.style.display = '';
+          } else {
+            group.style.display = 'none';
+          }
+        });
+
+        // If currently selected option is now hidden in filtered view, switch to first visible
+        const currentGroup = select.selectedOptions[0]?.parentElement;
+        if (cat !== 'all' && currentGroup && currentGroup.id !== cat) {
+          const targetGroup = document.getElementById(cat);
+          if (targetGroup) {
+            const firstOpt = targetGroup.querySelector('option');
+            if (firstOpt) {
+              select.value = firstOpt.value;
+              state.coverTemplate = firstOpt.value;
+              savePresets();
+              if (state.coverMode === 'generate' && state.currentPage === 1) {
+                renderCurrentPreview();
+              }
+            }
+          }
+        }
+      });
+    });
+  }
+
+  // --- Web 2.0: Zoom Engine ---
+  function applyZoom() {
+    const canvas = document.getElementById('previewCanvas');
+    const zoomLevelText = document.getElementById('zoomLevelText');
+    if (!canvas) return;
+    canvas.style.transform = `scale(${state.zoom})`;
+    canvas.style.transformOrigin = 'center top';
+    canvas.style.transition = 'transform 0.15s ease-out';
+    if (zoomLevelText) {
+      zoomLevelText.textContent = `${Math.round(state.zoom * 100)}%`;
+    }
+  }
+
+  // --- Web 2.0: Interactive Preview Toolbar ---
+  function setupPreviewToolbar() {
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const zoomFitBtn = document.getElementById('zoomFitBtn');
+    const darkPaperToggleBtn = document.getElementById('darkPaperToggleBtn');
+    const filmstripToggleBtn = document.getElementById('filmstripToggleBtn');
+    const theaterBtn = document.getElementById('theaterBtn');
+    const paperContainer = document.getElementById('paperContainer');
+    const filmstripDrawer = document.getElementById('filmstripDrawer');
+
+    if (zoomInBtn) {
+      zoomInBtn.addEventListener('click', () => {
+        state.zoom = Math.min(2.5, Math.round((state.zoom + 0.15) * 100) / 100);
+        applyZoom();
+      });
+    }
+
+    if (zoomOutBtn) {
+      zoomOutBtn.addEventListener('click', () => {
+        state.zoom = Math.max(0.4, Math.round((state.zoom - 0.15) * 100) / 100);
+        applyZoom();
+      });
+    }
+
+    if (zoomFitBtn) {
+      zoomFitBtn.addEventListener('click', () => {
+        state.zoom = 1.0;
+        applyZoom();
+        showToast('Zoom: 100% (Fit)');
+      });
+    }
+
+    if (darkPaperToggleBtn) {
+      darkPaperToggleBtn.addEventListener('click', () => {
+        state.darkPaper = !state.darkPaper;
+        if (paperContainer) {
+          paperContainer.classList.toggle('dark-paper', state.darkPaper);
+        }
+        darkPaperToggleBtn.classList.toggle('active', state.darkPaper);
+        showToast(state.darkPaper ? '🌙 Dark Paper Reading Mode: Active' : '☀️ Standard Paper Mode');
+      });
+    }
+
+    if (filmstripToggleBtn) {
+      filmstripToggleBtn.addEventListener('click', () => {
+        if (!filmstripDrawer) return;
+        const isHidden = filmstripDrawer.classList.toggle('hidden');
+        filmstripToggleBtn.classList.toggle('active', !isHidden);
+        if (!isHidden) {
+          renderFilmstrip();
+          updateFilmstripActive();
+        }
+      });
+    }
+
+    if (theaterBtn) {
+      theaterBtn.addEventListener('click', () => {
+        const isTheater = document.body.classList.toggle('theater-active');
+        theaterBtn.classList.toggle('active', isTheater);
+        showToast(isTheater ? '⛶ Theater Mode Active (Press Esc to exit)' : 'Exited Theater Mode');
+      });
+    }
+  }
+
+  // --- Web 2.0: Filmstrip Carousel Drawer ---
+  function renderFilmstrip() {
+    const drawer = document.getElementById('filmstripDrawer');
+    if (!drawer) return;
+    drawer.innerHTML = '';
+    const totalSheets = getTotalSheets();
+    if (!totalSheets || totalSheets < 1) return;
+
+    for (let sheet = 1; sheet <= totalSheets; sheet++) {
+      const item = document.createElement('div');
+      item.className = 'filmstrip-item' + (sheet === state.currentPage ? ' active' : '');
+      item.dataset.sheet = sheet;
+
+      const isCover = state.coverMode === 'generate' && sheet === 1;
+      const label = isCover ? 'Cover' : (state.coverMode === 'generate' ? sheet - 1 : sheet);
+      const icon = isCover ? '📕' : '📄';
+
+      item.innerHTML = `<span style="font-size: 1.1rem; line-height: 1; margin-bottom: 2px;">${icon}</span><span>${label}</span>`;
+      item.addEventListener('click', () => {
+        goToPage(sheet);
+      });
+      drawer.appendChild(item);
+    }
+  }
+
+  function updateFilmstripActive() {
+    const drawer = document.getElementById('filmstripDrawer');
+    if (!drawer) return;
+    const items = drawer.querySelectorAll('.filmstrip-item');
+    items.forEach((item) => {
+      const isCurrent = Number(item.dataset.sheet) === state.currentPage;
+      item.classList.toggle('active', isCurrent);
+      if (isCurrent) {
+        item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    });
+  }
+
+  // --- Web 2.0: Keyboard Shortcuts Cheat-sheet Modal ---
+  function setupKeyboardShortcutsModal() {
+    const shortcutsBtn = document.getElementById('shortcutsBtn');
+    const shortcutsModal = document.getElementById('shortcutsModal');
+    const closeShortcutsBtn = document.getElementById('closeShortcutsBtn');
+
+    function openModal() {
+      if (shortcutsModal) shortcutsModal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      if (shortcutsModal) shortcutsModal.classList.add('hidden');
+    }
+
+    if (shortcutsBtn) {
+      shortcutsBtn.addEventListener('click', openModal);
+    }
+
+    if (closeShortcutsBtn) {
+      closeShortcutsBtn.addEventListener('click', closeModal);
+    }
+
+    if (shortcutsModal) {
+      shortcutsModal.addEventListener('click', (e) => {
+        if (e.target === shortcutsModal) {
+          closeModal();
+        }
+      });
+    }
   }
 
   // --- Main Initialization (Called after all definitions) ---
