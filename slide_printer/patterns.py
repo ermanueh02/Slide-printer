@@ -1901,7 +1901,7 @@ def generate_cover_page(
         c.setFillColor(ink_violet)
         c.drawString(x1 + 14.0, head_y, "[ PREPRINT QM-III // THEORETICAL & ATOMIC PHYSICS ]")
         c.setFont("Times-BoldItalic", 9.0)
-        c.drawRightString(x2 - 14.0, head_y, "Ĥ |ψ⟩ = E |ψ⟩  ·  L⃗·S⃗  ·  σ_tot = (4π/k) Im f(0)")
+        c.drawRightString(x2 - 14.0, head_y, "H |psi> = E |psi>  ·  L·S  ·  sigma_tot = (4pi/k) Im f(0)")
 
         c.setStrokeColor(hairline)
         c.setLineWidth(0.6)
@@ -1944,7 +1944,7 @@ def generate_cover_page(
         c.drawPath(p_path, stroke=1, fill=0)
 
         # Quantized Energy Levels (n = 0, 1, 2, 3) and Eigen-wavefunctions psi_n(x)
-        level_labels = ["E₀ = ½ħω", "E₁ = ³⁄₂ħω", "E₂ = ⁵⁄₂ħω", "E₃ = ⁷⁄₂ħω"]
+        level_labels = ["E0 = (1/2) hbar omega", "E1 = (3/2) hbar omega", "E2 = (5/2) hbar omega", "E3 = (7/2) hbar omega"]
         for n in range(4):
             ly = diag_cy - 50.0 + n * 32.0
             lw = diag_w * (0.35 + n * 0.14)
@@ -1989,8 +1989,8 @@ def generate_cover_page(
         c.setFont("Times-Italic", 8.0)
         c.setFillColor(ink_dark)
         c.drawCentredString(center_x, diag_cy - 82.0, "x (Position / Spatial Coordinate)")
-        c.drawRightString(diag_x2 - 10.0, diag_cy - 82.0, "+∞")
-        c.drawString(diag_x1 + 10.0, diag_cy - 82.0, "-∞")
+        c.drawRightString(diag_x2 - 10.0, diag_cy - 82.0, "+inf")
+        c.drawString(diag_x1 + 10.0, diag_cy - 82.0, "-inf")
 
         # 6. Lower Technical Metadata Grid
         meta_y = m + 28.0
@@ -2046,7 +2046,7 @@ def generate_cover_page(
         c.setFillColor(ink_teal)
         c.drawString(x1 + 14.0, head_y, "[ MOLECULAR BIOPHYSICS // MONOGRAPH DOSSIER ]")
         c.setFont("Times-BoldItalic", 9.0)
-        c.drawRightString(x2 - 14.0, head_y, "ΔG = ΔH - TΔS  ·  k_B T ln(K_eq)")
+        c.drawRightString(x2 - 14.0, head_y, "Delta G = Delta H - T Delta S  ·  k_B T ln(K_eq)")
 
         c.setStrokeColor(hairline)
         c.setLineWidth(0.6)
@@ -2169,7 +2169,7 @@ def generate_cover_page(
         c.setFillColor(ink_amber)
         c.drawString(x1 + 14.0, head_y, "[ NONLINEAR DYNAMICS // COMPLEX SYSTEMS & CHAOS ]")
         c.setFont("Times-BoldItalic", 9.0)
-        c.drawRightString(x2 - 14.0, head_y, "ẋ=σ(y-x) · ẏ=x(ρ-z)-y · ż=xy-βz · δ≈4.6692")
+        c.drawRightString(x2 - 14.0, head_y, "dx/dt = sigma(y-x) · dy/dt = x(rho-z)-y · dz/dt = xy-beta z")
 
         c.setStrokeColor(hairline)
         c.setLineWidth(0.6)
@@ -2226,7 +2226,7 @@ def generate_cover_page(
 
         c.setFont("Courier-Bold", 7.5)
         c.setFillColor(ink_muted)
-        c.drawCentredString(center_x, diag_cy - 68.0, "LORENZ (1963) · σ = 10.0 · ρ = 28.0 · β = 8/3 · DIM = 2.06")
+        c.drawCentredString(center_x, diag_cy - 68.0, "LORENZ (1963) · sigma = 10.0 · rho = 28.0 · beta = 8/3 · DIM = 2.06")
 
         # 6. Lower Technical Metadata Grid
         meta_y = m + 28.0
@@ -2282,7 +2282,7 @@ def generate_cover_page(
         c.setFillColor(ink_green)
         c.drawString(x1 + 14.0, head_y, "[ HPC SIMULATION // COMPUTATIONAL MATERIALS & MOLECULAR DYNAMICS ]")
         c.setFont("Times-BoldItalic", 9.0)
-        c.drawRightString(x2 - 14.0, head_y, "F_i = -∇_i V(r_ij)  ·  Δt = 1.0 fs  ·  D = ⅙ lim d⟨Δr²⟩/dt")
+        c.drawRightString(x2 - 14.0, head_y, "F_i = -grad_i V(r_ij)  ·  dt = 1.0 fs  ·  D = (1/6) lim d<dr^2>/dt")
 
         c.setStrokeColor(hairline)
         c.setLineWidth(0.6)
@@ -2400,7 +2400,7 @@ def generate_cover_page(
         c.setFillColor(ink_green)
         c.drawString(x1 + 14.0, head_y, "[ IEEE INSTRUMENTATION // ANALOG FRONT-END & DAQ ]")
         c.setFont("Times-BoldItalic", 9.0)
-        c.drawRightString(x2 - 14.0, head_y, "V_out = -(R_f / R_in) V_in  ·  CMRR > 120 dB  ·  f_s ≥ 2·f_max")
+        c.drawRightString(x2 - 14.0, head_y, "V_out = -(R_f / R_in) V_in  ·  CMRR > 120 dB  ·  f_s >= 2 f_max")
 
         c.setStrokeColor(hairline)
         c.setLineWidth(0.6)
@@ -2526,7 +2526,7 @@ def generate_cover_page(
         c.setFillColor(ink_copper)
         c.drawString(x1 + 14.0, head_y, "[ CONDENSED MATTER // SOLID STATE & BRILLOUIN ARCHIVE ]")
         c.setFont("Times-BoldItalic", 9.0)
-        c.drawRightString(x2 - 14.0, head_y, "ψ_k(r) = e^{ik·r} u_k(r)  ·  E_F = ħ²k_F² / 2m*  ·  Φ_0 = h/2e")
+        c.drawRightString(x2 - 14.0, head_y, "psi_k(r) = e^{ik·r} u_k(r)  ·  E_F = (hbar^2 k_F^2)/2m*  ·  Phi_0 = h/2e")
 
         c.setStrokeColor(hairline)
         c.setLineWidth(0.6)
@@ -2574,7 +2574,7 @@ def generate_cover_page(
         c.setFillColor(ink_dark)
         c.circle(center_x, diag_cy, 2.5, fill=1, stroke=0)
         c.setFont("Times-BoldItalic", 9.0)
-        c.drawString(center_x - 12.0, diag_cy - 2.0, "Γ")
+        c.drawString(center_x - 12.0, diag_cy - 2.0, "G")
         c.circle(center_x + hex_r, diag_cy, 2.0, fill=1, stroke=0)
         c.drawString(center_x + hex_r + 4.0, diag_cy - 3.0, "K")
         c.circle(center_x + hex_r * 0.866 * math.cos(math.pi / 6), diag_cy + hex_r * 0.866 * math.sin(math.pi / 6), 2.0, fill=1, stroke=0)
@@ -2643,7 +2643,7 @@ def generate_cover_page(
         c.setFillColor(ink_violet)
         c.drawString(x1 + 14.0, head_y, "[ HIGH ENERGY PHYSICS // CERN-SLAC COLLIDER ARCHIVE ]")
         c.setFont("Times-BoldItalic", 9.0)
-        c.drawRightString(x2 - 14.0, head_y, "SU(3)_C × SU(2)_L × U(1)_Y  ·  B(A,Z)  ·  √s = 14 TeV")
+        c.drawRightString(x2 - 14.0, head_y, "SU(3)_C x SU(2)_L x U(1)_Y  ·  B(A,Z)  ·  sqrt(s) = 14 TeV")
 
         c.setStrokeColor(hairline)
         c.setLineWidth(0.6)
@@ -2675,8 +2675,8 @@ def generate_cover_page(
         c.line(v1_x - 60.0, diag_cy + 40.0, v1_x, diag_cy)
         c.line(v1_x - 60.0, diag_cy - 40.0, v1_x, diag_cy)
         c.setFont("Times-Italic", 9.0)
-        c.drawString(v1_x - 72.0, diag_cy + 38.0, "e⁻")
-        c.drawString(v1_x - 72.0, diag_cy - 42.0, "e⁺")
+        c.drawString(v1_x - 72.0, diag_cy + 38.0, "e-")
+        c.drawString(v1_x - 72.0, diag_cy - 42.0, "e+")
 
         # Gauge boson propagator (Z0 / gamma*) wavy line
         c.setStrokeColor(ink_violet)
@@ -2693,7 +2693,7 @@ def generate_cover_page(
         c.drawPath(w_path, stroke=1, fill=0)
         c.setFont("Courier-Bold", 7.5)
         c.setFillColor(ink_violet)
-        c.drawCentredString(center_x, diag_cy + 10.0, "γ* / Z⁰")
+        c.drawCentredString(center_x, diag_cy + 10.0, "gamma* / Z0")
 
         # Outgoing quarks (q, q-bar)
         c.setStrokeColor(ink_dark)
@@ -2702,7 +2702,7 @@ def generate_cover_page(
         c.line(v2_x, diag_cy, v2_x + 60.0, diag_cy - 40.0)
         c.setFont("Times-Italic", 9.0)
         c.drawString(v2_x + 66.0, diag_cy + 38.0, "q")
-        c.drawString(v2_x + 66.0, diag_cy - 42.0, "q̄")
+        c.drawString(v2_x + 66.0, diag_cy - 42.0, "q_bar")
 
         # Vertex interaction nodes
         c.setFillColor(ink_dark)
@@ -2718,7 +2718,7 @@ def generate_cover_page(
         # Stamp box
         c.setFont("Courier-Bold", 7.5)
         c.setFillColor(ink_violet)
-        c.drawCentredString(center_x, diag_cy - 68.0, "ELECTROWEAK ANNIHILATION · FEYNMAN DIAGRAM · 4π DETECTOR")
+        c.drawCentredString(center_x, diag_cy - 68.0, "ELECTROWEAK ANNIHILATION · FEYNMAN DIAGRAM · 4pi DETECTOR")
 
         # 6. Lower Technical Metadata Grid
         meta_y = m + 28.0

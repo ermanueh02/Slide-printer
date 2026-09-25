@@ -28,6 +28,68 @@
     currentRenderTasks = [];
   }
 
+  const mathImgCache = new Map();
+
+  /**
+   * Pre-loads math vector SVG assets from window.SLIDE_PRINTER_MATH_ASSETS into HTML Image objects.
+   */
+  function preloadMathSvgs() {
+    if (typeof window === 'undefined' || !window.SLIDE_PRINTER_MATH_ASSETS) return;
+    for (const [key, svgStr] of Object.entries(window.SLIDE_PRINTER_MATH_ASSETS)) {
+      if (!mathImgCache.has(key)) {
+        const img = new Image();
+        img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
+        mathImgCache.set(key, img);
+      }
+    }
+  }
+
+  if (typeof window !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', preloadMathSvgs);
+    } else {
+      setTimeout(preloadMathSvgs, 0);
+    }
+  }
+
+  /**
+   * Draws a pre-compiled LaTeX (newtxmath) vector SVG asset onto the preview canvas.
+   * 
+   * @param {CanvasRenderingContext2D} ctx Target 2D context.
+   * @param {string} assetKey Identifier in window.SLIDE_PRINTER_MATH_ASSETS.
+   * @param {number} x Position X.
+   * @param {number} y Position Y.
+   * @param {number} width Rendered width.
+   * @param {number} height Rendered height.
+   * @param {string} align 'left' | 'center' | 'right'.
+   * @returns {boolean} True if successfully drawn.
+   */
+  function drawMathSvg(ctx, assetKey, x, y, width, height, align = 'left') {
+    if (typeof window === 'undefined' || !window.SLIDE_PRINTER_MATH_ASSETS) return false;
+    const svgStr = window.SLIDE_PRINTER_MATH_ASSETS[assetKey];
+    if (!svgStr) return false;
+
+    let img = mathImgCache.get(assetKey);
+    if (!img) {
+      img = new Image();
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
+      mathImgCache.set(assetKey, img);
+    }
+
+    if (!img.complete || img.naturalWidth === 0) {
+      return false;
+    }
+
+    let drawX = x;
+    if (align === 'right') {
+      drawX = x - width;
+    } else if (align === 'center') {
+      drawX = x - width / 2;
+    }
+    ctx.drawImage(img, drawX, y, width, height);
+    return true;
+  }
+
   /**
    * Helper to retrieve or render a slide to an offscreen canvas.
    */
@@ -2220,7 +2282,9 @@
       ctx.fillText('[ PREPRINT QM-III // THEORETICAL & ATOMIC PHYSICS ]', x1 + 14, m + 22);
       ctx.font = 'italic 700 9px "Times New Roman", Times, Georgia, serif';
       ctx.textAlign = 'right';
-      ctx.fillText('Ĥ |ψ⟩ = E |ψ⟩  ·  L⃗·S⃗  ·  σ_tot = (4π/k) Im f(0)', x2 - 14, m + 22);
+      if (!drawMathSvg(ctx, 'quantum_header', x2 - 14, m + 14, 210, 11, 'right')) {
+        ctx.fillText('H |psi> = E |psi>  ·  L·S  ·  sigma_tot = (4pi/k) Im f(0)', x2 - 14, m + 22);
+      }
 
       ctx.strokeStyle = hairline;
       ctx.lineWidth = 0.6;
@@ -2259,7 +2323,7 @@
       }
       ctx.stroke();
 
-      const levelLabels = ['E₀ = ½ħω', 'E₁ = ³⁄₂ħω', 'E₂ = ⁵⁄₂ħω', 'E₃ = ⁷⁄₂ħω'];
+      const levelMathKeys = ['quantum_e0', 'quantum_e1', 'quantum_e2', 'quantum_e3'];
       for (let n = 0; n < 4; n++) {
         const ly = diagCy + 50 - n * 32;
         const lw = diagW * (0.35 + n * 0.14);
@@ -2272,10 +2336,12 @@
         ctx.moveTo(lx1, ly); ctx.lineTo(lx2, ly);
         ctx.stroke();
 
-        ctx.font = '700 7px monospace, monospace';
-        ctx.fillStyle = inkViolet;
-        ctx.textAlign = 'left';
-        ctx.fillText(levelLabels[n], lx2 + 6, ly + 2.5);
+        if (!drawMathSvg(ctx, levelMathKeys[n], lx2 + 6, ly - 5, 42, 11, 'left')) {
+          ctx.font = '700 7px monospace, monospace';
+          ctx.fillStyle = inkViolet;
+          ctx.textAlign = 'left';
+          ctx.fillText(`E_${n} = (${2*n+1}/2) hbar omega`, lx2 + 6, ly + 2.5);
+        }
 
         ctx.strokeStyle = inkViolet;
         ctx.lineWidth = (n === 0 || n === 1) ? 1.0 : 0.7;
@@ -2307,10 +2373,14 @@
       ctx.fillStyle = inkDark;
       ctx.textAlign = 'center';
       ctx.fillText('x (Position / Spatial Coordinate)', centerX, diagCy + 84);
-      ctx.textAlign = 'right';
-      ctx.fillText('+∞', diagX2 - 10, diagCy + 84);
-      ctx.textAlign = 'left';
-      ctx.fillText('-∞', diagX1 + 10, diagCy + 84);
+      if (!drawMathSvg(ctx, 'quantum_inf_pos', diagX2 - 10, diagCy + 75, 14, 11, 'right')) {
+        ctx.textAlign = 'right';
+        ctx.fillText('+inf', diagX2 - 10, diagCy + 84);
+      }
+      if (!drawMathSvg(ctx, 'quantum_inf_neg', diagX1 + 10, diagCy + 75, 14, 11, 'left')) {
+        ctx.textAlign = 'left';
+        ctx.fillText('-inf', diagX1 + 10, diagCy + 84);
+      }
 
       // 6. Lower Technical Metadata Grid
       const metaY = ph - m - 44;
@@ -2374,7 +2444,9 @@
       ctx.fillText('[ MOLECULAR BIOPHYSICS // MONOGRAPH DOSSIER ]', x1 + 14, m + 22);
       ctx.font = 'italic 700 9px "Times New Roman", Times, Georgia, serif';
       ctx.textAlign = 'right';
-      ctx.fillText('ΔG = ΔH - TΔS  ·  k_B T ln(K_eq)', x2 - 14, m + 22);
+      if (!drawMathSvg(ctx, 'biophysics_header', x2 - 14, m + 14, 160, 11, 'right')) {
+        ctx.fillText('Delta G = Delta H - T Delta S  ·  k_B T ln(K_eq)', x2 - 14, m + 22);
+      }
 
       ctx.strokeStyle = hairline;
       ctx.lineWidth = 0.6;
@@ -2509,7 +2581,9 @@
       ctx.fillText('[ NONLINEAR DYNAMICS // COMPLEX SYSTEMS & CHAOS ]', x1 + 14, m + 22);
       ctx.font = 'italic 700 9px "Times New Roman", Times, Georgia, serif';
       ctx.textAlign = 'right';
-      ctx.fillText('ẋ=σ(y-x) · ẏ=x(ρ-z)-y · ż=xy-βz · δ≈4.6692', x2 - 14, m + 22);
+      if (!drawMathSvg(ctx, 'complex_header', x2 - 14, m + 14, 215, 11, 'right')) {
+        ctx.fillText('x_dot=sigma(y-x) · y_dot=x(rho-z)-y · z_dot=xy-beta z · delta~4.6692', x2 - 14, m + 22);
+      }
 
       ctx.strokeStyle = hairline;
       ctx.lineWidth = 0.6;
@@ -2568,10 +2642,12 @@
       ctx.beginPath(); ctx.arc(centerX - 48, diagCy, 3, 0, Math.PI * 2); ctx.fill();
       ctx.beginPath(); ctx.arc(centerX + 48, diagCy, 3, 0, Math.PI * 2); ctx.fill();
 
-      ctx.font = '700 7.5px monospace, monospace';
-      ctx.fillStyle = inkMuted;
-      ctx.textAlign = 'center';
-      ctx.fillText('LORENZ (1963) · σ = 10.0 · ρ = 28.0 · β = 8/3 · DIM = 2.06', centerX, diagCy + 72);
+      if (!drawMathSvg(ctx, 'complex_lorenz', centerX, diagCy + 66, 240, 11, 'center')) {
+        ctx.font = '700 7.5px monospace, monospace';
+        ctx.fillStyle = inkMuted;
+        ctx.textAlign = 'center';
+        ctx.fillText('LORENZ (1963) · sigma = 10.0 · rho = 28.0 · beta = 8/3 · DIM = 2.06', centerX, diagCy + 72);
+      }
 
       // 6. Lower Technical Metadata Grid
       const metaY = ph - m - 44;
@@ -2635,7 +2711,9 @@
       ctx.fillText('[ HPC SIMULATION // COMPUTATIONAL MATERIALS & MOLECULAR DYNAMICS ]', x1 + 14, m + 22);
       ctx.font = 'italic 700 9px "Times New Roman", Times, Georgia, serif';
       ctx.textAlign = 'right';
-      ctx.fillText('F_i = -∇_i V(r_ij)  ·  Δt = 1.0 fs  ·  D = ⅙ lim d⟨Δr²⟩/dt', x2 - 14, m + 22);
+      if (!drawMathSvg(ctx, 'materials_header', x2 - 14, m + 14, 210, 11, 'right')) {
+        ctx.fillText('F_i = -grad_i V(r_ij)  ·  Delta t = 1.0 fs  ·  D = 1/6 lim d<dr^2>/dt', x2 - 14, m + 22);
+      }
 
       ctx.strokeStyle = hairline;
       ctx.lineWidth = 0.6;
@@ -2768,7 +2846,9 @@
       ctx.fillText('[ IEEE INSTRUMENTATION // ANALOG FRONT-END & DAQ ]', x1 + 14, m + 22);
       ctx.font = 'italic 700 9px "Times New Roman", Times, Georgia, serif';
       ctx.textAlign = 'right';
-      ctx.fillText('V_out = -(R_f / R_in) V_in  ·  CMRR > 120 dB  ·  f_s ≥ 2·f_max', x2 - 14, m + 22);
+      if (!drawMathSvg(ctx, 'circuits_header', x2 - 14, m + 14, 195, 11, 'right')) {
+        ctx.fillText('V_out = -(R_f / R_in) V_in  ·  CMRR > 120 dB  ·  f_s >= 2 f_max', x2 - 14, m + 22);
+      }
 
       ctx.strokeStyle = hairline;
       ctx.lineWidth = 0.6;
@@ -2920,7 +3000,9 @@
       ctx.fillText('[ CONDENSED MATTER // SOLID STATE & BRILLOUIN ARCHIVE ]', x1 + 14, m + 22);
       ctx.font = 'italic 700 9px "Times New Roman", Times, Georgia, serif';
       ctx.textAlign = 'right';
-      ctx.fillText('ψ_k(r) = e^{ik·r} u_k(r)  ·  E_F = ħ²k_F² / 2m*  ·  Φ_0 = h/2e', x2 - 14, m + 22);
+      if (!drawMathSvg(ctx, 'solid_header', x2 - 14, m + 14, 215, 11, 'right')) {
+        ctx.fillText('psi_k(r) = e^{ik·r} u_k(r)  ·  E_F = hbar^2 k_F^2 / 2m*  ·  Phi_0 = h/2e', x2 - 14, m + 22);
+      }
 
       ctx.strokeStyle = hairline;
       ctx.lineWidth = 0.6;
@@ -2965,16 +3047,22 @@
 
       ctx.fillStyle = inkDark;
       ctx.beginPath(); ctx.arc(centerX, diagCy, 2.5, 0, Math.PI * 2); ctx.fill();
-      ctx.font = 'italic 700 9px "Times New Roman", Times, Georgia, serif';
-      ctx.fillText('Γ', centerX - 12, diagCy + 2);
+      if (!drawMathSvg(ctx, 'solid_gamma', centerX - 12, diagCy - 5, 9, 10, 'center')) {
+        ctx.font = 'italic 700 9px "Times New Roman", Times, Georgia, serif';
+        ctx.fillText('Gamma', centerX - 12, diagCy + 2);
+      }
 
       ctx.beginPath(); ctx.arc(centerX + hexR, diagCy, 2, 0, Math.PI * 2); ctx.fill();
-      ctx.fillText('K', centerX + hexR + 4, diagCy + 3);
+      if (!drawMathSvg(ctx, 'solid_k', centerX + hexR + 4, diagCy - 5, 8, 10, 'left')) {
+        ctx.fillText('K', centerX + hexR + 4, diagCy + 3);
+      }
 
       const mx = centerX + hexR * 0.866 * Math.cos(Math.PI / 6);
       const my = diagCy - hexR * 0.866 * Math.sin(Math.PI / 6);
       ctx.beginPath(); ctx.arc(mx, my, 2, 0, Math.PI * 2); ctx.fill();
-      ctx.fillText('M', mx + 4, my - 2);
+      if (!drawMathSvg(ctx, 'solid_m', mx + 4, my - 7, 9, 10, 'left')) {
+        ctx.fillText('M', mx + 4, my - 2);
+      }
 
       ctx.strokeStyle = inkCopper;
       ctx.lineWidth = 0.8;
@@ -3049,7 +3137,9 @@
       ctx.fillText('[ HIGH ENERGY PHYSICS // CERN-SLAC COLLIDER ARCHIVE ]', x1 + 14, m + 22);
       ctx.font = 'italic 700 9px "Times New Roman", Times, Georgia, serif';
       ctx.textAlign = 'right';
-      ctx.fillText('SU(3)_C × SU(2)_L × U(1)_Y  ·  B(A,Z)  ·  √s = 14 TeV', x2 - 14, m + 22);
+      if (!drawMathSvg(ctx, 'nuclear_header', x2 - 14, m + 14, 205, 11, 'right')) {
+        ctx.fillText('SU(3)_C x SU(2)_L x U(1)_Y  ·  B(A,Z)  ·  sqrt(s) = 14 TeV', x2 - 14, m + 22);
+      }
 
       ctx.strokeStyle = hairline;
       ctx.lineWidth = 0.6;
@@ -3081,11 +3171,18 @@
       ctx.moveTo(v1x - 60, diagCy + 40); ctx.lineTo(v1x, diagCy);
       ctx.stroke();
 
-      ctx.font = 'italic 9px "Times New Roman", Times, Georgia, serif';
-      ctx.fillStyle = inkDark;
-      ctx.textAlign = 'right';
-      ctx.fillText('e⁻', v1x - 66, diagCy - 38);
-      ctx.fillText('e⁺', v1x - 66, diagCy + 42);
+      if (!drawMathSvg(ctx, 'nuclear_eminus', v1x - 76, diagCy - 45, 11, 10, 'left')) {
+        ctx.font = 'italic 9px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = inkDark;
+        ctx.textAlign = 'right';
+        ctx.fillText('e-', v1x - 66, diagCy - 38);
+      }
+      if (!drawMathSvg(ctx, 'nuclear_eplus', v1x - 76, diagCy + 35, 11, 10, 'left')) {
+        ctx.font = 'italic 9px "Times New Roman", Times, Georgia, serif';
+        ctx.fillStyle = inkDark;
+        ctx.textAlign = 'right';
+        ctx.fillText('e+', v1x - 66, diagCy + 42);
+      }
 
       // Wavy propagator
       ctx.strokeStyle = inkViolet;
@@ -3100,10 +3197,12 @@
       }
       ctx.stroke();
 
-      ctx.font = '700 7.5px monospace, monospace';
-      ctx.fillStyle = inkViolet;
-      ctx.textAlign = 'center';
-      ctx.fillText('γ* / Z⁰', centerX, diagCy - 10);
+      if (!drawMathSvg(ctx, 'nuclear_boson', centerX, diagCy - 17, 28, 10, 'center')) {
+        ctx.font = '700 7.5px monospace, monospace';
+        ctx.fillStyle = inkViolet;
+        ctx.textAlign = 'center';
+        ctx.fillText('gamma* / Z0', centerX, diagCy - 10);
+      }
 
       ctx.strokeStyle = inkDark;
       ctx.lineWidth = 1.2;
@@ -3116,7 +3215,7 @@
       ctx.fillStyle = inkDark;
       ctx.textAlign = 'left';
       ctx.fillText('q', v2x + 66, diagCy - 38);
-      ctx.fillText('q̄', v2x + 66, diagCy + 42);
+      ctx.fillText('q_bar', v2x + 66, diagCy + 42);
 
       ctx.fillStyle = inkDark;
       ctx.beginPath(); ctx.arc(v1x, diagCy, 3, 0, Math.PI * 2); ctx.fill();
@@ -3135,7 +3234,7 @@
       ctx.font = '700 7.5px monospace, monospace';
       ctx.fillStyle = inkViolet;
       ctx.textAlign = 'center';
-      ctx.fillText('ELECTROWEAK ANNIHILATION · FEYNMAN DIAGRAM · 4π DETECTOR', centerX, diagCy + 68);
+      ctx.fillText('ELECTROWEAK ANNIHILATION · FEYNMAN DIAGRAM · 4pi DETECTOR', centerX, diagCy + 68);
 
       // 6. Lower Technical Metadata Grid
       const metaY = ph - m - 44;

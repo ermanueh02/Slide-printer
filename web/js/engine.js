@@ -555,6 +555,77 @@
       return null;
     }
 
+    // Safe WinAnsi encoding utility: guarantees no unencoded character causes pdf-lib to crash
+    function toWinAnsi(str) {
+      if (!str) return '';
+      const map = {
+        'Ĥ': 'H', 'ħ': 'h', 'ż': 'z', 'ẋ': 'x', 'ẏ': 'y',
+        'Γ': 'Gamma', 'Δ': 'Delta', 'Φ': 'Phi', 'β': 'beta', 'γ': 'gamma', 'δ': 'delta',
+        'π': 'pi', 'ρ': 'rho', 'σ': 'sigma', 'ψ': 'psi', 'ω': 'omega',
+        '⁰': '0', '⁺': '+', '⁻': '-', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9',
+        '⅙': '1/6', '½': '1/2', '⅓': '1/3', '¼': '1/4', '¾': '3/4',
+        '∇': 'grad', '√': 'sqrt', '∞': 'inf', '≈': '~=', '≥': '>=', '≤': '<=',
+        '⟨': '<', '⟩': '>', '⃗': '', '·': '·', '✦': '*'
+      };
+      return String(str).split('').map(ch => {
+        if (map[ch] !== undefined) return map[ch];
+        const code = ch.charCodeAt(0);
+        if (code >= 32 && code <= 126) return ch;
+        if (code >= 160 && code <= 255) return ch;
+        if ([0x2022, 0x2013, 0x2014, 0x2018, 0x2019, 0x201C, 0x201D, 0x20AC, 0x2030, 0x2026, 0x00B7].includes(code)) return ch;
+        return '';
+      }).join('');
+    }
+
+    // Helper: Safely draw text ensuring WinAnsi compatibility
+    function safeDrawText(targetPage, text, opts) {
+      if (!text || !targetPage) return;
+      const clean = toWinAnsi(text);
+      if (!clean) return;
+      try {
+        targetPage.drawText(clean, opts);
+      } catch (err) {
+        console.warn('safeDrawText failed:', err);
+      }
+    }
+
+    // Embed pre-compiled LaTeX SVG formula (newtxmath) as high-res vector raster (300+ DPI)
+    async function embedMathSvg(svgString, targetWidth, targetHeight) {
+      if (typeof document === 'undefined' || !svgString) return null;
+      return new Promise((resolve) => {
+        try {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => {
+            try {
+              const scale = 4; // 4x supersampling = 300+ DPI
+              const cvs = document.createElement('canvas');
+              cvs.width = Math.max(1, Math.ceil(targetWidth * scale));
+              cvs.height = Math.max(1, Math.ceil(targetHeight * scale));
+              const ctx = cvs.getContext('2d');
+              ctx.drawImage(img, 0, 0, cvs.width, cvs.height);
+              cvs.toBlob(async (blob) => {
+                if (!blob) { resolve(null); return; }
+                try {
+                  const buf = await blob.arrayBuffer();
+                  const embedded = await outDoc.embedPng(buf);
+                  resolve(embedded);
+                } catch (e2) {
+                  resolve(null);
+                }
+              }, 'image/png');
+            } catch (e) {
+              resolve(null);
+            }
+          };
+          img.onerror = () => resolve(null);
+          img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
+        } catch (err) {
+          resolve(null);
+        }
+      });
+    }
+
     if (tpl === 'george') {
       // 1. George 90s Editorial / JFK Jr Executive Style
 
@@ -2825,13 +2896,19 @@
       // 3. Header band: Series stamp & Schrödinger equation
       const headY = ph - m - 22.0;
       if (courierBold) {
-        page.drawText('[ PREPRINT QM-III // THEORETICAL & ATOMIC PHYSICS ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkViolet });
+        safeDrawText(page, '[ PREPRINT QM-III // THEORETICAL & ATOMIC PHYSICS ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkViolet });
       }
-      if (timesItalic || timesFont) {
+      let mathQMHdr = null;
+      if (typeof window !== 'undefined' && window.SLIDE_PRINTER_MATH_ASSETS && window.SLIDE_PRINTER_MATH_ASSETS['quantum_header']) {
+        mathQMHdr = await embedMathSvg(window.SLIDE_PRINTER_MATH_ASSETS['quantum_header'], 198.0, 13.5);
+      }
+      if (mathQMHdr) {
+        page.drawImage(mathQMHdr, { x: x2 - 14.0 - 198.0, y: headY - 3.0, width: 198.0, height: 13.5 });
+      } else if (timesItalic || timesFont) {
         const fItalic = timesItalic || timesFont;
-        const eqStr = 'Ĥ |ψ⟩ = E |ψ⟩  ·  L⃗·S⃗  ·  σ_tot = (4π/k) Im f(0)';
+        const eqStr = toWinAnsi('H |psi> = E |psi>  ·  L.S  ·  sigma_tot = (4pi/k) Im f(0)');
         const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
-        page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkViolet });
+        safeDrawText(page, eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkViolet });
       }
       page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.25 });
 
@@ -2840,12 +2917,12 @@
       const lines = wrapText(helveticaBold, dispTitle, 26.0, w - 28.0);
       let curY = ph - m - 62.0;
       for (const line of lines) {
-        page.drawText(line, { x: x1 + 14.0, y: curY, size: 26.0, font: helveticaBold, color: inkDark });
+        safeDrawText(page, line, { x: x1 + 14.0, y: curY, size: 26.0, font: helveticaBold, color: inkDark });
         curY -= 32.0;
       }
       const dispSub = options.studyTitle || options.subtitle || 'Dirac Fine Structure · Hyperfine Interactions · Hartree-Fock · Collision Theory';
       if (timesItalic) {
-        page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
+        safeDrawText(page, dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
       }
 
       // 5. Scientific Vector Illustration: Quantum Harmonic Oscillator & Hermite Wavefunctions
@@ -2867,7 +2944,8 @@
       }
 
       // Quantized Energy Levels (n = 0, 1, 2, 3) and Eigen-wavefunctions psi_n(x)
-      const levelLabels = ['E0 = (1/2)ħω', 'E1 = (3/2)ħω', 'E2 = (5/2)ħω', 'E3 = (7/2)ħω'];
+      const qmKeys = ['quantum_e0', 'quantum_e1', 'quantum_e2', 'quantum_e3'];
+      const qmFallback = ['E0 = (1/2) hbar omega', 'E1 = (3/2) hbar omega', 'E2 = (5/2) hbar omega', 'E3 = (7/2) hbar omega'];
       for (let n = 0; n < 4; n++) {
         const ly = diagCy - 50.0 + n * 32.0;
         const lw = diagW * (0.35 + n * 0.14);
@@ -2875,8 +2953,14 @@
         const lx2 = centerX + lw / 2.0;
         page.drawLine({ start: { x: lx1, y: ly }, end: { x: lx2, y: ly }, thickness: 0.5, color: inkMuted, opacity: 0.6 });
 
-        if (courierBold) {
-          page.drawText(levelLabels[n], { x: lx2 + 6.0, y: ly - 2.5, size: 7.0, font: courierBold, color: inkViolet });
+        let mathLevel = null;
+        if (typeof window !== 'undefined' && window.SLIDE_PRINTER_MATH_ASSETS && window.SLIDE_PRINTER_MATH_ASSETS[qmKeys[n]]) {
+          mathLevel = await embedMathSvg(window.SLIDE_PRINTER_MATH_ASSETS[qmKeys[n]], 52.0, 11.0);
+        }
+        if (mathLevel) {
+          page.drawImage(mathLevel, { x: lx2 + 6.0, y: ly - 3.5, width: 52.0, height: 11.0 });
+        } else if (courierBold) {
+          safeDrawText(page, qmFallback[n], { x: lx2 + 6.0, y: ly - 2.5, size: 7.0, font: courierBold, color: inkViolet });
         }
 
         const wSteps = 36;
@@ -2912,9 +2996,9 @@
       if (timesItalic) {
         const xLbl = 'x (Position / Spatial Coordinate)';
         const xW = timesItalic.widthOfTextAtSize(xLbl, 8.0);
-        page.drawText(xLbl, { x: centerX - xW / 2, y: diagCy - 82.0, size: 8.0, font: timesItalic, color: inkDark });
-        page.drawText('+∞', { x: diagX2 - 22.0, y: diagCy - 82.0, size: 8.0, font: timesItalic, color: inkDark });
-        page.drawText('-∞', { x: diagX1 + 10.0, y: diagCy - 82.0, size: 8.0, font: timesItalic, color: inkDark });
+        safeDrawText(page, xLbl, { x: centerX - xW / 2, y: diagCy - 82.0, size: 8.0, font: timesItalic, color: inkDark });
+        safeDrawText(page, '+inf', { x: diagX2 - 22.0, y: diagCy - 82.0, size: 8.0, font: timesItalic, color: inkDark });
+        safeDrawText(page, '-inf', { x: diagX1 + 10.0, y: diagCy - 82.0, size: 8.0, font: timesItalic, color: inkDark });
       }
 
       // 6. Lower Technical Metadata Grid
@@ -2965,13 +3049,19 @@
       // 3. Header band: Series stamp & thermodynamic identity
       const headY = ph - m - 22.0;
       if (courierBold) {
-        page.drawText('[ MOLECULAR BIOPHYSICS // MONOGRAPH DOSSIER ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkTeal });
+        safeDrawText(page, '[ MOLECULAR BIOPHYSICS // MONOGRAPH DOSSIER ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkTeal });
       }
-      if (timesItalic || timesFont) {
+      let mathBioHdr = null;
+      if (typeof window !== 'undefined' && window.SLIDE_PRINTER_MATH_ASSETS && window.SLIDE_PRINTER_MATH_ASSETS['biophysics_header']) {
+        mathBioHdr = await embedMathSvg(window.SLIDE_PRINTER_MATH_ASSETS['biophysics_header'], 155.0, 13.5);
+      }
+      if (mathBioHdr) {
+        page.drawImage(mathBioHdr, { x: x2 - 14.0 - 155.0, y: headY - 3.0, width: 155.0, height: 13.5 });
+      } else if (timesItalic || timesFont) {
         const fItalic = timesItalic || timesFont;
-        const eqStr = 'ΔG = ΔH - TΔS  ·  k_B T ln(K_eq)';
+        const eqStr = toWinAnsi('Delta G = Delta H - T Delta S  ·  k_B T ln(K_eq)');
         const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
-        page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkTeal });
+        safeDrawText(page, eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkTeal });
       }
       page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
@@ -2980,12 +3070,12 @@
       const lines = wrapText(helveticaBold, dispTitle, 26.0, w - 28.0);
       let curY = ph - m - 62.0;
       for (const line of lines) {
-        page.drawText(line, { x: x1 + 14.0, y: curY, size: 26.0, font: helveticaBold, color: inkDark });
+        safeDrawText(page, line, { x: x1 + 14.0, y: curY, size: 26.0, font: helveticaBold, color: inkDark });
         curY -= 32.0;
       }
       const dispSub = options.studyTitle || options.subtitle || 'Macromolecular Thermodynamics · Machine Learning · Turing Patterns · Hodgkin-Huxley';
       if (timesItalic) {
-        page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
+        safeDrawText(page, dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
       }
 
       // 5. Scientific Vector Illustration: Interlaced DNA Double Helix
@@ -3025,7 +3115,7 @@
       page.drawLine({ start: { x: scaleX - 3.0, y: diagCy - 40.0 }, end: { x: scaleX + 3.0, y: diagCy - 40.0 }, thickness: 0.6, color: inkMuted });
       page.drawLine({ start: { x: scaleX - 3.0, y: diagCy + 40.0 }, end: { x: scaleX + 3.0, y: diagCy + 40.0 }, thickness: 0.6, color: inkMuted });
       if (courierBold) {
-        page.drawText('PITCH: 3.4 nm (10 bp)', { x: scaleX + 6.0, y: diagCy - 2.5, size: 7.0, font: courierBold, color: inkMuted });
+        safeDrawText(page, 'PITCH: 3.4 nm (10 bp)', { x: scaleX + 6.0, y: diagCy - 2.5, size: 7.0, font: courierBold, color: inkMuted });
       }
 
       // 6. Lower Technical Metadata Grid
@@ -3033,18 +3123,18 @@
       page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
       if (courierBold) {
-        page.drawText('INVESTIGATOR / SCHOLAR', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkTeal });
-        page.drawText('REGISTRATION DATE', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkTeal });
-        page.drawText('DOSSIER / PAGES', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkTeal });
+        safeDrawText(page, 'INVESTIGATOR / SCHOLAR', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkTeal });
+        safeDrawText(page, 'REGISTRATION DATE', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkTeal });
+        safeDrawText(page, 'DOSSIER / PAGES', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkTeal });
       }
       if (timesBold) {
         const authTxt = options.coverAuthor || options.author || 'Biophysics Laboratory';
-        page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        safeDrawText(page, authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
         const dateTxt = todayStr || 'Research Archive';
-        page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        safeDrawText(page, dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
         const slideCount = options.totalSlides || options.numSlides;
         const slideTxt = slideCount ? `${slideCount} Slides` : 'Complete Dossier';
-        page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        safeDrawText(page, slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
       }
 
     } else if (tpl === 'complex_systems_flat' || tpl === 'sistemas_complejos_flat' || tpl === 'chaos_flat' || tpl === 'atmospheric_flat' || tpl === 'atmosferica_flat') {
@@ -3076,13 +3166,19 @@
       // 3. Header band: Series stamp & Lorenz differential equations
       const headY = ph - m - 22.0;
       if (courierBold) {
-        page.drawText('[ NONLINEAR DYNAMICS // COMPLEX SYSTEMS & CHAOS ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkAmber });
+        safeDrawText(page, '[ NONLINEAR DYNAMICS // COMPLEX SYSTEMS & CHAOS ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkAmber });
       }
-      if (timesItalic || timesFont) {
+      let mathChaosHdr = null;
+      if (typeof window !== 'undefined' && window.SLIDE_PRINTER_MATH_ASSETS && window.SLIDE_PRINTER_MATH_ASSETS['complex_header']) {
+        mathChaosHdr = await embedMathSvg(window.SLIDE_PRINTER_MATH_ASSETS['complex_header'], 178.0, 13.5);
+      }
+      if (mathChaosHdr) {
+        page.drawImage(mathChaosHdr, { x: x2 - 14.0 - 178.0, y: headY - 3.0, width: 178.0, height: 13.5 });
+      } else if (timesItalic || timesFont) {
         const fItalic = timesItalic || timesFont;
-        const eqStr = 'ẋ=σ(y-x) · ẏ=x(ρ-z)-y · ż=xy-βz · δ≈4.6692';
-        const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
-        page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkAmber });
+        const eqStr = toWinAnsi('x_dot=sigma(y-x) · y_dot=x(rho-z)-y · z_dot=xy-beta z · delta~=4.6692');
+        const eqW = fItalic.widthOfTextAtSize(eqStr, 8.5);
+        safeDrawText(page, eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 8.5, font: fItalic, color: inkAmber });
       }
       page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
@@ -3091,12 +3187,12 @@
       const lines = wrapText(helveticaBold, dispTitle, 24.0, w - 28.0);
       let curY = ph - m - 62.0;
       for (const line of lines) {
-        page.drawText(line, { x: x1 + 14.0, y: curY, size: 24.0, font: helveticaBold, color: inkDark });
+        safeDrawText(page, line, { x: x1 + 14.0, y: curY, size: 24.0, font: helveticaBold, color: inkDark });
         curY -= 30.0;
       }
       const dispSub = options.studyTitle || options.subtitle || 'Nonlinear Dynamics · Lorenz Strange Attractor · Complex Networks · Criticality';
       if (timesItalic) {
-        page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
+        safeDrawText(page, dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
       }
 
       // 5. Scientific Vector Illustration: Lorenz Strange Attractor Butterfly Orbits
@@ -3104,8 +3200,8 @@
       page.drawLine({ start: { x: centerX - 120.0, y: diagCy }, end: { x: centerX + 120.0, y: diagCy }, thickness: 0.5, color: hairline, opacity: 0.22 });
       page.drawLine({ start: { x: centerX, y: diagCy - 70.0 }, end: { x: centerX, y: diagCy + 75.0 }, thickness: 0.5, color: hairline, opacity: 0.22 });
       if (courierBold) {
-        page.drawText('X', { x: centerX + 122.0, y: diagCy - 2.5, size: 7.0, font: courierBold, color: inkMuted });
-        page.drawText('Z', { x: centerX - 3.0, y: diagCy + 78.0, size: 7.0, font: courierBold, color: inkMuted });
+        safeDrawText(page, 'X', { x: centerX + 122.0, y: diagCy - 2.5, size: 7.0, font: courierBold, color: inkMuted });
+        safeDrawText(page, 'Z', { x: centerX - 3.0, y: diagCy + 78.0, size: 7.0, font: courierBold, color: inkMuted });
       }
 
       // Butterfly lobes
@@ -3137,10 +3233,16 @@
       page.drawCircle({ x: centerX - 48.0, y: diagCy + 5.0, size: 3.0, color: inkAmber });
       page.drawCircle({ x: centerX + 48.0, y: diagCy + 5.0, size: 3.0, color: inkAmber });
 
-      if (courierBold) {
-        const stamp = 'LORENZ (1963) · σ = 10.0 · ρ = 28.0 · β = 8/3 · DIM = 2.06';
+      let mathLorenz = null;
+      if (typeof window !== 'undefined' && window.SLIDE_PRINTER_MATH_ASSETS && window.SLIDE_PRINTER_MATH_ASSETS['complex_lorenz']) {
+        mathLorenz = await embedMathSvg(window.SLIDE_PRINTER_MATH_ASSETS['complex_lorenz'], 210.0, 12.0);
+      }
+      if (mathLorenz) {
+        page.drawImage(mathLorenz, { x: centerX - 105.0, y: diagCy - 72.0, width: 210.0, height: 12.0 });
+      } else if (courierBold) {
+        const stamp = toWinAnsi('LORENZ (1963) · sigma = 10.0 · rho = 28.0 · beta = 8/3 · DIM = 2.06');
         const stW = courierBold.widthOfTextAtSize(stamp, 7.5);
-        page.drawText(stamp, { x: centerX - stW / 2, y: diagCy - 68.0, size: 7.5, font: courierBold, color: inkMuted });
+        safeDrawText(page, stamp, { x: centerX - stW / 2, y: diagCy - 68.0, size: 7.5, font: courierBold, color: inkMuted });
       }
 
       // 6. Lower Technical Metadata Grid
@@ -3191,13 +3293,19 @@
       // 3. Header band: Series stamp & interatomic force formula
       const headY = ph - m - 22.0;
       if (courierBold) {
-        page.drawText('[ HPC SIMULATION // COMPUTATIONAL MATERIALS & MOLECULAR DYNAMICS ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkGreen });
+        safeDrawText(page, '[ HPC SIMULATION // COMPUTATIONAL MATERIALS & MOLECULAR DYNAMICS ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkGreen });
       }
-      if (timesItalic || timesFont) {
+      let mathMatHdr = null;
+      if (typeof window !== 'undefined' && window.SLIDE_PRINTER_MATH_ASSETS && window.SLIDE_PRINTER_MATH_ASSETS['materials_header']) {
+        mathMatHdr = await embedMathSvg(window.SLIDE_PRINTER_MATH_ASSETS['materials_header'], 205.0, 14.0);
+      }
+      if (mathMatHdr) {
+        page.drawImage(mathMatHdr, { x: x2 - 14.0 - 205.0, y: headY - 3.5, width: 205.0, height: 14.0 });
+      } else if (timesItalic || timesFont) {
         const fItalic = timesItalic || timesFont;
-        const eqStr = 'F_i = -∇_i V(r_ij)  ·  Δt = 1.0 fs  ·  D = ⅙ lim d⟨Δr²⟩/dt';
-        const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
-        page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkGreen });
+        const eqStr = toWinAnsi('F_i = -grad_i V(r_ij)  ·  Delta t = 1.0 fs  ·  D = 1/6 lim d<Delta r^2>/dt');
+        const eqW = fItalic.widthOfTextAtSize(eqStr, 8.5);
+        safeDrawText(page, eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 8.5, font: fItalic, color: inkGreen });
       }
       page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
@@ -3206,12 +3314,12 @@
       const lines = wrapText(helveticaBold, dispTitle, 23.0, w - 28.0);
       let curY = ph - m - 62.0;
       for (const line of lines) {
-        page.drawText(line, { x: x1 + 14.0, y: curY, size: 23.0, font: helveticaBold, color: inkDark });
+        safeDrawText(page, line, { x: x1 + 14.0, y: curY, size: 23.0, font: helveticaBold, color: inkDark });
         curY -= 29.0;
       }
       const dispSub = options.studyTitle || options.subtitle || 'Molecular Dynamics · Monte Carlo & Metropolis · Lennard-Jones · Transport';
       if (timesItalic) {
-        page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
+        safeDrawText(page, dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
       }
 
       // 5. Scientific Vector Illustration: 3D Isometric FCC Unit Cell & Lattice Vectors
@@ -3258,7 +3366,7 @@
       if (courierBold) {
         const stamp = 'FCC CRYSTAL LATTICE · LENNARD-JONES · MPI FORTRAN 90';
         const stW = courierBold.widthOfTextAtSize(stamp, 7.5);
-        page.drawText(stamp, { x: centerX - stW / 2, y: diagCy - 72.0, size: 7.5, font: courierBold, color: inkGreen });
+        safeDrawText(page, stamp, { x: centerX - stW / 2, y: diagCy - 72.0, size: 7.5, font: courierBold, color: inkGreen });
       }
 
       // 6. Lower Technical Metadata Grid
@@ -3266,18 +3374,18 @@
       page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
       if (courierBold) {
-        page.drawText('SCIENTIST / PROGRAMMER', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
-        page.drawText('COMPILATION TIMESTAMP', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
-        page.drawText('RUN ARCHIVE / SLIDES', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+        safeDrawText(page, 'SCIENTIST / PROGRAMMER', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+        safeDrawText(page, 'COMPILATION TIMESTAMP', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+        safeDrawText(page, 'RUN ARCHIVE / SLIDES', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
       }
       if (timesBold) {
         const authTxt = options.coverAuthor || options.author || 'Computational Materials Lab';
-        page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        safeDrawText(page, authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
         const dateTxt = todayStr || 'High-Performance Computing Cluster';
-        page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        safeDrawText(page, dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
         const slideCount = options.totalSlides || options.numSlides;
         const slideTxt = slideCount ? `${slideCount} Slides` : 'Simulation Dossier';
-        page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        safeDrawText(page, slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
       }
 
     } else if (tpl === 'circuits_flat' || tpl === 'circuitos_flat' || tpl === 'instrumentacion_flat' || tpl === 'fundamentos_instrumentacion_flat' || tpl === 'electronica_flat') {
@@ -3309,13 +3417,112 @@
       // 3. Header band: Series stamp & Op-Amp transfer equation
       const headY = ph - m - 22.0;
       if (courierBold) {
-        page.drawText('[ IEEE INSTRUMENTATION // ANALOG FRONT-END & DAQ ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkGreen });
+        safeDrawText(page, '[ IEEE INSTRUMENTATION // ANALOG FRONT-END & DAQ ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkGreen });
       }
-      if (timesItalic || timesFont) {
+      let mathCirHdr = null;
+      if (typeof window !== 'undefined' && window.SLIDE_PRINTER_MATH_ASSETS && window.SLIDE_PRINTER_MATH_ASSETS['circuits_header']) {
+        mathCirHdr = await embedMathSvg(window.SLIDE_PRINTER_MATH_ASSETS['circuits_header'], 195.0, 14.0);
+      }
+      if (mathCirHdr) {
+        page.drawImage(mathCirHdr, { x: x2 - 14.0 - 195.0, y: headY - 3.5, width: 195.0, height: 14.0 });
+      } else if (timesItalic || timesFont) {
         const fItalic = timesItalic || timesFont;
-        const eqStr = 'V_out = -(R_f / R_in) V_in  ·  CMRR > 120 dB  ·  f_s ≥ 2·f_max';
-        const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
-        page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkGreen });
+        const eqStr = toWinAnsi('V_out = -(R_f / R_in) V_in  ·  CMRR > 120 dB  ·  f_s >= 2 f_max');
+        const eqW = fItalic.widthOfTextAtSize(eqStr, 8.5);
+        safeDrawText(page, eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 8.5, font: fItalic, color: inkGreen });
+      }
+      page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
+
+      // 4. Title block
+      const dispTitle = (options.coverTitle && options.coverTitle.trim()) ? options.coverTitle : ((titleText && titleText !== 'Presentation') ? titleText : 'FUNDAMENTALS OF ELECTRONIC INSTRUMENTATION');
+      const lines = wrapText(helveticaBold, dispTitle, 22.0, w - 28.0);
+      let curY = ph - m - 62.0;
+      for (const line of lines) {
+        safeDrawText(page, line, { x: x1 + 14.0, y: curY, size: 22.0, font: helveticaBold, color: inkDark });
+        curY -= 28.0;
+      }
+      const dispSub = options.studyTitle || options.subtitle || 'Operational Amplifiers · Active Filter Design · ADC/DAC Conversion · DAQ & LabVIEW';
+      if (timesItalic) {
+        safeDrawText(page, dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.0, font: timesItalic, color: inkMuted });
+      }
+
+      // 5. Scientific Vector Illustration: Op-Amp Inverting Amplifier Schematic
+      const diagCy = ph * 0.44;
+      const triW = 60.0;
+      const triH = 70.0;
+      const triX = centerX - 10.0;
+
+      // Triangle body
+      page.drawLine({ start: { x: triX, y: diagCy - triH / 2.0 }, end: { x: triX, y: diagCy + triH / 2.0 }, thickness: 1.4, color: inkDark });
+      page.drawLine({ start: { x: triX, y: diagCy + triH / 2.0 }, end: { x: triX + triW, y: diagCy }, thickness: 1.4, color: inkDark });
+      page.drawLine({ start: { x: triX + triW, y: diagCy }, end: { x: triX, y: diagCy - triH / 2.0 }, thickness: 1.4, color: inkDark });
+
+      if (helveticaBold) {
+        safeDrawText(page, '-', { x: triX + 6.0, y: diagCy + 14.0, size: 10.0, font: helveticaBold, color: inkDark });
+        safeDrawText(page, '+', { x: triX + 6.0, y: diagCy - 22.0, size: 10.0, font: helveticaBold, color: inkDark });
+      }
+
+      // Input circuit with Rin
+      page.drawLine({ start: { x: triX - 80.0, y: diagCy + 18.0 }, end: { x: triX - 50.0, y: diagCy + 18.0 }, thickness: 1.0, color: inkDark });
+      page.drawRectangle({ x: triX - 50.0, y: diagCy + 12.0, width: 26.0, height: 12.0, borderColor: inkDark, borderWidth: 1.0 });
+      if (courierBold) {
+        safeDrawText(page, 'R_in', { x: triX - 46.0, y: diagCy + 27.0, size: 6.5, font: courierBold, color: inkDark });
+      }
+      page.drawLine({ start: { x: triX - 24.0, y: diagCy + 18.0 }, end: { x: triX, y: diagCy + 18.0 }, thickness: 1.0, color: inkDark });
+
+      // Feedback circuit with Rf
+      page.drawLine({ start: { x: triX - 12.0, y: diagCy + 18.0 }, end: { x: triX - 12.0, y: diagCy + 52.0 }, thickness: 1.0, color: inkDark });
+      page.drawLine({ start: { x: triX - 12.0, y: diagCy + 52.0 }, end: { x: triX + 10.0, y: diagCy + 52.0 }, thickness: 1.0, color: inkDark });
+      page.drawRectangle({ x: triX + 10.0, y: diagCy + 46.0, width: 26.0, height: 12.0, borderColor: inkDark, borderWidth: 1.0 });
+      if (courierBold) {
+        safeDrawText(page, 'R_f', { x: triX + 16.0, y: diagCy + 61.0, size: 6.5, font: courierBold, color: inkDark });
+      }
+      page.drawLine({ start: { x: triX + 36.0, y: diagCy + 52.0 }, end: { x: triX + 75.0, y: diagCy + 52.0 }, thickness: 1.0, color: inkDark });
+      page.drawLine({ start: { x: triX + 75.0, y: diagCy + 52.0 }, end: { x: triX + 75.0, y: diagCy }, thickness: 1.0, color: inkDark });
+
+      // Ground on positive terminal
+      page.drawLine({ start: { x: triX, y: diagCy - 18.0 }, end: { x: triX - 24.0, y: diagCy - 18.0 }, thickness: 1.0, color: inkDark });
+      page.drawLine({ start: { x: triX - 24.0, y: diagCy - 18.0 }, end: { x: triX - 24.0, y: diagCy - 30.0 }, thickness: 1.0, color: inkDark });
+      page.drawLine({ start: { x: triX - 30.0, y: diagCy - 30.0 }, end: { x: triX - 18.0, y: diagCy - 30.0 }, thickness: 1.0, color: inkDark });
+      page.drawLine({ start: { x: triX - 28.0, y: diagCy - 33.0 }, end: { x: triX - 20.0, y: diagCy - 33.0 }, thickness: 1.0, color: inkDark });
+      page.drawLine({ start: { x: triX - 26.0, y: diagCy - 36.0 }, end: { x: triX - 22.0, y: diagCy - 36.0 }, thickness: 1.0, color: inkDark });
+
+      // Output wire & terminal
+      page.drawLine({ start: { x: triX + triW, y: diagCy }, end: { x: triX + triW + 35.0, y: diagCy }, thickness: 1.0, color: inkDark });
+      page.drawCircle({ x: triX + triW + 35.0, y: diagCy, size: 2.5, color: inkDark });
+      if (courierBold) {
+        safeDrawText(page, 'V_out', { x: triX + triW + 42.0, y: diagCy - 3.0, size: 7.5, font: courierBold, color: inkDark });
+      }
+
+      // Input terminal
+      page.drawCircle({ x: triX - 80.0, y: diagCy + 18.0, size: 2.5, color: inkDark });
+      if (courierBold) {
+        safeDrawText(page, 'V_in', { x: triX - 105.0, y: diagCy + 15.0, size: 7.5, font: courierBold, color: inkDark });
+      }
+
+      if (courierBold) {
+        const stamp = 'ANALOG CIRCUITS · TEKTRONIX BENCH · LAB STANDARD';
+        const stW = courierBold.widthOfTextAtSize(stamp, 7.5);
+        safeDrawText(page, stamp, { x: centerX - stW / 2, y: diagCy - 68.0, size: 7.5, font: courierBold, color: inkGreen });
+      }
+
+      // 6. Lower Technical Metadata Grid
+      const metaY = m + 28.0;
+      page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
+
+      if (courierBold) {
+        safeDrawText(page, 'LEAD ENGINEER / STUDENT', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+        safeDrawText(page, 'TESTBENCH / CALIBRATION', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+        safeDrawText(page, 'INSTRUMENTATION REPORT', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkGreen });
+      }
+      if (timesBold) {
+        const authTxt = options.coverAuthor || options.author || 'Electronic Instrumentation Group';
+        safeDrawText(page, authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const dateTxt = todayStr || 'National Instruments GPIB / DAQ';
+        safeDrawText(page, dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        const slideCount = options.totalSlides || options.numSlides;
+        const slideTxt = slideCount ? `${slideCount} Slides` : 'Laboratory Log';
+        safeDrawText(page, slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
       }
       page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
@@ -3440,13 +3647,19 @@
       // 3. Header band: Series stamp & Bloch wave theorem
       const headY = ph - m - 22.0;
       if (courierBold) {
-        page.drawText('[ CONDENSED MATTER // SOLID STATE & BRILLOUIN ARCHIVE ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkCopper });
+        safeDrawText(page, '[ CONDENSED MATTER // SOLID STATE & BRILLOUIN ARCHIVE ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkCopper });
       }
-      if (timesItalic || timesFont) {
+      let mathSolidHdr = null;
+      if (typeof window !== 'undefined' && window.SLIDE_PRINTER_MATH_ASSETS && window.SLIDE_PRINTER_MATH_ASSETS['solid_header']) {
+        mathSolidHdr = await embedMathSvg(window.SLIDE_PRINTER_MATH_ASSETS['solid_header'], 210.0, 14.0);
+      }
+      if (mathSolidHdr) {
+        page.drawImage(mathSolidHdr, { x: x2 - 14.0 - 210.0, y: headY - 3.5, width: 210.0, height: 14.0 });
+      } else if (timesItalic || timesFont) {
         const fItalic = timesItalic || timesFont;
-        const eqStr = 'ψ_k(r) = e^{ik·r} u_k(r)  ·  E_F = ħ²k_F² / 2m*  ·  Φ_0 = h/2e';
-        const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
-        page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkCopper });
+        const eqStr = toWinAnsi('psi_k(r) = e^{ik.r} u_k(r)  ·  E_F = hbar^2 k_F^2 / 2m*  ·  Phi_0 = h/2e');
+        const eqW = fItalic.widthOfTextAtSize(eqStr, 8.5);
+        safeDrawText(page, eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 8.5, font: fItalic, color: inkCopper });
       }
       page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
@@ -3455,12 +3668,12 @@
       const lines = wrapText(helveticaBold, dispTitle, 26.0, w - 28.0);
       let curY = ph - m - 62.0;
       for (const line of lines) {
-        page.drawText(line, { x: x1 + 14.0, y: curY, size: 26.0, font: helveticaBold, color: inkDark });
+        safeDrawText(page, line, { x: x1 + 14.0, y: curY, size: 26.0, font: helveticaBold, color: inkDark });
         curY -= 32.0;
       }
       const dispSub = options.studyTitle || options.subtitle || 'Crystal Lattices & Reciprocal Space · Phonons · Bloch Bands · Superconductivity & BCS';
       if (timesItalic) {
-        page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
+        safeDrawText(page, dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
       }
 
       // 5. Scientific Vector Illustration: 1st Brillouin Zone Hexagon & Reciprocal Space
@@ -3485,17 +3698,17 @@
       // Symmetry points
       page.drawCircle({ x: centerX, y: diagCy, size: 2.5, color: inkDark });
       if (timesBold) {
-        page.drawText('Γ', { x: centerX - 12.0, y: diagCy - 2.0, size: 9.0, font: timesBold, color: inkDark });
+        safeDrawText(page, 'Gamma', { x: centerX - 18.0, y: diagCy - 2.0, size: 8.5, font: timesBold, color: inkDark });
       }
       page.drawCircle({ x: centerX + hexR, y: diagCy, size: 2.0, color: inkDark });
       if (timesBold) {
-        page.drawText('K', { x: centerX + hexR + 4.0, y: diagCy - 3.0, size: 9.0, font: timesBold, color: inkDark });
+        safeDrawText(page, 'K', { x: centerX + hexR + 4.0, y: diagCy - 3.0, size: 9.0, font: timesBold, color: inkDark });
       }
       const mx = centerX + hexR * 0.866 * Math.cos(Math.PI / 6);
       const my = diagCy + hexR * 0.866 * Math.sin(Math.PI / 6);
       page.drawCircle({ x: mx, y: my, size: 2.0, color: inkDark });
       if (timesBold) {
-        page.drawText('M', { x: mx + 4.0, y: my + 2.0, size: 9.0, font: timesBold, color: inkDark });
+        safeDrawText(page, 'M', { x: mx + 4.0, y: my + 2.0, size: 9.0, font: timesBold, color: inkDark });
       }
 
       // Fermi surface contour circle
@@ -3504,7 +3717,7 @@
       if (courierBold) {
         const stamp = 'RECIPROCAL SPACE · 1ST BRILLOUIN ZONE · FERMI SPHERE';
         const stW = courierBold.widthOfTextAtSize(stamp, 7.5);
-        page.drawText(stamp, { x: centerX - stW / 2, y: diagCy - 72.0, size: 7.5, font: courierBold, color: inkCopper });
+        safeDrawText(page, stamp, { x: centerX - stW / 2, y: diagCy - 72.0, size: 7.5, font: courierBold, color: inkCopper });
       }
 
       // 6. Lower Technical Metadata Grid
@@ -3512,18 +3725,18 @@
       page.drawLine({ start: { x: x1 + 14.0, y: metaY + 44.0 }, end: { x: x2 - 14.0, y: metaY + 44.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
       if (courierBold) {
-        page.drawText('PROFESSOR / SCHOLAR', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkCopper });
-        page.drawText('ACADEMIC TERM', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkCopper });
-        page.drawText('VOLUME / RECORD', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkCopper });
+        safeDrawText(page, 'PROFESSOR / SCHOLAR', { x: x1 + 14.0, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkCopper });
+        safeDrawText(page, 'ACADEMIC TERM', { x: x1 + w * 0.42, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkCopper });
+        safeDrawText(page, 'VOLUME / RECORD', { x: x1 + w * 0.75, y: metaY + 30.0, size: 7.5, font: courierBold, color: inkCopper });
       }
       if (timesBold) {
         const authTxt = options.coverAuthor || options.author || 'Condensed Matter Physics Group';
-        page.drawText(authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        safeDrawText(page, authTxt, { x: x1 + 14.0, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
         const dateTxt = todayStr || 'Academic Year';
-        page.drawText(dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        safeDrawText(page, dateTxt, { x: x1 + w * 0.42, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
         const slideCount = options.totalSlides || options.numSlides;
         const slideTxt = slideCount ? `${slideCount} Slides` : 'Theoretical Monograph';
-        page.drawText(slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
+        safeDrawText(page, slideTxt, { x: x1 + w * 0.75, y: metaY + 14.0, size: 10.0, font: timesBold, color: inkDark });
       }
 
     } else if (tpl === 'nuclear_flat' || tpl === 'particulas_flat' || tpl === 'nuclear_particles_flat' || tpl === 'particle_physics_flat') {
@@ -3555,13 +3768,19 @@
       // 3. Header band: Series stamp & Standard Model gauge group
       const headY = ph - m - 22.0;
       if (courierBold) {
-        page.drawText('[ HIGH ENERGY PHYSICS // CERN-SLAC COLLIDER ARCHIVE ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkViolet });
+        safeDrawText(page, '[ HIGH ENERGY PHYSICS // CERN-SLAC COLLIDER ARCHIVE ]', { x: x1 + 14.0, y: headY, size: 8.0, font: courierBold, color: inkViolet });
       }
-      if (timesItalic || timesFont) {
+      let mathNucHdr = null;
+      if (typeof window !== 'undefined' && window.SLIDE_PRINTER_MATH_ASSETS && window.SLIDE_PRINTER_MATH_ASSETS['nuclear_header']) {
+        mathNucHdr = await embedMathSvg(window.SLIDE_PRINTER_MATH_ASSETS['nuclear_header'], 200.0, 13.5);
+      }
+      if (mathNucHdr) {
+        page.drawImage(mathNucHdr, { x: x2 - 14.0 - 200.0, y: headY - 3.0, width: 200.0, height: 13.5 });
+      } else if (timesItalic || timesFont) {
         const fItalic = timesItalic || timesFont;
-        const eqStr = 'SU(3)_C × SU(2)_L × U(1)_Y  ·  B(A,Z)  ·  √s = 14 TeV';
-        const eqW = fItalic.widthOfTextAtSize(eqStr, 9.0);
-        page.drawText(eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 9.0, font: fItalic, color: inkViolet });
+        const eqStr = toWinAnsi('SU(3)_C x SU(2)_L x U(1)_Y  ·  B(A,Z)  ·  sqrt(s) = 14 TeV');
+        const eqW = fItalic.widthOfTextAtSize(eqStr, 8.5);
+        safeDrawText(page, eqStr, { x: x2 - 14.0 - eqW, y: headY, size: 8.5, font: fItalic, color: inkViolet });
       }
       page.drawLine({ start: { x: x1 + 14.0, y: headY - 8.0 }, end: { x: x2 - 14.0, y: headY - 8.0 }, thickness: 0.6, color: hairline, opacity: 0.22 });
 
@@ -3570,12 +3789,12 @@
       const lines = wrapText(helveticaBold, dispTitle, 23.0, w - 28.0);
       let curY = ph - m - 62.0;
       for (const line of lines) {
-        page.drawText(line, { x: x1 + 14.0, y: curY, size: 23.0, font: helveticaBold, color: inkDark });
+        safeDrawText(page, line, { x: x1 + 14.0, y: curY, size: 23.0, font: helveticaBold, color: inkDark });
         curY -= 29.0;
       }
       const dispSub = options.studyTitle || options.subtitle || 'Nuclear Shell Model · Radioactive Decay · Quark Model & QCD · Electroweak Model';
       if (timesItalic) {
-        page.drawText(dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
+        safeDrawText(page, dispSub, { x: x1 + 14.0, y: curY - 4.0, size: 11.5, font: timesItalic, color: inkMuted });
       }
 
       // 5. Scientific Vector Illustration: e+ e- -> Z0/gamma* -> q qbar Feynman Diagram
@@ -3587,8 +3806,8 @@
       page.drawLine({ start: { x: v1x - 60.0, y: diagCy + 40.0 }, end: { x: v1x, y: diagCy }, thickness: 1.2, color: inkDark });
       page.drawLine({ start: { x: v1x - 60.0, y: diagCy - 40.0 }, end: { x: v1x, y: diagCy }, thickness: 1.2, color: inkDark });
       if (timesItalic) {
-        page.drawText('e⁻', { x: v1x - 72.0, y: diagCy + 38.0, size: 9.0, font: timesItalic, color: inkDark });
-        page.drawText('e⁺', { x: v1x - 72.0, y: diagCy - 42.0, size: 9.0, font: timesItalic, color: inkDark });
+        safeDrawText(page, 'e-', { x: v1x - 72.0, y: diagCy + 38.0, size: 9.0, font: timesItalic, color: inkDark });
+        safeDrawText(page, 'e+', { x: v1x - 72.0, y: diagCy - 42.0, size: 9.0, font: timesItalic, color: inkDark });
       }
 
       // Gauge boson propagator wavy line
@@ -3601,17 +3820,17 @@
         page.drawLine({ start: { x: wx1, y: wy1 }, end: { x: wx2, y: wy2 }, thickness: 1.4, color: inkViolet });
       }
       if (courierBold) {
-        const bLabel = 'γ* / Z⁰';
+        const bLabel = toWinAnsi('gamma* / Z0');
         const bW = courierBold.widthOfTextAtSize(bLabel, 7.5);
-        page.drawText(bLabel, { x: centerX - bW / 2, y: diagCy + 10.0, size: 7.5, font: courierBold, color: inkViolet });
+        safeDrawText(page, bLabel, { x: centerX - bW / 2, y: diagCy + 10.0, size: 7.5, font: courierBold, color: inkViolet });
       }
 
       // Outgoing quarks
       page.drawLine({ start: { x: v2x, y: diagCy }, end: { x: v2x + 60.0, y: diagCy + 40.0 }, thickness: 1.2, color: inkDark });
       page.drawLine({ start: { x: v2x, y: diagCy }, end: { x: v2x + 60.0, y: diagCy - 40.0 }, thickness: 1.2, color: inkDark });
       if (timesItalic) {
-        page.drawText('q', { x: v2x + 66.0, y: diagCy + 38.0, size: 9.0, font: timesItalic, color: inkDark });
-        page.drawText('q̄', { x: v2x + 66.0, y: diagCy - 42.0, size: 9.0, font: timesItalic, color: inkDark });
+        safeDrawText(page, 'q', { x: v2x + 66.0, y: diagCy + 38.0, size: 9.0, font: timesItalic, color: inkDark });
+        safeDrawText(page, 'q_bar', { x: v2x + 66.0, y: diagCy - 42.0, size: 9.0, font: timesItalic, color: inkDark });
       }
 
       // Vertex interaction nodes
