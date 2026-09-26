@@ -102,3 +102,37 @@ def test_app_js_pwa_registration():
     assert 'appinstalled' in js
     assert 'installApp:' in js
     assert 'installAppTitle:' in js
+
+
+def test_javascript_syntax_and_engine_integrity():
+    """Verify that all web JavaScript files have valid syntax and engine initializes."""
+    import shutil
+    import subprocess
+
+    node_bin = shutil.which('node')
+    if not node_bin:
+        return
+
+    js_files = [
+        os.path.join(WEB_DIR, 'sw.js'),
+        os.path.join(WEB_DIR, 'js', 'math_assets.js'),
+        os.path.join(WEB_DIR, 'js', 'engine.js'),
+        os.path.join(WEB_DIR, 'js', 'preview.js'),
+        os.path.join(WEB_DIR, 'js', 'app.js'),
+    ]
+
+    for js_path in js_files:
+        assert os.path.exists(js_path), f'JS file not found: {js_path}'
+        res = subprocess.run([node_bin, '-c', js_path], capture_output=True, text=True)
+        assert res.returncode == 0, f'Syntax error in {js_path}:\n{res.stderr}'
+
+    # Verify engine export in Node environment
+    engine_test_script = (
+        "const PDFLib = require('./web/vendor/pdf-lib.min.js');"
+        "const engine = require('./web/js/engine.js');"
+        "if (!engine || typeof engine.convertSlidesToHandout !== 'function') {"
+        "  process.exit(1);"
+        "}"
+    )
+    res = subprocess.run([node_bin, '-e', engine_test_script], cwd=REPO_ROOT, capture_output=True, text=True)
+    assert res.returncode == 0, f'SlidePrinterEngine failed to load:\n{res.stderr}'

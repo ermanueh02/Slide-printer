@@ -34,7 +34,7 @@
    * Pre-loads math vector SVG assets from window.SLIDE_PRINTER_MATH_ASSETS into HTML Image objects.
    */
   function preloadMathSvgs() {
-    if (typeof window === 'undefined' || !window.SLIDE_PRINTER_MATH_ASSETS) return;
+    if (typeof window === 'undefined' || typeof Image === 'undefined' || !window.SLIDE_PRINTER_MATH_ASSETS) return;
     for (const [key, svgStr] of Object.entries(window.SLIDE_PRINTER_MATH_ASSETS)) {
       if (!mathImgCache.has(key)) {
         const img = new Image();

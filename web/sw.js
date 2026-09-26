@@ -3,12 +3,13 @@
  * Enables PWA offline capability and instant caching for mobile & desktop Chrome
  */
 
-const CACHE_NAME = 'slide-printer-v2.0';
+const CACHE_NAME = 'slide-printer-v2.1';
 
 const PRECACHE_ASSETS = [
   './',
   './index.html',
   './css/style.css',
+  './js/math_assets.js',
   './js/engine.js',
   './js/preview.js',
   './js/app.js',
