@@ -32,6 +32,7 @@ from slide_printer.constants import (
     COVER_TEMPLATES,
     COVER_TEMPLATE_ALIASES,
     DEFAULT_COVER_MODE,
+    DEFAULT_NOTEBOOK_PAGES,
 )
 from slide_printer.core import SlidePrinter, resolve_style
 
@@ -447,7 +448,8 @@ def interactive_wizard() -> int:
         size = os.path.getsize(f) if os.path.isfile(f) else 0
         local_pdf_info.append((f, pgs, size))
 
-    print(bold("\n4. Select Presentation File(s):"))
+    print(bold("\n4. Select Presentation File(s) or Notebook Mode:"))
+    print(f"  [{cyan('N')}] {bold('Generate Full Notebook / Libreta')} (Ruled lines, grid, dots · No slides required)")
     if local_pdf_info:
         print(dim(f"Found {len(local_pdf_info)} presentation PDF(s) in current directory:"))
         for i, (pdf_name, pgs, sz) in enumerate(local_pdf_info, 1):
@@ -461,13 +463,67 @@ def interactive_wizard() -> int:
         print(dim("  - Drag & drop any PDF or folder directly into this terminal."))
         print(dim(f"  - Press Enter to scan current directory '.' {bold('[default]')}"))
 
-    entry = input(bold("\nYour choice (default: current directory '.'): ")).strip()
+    entry = input(bold("\nYour choice (default: current directory '.', or 'N' for notebook): ")).strip()
 
     if not entry:
         entry = "."
 
     # Clean quotes from drag & drop
     entry = entry.strip("\"'")
+
+    if entry.lower() in ("n", "notebook", "libreta", "cuaderno"):
+        nb_pages_raw = input(f"Number of note pages in notebook [default: {DEFAULT_NOTEBOOK_PAGES}]: ").strip()
+        try:
+            nb_pages = int(nb_pages_raw) if nb_pages_raw else DEFAULT_NOTEBOOK_PAGES
+        except ValueError:
+            nb_pages = DEFAULT_NOTEBOOK_PAGES
+
+        num_choice = input("Include centered page numbers in footer? [Y/n] (default: Y): ").strip().lower()
+        include_page_numbers = num_choice not in ("n", "no")
+
+        cov_choice = input("Generate editorial cover page? [Y/n] (default: Y): ").strip().lower()
+        include_cover = cov_choice not in ("n", "no")
+        nb_title = None
+        if include_cover:
+            nb_title_raw = input("Notebook cover title (default: Notebook): ").strip()
+            nb_title = nb_title_raw if nb_title_raw else "Notebook"
+
+        printer = SlidePrinter(
+            paper_size=selected_paper,
+            margin=DEFAULT_MARGIN,
+            step=DEFAULT_STEP,
+            output_dir=DEFAULT_OUTPUT_DIR,
+            page_numbers=include_page_numbers,
+            binding=selected_binding,
+            duplex=selected_duplex,
+            hole_guides=selected_hole_guides,
+            cover_mode="generate" if include_cover else "none",
+            cover_title=nb_title,
+        )
+
+        style_names = [STYLE_METADATA[s]["name"] for s in selected_styles]
+        print(f"\n🚀 Generating notebook with {bold(str(nb_pages))} pages into {cyan(selected_paper.upper())} ({cyan(', '.join(style_names))})...\n")
+
+        t0 = time.time()
+        results = printer.generate_notebook(num_pages=nb_pages, styles=selected_styles)
+        elapsed = time.time() - t0
+        summary_rows = []
+        for r in results:
+            folder = os.path.basename(os.path.dirname(r))
+            print(f"   ├─ {cyan(folder):<7} {green('✔')} {r}")
+            summary_rows.append({
+                "name": f"Notebook ({nb_pages} pages)",
+                "slides": nb_pages,
+                "output": f"1 notebook ({folder})",
+                "count": 1,
+            })
+        print()
+        print_summary_table(summary_rows, elapsed, DEFAULT_OUTPUT_DIR, selected_paper)
+        if results and os.path.exists(results[0]):
+            open_choice = input(dim("Open output folder now? [Y/n]: ")).strip().lower()
+            if open_choice in ("", "y", "yes"):
+                open_path_in_os(os.path.dirname(results[0]))
+        return 0
 
     # Check for PPTX input
     is_pptx, matching_pdf = check_pptx_file(entry)
@@ -600,6 +656,8 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
         epilog="""
 Examples:
   slide-printer                                  Launch interactive studio wizard
+  slide-printer --notebook 50 -s lines           Generate 50-page ruled notebook (A4)
+  slide-printer --notebook 80 --no-page-numbers  Generate notebook without page numbers
   slide-printer -i lecture.pdf -s lines          Generate ruled lines handout (A4)
   slide-printer -i *.pdf -s all -o my_handouts   Convert all PDFs with all 4 styles
   slide-printer -i slides.pdf -p letter -s grid  US Letter paper with technical grid
@@ -613,6 +671,21 @@ Examples:
         "--input",
         nargs="+",
         help="Input PDF presentation(s), folder, or wildcards (e.g. slides.pdf, *.pdf, ./lectures/).",
+    )
+    parser.add_argument(
+        "-N",
+        "--notebook",
+        nargs="?",
+        const=DEFAULT_NOTEBOOK_PAGES,
+        type=int,
+        default=None,
+        help=f"Generate a complete notebook/notepad without slide inputs (default: {DEFAULT_NOTEBOOK_PAGES} pages). Optional page count: --notebook 80.",
+    )
+    parser.add_argument(
+        "--notebook-pages",
+        type=int,
+        default=None,
+        help="Specify number of note pages for the notebook (e.g. --notebook-pages 50).",
     )
     parser.add_argument(
         "-s",
@@ -754,12 +827,16 @@ Examples:
     )
     parser.add_argument(
         "--cover-title",
+        "--title",
+        dest="cover_title",
         type=str,
         default=None,
-        help="Custom main title for the generated cover page.",
+        help="Custom main title for the generated cover page or notebook.",
     )
     parser.add_argument(
         "--cover-author",
+        "--author",
+        dest="cover_author",
         type=str,
         default=None,
         help="Student, author, or presenter name for the generated cover page.",
@@ -939,7 +1016,9 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     args = parse_args(argv)
 
-    if not args.input:
+    is_notebook_mode = (args.notebook is not None) or (args.notebook_pages is not None)
+
+    if not is_notebook_mode and not args.input:
         if sys.stdin.isatty():
             return interactive_wizard()
         print(red("Error: No input files specified. Use -i/--input or run interactive mode."), file=sys.stderr)
@@ -947,23 +1026,27 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     # Check for PowerPoint files in input arguments
     processed_inputs: List[str] = []
-    for inp in args.input:
-        is_p, match_pdf = check_pptx_file(inp)
-        if is_p:
-            if match_pdf:
-                processed_inputs.append(match_pdf)
+    if not is_notebook_mode:
+        for inp in args.input:
+            is_p, match_pdf = check_pptx_file(inp)
+            if is_p:
+                if match_pdf:
+                    processed_inputs.append(match_pdf)
+                else:
+                    continue
             else:
-                continue
-        else:
-            processed_inputs.append(inp)
+                processed_inputs.append(inp)
 
-    if not processed_inputs:
-        print(red("Error: No valid PDF presentations specified."), file=sys.stderr)
-        return 1
+        if not processed_inputs:
+            print(red("Error: No valid PDF presentations specified."), file=sys.stderr)
+            return 1
 
     # Resolve requested styles
     try:
-        chosen_styles = parse_styles_arg(args.styles)
+        if is_notebook_mode and ("-s" not in argv and "--styles" not in argv):
+            chosen_styles = ["lines"]
+        else:
+            chosen_styles = parse_styles_arg(args.styles)
     except ValueError as err:
         print(red(f"Error: {err}"), file=sys.stderr)
         return 1
@@ -993,7 +1076,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         page_numbers=args.page_numbers,
         page_number_format=args.page_format,
         study_header=args.study_header,
-        study_title=args.study_title,
+        study_title=args.study_title or (args.cover_title if args.study_header else None),
         gutter_margin=args.gutter if getattr(args, "gutter", 0.0) > 0 else None,
         binding=binding_mode,
         hole_guides=args.hole_guides,
@@ -1009,6 +1092,77 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     t0 = time.time()
     paper_dim = printer.paper_dimensions
+
+    # Notebook execution path
+    if is_notebook_mode:
+        num_nb_pages = args.notebook_pages or args.notebook or DEFAULT_NOTEBOOK_PAGES
+        if num_nb_pages <= 0:
+            print(red(f"Error: Notebook pages must be greater than 0, got {num_nb_pages}"), file=sys.stderr)
+            return 1
+
+        if not args.quiet:
+            print(bold(f"\n● Slide-Printer v{__version__} · Notebook Studio"))
+            print(f"  Target : {cyan(args.paper_size.upper())} ({paper_dim[0]:.1f} × {paper_dim[1]:.1f} pt) · Pages: {bold(str(num_nb_pages))} folios · Spacing: {args.step:.0f} pt")
+            style_labels = [STYLE_METADATA[s]["name"] for s in chosen_styles]
+            print(f"  Styles : {cyan(', '.join(style_labels))}")
+            cov_lbl = f"{printer.cover_template.title()} Cover" if cover_mode == "generate" else "No cover"
+            num_lbl = f"Yes ({args.page_format})" if args.page_numbers else "None (Unnumbered)"
+            print(f"  Layout : {cov_lbl} · Folio numbers: {num_lbl} · Binding: {args.binding.title()}")
+            print(f"  Output : {dim(args.output_dir)}\n")
+
+        if args.dry_run:
+            print(yellow("🔍 DRY-RUN MODE: Simulating notebook generation without writing to disk.\n"))
+            for st in chosen_styles:
+                code = STYLE_METADATA[st]["code"]
+                base = args.cover_title or "notebook"
+                dest = os.path.join(args.output_dir, code, f"{base}_{code}.pdf")
+                print(f"   ├─ {cyan(code):<7} ➜ {dest} ({num_nb_pages} pages)")
+            print(bold(f"\nDry-run complete: Would generate {len(chosen_styles)} notebook(s) ({num_nb_pages} pages each)."))
+            return 0
+
+        def on_nb_progress(style: str, cur_p: int, tot_p: int) -> None:
+            if not args.quiet and sys.stdout.isatty():
+                bar = render_progress_bar(cur_p, tot_p, width=18)
+                st_name = STYLE_METADATA[style]["name"]
+                sys.stdout.write(f"\r   ├─ {cyan(st_name)}: {bar}")
+                sys.stdout.flush()
+
+        try:
+            results = printer.generate_notebook(
+                num_pages=num_nb_pages,
+                styles=chosen_styles,
+                output_dir=args.output_dir,
+                progress_cb=on_nb_progress,
+            )
+            if sys.stdout.isatty() and not args.quiet:
+                sys.stdout.write("\r" + " " * 75 + "\r")
+                sys.stdout.flush()
+
+            elapsed = time.time() - t0
+            summary_rows = []
+            for res_path in results:
+                st_code = os.path.basename(os.path.dirname(res_path))
+                if not args.quiet:
+                    print(f"   ├─ {cyan(st_code):<7} {green('✔')} {res_path} ({num_nb_pages} pages)")
+                summary_rows.append({
+                    "name": f"Notebook ({num_nb_pages} pages)",
+                    "slides": num_nb_pages,
+                    "output": f"1 notebook ({st_code})",
+                    "count": 1,
+                })
+
+            if not args.quiet:
+                print()
+                print_summary_table(summary_rows, elapsed, args.output_dir, args.paper_size)
+
+            if args.open and results:
+                target = args.output_dir if os.path.isdir(args.output_dir) else results[0]
+                open_path_in_os(target)
+
+            return 0
+        except Exception as e:
+            print(red(f"Error generating notebook: {e}"), file=sys.stderr)
+            return 1
 
     if not args.quiet:
         print(bold(f"\n● Slide-Printer v{__version__}"))

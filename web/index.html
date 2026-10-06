@@ -121,9 +121,14 @@
         </div>
         <div class="drop-zone-text" id="dropZoneTitleText">Drop presentation PDF(s) here</div>
         <div class="drop-zone-subtext" id="dropZoneSubText">Compatible with 16:9 and 4:3 slide formats · Multi-file batch ready</div>
-        <button type="button" class="btn-primary" id="browseBtn">
-          <span id="browseBtnText">Select Documents</span>
-        </button>
+        <div style="display: flex; gap: 0.75rem; align-items: center; justify-content: center; flex-wrap: wrap; margin-top: 0.25rem;">
+          <button type="button" class="btn-primary" id="browseBtn">
+            <span id="browseBtnText">Select Documents</span>
+          </button>
+          <button type="button" class="btn-secondary" id="createNotebookHeroBtn" title="Generate a full notebook (ruled lines, grid, or dots without slides)">
+            <span id="createNotebookHeroBtnText">📓 Create Notebook</span>
+          </button>
+        </div>
       </div>
 
       <!-- Features Strip -->
@@ -182,6 +187,7 @@
           </div>
         </div>
         <div class="workspace-meta-actions">
+          <button type="button" class="btn-secondary-sm" id="generateNotebookWorkspaceBtn" title="Export a complete notebook with the current settings">📓 New Notebook</button>
           <button type="button" class="btn-secondary-sm" id="addFilesHeaderBtn" title="Add more presentations to batch">+ Add Another PDF</button>
           <button type="button" class="btn-secondary-sm" id="replaceFileBtn" title="Select a different presentation">Change PDF</button>
         </div>

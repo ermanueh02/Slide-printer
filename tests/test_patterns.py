@@ -179,5 +179,89 @@ def test_standard_editorial_templates_and_aliases():
         assert isinstance(cover, PageObject)
 
 
+@pytest.mark.parametrize("style", ["blank", "lines", "grid", "dots"])
+def test_create_notebook_page_styles(style):
+    from slide_printer.patterns import create_notebook_page
+    a4_size = PAPER_SIZES["a4"]
+    margin = 40.0
+    width = a4_size[0] - 2 * margin
+
+    page = create_notebook_page(
+        page_size=a4_size,
+        margin=margin,
+        width=width,
+        bottom_margin=margin,
+        style=style,
+        step=14.0,
+        page_number=1,
+        total_pages=50,
+    )
+    assert isinstance(page, PageObject)
+    assert float(page.mediabox.width) == pytest.approx(a4_size[0], 0.1)
+    assert float(page.mediabox.height) == pytest.approx(a4_size[1], 0.1)
+    text = page.extract_text()
+    assert "1 / 50" in text
+
+
+def test_create_notebook_page_without_page_numbers():
+    from slide_printer.patterns import create_notebook_page
+    a4_size = PAPER_SIZES["a4"]
+    margin = 40.0
+    width = a4_size[0] - 2 * margin
+
+    page_no_num = create_notebook_page(
+        page_size=a4_size,
+        margin=margin,
+        width=width,
+        bottom_margin=margin,
+        style="lines",
+        page_number=None,
+    )
+    assert "1" not in page_no_num.extract_text()
+
+
+def test_create_notebook_page_study_header_and_binding():
+    from slide_printer.patterns import create_notebook_page
+    a4_size = PAPER_SIZES["a4"]
+    margin = 40.0
+    width = a4_size[0] - 2 * margin - 22.0
+
+    page = create_notebook_page(
+        page_size=a4_size,
+        margin=margin + 22.0,
+        width=width,
+        bottom_margin=margin,
+        style="lines",
+        study_header=True,
+        study_title="Advanced Quantum Mechanics",
+        binding="spiral",
+        hole_guides=True,
+        gutter_margin=22.0,
+        page_number=5,
+        total_pages=50,
+        page_number_format="simple",
+    )
+    text = page.extract_text()
+    assert "Advanced Quantum Mechanics" in text
+    assert "5" in text
+
+
+def test_generate_cover_page_notebook_edition():
+    from slide_printer.patterns import generate_cover_page
+    a4_size = PAPER_SIZES["a4"]
+    cover = generate_cover_page(
+        page_size=a4_size,
+        title="Theoretical Physics Notebook",
+        author="Student Dirac",
+        num_pages=60,
+        is_notebook=True,
+        template="atelier",
+    )
+    text = cover.extract_text()
+    assert "Theoretical Physics Notebook" in text
+    assert "60 pages with dedicated notes" in text
+
+
+
 
 

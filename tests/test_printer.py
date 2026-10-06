@@ -259,4 +259,63 @@ def test_decade_cover_templates(sample_slide_pdf, tmp_path):
         assert len(reader.pages) == 3  # 1 cover + 2 slides
 
 
+def test_slide_printer_generate_notebook_defaults(tmp_path):
+    out_dir = str(tmp_path / "notebooks_default")
+    printer = SlidePrinter(output_dir=out_dir)
+    results = printer.generate_notebook(num_pages=10)
+    assert len(results) == 1
+    out_file = results[0]
+    assert os.path.exists(out_file)
+    assert out_file.endswith("notebook_lines.pdf")
+
+    reader = PdfReader(out_file)
+    # Default has cover (1 cover + 10 note pages = 11 pages)
+    assert len(reader.pages) == 11
+    for page in reader.pages:
+        assert float(page.mediabox.width) == pytest.approx(PAPER_SIZES["a4"][0], 0.1)
+        assert float(page.mediabox.height) == pytest.approx(PAPER_SIZES["a4"][1], 0.1)
+
+    # Note page has page number "2 / 11"
+    p1_text = reader.pages[1].extract_text()
+    assert "2 / 11" in p1_text
+
+
+def test_slide_printer_generate_notebook_no_page_numbers(tmp_path):
+    out_dir = str(tmp_path / "notebooks_no_numbers")
+    printer = SlidePrinter(output_dir=out_dir, page_numbers=False, cover_mode="none")
+    results = printer.generate_notebook(num_pages=5, styles=["lines", "grid"])
+    assert len(results) == 2
+
+    for res in results:
+        reader = PdfReader(res)
+        assert len(reader.pages) == 5
+        for p in reader.pages:
+            text = p.extract_text().strip()
+            # No page number text should be extracted
+            assert text == ""
+
+
+def test_slide_printer_generate_notebook_custom_cover_and_binding(tmp_path):
+    out_dir = str(tmp_path / "notebooks_custom")
+    printer = SlidePrinter(
+        output_dir=out_dir,
+        cover_mode="generate",
+        cover_template="composition",
+        cover_title="Physics Laboratory Notes",
+        cover_author="Marie Curie",
+        binding="spiral",
+        hole_guides=True,
+        duplex=True,
+    )
+    results = printer.generate_notebook(num_pages=8, styles=["lines"])
+    assert len(results) == 1
+    reader = PdfReader(results[0])
+    assert len(reader.pages) == 9
+
+    cover_text = reader.pages[0].extract_text()
+    assert "Physics Laboratory Notes" in cover_text
+    assert "Marie Curie" in cover_text
+
+
+
 

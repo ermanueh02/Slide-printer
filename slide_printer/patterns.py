@@ -260,6 +260,64 @@ def create_notes_overlay(
     return PdfReader(packet).pages[0]
 
 
+def create_notebook_page(
+    page_size: Tuple[float, float],
+    margin: float,
+    width: float,
+    bottom_margin: float,
+    style: str,
+    step: float = DEFAULT_STEP,
+    dot_radius: float = 0.65,
+    page_number: Optional[int] = None,
+    total_pages: Optional[int] = None,
+    page_number_format: str = "total",
+    study_header: bool = False,
+    study_title: Optional[str] = None,
+    header_y: Optional[float] = None,
+    footer_margin: Optional[float] = None,
+    grayscale: bool = False,
+    binding: str = "none",
+    hole_guides: bool = False,
+    is_verso: bool = False,
+    gutter_margin: float = 0.0,
+) -> PageObject:
+    """Creates a full-sheet note page (for notebooks and notepads).
+
+    Preserves standard margin spacing, ruled line / dot grid step, binding
+    gutters, hole guides, and optional page numbering.
+    """
+    pw, ph = page_size
+    if study_header:
+        eff_header_y = header_y if header_y is not None else (ph - margin + 4.0)
+        y_sep = eff_header_y - 12.0
+    else:
+        eff_header_y = None
+        y_sep = ph - margin + 10.0
+
+    return create_notes_overlay(
+        page_size=page_size,
+        y_sep=y_sep,
+        margin=margin,
+        width=width,
+        bottom_margin=bottom_margin,
+        style=style,
+        step=step,
+        dot_radius=dot_radius,
+        page_number=page_number,
+        total_pages=total_pages,
+        page_number_format=page_number_format,
+        draw_separator=False,
+        study_header=study_header,
+        study_title=study_title,
+        header_y=eff_header_y,
+        footer_margin=footer_margin,
+        grayscale=grayscale,
+        binding=binding,
+        hole_guides=hole_guides,
+        is_verso=is_verso,
+        gutter_margin=gutter_margin,
+    )
+
 
 def generate_cover_page(
     page_size: Tuple[float, float],
@@ -275,6 +333,8 @@ def generate_cover_page(
     is_verso: bool = False,
     gutter_margin: float = 0.0,
     margin: float = 40.0,
+    is_notebook: bool = False,
+    num_pages: Optional[int] = None,
 ) -> PageObject:
     """Generates an editorial notebook cover page inspired by vintage and modernist designs.
 
@@ -283,9 +343,14 @@ def generate_cover_page(
     packet = io.BytesIO()
     c = canvas.Canvas(packet, pagesize=page_size)
     pw, ph = page_size
-    clean_title = (title or "Presentation").strip()
+    clean_title = (title or ("Notebook" if is_notebook else "Presentation")).strip()
     raw_tpl = (template or "atelier").lower().strip()
     tpl = COVER_TEMPLATE_ALIASES.get(raw_tpl, raw_tpl)
+
+    if is_notebook and num_pages is not None:
+        num_slides = num_pages
+    elif num_slides is None and num_pages is not None:
+        num_slides = num_pages
 
     left_gutter = 0.0 if is_verso else gutter_margin
     right_gutter = gutter_margin if is_verso else 0.0
@@ -357,7 +422,7 @@ def generate_cover_page(
         if num_slides is not None:
             c.setFont("Times-Italic", 8.0)
             c.setFillColor(Color(0.48, 0.48, 0.50, alpha=0.75))
-            s_word = "slide" if num_slides == 1 else "slides"
+            s_word = ("page" if num_slides == 1 else "pages") if is_notebook else ("slide" if num_slides == 1 else "slides")
             c.drawRightString(x2, meta_y - 8.0, f"{num_slides} {s_word} with study notes")
 
     elif tpl == "monograph":
@@ -420,7 +485,7 @@ def generate_cover_page(
         if num_slides is not None:
             c.setFont("Times-Roman", 8.5)
             c.setFillColor(Color(0.48, 0.48, 0.48, alpha=0.75))
-            s_word = "slide" if num_slides == 1 else "slides"
+            s_word = ("page" if num_slides == 1 else "pages") if is_notebook else ("slide" if num_slides == 1 else "slides")
             c.drawCentredString(center_x, meta_y, f"{num_slides} {s_word} with dedicated notes")
 
     elif tpl == "bauhaus":
@@ -470,7 +535,7 @@ def generate_cover_page(
         c.drawString(vert_x + 72.0, meta_y + 18.0, date_str or "Archival")
 
         if num_slides is not None:
-            s_word = "slide" if num_slides == 1 else "slides"
+            s_word = ("page" if num_slides == 1 else "pages") if is_notebook else ("slide" if num_slides == 1 else "slides")
             c.setFont("Helvetica-Oblique", 8.0)
             c.setFillColor(Color(0.5, 0.5, 0.52, alpha=0.75))
             c.drawString(vert_x + 14.0, meta_y - 4.0, f"{num_slides} {s_word} included")
@@ -535,7 +600,7 @@ def generate_cover_page(
         c.setFillColor(gold)
         c.drawCentredString(center_x, meta_y - 2.0, date_str or "Turn of the Century")
         if num_slides is not None:
-            s_word = "slide" if num_slides == 1 else "slides"
+            s_word = ("page" if num_slides == 1 else "pages") if is_notebook else ("slide" if num_slides == 1 else "slides")
             c.setFont("Times-Roman", 8.0)
             c.setFillColor(Color(0.4, 0.4, 0.4, alpha=0.8))
             c.drawCentredString(center_x, meta_y - 16.0, f"{num_slides} {s_word} compiled")
@@ -601,7 +666,7 @@ def generate_cover_page(
         c.setFillColor(gold_muted)
         c.drawString(x1 + 16.0, meta_y - 2.0, date_str or "Archival Record 1910")
         if num_slides is not None:
-            s_word = "slide" if num_slides == 1 else "slides"
+            s_word = ("page" if num_slides == 1 else "pages") if is_notebook else ("slide" if num_slides == 1 else "slides")
             c.setFont("Times-Roman", 8.0)
             c.setFillColor(navy)
             c.drawRightString(x2 - 16.0, meta_y + 12.0, f"{num_slides} {s_word} registered")
@@ -676,7 +741,7 @@ def generate_cover_page(
         c.setFillColor(deco_gold)
         c.drawCentredString(center_x, meta_y - 2.0, date_str or "1920s Archive")
         if num_slides is not None:
-            s_word = "slide" if num_slides == 1 else "slides"
+            s_word = ("page" if num_slides == 1 else "pages") if is_notebook else ("slide" if num_slides == 1 else "slides")
             c.setFont("Times-Roman", 8.0)
             c.setFillColor(deco_black)
             c.drawCentredString(center_x, meta_y - 16.0, f"{num_slides} {s_word} bound")
@@ -737,7 +802,7 @@ def generate_cover_page(
         c.setFillColor(copper)
         c.drawString(x1 + 14.0, meta_y - 2.0, date_str or "1930s Edition")
         if num_slides is not None:
-            s_word = "slide" if num_slides == 1 else "slides"
+            s_word = ("page" if num_slides == 1 else "pages") if is_notebook else ("slide" if num_slides == 1 else "slides")
             c.setFont("Helvetica", 8.0)
             c.setFillColor(slate)
             c.drawRightString(x2 - 14.0, meta_y + 12.0, f"{num_slides} {s_word} compiled")
@@ -858,7 +923,7 @@ def generate_cover_page(
         if num_slides is not None:
             c.setFont("Helvetica", 7.5)
             c.setFillColor(Color(0.52, 0.54, 0.56, alpha=0.8))
-            s_word = "slide" if num_slides == 1 else "slides"
+            s_word = ("page" if num_slides == 1 else "pages") if is_notebook else ("slide" if num_slides == 1 else "slides")
             c.drawCentredString(center_x, bot_band_y - 58.0, f"{num_slides} {s_word} with ruled marginal notes")
 
     elif tpl == "sixties":
@@ -922,7 +987,7 @@ def generate_cover_page(
             c.setFont("Helvetica-Bold", 7.0)
             c.drawString(x1, grid_y - 8.0, "FOLIO")
             c.setFont("Helvetica", 9.5)
-            s_word = "slide" if num_slides == 1 else "slides"
+            s_word = ("page" if num_slides == 1 else "pages") if is_notebook else ("slide" if num_slides == 1 else "slides")
             c.drawString(x1, grid_y - 20.0, f"{num_slides} {s_word}")
 
     elif tpl == "seventies":
@@ -1447,7 +1512,7 @@ def generate_cover_page(
         c.setFillColor(sage_soft)
         c.drawCentredString(center_x, meta_y - 4.0, date_str or "Springtime")
         if num_slides is not None:
-            s_word = "slide" if num_slides == 1 else "slides"
+            s_word = ("page" if num_slides == 1 else "pages") if is_notebook else ("slide" if num_slides == 1 else "slides")
             c.drawCentredString(center_x, meta_y - 18.0, f"{num_slides} {s_word} compiled")
 
     elif tpl == "summer":
@@ -1518,7 +1583,7 @@ def generate_cover_page(
         c.drawString(x1 + 18.0, meta_y - 8.0, date_str or "Summer Solstice")
 
         if num_slides is not None:
-            s_word = "slide" if num_slides == 1 else "slides"
+            s_word = ("page" if num_slides == 1 else "pages") if is_notebook else ("slide" if num_slides == 1 else "slides")
             c.setFont("Helvetica", 8.0)
             c.setFillColor(Color(0.4, 0.5, 0.6, alpha=0.9))
             c.drawRightString(x2 - 18.0, meta_y + 22.0, f"{num_slides} {s_word} in dossier")
@@ -1682,7 +1747,7 @@ def generate_cover_page(
         c.setFillColor(slate_blue)
         c.drawCentredString(center_x, meta_y - 4.0, date_str or "Winter Season")
         if num_slides is not None:
-            s_word = "slide" if num_slides == 1 else "slides"
+            s_word = ("page" if num_slides == 1 else "pages") if is_notebook else ("slide" if num_slides == 1 else "slides")
             c.drawCentredString(center_x, meta_y - 18.0, f"{num_slides} {s_word} indexed")
 
     elif tpl == "polo":
@@ -1861,7 +1926,7 @@ def generate_cover_page(
         c.setFillColor(saddle_tan)
         c.drawCentredString(center_x, meta_y - 2.0, date_str or "Season Archive")
         if num_slides is not None:
-            s_word = "slide" if num_slides == 1 else "slides"
+            s_word = ("page" if num_slides == 1 else "pages") if is_notebook else ("slide" if num_slides == 1 else "slides")
             c.setFont("Times-Roman", 8.0)
             c.setFillColor(brass)
             c.drawCentredString(center_x, meta_y - 16.0, f"{num_slides} {s_word} registered")
@@ -3066,7 +3131,7 @@ def generate_cover_page(
         if num_slides is not None:
             c.setFont("Times-Italic", 7.5)
             c.setFillColor(Color(1.0, 1.0, 1.0, alpha=0.8))
-            s_word = "slide" if num_slides == 1 else "slides"
+            s_word = ("page" if num_slides == 1 else "pages") if is_notebook else ("slide" if num_slides == 1 else "slides")
             c.drawCentredString(band_center_x, 20.0, f"{num_slides} {s_word} · study notes edition")
 
     elif tpl in ("gallimard", "gallimard_blanche", "nrf", "blanche"):
@@ -3706,15 +3771,11 @@ def generate_cover_page(
         if num_slides is not None:
             c.setFont("Times-Roman", 8.5)
             c.setFillColor(Color(0.48, 0.48, 0.48, alpha=0.75))
-            s_word = "slide" if num_slides == 1 else "slides"
+            s_word = ("page" if num_slides == 1 else "pages") if is_notebook else ("slide" if num_slides == 1 else "slides")
             c.drawCentredString(center_x, meta_y, f"{num_slides} {s_word} with dedicated notes")
 
     if hole_guides and binding in ("binder", "ring", "rings", "archivador", "anillas", "anelas", "spiral", "espiral", "wire-o", "wireo", "coil", "canutillo"):
         draw_binding_guides(c, page_size, binding, is_verso=is_verso, gutter_margin=gutter_margin)
-
-    c.save()
-    packet.seek(0)
-    return PdfReader(packet).pages[0]
 
     c.save()
     packet.seek(0)

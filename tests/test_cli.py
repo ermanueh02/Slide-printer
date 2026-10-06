@@ -626,3 +626,92 @@ def test_cli_science_flat_cover_templates(sample_slide_pdf, tmp_path):
         assert f"Flat Science {tmpl}" in cover_text
 
 
+def test_cli_notebook_flag_default(tmp_path):
+    out_dir = str(tmp_path / "cli_notebook_default")
+    code = main([
+        "--notebook", "10",
+        "-o", out_dir,
+        "-q",
+    ])
+    assert code == 0
+    out_pdf = tmp_path / "cli_notebook_default" / "lines" / "notebook_lines.pdf"
+    assert out_pdf.exists()
+    reader = PdfReader(str(out_pdf))
+    # 1 cover + 10 pages = 11 pages
+    assert len(reader.pages) == 11
+    # Page 2 has page number
+    assert "2 / 11" in reader.pages[1].extract_text()
+
+
+def test_cli_notebook_no_page_numbers(tmp_path):
+    out_dir = str(tmp_path / "cli_notebook_no_nums")
+    code = main([
+        "--notebook", "8",
+        "--no-page-numbers",
+        "--no-cover",
+        "-o", out_dir,
+        "-q",
+    ])
+    assert code == 0
+    out_pdf = tmp_path / "cli_notebook_no_nums" / "lines" / "notebook_lines.pdf"
+    assert out_pdf.exists()
+    reader = PdfReader(str(out_pdf))
+    assert len(reader.pages) == 8
+    for page in reader.pages:
+        assert page.extract_text().strip() == ""
+
+
+def test_cli_notebook_custom_style_and_cover(tmp_path):
+    out_dir = str(tmp_path / "cli_notebook_custom")
+    code = main([
+        "--notebook-pages", "12",
+        "-s", "grid",
+        "--cover-template", "composition",
+        "--cover-title", "Biophysics Notebook",
+        "--cover-author", "Student Rosalind",
+        "-o", out_dir,
+        "-q",
+    ])
+    assert code == 0
+    out_pdf = tmp_path / "cli_notebook_custom" / "grid" / "Biophysics_Notebook_grid.pdf"
+    assert out_pdf.exists()
+    reader = PdfReader(str(out_pdf))
+    assert len(reader.pages) == 13
+    cover_text = reader.pages[0].extract_text()
+    assert "Biophysics Notebook" in cover_text
+    assert "Student Rosalind" in cover_text
+
+
+def test_cli_notebook_dry_run():
+    code = main([
+        "--notebook", "30",
+        "-s", "lines",
+        "--dry-run",
+    ])
+    assert code == 0
+
+
+def test_cli_notebook_with_title_and_author_aliases(tmp_path):
+    out_dir = str(tmp_path / "cli_nb_aliases")
+    code = main([
+        "-N", "5",
+        "--title", "Organic Chemistry",
+        "--author", "Marie Curie",
+        "--study-header",
+        "--binding", "spiral",
+        "--duplex",
+        "-o", out_dir,
+        "-q",
+    ])
+    assert code == 0
+    out_pdf = tmp_path / "cli_nb_aliases" / "lines" / "Organic_Chemistry_lines.pdf"
+    assert out_pdf.exists()
+    reader = PdfReader(str(out_pdf))
+    assert len(reader.pages) == 6
+    cover_text = reader.pages[0].extract_text()
+    assert "Organic Chemistry" in cover_text
+    assert "Marie Curie" in cover_text
+
+
+
+

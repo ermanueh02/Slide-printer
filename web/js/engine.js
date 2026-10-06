@@ -5257,6 +5257,154 @@
     return await outDoc.save();
   }
 
+  /**
+   * Generates a complete notebook PDF without slide inputs.
+   */
+  async function generateNotebook(options = {}) {
+    const style = (options.style || 'lines').toLowerCase();
+    const paperKey = (options.paperSize || 'a4').toLowerCase();
+    const [paperWidth, paperHeight] = PAPER_SIZES[paperKey] || PAPER_SIZES.a4;
+    const margin = options.margin !== undefined ? Number(options.margin) : DEFAULT_MARGIN;
+    const step = options.step !== undefined ? Number(options.step) : DEFAULT_STEP;
+    const binding = (options.binding || (options.gutter > 0 ? 'binder' : 'none')).toLowerCase();
+    const holeGuides = Boolean(options.holeGuides);
+    const gutterMargin = options.gutter !== undefined
+      ? Number(options.gutter)
+      : (binding === 'binder' ? 30.0 : (binding === 'spiral' ? 22.0 : 0.0));
+    const duplex = Boolean(options.duplex);
+    const coverMode = (options.coverMode || 'generate').toLowerCase();
+    const studyHeader = Boolean(options.studyHeader);
+    const studyTitle = options.studyTitle || '';
+    const pageNumberFormat = options.pageNumberFormat || 'total';
+    const numPages = options.numPages ? Math.max(1, parseInt(options.numPages, 10)) : 50;
+    const pageNumbers = options.pageNumbers !== undefined ? Boolean(options.pageNumbers) : true;
+    const onProgress = options.onProgress || null;
+
+    const outDoc = await PDFDocument.create();
+
+    let helveticaFont = null;
+    let helveticaBold = null;
+    let helveticaOblique = null;
+    let timesFont = null;
+    let timesBold = null;
+    let timesItalic = null;
+    let courierFont = null;
+    let courierBold = null;
+    let courierOblique = null;
+    if (StandardFonts) {
+      try {
+        helveticaFont = await outDoc.embedFont(StandardFonts.Helvetica);
+        helveticaBold = await outDoc.embedFont(StandardFonts.HelveticaBold);
+        helveticaOblique = await outDoc.embedFont(StandardFonts.HelveticaOblique);
+        timesFont = await outDoc.embedFont(StandardFonts.TimesRoman);
+        timesBold = await outDoc.embedFont(StandardFonts.TimesRomanBold);
+        timesItalic = await outDoc.embedFont(StandardFonts.TimesRomanItalic);
+        courierFont = await outDoc.embedFont(StandardFonts.Courier);
+        courierBold = await outDoc.embedFont(StandardFonts.CourierBold);
+        courierOblique = await outDoc.embedFont(StandardFonts.CourierOblique);
+      } catch (e) {
+        console.warn('Could not embed fonts:', e);
+      }
+    }
+
+    const hasGenCover = (coverMode === 'generate');
+    const totalSheets = numPages + (hasGenCover ? 1 : 0);
+
+    // 1. Optional Generated Editorial Cover
+    if (hasGenCover) {
+      const coverPage = await generateCoverPage(
+        outDoc,
+        {
+          paperDimensions: [paperWidth, paperHeight],
+          title: options.coverTitle || options.title || 'Notebook',
+          subtitle: studyTitle || 'Notebook',
+          author: options.coverAuthor || options.author || '',
+          coverTemplate: options.coverTemplate || 'atelier',
+          numSlides: numPages,
+          grayscale: Boolean(options.grayscale),
+          binding,
+          holeGuides,
+          gutterMargin,
+          margin,
+          isNotebook: true,
+          numPages,
+        },
+        {
+          timesFont,
+          timesBold,
+          timesItalic,
+          helveticaFont,
+          helveticaBold,
+          helveticaOblique,
+          courierFont,
+          courierBold,
+          courierOblique,
+        }
+      );
+
+      if (holeGuides && binding !== 'none') {
+        drawBindingGuides(coverPage, { binding, duplex, isVerso: false, gutterMargin });
+      }
+    }
+
+    let sheetCounter = hasGenCover ? 2 : 1;
+
+    // Helper for footer page number
+    function drawFooter(page, sheetNum) {
+      if (!pageNumbers || !helveticaFont) return;
+      const numStr = pageNumberFormat === 'total' ? `${sheetNum} / ${totalSheets}` : String(sheetNum);
+      const textSize = 9;
+      const textWidth = helveticaFont.widthOfTextAtSize(numStr, textSize);
+      const footerY = Math.max(margin / 2 - 3, 12);
+      page.drawText(numStr, {
+        x: (paperWidth - textWidth) / 2,
+        y: footerY,
+        size: textSize,
+        font: helveticaFont,
+        color: rgb(0.3, 0.3, 0.3),
+        opacity: 0.7,
+      });
+    }
+
+    // 2. Generate Note Pages
+    for (let pIdx = 1; pIdx <= numPages; pIdx++) {
+      const leftGutter = duplex ? (sheetCounter % 2 === 1 ? gutterMargin : 0) : gutterMargin;
+      const xOffset = margin + leftGutter;
+      const availableWidth = paperWidth - 2 * margin - gutterMargin;
+
+      const newPage = outDoc.addPage([paperWidth, paperHeight]);
+
+      if (studyHeader) {
+        drawStudyHeader(newPage, { margin: xOffset, topMargin: margin, width: availableWidth, title: studyTitle }, helveticaFont);
+      }
+
+      const ySep = studyHeader ? (paperHeight - margin - 8) : (paperHeight - margin + 10);
+      drawNotesOverlay(newPage, {
+        margin: xOffset,
+        width: availableWidth,
+        ySep,
+        bottomMargin: margin,
+        style,
+        step,
+        drawSeparator: false,
+      });
+
+      drawFooter(newPage, sheetCounter);
+
+      if (holeGuides && binding !== 'none') {
+        const isVerso = duplex && (sheetCounter % 2 === 0);
+        drawBindingGuides(newPage, { binding, duplex, isVerso });
+      }
+
+      if (onProgress) {
+        onProgress(pIdx, numPages, style);
+      }
+      sheetCounter++;
+    }
+
+    return await outDoc.save();
+  }
+
   return {
     PAPER_SIZES,
     STYLES,
@@ -5265,5 +5413,6 @@
     DEFAULT_SEPARATION,
     parsePageRanges,
     convertSlidesToHandout,
+    generateNotebook,
   };
 });

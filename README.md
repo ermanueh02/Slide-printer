@@ -49,6 +49,11 @@ Each page of your presentation is placed on the sheet, followed by a customizabl
 
 ## ✨ Features
 
+- **Notebook & Notepad Generation (`--notebook [PAGES]`, `-N`)**:
+  - Generate complete multi-page notebooks and notepads without needing slide presentation inputs.
+  - Choose between running with or without centered page numbers (`--page-numbers` vs `--no-page-numbers`).
+  - Full support for continuous ruled lines (`lines`), technical graph grid (`grid`), dot matrix (`dots`), or clean blank folios.
+  - Preserves all binding options (spiral coil, ring binder, hole guides, duplex alternating margins, and editorial cover templates).
 - **4 Note Patterns**:
   - **Ruled Lines (`lines`)**: Clean horizontal lines tailored for handwriting (~4.9 mm / ~14 pt spacing).
   - **Graph Grid (`grid`)**: Technical squared grid for math, diagrams, sketches, and charts.
@@ -180,6 +185,15 @@ slide-printer --web
 # Process a presentation with ruled lines on A4
 slide-printer -i presentation.pdf -s lines
 
+# Generate a complete 50-page notebook with ruled lines (renglones)
+slide-printer --notebook 50 -s lines
+
+# Generate a notebook without folio numbers in footer
+slide-printer --notebook 80 -s lines --no-page-numbers
+
+# Generate an editorial notebook with custom cover and spiral binding
+slide-printer --notebook 60 -s lines --cover-template composition --cover-title "Física Cuántica" --binding spiral --hole-guides
+
 # Selective styles (e.g. ruled lines & graph grid only, skipping blank & dots)
 slide-printer -i presentation.pdf -s lines grid
 # Or using numbers / ranges:
@@ -209,6 +223,8 @@ slide-printer --dry-run -i presentation.pdf -s all
 | Flag | Description | Default |
 | ------ | ------------- | --------- |
 | `-i`, `--input` | Input PDF presentation(s), folder, or wildcards | *(Interactive)* |
+| `-N`, `--notebook` | Generate complete notebook without slide inputs (optional page count, e.g. `--notebook 50`) | — |
+| `--notebook-pages` | Specify number of note pages for notebook mode | `50` |
 | `-s`, `--styles` | Note style(s): `grid`, `lines`, `dots`, `blank`, numbers (1–4), ranges (`1-2`), or `all` | `grid` |
 | `-o`, `--output-dir` | Directory where output PDFs are organized | `handouts` |
 | `-p`, `--paper-size` | Target paper: `a4`, `letter`, `legal`, `a3` | `a4` |
@@ -223,8 +239,8 @@ slide-printer --dry-run -i presentation.pdf -s all
 | `--clean-cover` | Use 1st slide as title cover without note lines or dividers | `False` |
 | `--generate-cover` | Generate an editorial title cover page before slides | `False` |
 | `--cover-template` | Cover design: `penguin`, `gallimard`, `oxford_press`, `cahier`, `midori`, `blueprint`, `celestial`, `field_notes`, `atelier`, `quantum_flat`, `biophysics_flat`, `complex_systems_flat`, `materials_sim_flat`, `solid_state_flat`, `circuits_flat`, `nuclear_flat`, `composition`, `george`, `monograph`, `bauhaus`, `fifties`, `sixties`, `seventies`, `eighties`, `nineties`, `natural`, `polo`, `equestrian` | `atelier` |
-| `--cover-title` | Title for generated cover page | Presentation name |
-| `--cover-author` | Author/Student/Topic for generated cover page | — |
+| `--cover-title`, `--title` | Title for generated cover page or notebook | Presentation name / Notebook |
+| `--cover-author`, `--author` | Author/Student/Topic for generated cover page | — |
 | `--study-header` | Add top metadata bar with subject fill-in and date line | `False` |
 | `--study-title` | Optional subject/topic name pre-filled in study header | — |
 | `--pages` | Process specific slide range (e.g. `1-10, 15, 20-30` or `all`) | `all` |
@@ -279,6 +295,14 @@ output_files = printer.process_file(
 )
 
 print(f"Generated handouts: {output_files}")
+
+# Or generate a complete 50-page notebook with ruled lines (with/without page numbers)
+notebook_files = printer.generate_notebook(
+    num_pages=50,
+    styles=["lines"],
+    base_name="libreta_apuntes"
+)
+print(f"Generated notebook: {notebook_files}")
 ```
 
 ---
@@ -292,7 +316,7 @@ pip install -r requirements-dev.txt
 pytest -v
 ```
 
-All 36 unit tests run in ~3 seconds.
+All 240+ automated tests run in seconds across unit, CLI, pattern, and PWA suites.
 
 ---
 

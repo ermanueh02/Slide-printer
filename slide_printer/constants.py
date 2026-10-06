@@ -69,6 +69,7 @@ SPIRAL_GUTTER_POINTS = 22.0  # ~7.8 mm for spiral / wire-o coil binding
 
 DEFAULT_BINDING = "none"  # "none", "binder", "spiral"
 DEFAULT_HOLE_GUIDES = False
+DEFAULT_NOTEBOOK_PAGES = 50
 
 BINDING_GUTTER_MAP: Dict[str, float] = {
     "none": 0.0,

@@ -25,6 +25,8 @@
       dropTitle: "Drop presentation PDF(s) here",
       dropSub: "Compatible with 16:9 and 4:3 slide formats · Multi-file batch ready",
       browseBtn: "Select Documents",
+      createNotebookBtn: "📓 Create Notebook",
+      generateNotebookWorkspace: "📓 New Notebook",
       batchTitle: "Presentation Queue",
       addMoreBtn: "Add More",
       addFilesHeader: "+ Add Another PDF",
@@ -201,6 +203,8 @@
       dropTitle: "Arrastra tus presentaciones PDF aquí",
       dropSub: "Compatible con diapositivas 16:9 y 4:3 · Procesa múltiples archivos a la vez",
       browseBtn: "Seleccionar documentos",
+      createNotebookBtn: "📓 Crear libreta",
+      generateNotebookWorkspace: "📓 Nueva libreta",
       batchTitle: "Cola de presentaciones",
       addMoreBtn: "Añadir más",
       addFilesHeader: "+ Añadir otro PDF",
@@ -373,6 +377,8 @@
       dropTitle: "Arrastra as túas presentacións PDF aquí",
       dropSub: "Compatible con diapositivas 16:9 e 4:3 · Procesa múltiples ficheiros á vez",
       browseBtn: "Seleccionar documentos",
+      createNotebookBtn: "📓 Crear libreta",
+      generateNotebookWorkspace: "📓 Nova libreta",
       batchTitle: "Fila de presentacións",
       addMoreBtn: "Engadir máis",
       addFilesHeader: "+ Engadir outro PDF",
@@ -791,6 +797,7 @@
     setText('dropZoneTitleText', dict.dropTitle);
     setText('dropZoneSubText', dict.dropSub);
     setText('browseBtnText', dict.browseBtn);
+    setText('createNotebookHeroBtnText', dict.createNotebookBtn);
 
     // Features
     setText('feat1NumText', dict.feat1Num);
@@ -805,6 +812,7 @@
 
     // Controls
     setText('replaceFileBtn', dict.changeBtn);
+    setText('generateNotebookWorkspaceBtn', dict.generateNotebookWorkspace);
     setText('patternSectionLabel', dict.patternLabel);
     setText('patternSectionSub', dict.section1);
     setText('styleLinesTitle', dict.styleLinesTitle);
@@ -1166,6 +1174,98 @@
     if (browseBtn) {
       browseBtn.addEventListener('click', openReplacePicker);
     }
+    const createNotebookHeroBtn = document.getElementById('createNotebookHeroBtn');
+    if (createNotebookHeroBtn) {
+      createNotebookHeroBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const numPagesStr = prompt("How many note pages (folios) in the notebook?", "50");
+        if (numPagesStr === null) return;
+        const numPages = parseInt(numPagesStr, 10) || 50;
+
+        const includePageNumbers = confirm("Include centered page numbers in footer?\n(OK = Yes, Cancel = No)");
+        const includeCover = confirm("Include an editorial notebook cover page?\n(OK = Yes, Cancel = No)");
+
+        let coverTitle = "Notebook";
+        if (includeCover) {
+          const titleInput = prompt("Notebook cover title:", "Study Notebook");
+          if (titleInput) coverTitle = titleInput.trim();
+        }
+
+        showToast(`Generating notebook (${numPages} pages)...`);
+        try {
+          const outBytes = await SlidePrinterEngine.generateNotebook({
+            numPages,
+            style: 'lines',
+            paperSize: state.paperSize || 'a4',
+            margin: state.margin || 40,
+            step: state.step || 14,
+            binding: state.binding || 'none',
+            gutter: state.gutterMargin || 0,
+            duplex: state.duplex || false,
+            holeGuides: state.holeGuides || false,
+            pageNumbers: includePageNumbers,
+            pageNumberFormat: state.pageNumberFormat || 'total',
+            coverMode: includeCover ? 'generate' : 'none',
+            coverTemplate: state.coverTemplate || 'atelier',
+            coverTitle,
+            studyHeader: state.studyHeader || false,
+            studyTitle: state.studyTitle || '',
+            grayscale: state.grayscale || false,
+          });
+
+          const blob = new Blob([outBytes], { type: 'application/pdf' });
+          const safeName = coverTitle.replace(/[^a-zA-Z0-9_\-]/g, '_') + '_lines.pdf';
+          triggerDownload(blob, safeName);
+          showToast(`✔ Notebook generated successfully! (${numPages} pages)`);
+        } catch (err) {
+          showToast(`Error generating notebook: ${err.message}`);
+        }
+      });
+    }
+    const generateNotebookWorkspaceBtn = document.getElementById('generateNotebookWorkspaceBtn');
+    if (generateNotebookWorkspaceBtn) {
+      generateNotebookWorkspaceBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const numPagesStr = prompt("How many note pages (folios) in the notebook?", "50");
+        if (numPagesStr === null) return;
+        const numPages = parseInt(numPagesStr, 10) || 50;
+
+        showToast(`Generating notebook (${numPages} pages)...`);
+        try {
+          const outBytes = await SlidePrinterEngine.generateNotebook({
+            numPages,
+            style: state.style || 'lines',
+            paperSize: state.paperSize || 'a4',
+            margin: state.margin !== undefined ? state.margin : 40,
+            step: state.step !== undefined ? state.step : 14,
+            binding: state.binding || 'none',
+            gutter: state.gutterMargin || 0,
+            duplex: state.duplex || false,
+            holeGuides: state.holeGuides || false,
+            pageNumbers: state.pageNumbers !== undefined ? state.pageNumbers : true,
+            pageNumberFormat: state.pageNumberFormat || 'total',
+            coverMode: state.coverMode || 'generate',
+            coverTemplate: state.coverTemplate || 'atelier',
+            coverTitle: state.coverTitle || (state.fileName ? state.fileName.replace(/\.pdf$/i, '') : 'Notebook'),
+            coverAuthor: state.coverAuthor || '',
+            studyHeader: state.studyHeader || false,
+            studyTitle: state.studyTitle || '',
+            grayscale: state.grayscale || false,
+          });
+
+          const blob = new Blob([outBytes], { type: 'application/pdf' });
+          const base = (state.coverTitle || (state.fileName ? state.fileName.replace(/\.pdf$/i, '') : 'notebook')).replace(/[^a-zA-Z0-9_\-]/g, '_');
+          const safeName = `${base}_${state.style || 'lines'}.pdf`;
+          triggerDownload(blob, safeName);
+          showToast(`✔ Notebook generated successfully! (${numPages} pages)`);
+        } catch (err) {
+          showToast(`Error generating notebook: ${err.message}`);
+        }
+      });
+    }
+
     if (replaceFileBtn) {
       replaceFileBtn.addEventListener('click', openReplacePicker);
     }

@@ -3,6 +3,7 @@
 import os
 import glob
 import datetime
+import re
 from typing import List, Optional, Tuple, Union, Callable
 from pypdf import PdfReader, PdfWriter, Transformation
 from pypdf.generic import RectangleObject, FloatObject, ArrayObject, NameObject
@@ -33,10 +34,12 @@ from slide_printer.constants import (
     DEFAULT_LAYOUT,
     DEFAULT_GRAYSCALE,
     DEFAULT_COVER_MODE,
+    DEFAULT_NOTEBOOK_PAGES,
 )
 from slide_printer.patterns import (
     create_notes_overlay,
     create_2up_notes_overlay,
+    create_notebook_page,
     generate_cover_page,
 )
 
@@ -558,3 +561,129 @@ class SlidePrinter:
                 on_file_complete(file_path, generated)
 
         return all_generated
+
+    def generate_notebook(
+        self,
+        num_pages: int = DEFAULT_NOTEBOOK_PAGES,
+        styles: Optional[List[str]] = None,
+        output_dir: Optional[str] = None,
+        base_name: Optional[str] = None,
+        progress_cb: Optional[Callable[[str, int, int], None]] = None,
+    ) -> List[str]:
+        """Generates a complete multi-page notebook PDF for each requested style.
+
+        Args:
+            num_pages: Number of note pages (folios) in the notebook (default: 50).
+            styles: Note style(s) to generate (e.g. ['lines'], ['grid'], ['dots'], ['blank']).
+                   If None, defaults to ['lines'].
+            output_dir: Target output directory (overrides default).
+            base_name: Base filename prefix (default: derived from cover_title or 'notebook').
+            progress_cb: Optional callback(current_style, current_page, total_pages).
+
+        Returns:
+            List of generated notebook file paths.
+        """
+        if num_pages <= 0:
+            raise ValueError(f"Number of notebook pages must be greater than 0, got {num_pages}")
+
+        out_root = output_dir or self.output_dir
+        if base_name:
+            clean_base = re.sub(r'[\\/*?:"<>| ]', '_', base_name).strip('_')
+        elif self.cover_title:
+            clean_base = re.sub(r'[\\/*?:"<>| ]', '_', self.cover_title).strip('_')
+        else:
+            clean_base = "notebook"
+
+        chosen_styles = styles if styles is not None else ["lines"]
+        canonical_styles = [resolve_style(s) for s in chosen_styles]
+        generated_files: List[str] = []
+
+        paper_width, paper_height = self.paper_dimensions
+
+        for style in canonical_styles:
+            style_meta = STYLE_METADATA[style]
+            folder_name = style_meta["code"]
+            style_dir = os.path.join(out_root, folder_name)
+            os.makedirs(style_dir, exist_ok=True)
+
+            writer = PdfWriter()
+            has_gen_cover = (self.cover_mode == "generate")
+            total_sheets = num_pages + (1 if has_gen_cover else 0)
+
+            # 1. Prepend cover if requested
+            if has_gen_cover:
+                today_str = datetime.date.today().strftime("%B %d, %Y")
+                cover_title = self.cover_title or clean_base.replace("_", " ").title()
+                cover_page = generate_cover_page(
+                    page_size=self.paper_dimensions,
+                    title=cover_title,
+                    subtitle=self.study_title or "Notebook",
+                    author=self.cover_author,
+                    date_str=today_str,
+                    num_slides=num_pages,
+                    grayscale=self.grayscale,
+                    template=self.cover_template,
+                    binding=self.binding,
+                    hole_guides=self.hole_guides,
+                    is_verso=False,
+                    gutter_margin=self.gutter_margin,
+                    margin=self.margin,
+                    is_notebook=True,
+                    num_pages=num_pages,
+                )
+                writer.add_page(cover_page)
+
+            # 2. Generate notebook pages
+            sheet_counter = 1 if not has_gen_cover else 2
+            for page_idx in range(1, num_pages + 1):
+                is_verso = False
+                if self.duplex:
+                    if sheet_counter % 2 == 1:
+                        left_gutter = self.gutter_margin
+                    else:
+                        left_gutter = 0.0
+                        is_verso = True
+                else:
+                    left_gutter = self.gutter_margin
+
+                x_offset = self.margin + left_gutter
+                available_width = paper_width - 2 * self.margin - self.gutter_margin
+
+                num_to_draw = sheet_counter if self.page_numbers else None
+                header_y = (paper_height - self.margin + 4.0) if self.study_header else None
+
+                page = create_notebook_page(
+                    page_size=self.paper_dimensions,
+                    margin=x_offset,
+                    width=available_width,
+                    bottom_margin=self.margin,
+                    style=style,
+                    step=self.step,
+                    page_number=num_to_draw,
+                    total_pages=total_sheets,
+                    page_number_format=self.page_number_format,
+                    study_header=self.study_header,
+                    study_title=self.study_title,
+                    header_y=header_y,
+                    grayscale=self.grayscale,
+                    binding=self.binding,
+                    hole_guides=self.hole_guides,
+                    is_verso=is_verso,
+                    gutter_margin=self.gutter_margin,
+                )
+                writer.add_page(page)
+
+                if progress_cb:
+                    progress_cb(style, page_idx, num_pages)
+                sheet_counter += 1
+
+            output_file = os.path.join(style_dir, f"{clean_base}_{folder_name}.pdf")
+            with open(output_file, "wb") as f:
+                writer.write(f)
+
+            generated_files.append(output_file)
+
+        return generated_files
+
+    # Ergonomic alias
+    create_notebook = generate_notebook
