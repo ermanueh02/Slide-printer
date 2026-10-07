@@ -33,6 +33,7 @@ from slide_printer.constants import (
     COVER_TEMPLATE_ALIASES,
     DEFAULT_COVER_MODE,
     DEFAULT_NOTEBOOK_PAGES,
+    PAPER_TINTS,
 )
 from slide_printer.core import SlidePrinter, resolve_style
 
@@ -864,6 +865,18 @@ Examples:
         help="Eco-print mode: optimize tones for monochrome / black-and-white printing.",
     )
     parser.add_argument(
+        "--paper-tint",
+        choices=list(PAPER_TINTS.keys()),
+        default="white",
+        help="Background paper tint for digital notebooks/sheets: 'white', 'ivory' (warm Moleskine), 'cream', 'dark' (OLED dark mode), 'legal' (yellow pad), 'sage' (default: white).",
+    )
+    parser.add_argument(
+        "--margin-line",
+        action="store_true",
+        default=False,
+        help="Render classic vertical red/grey margin line on lined notebook sheets.",
+    )
+    parser.add_argument(
         "-O",
         "--open",
         action="store_true",
@@ -1088,6 +1101,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         cover_template=getattr(args, "cover_template", "atelier"),
         cover_title=args.cover_title,
         cover_author=args.cover_author,
+        paper_tint=getattr(args, "paper_tint", "white"),
+        margin_line=getattr(args, "margin_line", False),
     )
 
     t0 = time.time()

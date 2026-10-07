@@ -46,6 +46,16 @@
         </div>
       </a>
 
+      <!-- App Mode Switcher -->
+      <nav class="header-mode-nav" role="tablist" aria-label="Studio Mode">
+        <button type="button" class="mode-nav-btn is-active" id="navModeSlidesBtn" role="tab" aria-selected="true">
+          <span id="navModeSlidesText">📑 Diapositivas</span>
+        </button>
+        <button type="button" class="mode-nav-btn" id="navModeNotebookBtn" role="tab" aria-selected="false">
+          <span id="navModeNotebookText">📓 Libreta Digital</span>
+        </button>
+      </nav>
+
       <div class="header-actions">
         <!-- Language Selector -->
         <div class="lang-selector-group" role="group" aria-label="Language">
@@ -125,10 +135,19 @@
           <button type="button" class="btn-primary" id="browseBtn">
             <span id="browseBtnText">Select Documents</span>
           </button>
-          <button type="button" class="btn-secondary" id="createNotebookHeroBtn" title="Generate a full notebook (ruled lines, grid, or dots without slides)">
-            <span id="createNotebookHeroBtnText">📓 Create Notebook</span>
-          </button>
         </div>
+      </div>
+
+      <!-- Digital Notebook Designer Hero Banner (Outside dropzone) -->
+      <div class="hero-notebook-banner" id="heroNotebookBanner">
+        <div class="notebook-banner-content">
+          <div class="notebook-banner-badge" id="nbBannerBadge">✨ Samsung Notes · GoodNotes · Tablets</div>
+          <h3 class="notebook-banner-title" id="nbBannerTitle">Estudio de Libretas y Plantillas Digitales</h3>
+          <p class="notebook-banner-desc" id="nbBannerDesc">Crea cuadernos a toda página con renglones, cuadrícula, Cornell o puntos. Elige papel marfil, dark OLED o amarillo legal y portadas clásicas para escribir en pantalla con tu stylus o imprimir.</p>
+        </div>
+        <button type="button" class="btn-primary" id="openNotebookStudioBtn">
+          <span id="openNotebookStudioBtnText">📓 Diseñar Mi Libreta</span>
+        </button>
       </div>
 
       <!-- Features Strip -->
@@ -679,6 +698,303 @@
 
       </div><!-- /.workspace-layout -->
 
+    </section>
+
+    <!-- Dedicated Digital Notebook Studio Workspace -->
+    <section class="workspace-container hidden" id="notebookWorkspace">
+      <!-- Notebook Studio Header Bar -->
+      <div class="card file-info-bar notebook-meta-bar">
+        <div class="file-meta-content">
+          <div class="file-name-text" id="nbStudioTitleText">📓 Estudio de Libretas y Plantillas Digitales</div>
+          <div class="file-pills">
+            <span class="pill">Samsung Notes &amp; GoodNotes</span>
+            <span class="pill">Vectorial 100%</span>
+            <span class="pill">A toda página</span>
+          </div>
+        </div>
+        <div class="workspace-meta-actions">
+          <button type="button" class="btn-secondary-sm" id="exitNotebookStudioBtn" title="Volver a convertir diapositivas">← Diapositivas</button>
+        </div>
+      </div>
+
+      <div class="workspace-layout">
+        <!-- Controls Column -->
+        <aside class="controls-sidebar">
+
+          <!-- Section 01: Tono de Papel (Paper Tone) -->
+          <div class="card">
+            <div class="section-label">
+              <span id="nbTintSectionLabel">Tono de Papel</span>
+              <span class="section-label-sub">01</span>
+            </div>
+            <div class="paper-tint-grid" role="group" aria-label="Paper tone">
+              <button type="button" class="tint-chip is-active" data-tint="ivory" title="Marfil cálido estilo Moleskine / Midori (Recomendado para pantallas)">
+                <span class="tint-swatch tint-swatch-ivory"></span>
+                <span class="tint-label" id="tintIvoryLabel">Marfil Cálido</span>
+              </button>
+              <button type="button" class="tint-chip" data-tint="white" title="Blanco puro para impresión y máximo contraste">
+                <span class="tint-swatch tint-swatch-white"></span>
+                <span class="tint-label" id="tintWhiteLabel">Blanco Puro</span>
+              </button>
+              <button type="button" class="tint-chip" data-tint="dark" title="Pizarra oscura / Dark OLED para Samsung Notes">
+                <span class="tint-swatch tint-swatch-dark"></span>
+                <span class="tint-label" id="tintDarkLabel">Dark OLED</span>
+              </button>
+              <button type="button" class="tint-chip" data-tint="legal" title="Clásico bloc amarillo legal americano">
+                <span class="tint-swatch tint-swatch-legal"></span>
+                <span class="tint-label" id="tintLegalLabel">Amarillo Legal</span>
+              </button>
+              <button type="button" class="tint-chip" data-tint="sage" title="Verde menta suave para lectura relajada">
+                <span class="tint-swatch tint-swatch-sage"></span>
+                <span class="tint-label" id="tintSageLabel">Menta Suave</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Section 02: Patrón de Página (Note Pattern) -->
+          <div class="card">
+            <div class="section-label">
+              <span id="nbPatternSectionLabel">Patrón a Toda Página</span>
+              <span class="section-label-sub">02</span>
+            </div>
+            <div class="style-grid" role="group" aria-label="Notebook styles">
+              <div class="style-card is-selected" data-nbstyle="lines" tabindex="0" id="nbStyleCardLines">
+                <div class="style-card-header">
+                  <div class="style-card-title-group">
+                    <span class="style-card-title" id="nbStyleLinesTitle">Renglones</span>
+                    <span class="style-card-desc" id="nbStyleLinesDesc">Líneas horizontales continuas</span>
+                  </div>
+                </div>
+              </div>
+              <div class="style-card" data-nbstyle="grid" tabindex="0" id="nbStyleCardGrid">
+                <div class="style-card-header">
+                  <div class="style-card-title-group">
+                    <span class="style-card-title" id="nbStyleGridTitle">Cuadrícula</span>
+                    <span class="style-card-desc" id="nbStyleGridDesc">Red técnica para fórmulas y gráficos</span>
+                  </div>
+                </div>
+              </div>
+              <div class="style-card" data-nbstyle="dots" tabindex="0" id="nbStyleCardDots">
+                <div class="style-card-header">
+                  <div class="style-card-title-group">
+                    <span class="style-card-title" id="nbStyleDotsTitle">Puntos (Bullet)</span>
+                    <span class="style-card-desc" id="nbStyleDotsDesc">Matriz de puntos sutil</span>
+                  </div>
+                </div>
+              </div>
+              <div class="style-card" data-nbstyle="cornell" tabindex="0" id="nbStyleCardCornell">
+                <div class="style-card-header">
+                  <div class="style-card-title-group">
+                    <span class="style-card-title" id="nbStyleCornellTitle">Cornell Notes</span>
+                    <span class="style-card-desc" id="nbStyleCornellDesc">Ideas a la izquierda, notas y resumen</span>
+                  </div>
+                </div>
+              </div>
+              <div class="style-card" data-nbstyle="blank" tabindex="0" id="nbStyleCardBlank">
+                <div class="style-card-header">
+                  <div class="style-card-title-group">
+                    <span class="style-card-title" id="nbStyleBlankTitle">En Blanco</span>
+                    <span class="style-card-desc" id="nbStyleBlankDesc">Página limpia para dibujo o notas libres</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 03: Espaciado / Ruling -->
+          <div class="card">
+            <div class="section-label">
+              <span id="nbSpacingSectionLabel">Interlineado / Espaciado</span>
+              <span class="section-label-sub">03</span>
+            </div>
+            <div class="btn-group" role="group" style="margin-bottom: 0.75rem;">
+              <button type="button" class="btn-chip is-active" data-nbspacing="7" id="nbSpacing7Btn">7 mm (Estándar)</button>
+              <button type="button" class="btn-chip" data-nbspacing="5" id="nbSpacing5Btn">5 mm (Fino / Math)</button>
+              <button type="button" class="btn-chip" data-nbspacing="8.5" id="nbSpacing8Btn">8.5 mm (Amplio)</button>
+            </div>
+            <div class="option-slider-row">
+              <span class="mono-val" id="nbStepValueLabel">19.8 pt (~7.0 mm)</span>
+              <input type="range" id="nbStepSlider" min="10" max="32" step="0.5" value="19.8" style="width: 100%;">
+            </div>
+          </div>
+
+          <!-- Section 04: Detalles de Libreta Clásica -->
+          <div class="card">
+            <div class="section-label">
+              <span id="nbDetailsSectionLabel">Detalles de Libreta</span>
+              <span class="section-label-sub">04</span>
+            </div>
+            <div class="options-list">
+              <label class="checkbox-control">
+                <input type="checkbox" id="nbMarginLineCheck" checked>
+                <div class="checkbox-label-group">
+                  <span class="checkbox-title" id="nbMarginLineTitle">Margen de libreta clásico</span>
+                  <span class="checkbox-desc" id="nbMarginLineDesc">Línea vertical roja/rosa a la izquierda</span>
+                </div>
+              </label>
+
+              <label class="checkbox-control">
+                <input type="checkbox" id="nbStudyHeaderCheck">
+                <div class="checkbox-label-group">
+                  <span class="checkbox-title" id="nbStudyHeaderTitle">Encabezado de estudio</span>
+                  <span class="checkbox-desc" id="nbStudyHeaderDesc">Barra superior con tema y fecha</span>
+                </div>
+              </label>
+
+              <div id="nbStudyHeaderFields" style="display: none; padding-left: 1.8rem; margin-top: -0.25rem; margin-bottom: 0.5rem;">
+                <input type="text" class="input-control" id="nbStudyTitleInput" placeholder="Asignatura o Tema (ej. Física Teórica)" style="width: 100%;">
+              </div>
+
+              <label class="checkbox-control">
+                <input type="checkbox" id="nbPageNumbersCheck">
+                <div class="checkbox-label-group">
+                  <span class="checkbox-title" id="nbPageNumbersTitle">Números de página en el pie</span>
+                  <span class="checkbox-desc" id="nbPageNumbersDesc">Desactivar para plantilla infinita</span>
+                </div>
+              </label>
+
+              <div id="nbPageNumberFormatGroup" style="display: none; padding-left: 1.8rem; margin-bottom: 0.5rem;">
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn-chip is-active" id="nbPageFormatTotalBtn">1 / 50</button>
+                  <button type="button" class="btn-chip" id="nbPageFormatSimpleBtn">1</button>
+                </div>
+              </div>
+
+              <div class="option-select-row" style="margin-top: 0.5rem;">
+                <label for="nbBindingSelect" class="option-row-label" id="nbBindingLabel">Guías de encuadernación:</label>
+                <select id="nbBindingSelect" class="select-control">
+                  <option value="none" selected id="nbBindingNoneOpt">Ninguna (Pantalla Tablet Completa)</option>
+                  <option value="spiral" id="nbBindingSpiralOpt">Espiral / Wire-O (+8 mm canaleta)</option>
+                  <option value="binder" id="nbBindingBinderOpt">Anillas Archivador (+11 mm canaleta)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 05: Portada Editorial Opcional -->
+          <div class="card">
+            <div class="section-label">
+              <span id="nbCoverSectionLabel">Portada Editorial</span>
+              <span class="section-label-sub">05</span>
+            </div>
+            <label class="checkbox-control" style="margin-bottom: 0.75rem;">
+              <input type="checkbox" id="nbIncludeCoverCheck">
+              <div class="checkbox-label-group">
+                <span class="checkbox-title" id="nbIncludeCoverTitle">Incluir Portada Editorial</span>
+                <span class="checkbox-desc" id="nbIncludeCoverDesc">Añade página de portada al principio</span>
+              </div>
+            </label>
+
+            <div id="nbCoverFieldsGroup" style="display: none;">
+              <div class="option-select-row" style="margin-bottom: 0.6rem;">
+                <label for="nbCoverTemplateSelect" class="option-row-label">Diseño de Portada:</label>
+                <select id="nbCoverTemplateSelect" class="select-control">
+                  <optgroup label="Cuadernos Legendarios">
+                    <option value="composition">Composition Book (Agata Marble)</option>
+                    <option value="cahier">Cahier d'Écolier (Sépia / Séyès)</option>
+                    <option value="midori">Midori MD Minimalist</option>
+                    <option value="comp_blue">Composition Navy Wave</option>
+                    <option value="comp_coral">Composition Terracotta</option>
+                    <option value="comp_amber">Composition Gold Onyx</option>
+                    <option value="comp_marbled">Florentine Marbled Paper</option>
+                    <option value="comp_morris">William Morris Botanical</option>
+                  </optgroup>
+                  <optgroup label="Editoriales Clásicas">
+                    <option value="atelier" selected>Atelier Modernist</option>
+                    <option value="gallimard">Gallimard NRF Blanche</option>
+                    <option value="oxford_press">Oxford Academic Press</option>
+                    <option value="penguin">Penguin Classics</option>
+                    <option value="blueprint">Cyanotype Blueprint</option>
+                    <option value="celestial">Celestial Star Atlas</option>
+                    <option value="field_notes">Field Notes Industrial</option>
+                  </optgroup>
+                  <optgroup label="Física & Ciencias (Flat 90s Minimalist)">
+                    <option value="quantum_flat">Mecánica Cuántica III</option>
+                    <option value="biophysics_flat">Biofísica</option>
+                    <option value="complex_systems_flat">Sistemas Complejos</option>
+                    <option value="materials_sim_flat">Simulación Materiales</option>
+                    <option value="solid_state_flat">Física Estado Sólido</option>
+                    <option value="circuits_flat">Instrumentación Electrónica</option>
+                    <option value="nuclear_flat">Física Nuclear y Partículas</option>
+                  </optgroup>
+                  <optgroup label="Épocas & Estilos">
+                    <option value="nineteen00s">1900s Art Nouveau</option>
+                    <option value="twenties">1920s Art Deco</option>
+                    <option value="fifties">1950s Mid-Century</option>
+                    <option value="sixties">1960s Swiss Modernism</option>
+                    <option value="seventies">1970s Apollo Warm</option>
+                    <option value="eighties">1980s Memphis Tech</option>
+                    <option value="nineties">1990s Indie Lookbook</option>
+                    <option value="natural">Natural Forest Green</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <input type="text" class="input-control" id="nbCoverTitleInput" placeholder="Título de la Libreta" value="Cuaderno de Apuntes">
+                <input type="text" class="input-control" id="nbCoverAuthorInput" placeholder="Autor o Estudiante (Opcional)">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 06: Formato & Páginas -->
+          <div class="card">
+            <div class="section-label">
+              <span id="nbPagesSectionLabel">Páginas y Formato</span>
+              <span class="section-label-sub">06</span>
+            </div>
+            <div class="option-select-row" style="margin-bottom: 0.75rem;">
+              <label for="nbPaperSizeSelect" class="option-row-label">Tamaño de papel:</label>
+              <select id="nbPaperSizeSelect" class="select-control">
+                <option value="a4" selected>DIN A4 (Ideal para Tablet &amp; Impresión)</option>
+                <option value="letter">US Letter (216 × 279 mm)</option>
+                <option value="legal">US Legal (216 × 356 mm)</option>
+                <option value="a3">DIN A3 (Lienzo grande)</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom: 0.5rem;">
+              <span class="option-row-label" style="display: block; margin-bottom: 0.35rem;" id="nbPageCountHeader">Número de hojas:</span>
+              <div class="btn-group" role="group" style="flex-wrap: wrap;">
+                <button type="button" class="btn-chip" data-nbpages="1" id="nbPages1Btn" title="Plantilla maestra: en Samsung Notes añade páginas infinitas de esta plantilla">1 pág (Plantilla)</button>
+                <button type="button" class="btn-chip" data-nbpages="25" id="nbPages25Btn">25 págs</button>
+                <button type="button" class="btn-chip is-active" data-nbpages="50" id="nbPages50Btn">50 págs</button>
+                <button type="button" class="btn-chip" data-nbpages="80" id="nbPages80Btn">80 págs</button>
+                <button type="button" class="btn-chip" data-nbpages="100" id="nbPages100Btn">100 págs</button>
+              </div>
+            </div>
+            <input type="number" class="input-control" id="nbPagesInput" min="1" max="500" value="50" style="width: 100px; margin-top: 0.25rem;">
+          </div>
+
+          <!-- Section 07: Botón de Descarga Inmediata -->
+          <div class="card" style="background: var(--bg-surface-elevated); border-color: var(--border-dark);">
+            <button type="button" class="btn-primary" id="downloadNotebookStudioBtn" style="width: 100%; justify-content: center; padding: 0.85rem 1rem; font-size: 1rem; font-weight: 700;">
+              <span id="downloadNotebookStudioBtnText">📥 Descargar Libreta PDF</span>
+            </button>
+          </div>
+
+        </aside>
+
+        <!-- Preview Column -->
+        <section class="preview-stage" id="nbPreviewStage" aria-label="Notebook live preview">
+          <!-- Toolbar over canvas -->
+          <div class="preview-controls-bar">
+            <div class="preview-tabs-track">
+              <button type="button" class="btn-secondary-xs is-active" id="nbTabSheetBtn">📄 Hoja de Notas</button>
+              <button type="button" class="btn-secondary-xs" id="nbTabCoverBtn" style="display: none;">🎨 Portada</button>
+            </div>
+            <div class="preview-status-pill" id="nbPreviewBadge">Live Stylus Preview</div>
+          </div>
+
+          <div class="paper-container" id="nbPaperContainer">
+            <canvas id="nbPreviewCanvas" width="595" height="842"></canvas>
+          </div>
+
+          <div class="preview-meta-footer" id="nbPreviewSummaryText">
+            A4 · Papel Marfil · Renglones (7 mm) · 50 páginas · Margen clásico
+          </div>
+        </section>
+      </div>
     </section>
 
   </main>

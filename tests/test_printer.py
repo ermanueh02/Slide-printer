@@ -317,5 +317,24 @@ def test_slide_printer_generate_notebook_custom_cover_and_binding(tmp_path):
     assert "Marie Curie" in cover_text
 
 
+def test_slide_printer_generate_notebook_stationery_features(tmp_path):
+    out_dir = str(tmp_path / "notebooks_stationery")
+    printer = SlidePrinter(
+        output_dir=out_dir,
+        cover_mode="none",
+        paper_tint="ivory",
+        margin_line=True,
+    )
+    results = printer.generate_notebook(num_pages=3, styles=["cornell"])
+    assert len(results) == 1
+    reader = PdfReader(results[0])
+    assert len(reader.pages) == 3
+    for page in reader.pages:
+        text = page.extract_text()
+        assert "CUES / IDEAS" in text
+        assert "SUMMARY" in text
+
+
+
 
 

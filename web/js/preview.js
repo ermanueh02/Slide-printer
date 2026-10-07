@@ -4283,8 +4283,231 @@
     }
   }
 
+  /**
+   * Dedicated Live Preview renderer for full-sheet digital notebooks and tablet templates.
+   */
+  async function renderNotebookPreview(canvas, options = {}) {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    const paperDimensions = options.paperDimensions || [595.28, 841.89];
+    const [paperWidth, paperHeight] = paperDimensions;
+
+    const margin = options.margin !== undefined ? Number(options.margin) : 40.0;
+    const step = options.step !== undefined ? Number(options.step) : 19.8; // default ~7mm
+    const style = (options.style || 'lines').toLowerCase();
+    const pageNumbers = Boolean(options.pageNumbers);
+    const pageNumberFormat = options.pageNumberFormat || 'total';
+    const totalPages = options.totalPages || options.numPages || 50;
+    const binding = (options.binding || 'none').toLowerCase();
+    const holeGuides = Boolean(options.holeGuides);
+    const gutterMargin = options.gutter !== undefined
+      ? Number(options.gutter)
+      : (binding === 'binder' ? 30.0 : (binding === 'spiral' ? 22.0 : 0.0));
+    const studyHeader = Boolean(options.studyHeader);
+    const studyTitle = options.studyTitle || '';
+    const paperTint = (options.paperTint || 'ivory').toLowerCase();
+    const marginLine = Boolean(options.marginLine);
+    const activeTab = options.activeTab || 'sheet'; // 'sheet' | 'cover'
+
+    const scaleFactor = Math.max(dpr, 2);
+    canvas.width = Math.round(paperWidth * scaleFactor);
+    canvas.height = Math.round(paperHeight * scaleFactor);
+
+    canvas.style.width = '100%';
+    canvas.style.maxWidth = '580px';
+    canvas.style.height = 'auto';
+    canvas.style.aspectRatio = `${paperWidth} / ${paperHeight}`;
+
+    ctx.save();
+    ctx.scale(scaleFactor, scaleFactor);
+
+    // 1. Cover View Tab
+    if (activeTab === 'cover') {
+      renderPreviewEditorialCover(ctx, paperWidth, paperHeight, {
+        ...options,
+        isNotebook: true,
+      });
+      if (holeGuides && binding !== 'none') {
+        drawPreviewBindingGuides(ctx, paperWidth, paperHeight, binding, false, false, holeGuides);
+      }
+      ctx.restore();
+      return;
+    }
+
+    // 2. Note Sheet View Tab
+    const tintColors = {
+      white: '#ffffff',
+      ivory: '#faf7ee',
+      cream: '#fbf8ea',
+      dark: '#141518',
+      oled: '#141518',
+      legal: '#fefce8',
+      sage: '#f0f7f4',
+    };
+    const bgTint = tintColors[paperTint] || '#faf7ee';
+    const isDark = (paperTint === 'dark' || paperTint === 'oled');
+
+    // Fill background
+    ctx.fillStyle = bgTint;
+    ctx.fillRect(0, 0, paperWidth, paperHeight);
+
+    // Subtle page border
+    ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, paperWidth, paperHeight);
+
+    const xOffset = margin + gutterMargin;
+    const availableWidth = paperWidth - 2 * margin - gutterMargin;
+    const x1 = xOffset;
+    const x2 = xOffset + availableWidth;
+
+    // Header Y and Start of writing
+    let yStart = margin + 12;
+    if (studyHeader) {
+      const hY = margin + 14;
+      ctx.font = '600 8.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = isDark ? 'rgba(230, 235, 245, 0.85)' : 'rgba(50, 50, 50, 0.85)';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
+      const label = studyTitle ? `SUBJECT / TOPIC: ${studyTitle}` : 'SUBJECT / TOPIC: _____________________________';
+      ctx.fillText(label, x1, hY);
+
+      ctx.font = '400 8.5px system-ui, -apple-system, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText('DATE: _____ / _____ / 20___', x2, hY);
+
+      ctx.strokeStyle = isDark ? 'rgba(230, 235, 245, 0.22)' : 'rgba(50, 50, 50, 0.22)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(x1, hY + 6);
+      ctx.lineTo(x2, hY + 6);
+      ctx.stroke();
+
+      yStart = hY + 20;
+    }
+
+    const bottomLimit = paperHeight - margin - (pageNumbers ? 12 : 0);
+
+    // Note Patterns
+    if (style === 'lines') {
+      ctx.strokeStyle = isDark ? 'rgba(210, 220, 235, 0.20)' : 'rgba(80, 85, 95, 0.22)';
+      ctx.lineWidth = 0.45;
+      ctx.beginPath();
+      for (let y = yStart + step; y <= bottomLimit; y += step) {
+        ctx.moveTo(x1, y);
+        ctx.lineTo(x2, y);
+      }
+      ctx.stroke();
+    } else if (style === 'grid') {
+      const numCols = Math.max(1, Math.floor(availableWidth / step));
+      const gridW = numCols * step;
+      const gx1 = x1 + (availableWidth - gridW) / 2;
+      const gx2 = gx1 + gridW;
+
+      ctx.strokeStyle = isDark ? 'rgba(210, 220, 235, 0.18)' : 'rgba(80, 85, 95, 0.18)';
+      ctx.lineWidth = 0.35;
+      ctx.beginPath();
+      let yMax = yStart;
+      for (let y = yStart + step; y <= bottomLimit; y += step) {
+        ctx.moveTo(gx1, y);
+        ctx.lineTo(gx2, y);
+        yMax = y;
+      }
+      for (let col = 0; col <= numCols; col++) {
+        const cx = gx1 + col * step;
+        ctx.moveTo(cx, yStart + step);
+        ctx.lineTo(cx, yMax);
+      }
+      ctx.stroke();
+    } else if (style === 'dots') {
+      const numCols = Math.max(1, Math.floor(availableWidth / step));
+      const gridW = numCols * step;
+      const gx1 = x1 + (availableWidth - gridW) / 2;
+
+      ctx.fillStyle = isDark ? 'rgba(220, 230, 245, 0.35)' : 'rgba(60, 65, 75, 0.32)';
+      const dotRadius = 0.75;
+      for (let y = yStart + step; y <= bottomLimit; y += step) {
+        for (let col = 0; col <= numCols; col++) {
+          const cx = gx1 + col * step;
+          ctx.beginPath();
+          ctx.arc(cx, y, dotRadius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    } else if (style === 'cornell') {
+      const summaryH = 85;
+      const summaryTopY = bottomLimit - summaryH;
+      const cueColW = availableWidth * 0.28;
+      const cueX = x1 + cueColW;
+
+      // Lines in Notes area
+      ctx.strokeStyle = isDark ? 'rgba(210, 220, 235, 0.20)' : 'rgba(80, 85, 95, 0.22)';
+      ctx.lineWidth = 0.45;
+      ctx.beginPath();
+      for (let y = yStart + step; y <= summaryTopY; y += step) {
+        ctx.moveTo(cueX, y);
+        ctx.lineTo(x2, y);
+      }
+      ctx.stroke();
+
+      // Vertical Cue divider
+      ctx.strokeStyle = isDark ? 'rgba(220, 230, 245, 0.35)' : 'rgba(50, 50, 50, 0.30)';
+      ctx.lineWidth = 0.7;
+      ctx.beginPath();
+      ctx.moveTo(cueX, yStart);
+      ctx.lineTo(cueX, summaryTopY);
+      ctx.stroke();
+
+      // Horizontal Summary divider
+      ctx.beginPath();
+      ctx.moveTo(x1, summaryTopY);
+      ctx.lineTo(x2, summaryTopY);
+      ctx.stroke();
+
+      // Cornell section typography
+      ctx.font = '700 7px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = isDark ? 'rgba(220, 230, 245, 0.6)' : 'rgba(90, 95, 105, 0.65)';
+      ctx.textAlign = 'left';
+      ctx.fillText('CUES / IDEAS', x1 + 4, yStart + 9);
+      ctx.fillText('NOTES', cueX + 8, yStart + 9);
+      ctx.fillText('SUMMARY', x1 + 4, summaryTopY + 14);
+    }
+
+    // Classic Red/Pink Margin line
+    if (marginLine && (style === 'lines' || style === 'cornell')) {
+      const redMarginX = x1 + 52;
+      if (redMarginX < x2 - 40) {
+        ctx.strokeStyle = isDark ? 'rgba(245, 110, 120, 0.40)' : 'rgba(220, 60, 60, 0.32)';
+        ctx.lineWidth = 0.7;
+        ctx.beginPath();
+        ctx.moveTo(redMarginX, yStart);
+        ctx.lineTo(redMarginX, bottomLimit);
+        ctx.stroke();
+      }
+    }
+
+    // Footer Page Number
+    if (pageNumbers) {
+      const numStr = pageNumberFormat === 'total' ? `1 / ${totalPages}` : '1';
+      ctx.font = '500 8.5px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = isDark ? 'rgba(220, 230, 245, 0.65)' : 'rgba(70, 70, 70, 0.65)';
+      ctx.textAlign = 'center';
+      ctx.fillText(numStr, paperWidth / 2, paperHeight - margin / 2);
+    }
+
+    // Optional Binding guides
+    if (holeGuides && binding !== 'none') {
+      drawPreviewBindingGuides(ctx, paperWidth, paperHeight, binding, false, false, holeGuides);
+    }
+
+    ctx.restore();
+  }
+
   return {
     renderPreview,
+    renderNotebookPreview,
     resetCache,
   };
 });

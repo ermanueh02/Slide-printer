@@ -9,7 +9,7 @@ from pypdf._page import PageObject
 from reportlab.lib.colors import Color
 from reportlab.pdfgen import canvas
 
-from slide_printer.constants import DEFAULT_STEP, COVER_TEMPLATE_ALIASES
+from slide_printer.constants import DEFAULT_STEP, COVER_TEMPLATE_ALIASES, PAPER_TINTS
 
 
 def _get_cover_texture_path(template_name: str) -> Optional[str]:
@@ -135,6 +135,8 @@ def create_notes_overlay(
     hole_guides: bool = False,
     is_verso: bool = False,
     gutter_margin: float = 0.0,
+    paper_tint: str = "white",
+    margin_line: bool = False,
 ) -> PageObject:
     """Creates a PDF overlay page containing the notes pattern.
 
@@ -144,7 +146,7 @@ def create_notes_overlay(
         margin: Left margin coordinate.
         width: Available width for the note section.
         bottom_margin: Minimum Y-coordinate for lines/dots.
-        style: Pattern style ('blank', 'lines', 'grid', 'dots' or their aliases).
+        style: Pattern style ('blank', 'lines', 'grid', 'dots', 'cornell' or their aliases).
         step: Spacing between lines or dots in points (default: 14pt).
         dot_radius: Radius for dot grid pattern (default: 0.65pt).
         page_number: Folio index to print in footer.
@@ -160,6 +162,8 @@ def create_notes_overlay(
         hole_guides: Whether to draw subtle hole punch or spiral guides.
         is_verso: True if current sheet is even in duplex mode.
         gutter_margin: Extra binding margin in points.
+        paper_tint: Background paper tint ('white', 'ivory', 'cream', 'dark', 'oled', 'legal', 'sage').
+        margin_line: Whether to render a vertical red/grey margin line (classic notebook style).
 
     Returns:
         PageObject containing the rendered overlay.
@@ -167,14 +171,27 @@ def create_notes_overlay(
     packet = io.BytesIO()
     c = canvas.Canvas(packet, pagesize=page_size)
 
+    pw, ph = page_size
+    norm_tint = (paper_tint or "white").strip().lower()
+    is_dark_paper = norm_tint in ("dark", "oled")
+
+    # 1. Fill background paper tint if requested
+    if norm_tint in PAPER_TINTS and norm_tint != "white":
+        tr, tg, tb = PAPER_TINTS[norm_tint]
+        c.setFillColor(Color(tr, tg, tb, alpha=1.0))
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
     x1 = margin
     x2 = margin + width
     y_start = y_sep - 10
 
     # Draw study header if requested
     if study_header and header_y is not None:
+        hdr_txt_color = Color(0.85, 0.88, 0.95, alpha=0.85) if is_dark_paper else Color(0.25, 0.25, 0.25, alpha=0.85)
+        hdr_rule_color = Color(0.85, 0.88, 0.95, alpha=0.25) if is_dark_paper else Color(0.25, 0.25, 0.25, alpha=0.25)
+
         c.setFont("Helvetica-Bold", 8)
-        c.setFillColor(Color(0.25, 0.25, 0.25, alpha=0.85))
+        c.setFillColor(hdr_txt_color)
         left_label = f"SUBJECT / TOPIC: {study_title}" if study_title else "SUBJECT / TOPIC: _____________________________"
         c.drawString(x1, header_y, left_label)
 
@@ -182,13 +199,14 @@ def create_notes_overlay(
         c.drawRightString(x2, header_y, "DATE: _____ / _____ / 20___")
 
         # Subtle divider below header
-        c.setStrokeColor(Color(0.25, 0.25, 0.25, alpha=0.25))
+        c.setStrokeColor(hdr_rule_color)
         c.setLineWidth(0.5)
         c.line(x1, header_y - 4, x2, header_y - 4)
 
     # Draw upper separator line with subtle end ticks
     if draw_separator:
-        c.setStrokeColor(Color(0.2, 0.2, 0.2, alpha=0.35))
+        sep_color = Color(0.85, 0.88, 0.95, alpha=0.35) if is_dark_paper else Color(0.2, 0.2, 0.2, alpha=0.35)
+        c.setStrokeColor(sep_color)
         c.setLineWidth(0.8)
         c.line(x1, y_sep, x2, y_sep)
         c.setLineWidth(0.5)
@@ -197,7 +215,8 @@ def create_notes_overlay(
 
     norm_style = style.lower()
     if norm_style in ("lines", "lineas", "line"):
-        c.setStrokeColor(Color(0.4, 0.4, 0.4, alpha=0.22))
+        line_color = Color(0.80, 0.85, 0.95, alpha=0.20) if is_dark_paper else Color(0.4, 0.4, 0.4, alpha=0.22)
+        c.setStrokeColor(line_color)
         c.setLineWidth(0.4)
         curr_y = y_start - step
         while curr_y >= bottom_margin:
@@ -205,7 +224,8 @@ def create_notes_overlay(
             curr_y -= step
 
     elif norm_style in ("grid", "cuadricula"):
-        c.setStrokeColor(Color(0.4, 0.4, 0.4, alpha=0.18))
+        grid_color = Color(0.80, 0.85, 0.95, alpha=0.18) if is_dark_paper else Color(0.4, 0.4, 0.4, alpha=0.18)
+        c.setStrokeColor(grid_color)
         c.setLineWidth(0.35)
 
         num_cols = max(1, int(width // step))
@@ -224,7 +244,8 @@ def create_notes_overlay(
             c.line(cx, y_min, cx, y_start)
 
     elif norm_style in ("dots", "puntos", "dot"):
-        c.setFillColor(Color(0.25, 0.25, 0.25, alpha=0.35))
+        dot_color = Color(0.85, 0.88, 0.95, alpha=0.38) if is_dark_paper else Color(0.25, 0.25, 0.25, alpha=0.35)
+        c.setFillColor(dot_color)
 
         num_cols = max(1, int(width // step))
         grid_w = num_cols * step
@@ -237,10 +258,55 @@ def create_notes_overlay(
                 c.circle(cx, curr_y, dot_radius, fill=1, stroke=0)
             curr_y -= step
 
+    elif norm_style in ("cornell", "cornell_notes"):
+        # Cornell Notes Layout: Left Cue column (28% width), Right Notes column, Bottom Summary box
+        summary_h = 85.0
+        summary_top_y = bottom_margin + summary_h
+        cue_col_w = width * 0.28
+        cue_x = x1 + cue_col_w
+
+        # Main notes lines in right column
+        line_color = Color(0.80, 0.85, 0.95, alpha=0.20) if is_dark_paper else Color(0.4, 0.4, 0.4, alpha=0.22)
+        c.setStrokeColor(line_color)
+        c.setLineWidth(0.4)
+        curr_y = y_start - step
+        while curr_y >= summary_top_y:
+            c.line(cue_x, curr_y, x2, curr_y)
+            curr_y -= step
+
+        # Vertical divider between Cue column and Notes column
+        divider_color = Color(0.85, 0.88, 0.95, alpha=0.35) if is_dark_paper else Color(0.3, 0.3, 0.3, alpha=0.30)
+        c.setStrokeColor(divider_color)
+        c.setLineWidth(0.65)
+        c.line(cue_x, summary_top_y, cue_x, y_start)
+
+        # Horizontal divider for Summary section at bottom
+        c.line(x1, summary_top_y, x2, summary_top_y)
+
+        # Labels for Cornell sections
+        lbl_color = Color(0.85, 0.88, 0.95, alpha=0.55) if is_dark_paper else Color(0.35, 0.35, 0.35, alpha=0.60)
+        c.setFont("Helvetica-Bold", 6.5)
+        c.setFillColor(lbl_color)
+        c.drawString(x1 + 4.0, y_start - 8.0, "CUES / IDEAS")
+        c.drawString(cue_x + 8.0, y_start - 8.0, "NOTES")
+        c.drawString(x1 + 4.0, summary_top_y - 10.0, "SUMMARY")
+
+    # Optional vertical red/grey margin line (classic school / collegiate notebook style)
+    if margin_line and norm_style in ("lines", "lineas", "line", "cornell"):
+        margin_x = x1 + 60.0  # ~21 mm from writing edge
+        if margin_x < x2 - 50.0:
+            if is_dark_paper:
+                c.setStrokeColor(Color(0.95, 0.40, 0.45, alpha=0.35))
+            else:
+                c.setStrokeColor(Color(0.85, 0.25, 0.25, alpha=0.28))
+            c.setLineWidth(0.6)
+            c.line(margin_x, bottom_margin, margin_x, y_start)
+
     # Centered page number at footer
     if page_number is not None:
         c.setFont("Helvetica", 9)
-        c.setFillColor(Color(0.3, 0.3, 0.3, alpha=0.7))
+        folio_color = Color(0.85, 0.88, 0.95, alpha=0.7) if is_dark_paper else Color(0.3, 0.3, 0.3, alpha=0.7)
+        c.setFillColor(folio_color)
         effective_footer_margin = footer_margin if footer_margin is not None else margin
         footer_y = max(effective_footer_margin / 2.0 - 3, 12)
 
@@ -280,6 +346,8 @@ def create_notebook_page(
     hole_guides: bool = False,
     is_verso: bool = False,
     gutter_margin: float = 0.0,
+    paper_tint: str = "white",
+    margin_line: bool = False,
 ) -> PageObject:
     """Creates a full-sheet note page (for notebooks and notepads).
 
@@ -316,6 +384,8 @@ def create_notebook_page(
         hole_guides=hole_guides,
         is_verso=is_verso,
         gutter_margin=gutter_margin,
+        paper_tint=paper_tint,
+        margin_line=margin_line,
     )
 
 

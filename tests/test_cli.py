@@ -713,5 +713,28 @@ def test_cli_notebook_with_title_and_author_aliases(tmp_path):
     assert "Marie Curie" in cover_text
 
 
+def test_cli_notebook_paper_tint_and_margin_line(tmp_path):
+    out_dir = str(tmp_path / "cli_nb_stationery")
+    code = main([
+        "-N", "4",
+        "-s", "cornell",
+        "--paper-tint", "ivory",
+        "--margin-line",
+        "--no-cover",
+        "-o", out_dir,
+        "-q",
+    ])
+    assert code == 0
+    out_pdf = tmp_path / "cli_nb_stationery" / "cornell" / "notebook_cornell.pdf"
+    assert out_pdf.exists()
+    reader = PdfReader(str(out_pdf))
+    assert len(reader.pages) == 4
+    for page in reader.pages:
+        text = page.extract_text()
+        assert "CUES / IDEAS" in text
+        assert "SUMMARY" in text
+
+
+
 
 

@@ -262,6 +262,41 @@ def test_generate_cover_page_notebook_edition():
     assert "60 pages with dedicated notes" in text
 
 
+def test_create_notebook_page_tints_margin_and_cornell():
+    from slide_printer.patterns import create_notebook_page
+    a4_size = PAPER_SIZES["a4"]
+    margin = 40.0
+    width = a4_size[0] - 2 * margin
+
+    # Cornell layout
+    cornell_page = create_notebook_page(
+        page_size=a4_size,
+        margin=margin,
+        width=width,
+        bottom_margin=margin,
+        style="cornell",
+        paper_tint="ivory",
+        margin_line=True,
+    )
+    assert isinstance(cornell_page, PageObject)
+    text = cornell_page.extract_text()
+    assert "CUES / IDEAS" in text
+    assert "SUMMARY" in text
+
+    # Dark OLED tint with margin line
+    oled_page = create_notebook_page(
+        page_size=a4_size,
+        margin=margin,
+        width=width,
+        bottom_margin=margin,
+        style="lines",
+        paper_tint="oled",
+        margin_line=True,
+    )
+    assert isinstance(oled_page, PageObject)
+
+
+
 
 
 

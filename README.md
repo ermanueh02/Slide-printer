@@ -49,15 +49,18 @@ Each page of your presentation is placed on the sheet, followed by a customizabl
 
 ## ✨ Features
 
-- **Notebook & Notepad Generation (`--notebook [PAGES]`, `-N`)**:
-  - Generate complete multi-page notebooks and notepads without needing slide presentation inputs.
+- **Digital Notebook Studio & Full-Page Templates (`--notebook [PAGES]`, `-N`)**:
+  - Generate full-sheet digital notebooks and paper templates tailored for **stylus handwriting in Samsung Notes, GoodNotes, Notability, or physical printing**.
+  - Ruled lines, graph grid, bullet dots, clean blank sheets, or **Cornell Note-taking layout** (`cornell` with cue column and summary block) extended across the entire page.
+  - **Paper Tints (`--paper-tint`)**: Classic White, Warm Ivory, Cream Book Paper, OLED Pure Black (`#000000`), Dark Mode, Legal Pad Yellow, and Sage Green.
+  - **Stationery Margin Rule (`--margin-line`)**: Classic vertical red margin line for traditional notebook aesthetics.
   - Choose between running with or without centered page numbers (`--page-numbers` vs `--no-page-numbers`).
-  - Full support for continuous ruled lines (`lines`), technical graph grid (`grid`), dot matrix (`dots`), or clean blank folios.
-  - Preserves all binding options (spiral coil, ring binder, hole guides, duplex alternating margins, and editorial cover templates).
-- **4 Note Patterns**:
+  - Preserves all binding options (spiral coil, ring binder, hole guides, duplex alternating margins, and 45+ editorial cover templates).
+- **5 Note Patterns**:
   - **Ruled Lines (`lines`)**: Clean horizontal lines tailored for handwriting (~4.9 mm / ~14 pt spacing).
   - **Graph Grid (`grid`)**: Technical squared grid for math, diagrams, sketches, and charts.
   - **Dot Matrix (`dots`)**: Subtle bullet dot grid for flexible note-taking.
+  - **Cornell Notes (`cornell`)**: Professional study format with left cue column, note lines, and bottom summary block.
   - **Blank (`blank`)**: Clean open space with an elegant hairline divider.
 - **2 Layout Modes**:
   - **1-Up Standard**: 1 slide per sheet with full-width note space.
@@ -188,6 +191,12 @@ slide-printer -i presentation.pdf -s lines
 # Generate a complete 50-page notebook with ruled lines (renglones)
 slide-printer --notebook 50 -s lines
 
+# Generate a digital notebook template for Samsung Notes with ivory tint & classic margin
+slide-printer --notebook 100 -s lines --paper-tint ivory --margin-line --study-header
+
+# Generate Cornell study notebook with OLED pure black paper
+slide-printer --notebook 80 -s cornell --paper-tint oled
+
 # Generate a notebook without folio numbers in footer
 slide-printer --notebook 80 -s lines --no-page-numbers
 
@@ -199,7 +208,7 @@ slide-printer -i presentation.pdf -s lines grid
 # Or using numbers / ranges:
 slide-printer -i presentation.pdf -s 1-2
 
-# Generate all 4 note styles at once
+# Generate all note styles at once
 slide-printer -i presentation.pdf -s all
 
 # Print 2 slides per sheet (compact 2-up handout) with binding gutter for ring binder
@@ -225,7 +234,9 @@ slide-printer --dry-run -i presentation.pdf -s all
 | `-i`, `--input` | Input PDF presentation(s), folder, or wildcards | *(Interactive)* |
 | `-N`, `--notebook` | Generate complete notebook without slide inputs (optional page count, e.g. `--notebook 50`) | — |
 | `--notebook-pages` | Specify number of note pages for notebook mode | `50` |
-| `-s`, `--styles` | Note style(s): `grid`, `lines`, `dots`, `blank`, numbers (1–4), ranges (`1-2`), or `all` | `grid` |
+| `-s`, `--styles` | Note style(s): `grid`, `lines`, `dots`, `cornell`, `blank`, numbers (1–5), ranges (`1-2`), or `all` | `grid` |
+| `--paper-tint` | Background paper tone: `white`, `ivory`, `cream`, `dark`, `oled`, `legal`, `sage` | `white` |
+| `--margin-line` | Draw classic vertical stationery red/pink margin line | `False` |
 | `-o`, `--output-dir` | Directory where output PDFs are organized | `handouts` |
 | `-p`, `--paper-size` | Target paper: `a4`, `letter`, `legal`, `a3` | `a4` |
 | `-m`, `--margin` | Page margin in points (1 pt = 1/72 in) | `40.0` |

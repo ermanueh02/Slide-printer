@@ -1174,94 +1174,347 @@
     if (browseBtn) {
       browseBtn.addEventListener('click', openReplacePicker);
     }
-    const createNotebookHeroBtn = document.getElementById('createNotebookHeroBtn');
-    if (createNotebookHeroBtn) {
-      createNotebookHeroBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    // --- Digital Notebook Studio Controller ---
+    const notebookState = {
+      paperTint: 'ivory',
+      style: 'lines',
+      step: 19.8,
+      marginLine: true,
+      studyHeader: false,
+      studyTitle: '',
+      pageNumbers: false,
+      pageNumberFormat: 'total',
+      binding: 'none',
+      holeGuides: false,
+      includeCover: false,
+      coverTemplate: 'atelier',
+      coverTitle: 'Cuaderno de Apuntes',
+      coverAuthor: '',
+      paperSize: 'a4',
+      numPages: 50,
+      activeTab: 'sheet',
+    };
 
-        const numPagesStr = prompt("How many note pages (folios) in the notebook?", "50");
-        if (numPagesStr === null) return;
-        const numPages = parseInt(numPagesStr, 10) || 50;
+    const initialHero = document.getElementById('initialHero');
+    const workspace = document.getElementById('workspace');
+    const notebookWorkspace = document.getElementById('notebookWorkspace');
+    const navModeSlidesBtn = document.getElementById('navModeSlidesBtn');
+    const navModeNotebookBtn = document.getElementById('navModeNotebookBtn');
+    const openNotebookStudioBtn = document.getElementById('openNotebookStudioBtn');
+    const exitNotebookStudioBtn = document.getElementById('exitNotebookStudioBtn');
+    const generateNotebookWorkspaceBtn = document.getElementById('generateNotebookWorkspaceBtn');
+    const nbPreviewCanvas = document.getElementById('nbPreviewCanvas');
 
-        const includePageNumbers = confirm("Include centered page numbers in footer?\n(OK = Yes, Cancel = No)");
-        const includeCover = confirm("Include an editorial notebook cover page?\n(OK = Yes, Cancel = No)");
+    function renderNotebookStudioPreview() {
+      if (!nbPreviewCanvas || !SlidePrinterPreview.renderNotebookPreview) return;
+      SlidePrinterPreview.renderNotebookPreview(nbPreviewCanvas, {
+        paperDimensions: SlidePrinterEngine.PAPER_SIZES[notebookState.paperSize] || SlidePrinterEngine.PAPER_SIZES.a4,
+        margin: 40.0,
+        step: notebookState.step,
+        style: notebookState.style,
+        pageNumbers: notebookState.pageNumbers,
+        pageNumberFormat: notebookState.pageNumberFormat,
+        totalPages: notebookState.numPages,
+        numPages: notebookState.numPages,
+        binding: notebookState.binding,
+        holeGuides: notebookState.holeGuides,
+        studyHeader: notebookState.studyHeader,
+        studyTitle: notebookState.studyTitle,
+        paperTint: notebookState.paperTint,
+        marginLine: notebookState.marginLine,
+        activeTab: notebookState.activeTab,
+        coverTemplate: notebookState.coverTemplate,
+        coverTitle: notebookState.coverTitle,
+        coverAuthor: notebookState.coverAuthor,
+      });
 
-        let coverTitle = "Notebook";
-        if (includeCover) {
-          const titleInput = prompt("Notebook cover title:", "Study Notebook");
-          if (titleInput) coverTitle = titleInput.trim();
-        }
+      // Update footer summary
+      const summaryElem = document.getElementById('nbPreviewSummaryText');
+      if (summaryElem) {
+        const tintNames = { ivory: 'Papel Marfil', white: 'Blanco Puro', dark: 'Dark OLED', legal: 'Amarillo Legal', sage: 'Menta Suave' };
+        const styleNames = { lines: 'Renglones', grid: 'Cuadrícula', dots: 'Puntos', cornell: 'Cornell Notes', blank: 'En Blanco' };
+        const mm = (notebookState.step * 25.4 / 72).toFixed(1);
+        const coverPart = notebookState.includeCover ? ' · Con Portada' : '';
+        const marginPart = notebookState.marginLine ? ' · Margen Clásico' : '';
+        summaryElem.textContent = `${notebookState.paperSize.toUpperCase()} · ${tintNames[notebookState.paperTint] || 'Papel'} · ${styleNames[notebookState.style] || 'Líneas'} (${mm} mm) · ${notebookState.numPages} págs${marginPart}${coverPart}`;
+      }
+    }
 
-        showToast(`Generating notebook (${numPages} pages)...`);
-        try {
-          const outBytes = await SlidePrinterEngine.generateNotebook({
-            numPages,
-            style: 'lines',
-            paperSize: state.paperSize || 'a4',
-            margin: state.margin || 40,
-            step: state.step || 14,
-            binding: state.binding || 'none',
-            gutter: state.gutterMargin || 0,
-            duplex: state.duplex || false,
-            holeGuides: state.holeGuides || false,
-            pageNumbers: includePageNumbers,
-            pageNumberFormat: state.pageNumberFormat || 'total',
-            coverMode: includeCover ? 'generate' : 'none',
-            coverTemplate: state.coverTemplate || 'atelier',
-            coverTitle,
-            studyHeader: state.studyHeader || false,
-            studyTitle: state.studyTitle || '',
-            grayscale: state.grayscale || false,
-          });
+    function openNotebookStudio() {
+      if (initialHero) initialHero.classList.add('hidden');
+      if (workspace) workspace.classList.add('hidden');
+      if (notebookWorkspace) notebookWorkspace.classList.remove('hidden');
 
-          const blob = new Blob([outBytes], { type: 'application/pdf' });
-          const safeName = coverTitle.replace(/[^a-zA-Z0-9_\-]/g, '_') + '_lines.pdf';
-          triggerDownload(blob, safeName);
-          showToast(`✔ Notebook generated successfully! (${numPages} pages)`);
-        } catch (err) {
-          showToast(`Error generating notebook: ${err.message}`);
-        }
+      if (navModeNotebookBtn) {
+        navModeNotebookBtn.classList.add('is-active');
+        navModeNotebookBtn.setAttribute('aria-selected', 'true');
+      }
+      if (navModeSlidesBtn) {
+        navModeSlidesBtn.classList.remove('is-active');
+        navModeSlidesBtn.setAttribute('aria-selected', 'false');
+      }
+
+      renderNotebookStudioPreview();
+    }
+
+    function exitNotebookStudio() {
+      if (notebookWorkspace) notebookWorkspace.classList.add('hidden');
+
+      if (navModeSlidesBtn) {
+        navModeSlidesBtn.classList.add('is-active');
+        navModeSlidesBtn.setAttribute('aria-selected', 'true');
+      }
+      if (navModeNotebookBtn) {
+        navModeNotebookBtn.classList.remove('is-active');
+        navModeNotebookBtn.setAttribute('aria-selected', 'false');
+      }
+
+      if (state.pdfDoc && state.filesQueue && state.filesQueue.length > 0) {
+        if (workspace) workspace.classList.remove('hidden');
+        renderActivePage();
+      } else {
+        if (initialHero) initialHero.classList.remove('hidden');
+      }
+    }
+
+    if (openNotebookStudioBtn) openNotebookStudioBtn.addEventListener('click', openNotebookStudio);
+    if (navModeNotebookBtn) navModeNotebookBtn.addEventListener('click', openNotebookStudio);
+    if (navModeSlidesBtn) navModeSlidesBtn.addEventListener('click', exitNotebookStudio);
+    if (exitNotebookStudioBtn) exitNotebookStudioBtn.addEventListener('click', exitNotebookStudio);
+    if (generateNotebookWorkspaceBtn) generateNotebookWorkspaceBtn.addEventListener('click', openNotebookStudio);
+
+    // Tint chips
+    document.querySelectorAll('.tint-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.tint-chip').forEach(c => c.classList.remove('is-active'));
+        chip.classList.add('is-active');
+        notebookState.paperTint = chip.getAttribute('data-tint') || 'ivory';
+        renderNotebookStudioPreview();
+      });
+    });
+
+    // Style cards
+    document.querySelectorAll('[data-nbstyle]').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('[data-nbstyle]').forEach(c => c.classList.remove('is-selected'));
+        card.classList.add('is-selected');
+        notebookState.style = card.getAttribute('data-nbstyle') || 'lines';
+        renderNotebookStudioPreview();
+      });
+    });
+
+    // Spacing chips
+    const nbStepSlider = document.getElementById('nbStepSlider');
+    const nbStepValueLabel = document.getElementById('nbStepValueLabel');
+    document.querySelectorAll('[data-nbspacing]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-nbspacing]').forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        const mm = parseFloat(btn.getAttribute('data-nbspacing') || '7');
+        const pt = (mm * 72 / 25.4);
+        notebookState.step = pt;
+        if (nbStepSlider) nbStepSlider.value = pt.toFixed(1);
+        if (nbStepValueLabel) nbStepValueLabel.textContent = `${pt.toFixed(1)} pt (~${mm.toFixed(1)} mm)`;
+        renderNotebookStudioPreview();
+      });
+    });
+
+    if (nbStepSlider) {
+      nbStepSlider.addEventListener('input', (e) => {
+        const pt = parseFloat(e.target.value);
+        const mm = (pt * 25.4 / 72).toFixed(1);
+        notebookState.step = pt;
+        if (nbStepValueLabel) nbStepValueLabel.textContent = `${pt.toFixed(1)} pt (~${mm} mm)`;
+        document.querySelectorAll('[data-nbspacing]').forEach(b => b.classList.remove('is-active'));
+        renderNotebookStudioPreview();
       });
     }
-    const generateNotebookWorkspaceBtn = document.getElementById('generateNotebookWorkspaceBtn');
-    if (generateNotebookWorkspaceBtn) {
-      generateNotebookWorkspaceBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const numPagesStr = prompt("How many note pages (folios) in the notebook?", "50");
-        if (numPagesStr === null) return;
-        const numPages = parseInt(numPagesStr, 10) || 50;
 
-        showToast(`Generating notebook (${numPages} pages)...`);
+    // Stationery options
+    const nbMarginLineCheck = document.getElementById('nbMarginLineCheck');
+    if (nbMarginLineCheck) {
+      nbMarginLineCheck.addEventListener('change', (e) => {
+        notebookState.marginLine = e.target.checked;
+        renderNotebookStudioPreview();
+      });
+    }
+
+    const nbStudyHeaderCheck = document.getElementById('nbStudyHeaderCheck');
+    const nbStudyHeaderFields = document.getElementById('nbStudyHeaderFields');
+    const nbStudyTitleInput = document.getElementById('nbStudyTitleInput');
+    if (nbStudyHeaderCheck) {
+      nbStudyHeaderCheck.addEventListener('change', (e) => {
+        notebookState.studyHeader = e.target.checked;
+        if (nbStudyHeaderFields) nbStudyHeaderFields.style.display = e.target.checked ? 'block' : 'none';
+        renderNotebookStudioPreview();
+      });
+    }
+    if (nbStudyTitleInput) {
+      nbStudyTitleInput.addEventListener('input', (e) => {
+        notebookState.studyTitle = e.target.value;
+        renderNotebookStudioPreview();
+      });
+    }
+
+    const nbPageNumbersCheck = document.getElementById('nbPageNumbersCheck');
+    const nbPageNumberFormatGroup = document.getElementById('nbPageNumberFormatGroup');
+    const nbPageFormatTotalBtn = document.getElementById('nbPageFormatTotalBtn');
+    const nbPageFormatSimpleBtn = document.getElementById('nbPageFormatSimpleBtn');
+    if (nbPageNumbersCheck) {
+      nbPageNumbersCheck.addEventListener('change', (e) => {
+        notebookState.pageNumbers = e.target.checked;
+        if (nbPageNumberFormatGroup) nbPageNumberFormatGroup.style.display = e.target.checked ? 'block' : 'none';
+        renderNotebookStudioPreview();
+      });
+    }
+    if (nbPageFormatTotalBtn && nbPageFormatSimpleBtn) {
+      nbPageFormatTotalBtn.addEventListener('click', () => {
+        nbPageFormatTotalBtn.classList.add('is-active');
+        nbPageFormatSimpleBtn.classList.remove('is-active');
+        notebookState.pageNumberFormat = 'total';
+        renderNotebookStudioPreview();
+      });
+      nbPageFormatSimpleBtn.addEventListener('click', () => {
+        nbPageFormatSimpleBtn.classList.add('is-active');
+        nbPageFormatTotalBtn.classList.remove('is-active');
+        notebookState.pageNumberFormat = 'simple';
+        renderNotebookStudioPreview();
+      });
+    }
+
+    const nbBindingSelect = document.getElementById('nbBindingSelect');
+    if (nbBindingSelect) {
+      nbBindingSelect.addEventListener('change', (e) => {
+        notebookState.binding = e.target.value;
+        notebookState.holeGuides = (e.target.value !== 'none');
+        renderNotebookStudioPreview();
+      });
+    }
+
+    // Cover options
+    const nbIncludeCoverCheck = document.getElementById('nbIncludeCoverCheck');
+    const nbCoverFieldsGroup = document.getElementById('nbCoverFieldsGroup');
+    const nbTabCoverBtn = document.getElementById('nbTabCoverBtn');
+    const nbCoverTemplateSelect = document.getElementById('nbCoverTemplateSelect');
+    const nbCoverTitleInput = document.getElementById('nbCoverTitleInput');
+    const nbCoverAuthorInput = document.getElementById('nbCoverAuthorInput');
+    if (nbIncludeCoverCheck) {
+      nbIncludeCoverCheck.addEventListener('change', (e) => {
+        notebookState.includeCover = e.target.checked;
+        if (nbCoverFieldsGroup) nbCoverFieldsGroup.style.display = e.target.checked ? 'block' : 'none';
+        if (nbTabCoverBtn) nbTabCoverBtn.style.display = e.target.checked ? 'inline-block' : 'none';
+        if (!e.target.checked && notebookState.activeTab === 'cover') {
+          notebookState.activeTab = 'sheet';
+          const nbTabSheetBtn = document.getElementById('nbTabSheetBtn');
+          if (nbTabSheetBtn) nbTabSheetBtn.classList.add('is-active');
+          if (nbTabCoverBtn) nbTabCoverBtn.classList.remove('is-active');
+        }
+        renderNotebookStudioPreview();
+      });
+    }
+    if (nbCoverTemplateSelect) {
+      nbCoverTemplateSelect.addEventListener('change', (e) => {
+        notebookState.coverTemplate = e.target.value;
+        renderNotebookStudioPreview();
+      });
+    }
+    if (nbCoverTitleInput) {
+      nbCoverTitleInput.addEventListener('input', (e) => {
+        notebookState.coverTitle = e.target.value;
+        renderNotebookStudioPreview();
+      });
+    }
+    if (nbCoverAuthorInput) {
+      nbCoverAuthorInput.addEventListener('input', (e) => {
+        notebookState.coverAuthor = e.target.value;
+        renderNotebookStudioPreview();
+      });
+    }
+
+    // Paper size & pages
+    const nbPaperSizeSelect = document.getElementById('nbPaperSizeSelect');
+    if (nbPaperSizeSelect) {
+      nbPaperSizeSelect.addEventListener('change', (e) => {
+        notebookState.paperSize = e.target.value;
+        renderNotebookStudioPreview();
+      });
+    }
+
+    const nbPagesInput = document.getElementById('nbPagesInput');
+    document.querySelectorAll('[data-nbpages]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-nbpages]').forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        const num = parseInt(btn.getAttribute('data-nbpages') || '50', 10);
+        notebookState.numPages = num;
+        if (nbPagesInput) nbPagesInput.value = num;
+        renderNotebookStudioPreview();
+      });
+    });
+    if (nbPagesInput) {
+      nbPagesInput.addEventListener('input', (e) => {
+        const num = Math.max(1, parseInt(e.target.value, 10) || 1);
+        notebookState.numPages = num;
+        document.querySelectorAll('[data-nbpages]').forEach(b => {
+          if (b.getAttribute('data-nbpages') === String(num)) b.classList.add('is-active');
+          else b.classList.remove('is-active');
+        });
+        renderNotebookStudioPreview();
+      });
+    }
+
+    // Preview tabs
+    const nbTabSheetBtn = document.getElementById('nbTabSheetBtn');
+    if (nbTabSheetBtn && nbTabCoverBtn) {
+      nbTabSheetBtn.addEventListener('click', () => {
+        nbTabSheetBtn.classList.add('is-active');
+        nbTabCoverBtn.classList.remove('is-active');
+        notebookState.activeTab = 'sheet';
+        renderNotebookStudioPreview();
+      });
+      nbTabCoverBtn.addEventListener('click', () => {
+        nbTabCoverBtn.classList.add('is-active');
+        nbTabSheetBtn.classList.remove('is-active');
+        notebookState.activeTab = 'cover';
+        renderNotebookStudioPreview();
+      });
+    }
+
+    // Download Button
+    const downloadNotebookStudioBtn = document.getElementById('downloadNotebookStudioBtn');
+    if (downloadNotebookStudioBtn) {
+      downloadNotebookStudioBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        showToast(`Generando libreta (${notebookState.numPages} páginas)...`);
         try {
           const outBytes = await SlidePrinterEngine.generateNotebook({
-            numPages,
-            style: state.style || 'lines',
-            paperSize: state.paperSize || 'a4',
-            margin: state.margin !== undefined ? state.margin : 40,
-            step: state.step !== undefined ? state.step : 14,
-            binding: state.binding || 'none',
-            gutter: state.gutterMargin || 0,
-            duplex: state.duplex || false,
-            holeGuides: state.holeGuides || false,
-            pageNumbers: state.pageNumbers !== undefined ? state.pageNumbers : true,
-            pageNumberFormat: state.pageNumberFormat || 'total',
-            coverMode: state.coverMode || 'generate',
-            coverTemplate: state.coverTemplate || 'atelier',
-            coverTitle: state.coverTitle || (state.fileName ? state.fileName.replace(/\.pdf$/i, '') : 'Notebook'),
-            coverAuthor: state.coverAuthor || '',
-            studyHeader: state.studyHeader || false,
-            studyTitle: state.studyTitle || '',
-            grayscale: state.grayscale || false,
+            numPages: notebookState.numPages,
+            style: notebookState.style,
+            paperSize: notebookState.paperSize,
+            margin: 40,
+            step: notebookState.step,
+            paperTint: notebookState.paperTint,
+            marginLine: notebookState.marginLine,
+            binding: notebookState.binding,
+            gutter: notebookState.binding === 'binder' ? 30 : (notebookState.binding === 'spiral' ? 22 : 0),
+            holeGuides: notebookState.holeGuides,
+            pageNumbers: notebookState.pageNumbers,
+            pageNumberFormat: notebookState.pageNumberFormat,
+            coverMode: notebookState.includeCover ? 'generate' : 'none',
+            coverTemplate: notebookState.coverTemplate,
+            coverTitle: notebookState.coverTitle || 'Cuaderno',
+            coverAuthor: notebookState.coverAuthor || '',
+            studyHeader: notebookState.studyHeader,
+            studyTitle: notebookState.studyTitle || '',
           });
 
           const blob = new Blob([outBytes], { type: 'application/pdf' });
-          const base = (state.coverTitle || (state.fileName ? state.fileName.replace(/\.pdf$/i, '') : 'notebook')).replace(/[^a-zA-Z0-9_\-]/g, '_');
-          const safeName = `${base}_${state.style || 'lines'}.pdf`;
+          const safeTitle = (notebookState.coverTitle || 'cuaderno').replace(/[^a-zA-Z0-9_\-]/g, '_');
+          const safeName = `${safeTitle}_${notebookState.style}.pdf`;
           triggerDownload(blob, safeName);
-          showToast(`✔ Notebook generated successfully! (${numPages} pages)`);
+          showToast(`✔ Libreta descargada correctamente (${notebookState.numPages} páginas)`);
         } catch (err) {
-          showToast(`Error generating notebook: ${err.message}`);
+          showToast(`Error al generar libreta: ${err.message}`);
         }
       });
     }

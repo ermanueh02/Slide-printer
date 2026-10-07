@@ -152,6 +152,8 @@ class SlidePrinter:
         cover_title: Optional[str] = None,
         cover_author: Optional[str] = None,
         cover_template: str = "atelier",
+        paper_tint: str = "white",
+        margin_line: bool = False,
     ):
         if isinstance(paper_size, str):
             paper_norm = paper_size.lower()
@@ -198,6 +200,8 @@ class SlidePrinter:
         self.cover_author = cover_author
         raw_tpl = str(cover_template).lower().strip()
         self.cover_template = COVER_TEMPLATE_ALIASES.get(raw_tpl, raw_tpl)
+        self.paper_tint = str(paper_tint or "white").lower().strip()
+        self.margin_line = bool(margin_line)
 
     def convert_slide_page(
         self,
@@ -568,6 +572,8 @@ class SlidePrinter:
         styles: Optional[List[str]] = None,
         output_dir: Optional[str] = None,
         base_name: Optional[str] = None,
+        paper_tint: Optional[str] = None,
+        margin_line: Optional[bool] = None,
         progress_cb: Optional[Callable[[str, int, int], None]] = None,
     ) -> List[str]:
         """Generates a complete multi-page notebook PDF for each requested style.
@@ -670,6 +676,8 @@ class SlidePrinter:
                     hole_guides=self.hole_guides,
                     is_verso=is_verso,
                     gutter_margin=self.gutter_margin,
+                    paper_tint=paper_tint or self.paper_tint,
+                    margin_line=self.margin_line if margin_line is None else margin_line,
                 )
                 writer.add_page(page)
 

@@ -36,6 +36,12 @@ STYLE_METADATA = {
         "code": "dots",
         "key": "4",
     },
+    "cornell": {
+        "id": "cornell",
+        "name": "Cornell Notes",
+        "code": "cornell",
+        "key": "5",
+    },
 }
 
 STYLE_KEY_MAP = {
@@ -43,17 +49,31 @@ STYLE_KEY_MAP = {
     "2": "lines",
     "3": "grid",
     "4": "dots",
+    "5": "cornell",
     "blank": "blank",
     "lines": "lines",
     "line": "lines",
     "grid": "grid",
     "dots": "dots",
     "dot": "dots",
+    "cornell": "cornell",
+    "cornell_notes": "cornell",
     # Legacy / alias compatibility
     "en_blanco": "blank",
     "lineas": "lines",
     "cuadricula": "grid",
     "puntos": "dots",
+}
+
+# Digital notebook & tablet paper tints (RGB normalized 0.0 - 1.0)
+PAPER_TINTS: Dict[str, Tuple[float, float, float]] = {
+    "white": (1.0, 1.0, 1.0),
+    "ivory": (0.980, 0.969, 0.933),      # #FAF7EE Moleskine / Midori Warm Ivory
+    "cream": (0.984, 0.973, 0.918),      # #FBF8EA Warm Cream Vellum
+    "dark": (0.078, 0.082, 0.094),       # #141518 Dark Mode / OLED Obsidian
+    "oled": (0.078, 0.082, 0.094),
+    "legal": (0.996, 0.988, 0.910),      # #FEFCE8 American Legal Pad
+    "sage": (0.941, 0.969, 0.957),       # #F0F7F4 Soft Sage Relaxed Reading
 }
 
 DEFAULT_PAPER_SIZE = "a4"

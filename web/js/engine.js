@@ -170,6 +170,8 @@
     }
 
     const normStyle = (style || 'lines').toLowerCase();
+    const isDark = Boolean(options.isDark);
+    const font = options.font || null;
 
     if (normStyle === 'lines') {
       let currY = yStart - step;
@@ -178,8 +180,8 @@
           start: { x: x1, y: currY },
           end: { x: x2, y: currY },
           thickness: 0.4,
-          color: rgb(0.4, 0.4, 0.4),
-          opacity: 0.22,
+          color: isDark ? rgb(0.85, 0.88, 0.95) : rgb(0.4, 0.4, 0.4),
+          opacity: isDark ? 0.20 : 0.22,
         });
         currY -= step;
       }
@@ -195,8 +197,8 @@
           start: { x: gridX1, y: currY },
           end: { x: gridX2, y: currY },
           thickness: 0.35,
-          color: rgb(0.4, 0.4, 0.4),
-          opacity: 0.18,
+          color: isDark ? rgb(0.85, 0.88, 0.95) : rgb(0.4, 0.4, 0.4),
+          opacity: isDark ? 0.18 : 0.18,
         });
         currY -= step;
       }
@@ -208,8 +210,8 @@
           start: { x: cx, y: yMin },
           end: { x: cx, y: yStart },
           thickness: 0.35,
-          color: rgb(0.4, 0.4, 0.4),
-          opacity: 0.18,
+          color: isDark ? rgb(0.85, 0.88, 0.95) : rgb(0.4, 0.4, 0.4),
+          opacity: isDark ? 0.18 : 0.18,
         });
       }
     } else if (normStyle === 'dots') {
@@ -225,11 +227,70 @@
             x: cx,
             y: currY,
             size: dotRadius,
-            color: rgb(0.25, 0.25, 0.25),
-            opacity: 0.35,
+            color: isDark ? rgb(0.85, 0.88, 0.95) : rgb(0.25, 0.25, 0.25),
+            opacity: isDark ? 0.38 : 0.35,
           });
         }
         currY -= step;
+      }
+    } else if (normStyle === 'cornell') {
+      const summaryH = 85;
+      const summaryTopY = bottomMargin + summaryH;
+      const cueColW = width * 0.28;
+      const cueX = x1 + cueColW;
+
+      // Lines in Notes area
+      let currY = yStart - step;
+      while (currY >= summaryTopY) {
+        page.drawLine({
+          start: { x: cueX, y: currY },
+          end: { x: x2, y: currY },
+          thickness: 0.4,
+          color: isDark ? rgb(0.85, 0.88, 0.95) : rgb(0.4, 0.4, 0.4),
+          opacity: isDark ? 0.20 : 0.22,
+        });
+        currY -= step;
+      }
+
+      // Vertical Cue divider
+      page.drawLine({
+        start: { x: cueX, y: summaryTopY },
+        end: { x: cueX, y: yStart },
+        thickness: 0.65,
+        color: isDark ? rgb(0.85, 0.88, 0.95) : rgb(0.3, 0.3, 0.3),
+        opacity: isDark ? 0.35 : 0.30,
+      });
+
+      // Horizontal Summary divider
+      page.drawLine({
+        start: { x: x1, y: summaryTopY },
+        end: { x: x2, y: summaryTopY },
+        thickness: 0.65,
+        color: isDark ? rgb(0.85, 0.88, 0.95) : rgb(0.3, 0.3, 0.3),
+        opacity: isDark ? 0.35 : 0.30,
+      });
+
+      if (font) {
+        const lblColor = isDark ? rgb(0.85, 0.88, 0.95) : rgb(0.35, 0.35, 0.35);
+        try {
+          page.drawText('CUES / IDEAS', { x: x1 + 4, y: yStart - 10, size: 6.5, font, color: lblColor, opacity: 0.65 });
+          page.drawText('NOTES', { x: cueX + 8, y: yStart - 10, size: 6.5, font, color: lblColor, opacity: 0.65 });
+          page.drawText('SUMMARY', { x: x1 + 4, y: summaryTopY - 12, size: 6.5, font, color: lblColor, opacity: 0.65 });
+        } catch (_) {}
+      }
+    }
+
+    // Classic Red / Grey Margin line
+    if (options.marginLine && (normStyle === 'lines' || normStyle === 'cornell')) {
+      const redMarginX = x1 + 52;
+      if (redMarginX < x2 - 40) {
+        page.drawLine({
+          start: { x: redMarginX, y: bottomMargin },
+          end: { x: redMarginX, y: yStart },
+          thickness: 0.6,
+          color: isDark ? rgb(0.95, 0.45, 0.50) : rgb(0.85, 0.28, 0.28),
+          opacity: isDark ? 0.38 : 0.30,
+        });
       }
     }
   }
@@ -5347,6 +5408,19 @@
       }
     }
 
+    const paperTint = (options.paperTint || 'white').toLowerCase();
+    const isDark = (paperTint === 'dark' || paperTint === 'oled');
+    const marginLine = Boolean(options.marginLine);
+    const tintColors = {
+      white: [1.0, 1.0, 1.0],
+      ivory: [0.980, 0.969, 0.933],
+      cream: [0.984, 0.973, 0.918],
+      dark: [0.078, 0.082, 0.094],
+      oled: [0.078, 0.082, 0.094],
+      legal: [0.996, 0.988, 0.910],
+      sage: [0.941, 0.969, 0.957],
+    };
+
     let sheetCounter = hasGenCover ? 2 : 1;
 
     // Helper for footer page number
@@ -5361,8 +5435,8 @@
         y: footerY,
         size: textSize,
         font: helveticaFont,
-        color: rgb(0.3, 0.3, 0.3),
-        opacity: 0.7,
+        color: isDark ? rgb(0.85, 0.88, 0.95) : rgb(0.3, 0.3, 0.3),
+        opacity: isDark ? 0.65 : 0.7,
       });
     }
 
@@ -5373,6 +5447,17 @@
       const availableWidth = paperWidth - 2 * margin - gutterMargin;
 
       const newPage = outDoc.addPage([paperWidth, paperHeight]);
+
+      if (paperTint !== 'white' && tintColors[paperTint]) {
+        const [tr, tg, tb] = tintColors[paperTint];
+        newPage.drawRectangle({
+          x: 0,
+          y: 0,
+          width: paperWidth,
+          height: paperHeight,
+          color: rgb(tr, tg, tb),
+        });
+      }
 
       if (studyHeader) {
         drawStudyHeader(newPage, { margin: xOffset, topMargin: margin, width: availableWidth, title: studyTitle }, helveticaFont);
@@ -5387,6 +5472,9 @@
         style,
         step,
         drawSeparator: false,
+        isDark,
+        marginLine,
+        font: helveticaBold,
       });
 
       drawFooter(newPage, sheetCounter);
