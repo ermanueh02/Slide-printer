@@ -3532,25 +3532,25 @@
       const botH = ph * 0.28;
 
       ctx.fillStyle = '#eb6128';
-      ctx.fillRect(bandX1, 0, bandW, topH);
+      ctx.fillRect(0, 0, pw, topH);
 
       ctx.fillStyle = '#faf5e8';
-      ctx.fillRect(bandX1, topH, bandW, midH);
+      ctx.fillRect(0, topH, pw, midH);
 
       ctx.fillStyle = '#eb6128';
-      ctx.fillRect(bandX1, topH + midH, bandW, botH);
+      ctx.fillRect(0, topH + midH, pw, botH);
 
       ctx.strokeStyle = '#1e1e24';
       ctx.lineWidth = 2.2;
       ctx.beginPath();
-      ctx.moveTo(bandX1, topH); ctx.lineTo(bandX1 + bandW, topH);
-      ctx.moveTo(bandX1, topH + midH); ctx.lineTo(bandX1 + bandW, topH + midH);
+      ctx.moveTo(0, topH); ctx.lineTo(pw, topH);
+      ctx.moveTo(0, topH + midH); ctx.lineTo(pw, topH + midH);
       ctx.stroke();
 
       ctx.lineWidth = 0.5;
       ctx.beginPath();
-      ctx.moveTo(bandX1, topH - 4); ctx.lineTo(bandX1 + bandW, topH - 4);
-      ctx.moveTo(bandX1, topH + midH + 4); ctx.lineTo(bandX1 + bandW, topH + midH + 4);
+      ctx.moveTo(0, topH - 4); ctx.lineTo(pw, topH - 4);
+      ctx.moveTo(0, topH + midH + 4); ctx.lineTo(pw, topH + midH + 4);
       ctx.stroke();
 
       ctx.font = '700 10px system-ui, -apple-system, sans-serif';
@@ -3619,7 +3619,7 @@
       // Gallimard Blanche NRF
       ctx.save();
       ctx.fillStyle = '#fcf9f1';
-      ctx.fillRect(leftGutter, 0, pw - gutterMargin, ph);
+      ctx.fillRect(0, 0, pw, ph);
 
       const frameInset = 40;
       const fx1 = leftGutter + frameInset;
@@ -3681,7 +3681,7 @@
       // Oxford Academic Press
       ctx.save();
       ctx.fillStyle = '#faf8f5';
-      ctx.fillRect(leftGutter, 0, pw - gutterMargin, ph);
+      ctx.fillRect(0, 0, pw, ph);
 
       const inset = 38;
       const x1 = leftGutter + inset;
@@ -3756,21 +3756,21 @@
       // Cahier d'Écolier
       ctx.save();
       ctx.fillStyle = '#24528c';
-      ctx.fillRect(leftGutter, 0, pw - gutterMargin, ph);
+      ctx.fillRect(0, 0, pw, ph);
 
-      const tapeW = 34;
+      const tapeW = leftGutter + 34;
       ctx.fillStyle = '#141418';
-      ctx.fillRect(leftGutter, 0, tapeW, ph);
+      ctx.fillRect(0, 0, tapeW, ph);
 
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
       ctx.lineWidth = 0.6;
       ctx.setLineDash([2, 4]);
       ctx.beginPath();
-      ctx.moveTo(leftGutter + tapeW - 5, 0); ctx.lineTo(leftGutter + tapeW - 5, ph);
+      ctx.moveTo(tapeW - 5, 0); ctx.lineTo(tapeW - 5, ph);
       ctx.stroke();
       ctx.setLineDash([]);
 
-      const availX1 = leftGutter + tapeW;
+      const availX1 = tapeW;
       const availW = pw - rightGutter - availX1;
       const centerX = availX1 + availW / 2;
 
@@ -3844,14 +3844,14 @@
       // Midori MD Minimalist
       ctx.save();
       ctx.fillStyle = '#f7f5ed';
-      ctx.fillRect(leftGutter, 0, pw - gutterMargin, ph);
+      ctx.fillRect(0, 0, pw, ph);
 
-      const spineW = 18;
+      const spineW = leftGutter + 18;
       ctx.fillStyle = '#dcdfc8';
-      ctx.fillRect(leftGutter, 0, spineW, ph);
+      ctx.fillRect(0, 0, spineW, ph);
 
       const m = 48;
-      const x1 = leftGutter + spineW + m;
+      const x1 = spineW + m;
       const x2 = pw - rightGutter - m;
       const w = x2 - x1;
 
@@ -3929,7 +3929,7 @@
       // Cyanotype Blueprint Docket
       ctx.save();
       ctx.fillStyle = '#0f2947';
-      ctx.fillRect(leftGutter, 0, pw - gutterMargin, ph);
+      ctx.fillRect(0, 0, pw, ph);
 
       const m = 32;
       const x1 = leftGutter + m;
@@ -4034,7 +4034,7 @@
       // Celestial Star Atlas
       ctx.save();
       ctx.fillStyle = '#080d1e';
-      ctx.fillRect(leftGutter, 0, pw - gutterMargin, ph);
+      ctx.fillRect(0, 0, pw, ph);
 
       const m = 36;
       const x1 = leftGutter + m;
@@ -4127,7 +4127,7 @@
       // Field Notes Utility & Rubric
       ctx.save();
       ctx.fillStyle = '#e0d6c2';
-      ctx.fillRect(leftGutter, 0, pw - gutterMargin, ph);
+      ctx.fillRect(0, 0, pw, ph);
 
       const m = 38;
       const x1 = leftGutter + m;
@@ -4137,7 +4137,7 @@
 
       const topBarH = 56;
       ctx.fillStyle = '#f56b23';
-      ctx.fillRect(leftGutter, 0, pw - gutterMargin, topBarH);
+      ctx.fillRect(0, 0, pw, topBarH);
 
       ctx.font = '700 14px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = '#141416';

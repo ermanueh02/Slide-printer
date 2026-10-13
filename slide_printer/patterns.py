@@ -933,7 +933,7 @@ def generate_cover_page(
         # 4. 1950s Mid-Century Pelican / Penguin Tri-Band Paperbound Classic
         top_band_h = ph * 0.20
         c.setFillColor(Color(0.16, 0.18, 0.20, alpha=1.0))
-        c.rect(left_gutter, ph - top_band_h, pw - left_gutter - right_gutter, top_band_h, fill=1, stroke=0)
+        c.rect(0, ph - top_band_h, pw, top_band_h, fill=1, stroke=0)
 
         c.setFont("Helvetica-Bold", 8.5)
         c.setFillColor(Color(0.96, 0.96, 0.96, alpha=0.95))
@@ -1601,9 +1601,9 @@ def generate_cover_page(
 
         bar_h = 36.0
         c.setFillColor(azure_deep)
-        c.rect(left_gutter, ph - bar_h, pw - left_gutter - right_gutter, bar_h, fill=1, stroke=0)
+        c.rect(0, ph - bar_h, pw, bar_h, fill=1, stroke=0)
         c.setFillColor(solar_gold)
-        c.rect(left_gutter, ph - bar_h - 2.5, pw - left_gutter - right_gutter, 2.5, fill=1, stroke=0)
+        c.rect(0, ph - bar_h - 2.5, pw, 2.5, fill=1, stroke=0)
 
         c.setFont("Helvetica-Bold", 8.5)
         c.setFillColor(Color(0.98, 0.98, 0.98, alpha=0.95))
@@ -3119,26 +3119,26 @@ def generate_cover_page(
 
         # Top Band: Classic Vintage Penguin Orange
         c.setFillColor(Color(0.92, 0.38, 0.16, alpha=1.0))
-        c.rect(band_x1, y_mid_top, band_w, top_h, fill=1, stroke=0)
+        c.rect(0, y_mid_top, pw, top_h, fill=1, stroke=0)
 
         # Center Band: Ivory / Cream paper
         c.setFillColor(Color(0.985, 0.965, 0.925, alpha=1.0))
-        c.rect(band_x1, y_bot_top, band_w, mid_h, fill=1, stroke=0)
+        c.rect(0, y_bot_top, pw, mid_h, fill=1, stroke=0)
 
         # Bottom Band: Matching Vintage Orange
         c.setFillColor(Color(0.92, 0.38, 0.16, alpha=1.0))
-        c.rect(band_x1, 0, band_w, bot_h, fill=1, stroke=0)
+        c.rect(0, 0, pw, bot_h, fill=1, stroke=0)
 
         # Divider Lines (Bold charcoal rules)
         c.setStrokeColor(Color(0.12, 0.12, 0.14, alpha=1.0))
         c.setLineWidth(2.2)
-        c.line(band_x1, y_mid_top, band_x2, y_mid_top)
-        c.line(band_x1, y_bot_top, band_x2, y_bot_top)
+        c.line(0, y_mid_top, pw, y_mid_top)
+        c.line(0, y_bot_top, pw, y_bot_top)
 
         # Hairline inner rules
         c.setLineWidth(0.5)
-        c.line(band_x1, y_mid_top + 4.0, band_x2, y_mid_top + 4.0)
-        c.line(band_x1, y_bot_top - 4.0, band_x2, y_bot_top - 4.0)
+        c.line(0, y_mid_top + 4.0, pw, y_mid_top + 4.0)
+        c.line(0, y_bot_top - 4.0, pw, y_bot_top - 4.0)
 
         # Top Band Text: White small-caps rubric
         c.setFont("Helvetica-Bold", 10.0)
@@ -3207,7 +3207,7 @@ def generate_cover_page(
     elif tpl in ("gallimard", "gallimard_blanche", "nrf", "blanche"):
         # Gallimard Blanche NRF (Éditions Gallimard, Paris)
         c.setFillColor(Color(0.988, 0.980, 0.953, alpha=1.0))
-        c.rect(left_gutter, 0, pw - gutter_margin, ph, fill=1, stroke=0)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
         frame_inset = 40.0
         fx1 = left_gutter + frame_inset
@@ -3266,7 +3266,7 @@ def generate_cover_page(
     elif tpl in ("oxford_press", "oxford", "cambridge", "academic_press"):
         # Oxford / Cambridge Academic Press (Clarendon Monograph)
         c.setFillColor(Color(0.99, 0.985, 0.97, alpha=1.0))
-        c.rect(left_gutter, 0, pw - gutter_margin, ph, fill=1, stroke=0)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
         inset = 38.0
         x1 = left_gutter + inset
@@ -3336,19 +3336,19 @@ def generate_cover_page(
     elif tpl in ("cahier", "cahier_ecolier", "seyes", "french_notebook"):
         # Cahier d'Écolier (French Seyès Vintage School Notebook)
         c.setFillColor(Color(0.14, 0.32, 0.55, alpha=1.0))
-        c.rect(left_gutter, 0, pw - gutter_margin, ph, fill=1, stroke=0)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
-        tape_w = 34.0
+        tape_w = left_gutter + 34.0
         c.setFillColor(Color(0.10, 0.10, 0.12, alpha=1.0))
-        c.rect(left_gutter, 0, tape_w, ph, fill=1, stroke=0)
+        c.rect(0, 0, tape_w, ph, fill=1, stroke=0)
 
         c.setStrokeColor(Color(0.85, 0.85, 0.85, alpha=0.35))
         c.setLineWidth(0.6)
         c.setDash(2, 4)
-        c.line(left_gutter + tape_w - 5.0, 0, left_gutter + tape_w - 5.0, ph)
+        c.line(tape_w - 5.0, 0, tape_w - 5.0, ph)
         c.setDash()
 
-        avail_x1 = left_gutter + tape_w
+        avail_x1 = tape_w
         avail_w = pw - right_gutter - avail_x1
         center_x = avail_x1 + avail_w / 2.0
 
@@ -3416,14 +3416,14 @@ def generate_cover_page(
     elif tpl in ("midori", "midori_md", "japanese_minimalist", "wabi_sabi"):
         # Midori MD Minimalist (Japanese Paper Craft & Hanko)
         c.setFillColor(Color(0.975, 0.965, 0.940, alpha=1.0))
-        c.rect(left_gutter, 0, pw - gutter_margin, ph, fill=1, stroke=0)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
-        spine_w = 18.0
+        spine_w = left_gutter + 18.0
         c.setFillColor(Color(0.86, 0.88, 0.82, alpha=1.0))
-        c.rect(left_gutter, 0, spine_w, ph, fill=1, stroke=0)
+        c.rect(0, 0, spine_w, ph, fill=1, stroke=0)
 
         m = 48.0
-        x1 = left_gutter + spine_w + m
+        x1 = spine_w + m
         x2 = pw - right_gutter - m
         w = x2 - x1
         center_x = x1 + w / 2.0
@@ -3496,7 +3496,7 @@ def generate_cover_page(
     elif tpl in ("blueprint", "cyanotype", "drafting", "architectural"):
         # Cyanotype Blueprint Docket (Architectural & Engineering Drawing)
         c.setFillColor(Color(0.06, 0.16, 0.28, alpha=1.0))
-        c.rect(left_gutter, 0, pw - gutter_margin, ph, fill=1, stroke=0)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
         m = 32.0
         x1 = left_gutter + m
@@ -3607,7 +3607,7 @@ def generate_cover_page(
     elif tpl in ("celestial", "star_atlas", "uranometria", "astronomy"):
         # Celestial Star Atlas (Uranometria Antiqua & Harmonia Macrocosmica)
         c.setFillColor(Color(0.04, 0.06, 0.14, alpha=1.0))
-        c.rect(left_gutter, 0, pw - gutter_margin, ph, fill=1, stroke=0)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
         m = 36.0
         x1 = left_gutter + m
@@ -3695,7 +3695,7 @@ def generate_cover_page(
     elif tpl in ("field_notes", "fieldnotes", "expedition", "utilitarian"):
         # Field Notes Utility & Rubric (Industrial Heavy Duty)
         c.setFillColor(Color(0.88, 0.84, 0.76, alpha=1.0))
-        c.rect(left_gutter, 0, pw - gutter_margin, ph, fill=1, stroke=0)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
         m = 38.0
         x1 = left_gutter + m
@@ -3705,7 +3705,7 @@ def generate_cover_page(
 
         top_bar_h = 56.0
         c.setFillColor(Color(0.96, 0.42, 0.14, alpha=1.0))
-        c.rect(left_gutter, ph - top_bar_h, pw - gutter_margin, top_bar_h, fill=1, stroke=0)
+        c.rect(0, ph - top_bar_h, pw, top_bar_h, fill=1, stroke=0)
 
         c.setFont("Helvetica-Bold", 14.0)
         c.setFillColor(Color(0.08, 0.08, 0.10, alpha=1.0))

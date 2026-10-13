@@ -296,6 +296,38 @@ def test_create_notebook_page_tints_margin_and_cornell():
     assert isinstance(oled_page, PageObject)
 
 
+def test_editorial_covers_with_binding_gutter():
+    """Verify that editorial covers render correctly with binding gutter and hole guides."""
+    a4_size = PAPER_SIZES["a4"]
+    editorial_templates = [
+        "penguin",
+        "gallimard",
+        "oxford_press",
+        "cahier",
+        "midori",
+        "blueprint",
+        "celestial",
+        "field_notes",
+    ]
+    for tpl in editorial_templates:
+        cover = generate_cover_page(
+            page_size=a4_size,
+            title="Cosas & Apuntes",
+            subtitle="Testing Binding Gutter",
+            author="Manuel E.",
+            date_str="2026-10-07",
+            num_slides=25,
+            template=tpl,
+            binding="binder",
+            hole_guides=True,
+            gutter_margin=30.0,
+        )
+        assert isinstance(cover, PageObject)
+        text = cover.extract_text()
+        assert "Cosas" in text
+
+
+
 
 
 

@@ -4111,51 +4111,51 @@
       const yMidTop = botH + midH;
 
       page.drawRectangle({
-        x: bandX1,
+        x: 0,
         y: yMidTop,
-        width: bandW,
+        width: pw,
         height: topH,
         color: rgb(0.92, 0.38, 0.16),
       });
 
       page.drawRectangle({
-        x: bandX1,
+        x: 0,
         y: yBotTop,
-        width: bandW,
+        width: pw,
         height: midH,
         color: rgb(0.985, 0.965, 0.925),
       });
 
       page.drawRectangle({
-        x: bandX1,
+        x: 0,
         y: 0,
-        width: bandW,
+        width: pw,
         height: botH,
         color: rgb(0.92, 0.38, 0.16),
       });
 
       page.drawLine({
-        start: { x: bandX1, y: yMidTop },
-        end: { x: bandX1 + bandW, y: yMidTop },
+        start: { x: 0, y: yMidTop },
+        end: { x: pw, y: yMidTop },
         thickness: 2.2,
         color: rgb(0.12, 0.12, 0.14),
       });
       page.drawLine({
-        start: { x: bandX1, y: yBotTop },
-        end: { x: bandX1 + bandW, y: yBotTop },
+        start: { x: 0, y: yBotTop },
+        end: { x: pw, y: yBotTop },
         thickness: 2.2,
         color: rgb(0.12, 0.12, 0.14),
       });
 
       page.drawLine({
-        start: { x: bandX1, y: yMidTop + 4 },
-        end: { x: bandX1 + bandW, y: yMidTop + 4 },
+        start: { x: 0, y: yMidTop + 4 },
+        end: { x: pw, y: yMidTop + 4 },
         thickness: 0.5,
         color: rgb(0.12, 0.12, 0.14),
       });
       page.drawLine({
-        start: { x: bandX1, y: yBotTop - 4 },
-        end: { x: bandX1 + bandW, y: yBotTop - 4 },
+        start: { x: 0, y: yBotTop - 4 },
+        end: { x: pw, y: yBotTop - 4 },
         thickness: 0.5,
         color: rgb(0.12, 0.12, 0.14),
       });
@@ -4266,9 +4266,9 @@
     } else if (tpl === 'gallimard' || tpl.includes('gallimard') || tpl === 'nrf' || tpl === 'blanche') {
       // Gallimard Blanche NRF
       page.drawRectangle({
-        x: leftGutter,
+        x: 0,
         y: 0,
-        width: pw - gutterMargin,
+        width: pw,
         height: ph,
         color: rgb(0.988, 0.980, 0.953),
       });
@@ -4343,9 +4343,9 @@
     } else if (tpl === 'oxford_press' || tpl.includes('oxford') || tpl.includes('cambridge') || tpl === 'academic_press') {
       // Oxford Academic Press
       page.drawRectangle({
-        x: leftGutter,
+        x: 0,
         y: 0,
-        width: pw - gutterMargin,
+        width: pw,
         height: ph,
         color: rgb(0.99, 0.985, 0.97),
       });
@@ -4431,16 +4431,16 @@
     } else if (tpl === 'cahier' || tpl.includes('cahier') || tpl === 'seyes' || tpl === 'french_notebook') {
       // Cahier d'Écolier
       page.drawRectangle({
-        x: leftGutter,
+        x: 0,
         y: 0,
-        width: pw - gutterMargin,
+        width: pw,
         height: ph,
         color: rgb(0.14, 0.32, 0.55),
       });
 
-      const tapeW = 34;
+      const tapeW = leftGutter + 34;
       page.drawRectangle({
-        x: leftGutter,
+        x: 0,
         y: 0,
         width: tapeW,
         height: ph,
@@ -4448,15 +4448,15 @@
       });
 
       page.drawLine({
-        start: { x: leftGutter + tapeW - 5, y: 0 },
-        end: { x: leftGutter + tapeW - 5, y: ph },
+        start: { x: tapeW - 5, y: 0 },
+        end: { x: tapeW - 5, y: ph },
         thickness: 0.6,
         color: rgb(0.85, 0.85, 0.85),
         opacity: 0.35,
         dashArray: [2, 4],
       });
 
-      const availX1 = leftGutter + tapeW;
+      const availX1 = tapeW;
       const availW = pw - rightGutter - availX1;
       const centerX = availX1 + availW / 2;
 
@@ -4539,16 +4539,16 @@
     } else if (tpl === 'midori' || tpl.includes('midori') || tpl === 'japanese_minimalist' || tpl === 'wabi_sabi') {
       // Midori MD Minimalist
       page.drawRectangle({
-        x: leftGutter,
+        x: 0,
         y: 0,
-        width: pw - gutterMargin,
+        width: pw,
         height: ph,
         color: rgb(0.975, 0.965, 0.940),
       });
 
-      const spineW = 18;
+      const spineW = leftGutter + 18;
       page.drawRectangle({
-        x: leftGutter,
+        x: 0,
         y: 0,
         width: spineW,
         height: ph,
@@ -4556,7 +4556,7 @@
       });
 
       const m = 48;
-      const x1 = leftGutter + spineW + m;
+      const x1 = spineW + m;
       const x2 = pw - rightGutter - m;
       const w = x2 - x1;
 
@@ -4629,9 +4629,9 @@
     } else if (tpl === 'blueprint' || tpl.includes('blueprint') || tpl === 'cyanotype' || tpl === 'drafting') {
       // Cyanotype Blueprint Docket
       page.drawRectangle({
-        x: leftGutter,
+        x: 0,
         y: 0,
-        width: pw - gutterMargin,
+        width: pw,
         height: ph,
         color: rgb(0.06, 0.16, 0.28),
       });
@@ -4719,9 +4719,9 @@
     } else if (tpl === 'celestial' || tpl.includes('celestial') || tpl === 'star_atlas' || tpl === 'uranometria') {
       // Celestial Star Atlas
       page.drawRectangle({
-        x: leftGutter,
+        x: 0,
         y: 0,
-        width: pw - gutterMargin,
+        width: pw,
         height: ph,
         color: rgb(0.04, 0.06, 0.14),
       });
@@ -4830,9 +4830,9 @@
     } else if (tpl === 'field_notes' || tpl.includes('fieldnotes') || tpl === 'expedition' || tpl === 'utilitarian') {
       // Field Notes Utility & Rubric
       page.drawRectangle({
-        x: leftGutter,
+        x: 0,
         y: 0,
-        width: pw - gutterMargin,
+        width: pw,
         height: ph,
         color: rgb(0.88, 0.84, 0.76),
       });
@@ -4845,9 +4845,9 @@
 
       const topBarH = 56;
       page.drawRectangle({
-        x: leftGutter,
+        x: 0,
         y: ph - topBarH,
-        width: pw - gutterMargin,
+        width: pw,
         height: topBarH,
         color: rgb(0.96, 0.42, 0.14),
       });
