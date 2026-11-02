@@ -282,8 +282,9 @@
 
     // Classic Red / Grey Margin line
     if (options.marginLine && (normStyle === 'lines' || normStyle === 'cornell')) {
-      const redMarginX = x1 + 52;
-      if (redMarginX < x2 - 40) {
+      const mirrorLine = Boolean(options.mirrorMarginLine) && Boolean(options.isVerso);
+      const redMarginX = mirrorLine ? (x2 - 52) : (x1 + 52);
+      if (redMarginX > x1 + 40 && redMarginX < x2 - 40) {
         page.drawLine({
           start: { x: redMarginX, y: bottomMargin },
           end: { x: redMarginX, y: yStart },
@@ -5329,10 +5330,10 @@
     const step = options.step !== undefined ? Number(options.step) : DEFAULT_STEP;
     const binding = (options.binding || (options.gutter > 0 ? 'binder' : 'none')).toLowerCase();
     const holeGuides = Boolean(options.holeGuides);
-    const gutterMargin = options.gutter !== undefined
-      ? Number(options.gutter)
-      : (binding === 'binder' ? 30.0 : (binding === 'spiral' ? 22.0 : 0.0));
     const duplex = Boolean(options.duplex);
+    const gutterMargin = (options.gutter !== undefined && Number(options.gutter) > 0)
+      ? Number(options.gutter)
+      : (binding === 'binder' ? 30.0 : (binding === 'spiral' ? 22.0 : (duplex ? 22.0 : 0.0)));
     const coverMode = (options.coverMode || 'generate').toLowerCase();
     const studyHeader = Boolean(options.studyHeader);
     const studyTitle = options.studyTitle || '';
@@ -5411,6 +5412,7 @@
     const paperTint = (options.paperTint || 'white').toLowerCase();
     const isDark = (paperTint === 'dark' || paperTint === 'oled');
     const marginLine = Boolean(options.marginLine);
+    const mirrorMarginLine = options.mirrorMarginLine !== undefined ? Boolean(options.mirrorMarginLine) : duplex;
     const tintColors = {
       white: [1.0, 1.0, 1.0],
       ivory: [0.980, 0.969, 0.933],
@@ -5442,6 +5444,7 @@
 
     // 2. Generate Note Pages
     for (let pIdx = 1; pIdx <= numPages; pIdx++) {
+      const isVerso = duplex && (sheetCounter % 2 === 0);
       const leftGutter = duplex ? (sheetCounter % 2 === 1 ? gutterMargin : 0) : gutterMargin;
       const xOffset = margin + leftGutter;
       const availableWidth = paperWidth - 2 * margin - gutterMargin;
@@ -5474,13 +5477,14 @@
         drawSeparator: false,
         isDark,
         marginLine,
+        mirrorMarginLine,
+        isVerso,
         font: helveticaBold,
       });
 
       drawFooter(newPage, sheetCounter);
 
       if (holeGuides && binding !== 'none') {
-        const isVerso = duplex && (sheetCounter % 2 === 0);
         drawBindingGuides(newPage, { binding, duplex, isVerso });
       }
 

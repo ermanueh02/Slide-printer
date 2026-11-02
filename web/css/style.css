@@ -948,6 +948,34 @@ body {
   opacity: 0.45;
 }
 
+.style-swatch-cornell {
+  position: relative;
+  background-image: linear-gradient(to bottom, transparent 4px, var(--border) 4px, var(--border) 5px, transparent 5px);
+  background-size: 100% 6px;
+}
+
+.style-swatch-cornell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 6px;
+  left: 30%;
+  width: 1.5px;
+  background: var(--accent-color);
+  opacity: 0.85;
+}
+
+.style-swatch-cornell::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 5px;
+  height: 1.5px;
+  background: var(--text-secondary);
+  opacity: 0.7;
+}
+
 .style-card-header {
   display: flex;
   align-items: center;
@@ -1834,25 +1862,29 @@ details.settings-details summary {
 
 @media (min-width: 961px) {
   body.editor-mode,
-  body:has(#workspace:not(.hidden)) {
+  body:has(#workspace:not(.hidden)),
+  body:has(#notebookWorkspace:not(.hidden)) {
     height: 100vh !important;
     max-height: 100vh !important;
     overflow: hidden !important;
   }
 
   body.editor-mode .app-header,
-  body:has(#workspace:not(.hidden)) .app-header {
+  body:has(#workspace:not(.hidden)) .app-header,
+  body:has(#notebookWorkspace:not(.hidden)) .app-header {
     flex-shrink: 0;
     padding: 0.55rem 2rem;
   }
 
   body.editor-mode .app-footer,
-  body:has(#workspace:not(.hidden)) .app-footer {
+  body:has(#workspace:not(.hidden)) .app-footer,
+  body:has(#notebookWorkspace:not(.hidden)) .app-footer {
     display: none !important;
   }
 
   body.editor-mode .app-container,
-  body:has(#workspace:not(.hidden)) .app-container {
+  body:has(#workspace:not(.hidden)) .app-container,
+  body:has(#notebookWorkspace:not(.hidden)) .app-container {
     padding: 0.6rem 2rem 0.6rem 2rem;
     max-width: 1650px;
     width: 100%;
@@ -1864,7 +1896,8 @@ details.settings-details summary {
   }
 
   body.editor-mode .workspace-container,
-  body:has(#workspace:not(.hidden)) .workspace-container {
+  body:has(#workspace:not(.hidden)) .workspace-container,
+  body:has(#notebookWorkspace:not(.hidden)) .workspace-container {
     flex: 1;
     min-height: 0;
     height: 100%;
@@ -1875,19 +1908,22 @@ details.settings-details summary {
   }
 
   body.editor-mode .batch-bar,
-  body:has(#workspace:not(.hidden)) .batch-bar {
+  body:has(#workspace:not(.hidden)) .batch-bar,
+  body:has(#notebookWorkspace:not(.hidden)) .batch-bar {
     flex-shrink: 0;
     padding: 0.5rem 1rem;
   }
 
   body.editor-mode .workspace-meta-bar,
-  body:has(#workspace:not(.hidden)) .workspace-meta-bar {
+  body:has(#workspace:not(.hidden)) .workspace-meta-bar,
+  body:has(#notebookWorkspace:not(.hidden)) .workspace-meta-bar {
     flex-shrink: 0;
     padding: 0.45rem 1rem;
   }
 
   body.editor-mode .workspace-layout,
-  body:has(#workspace:not(.hidden)) .workspace-layout {
+  body:has(#workspace:not(.hidden)) .workspace-layout,
+  body:has(#notebookWorkspace:not(.hidden)) .workspace-layout {
     flex: 1;
     min-height: 0;
     height: 100%;
@@ -1899,7 +1935,8 @@ details.settings-details summary {
   }
 
   body.editor-mode .controls-sidebar,
-  body:has(#workspace:not(.hidden)) .controls-sidebar {
+  body:has(#workspace:not(.hidden)) .controls-sidebar,
+  body:has(#notebookWorkspace:not(.hidden)) .controls-sidebar {
     height: 100%;
     max-height: 100%;
     overflow-y: auto;
@@ -1911,7 +1948,8 @@ details.settings-details summary {
   }
 
   body.editor-mode .preview-pane,
-  body:has(#workspace:not(.hidden)) .preview-pane {
+  body:has(#workspace:not(.hidden)) .preview-pane,
+  body:has(#notebookWorkspace:not(.hidden)) .preview-pane {
     position: static;
     height: 100%;
     max-height: 100%;
@@ -1924,13 +1962,15 @@ details.settings-details summary {
   }
 
   body.editor-mode .page-navigator,
-  body:has(#workspace:not(.hidden)) .page-navigator {
+  body:has(#workspace:not(.hidden)) .page-navigator,
+  body:has(#notebookWorkspace:not(.hidden)) .page-navigator {
     flex-shrink: 0;
     padding: 0.35rem 0.75rem;
   }
 
   body.editor-mode .paper-container,
-  body:has(#workspace:not(.hidden)) .paper-container {
+  body:has(#workspace:not(.hidden)) .paper-container,
+  body:has(#notebookWorkspace:not(.hidden)) .paper-container {
     flex: 1;
     min-height: 0;
     height: 100%;
@@ -1945,7 +1985,9 @@ details.settings-details summary {
   }
 
   body.editor-mode #previewCanvas,
-  body:has(#workspace:not(.hidden)) #previewCanvas {
+  body.editor-mode #nbPreviewCanvas,
+  body:has(#workspace:not(.hidden)) #previewCanvas,
+  body:has(#notebookWorkspace:not(.hidden)) #nbPreviewCanvas {
     max-width: 100%;
     max-height: 100%;
     width: auto !important;
@@ -2610,10 +2652,100 @@ body.theater-active .preview-pane #previewCanvas {
   white-space: nowrap;
 }
 
-/* Notebook Meta Bar */
+/* Notebook Meta Bar & Studio Controls */
 .notebook-meta-bar {
   border-left: 3px solid var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  padding: 0.55rem 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
+
+.checkbox-label-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-right: 0.75rem;
+}
+
+.checkbox-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.checkbox-desc {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  line-height: 1.25;
+}
+
+.btn-chip {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 0.35rem 0.65rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+  text-align: center;
+}
+
+.btn-chip:hover {
+  border-color: var(--border-dark);
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+}
+
+.btn-chip.is-active,
+.btn-chip.active,
+.tool-btn.is-active {
+  background: var(--text-primary);
+  color: var(--bg-base);
+  border-color: var(--text-primary);
+  font-weight: 700;
+}
+
+.preview-meta-footer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.75rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+#nbPreviewCanvas {
+  background-color: #ffffff;
+  box-shadow: var(--shadow-paper);
+  max-width: 100%;
+  max-height: 74vh;
+  width: auto;
+  height: auto;
+  display: block;
+  border-radius: 1px;
+  transition: transform 0.15s ease-out;
+}
+
 
 
 

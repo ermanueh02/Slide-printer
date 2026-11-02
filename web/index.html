@@ -402,7 +402,7 @@
               <div id="coverMetaFields" class="sub-form-group" style="margin-top: 0.5rem;">
                 <label for="coverTemplateSelect" class="form-label" style="font-size: 0.75rem; margin-bottom: 0.25rem;"><span id="coverTemplateLabelText">Cover Style</span></label>
                 <!-- Category Filter Pills -->
-                <div class="cover-filter-row" role="group" aria-label="Cover Categories">
+                <div class="cover-filter-row" id="coverFilterRow" role="group" aria-label="Cover Categories">
                   <button type="button" class="cover-cat-pill active" data-cover-cat="all">All</button>
                   <button type="button" class="cover-cat-pill" data-cover-cat="groupEditorialStandard">Editorial &amp; Presses</button>
                   <button type="button" class="cover-cat-pill" data-cover-cat="groupScienceFlat">USC Flat 90s</button>
@@ -411,6 +411,8 @@
                   <button type="button" class="cover-cat-pill" data-cover-cat="groupClassics">Classics</button>
                   <button type="button" class="cover-cat-pill" data-cover-cat="groupDecades">Decades</button>
                   <button type="button" class="cover-cat-pill" data-cover-cat="groupSeasons">Seasons</button>
+                  <button type="button" class="cover-cat-pill" data-cover-cat="groupRalphLauren">Ralph Lauren</button>
+                  <button type="button" class="cover-cat-pill" data-cover-cat="groupNature">Nature</button>
                 </div>
                 <select id="coverTemplateSelect" class="form-select" style="margin-bottom: 0.35rem;">
                   <optgroup label="Edición Estándar &amp; Editoriales Clásicas (Editorial Presses &amp; Notebooks)" id="groupEditorialStandard">
@@ -703,16 +705,17 @@
     <!-- Dedicated Digital Notebook Studio Workspace -->
     <section class="workspace-container hidden" id="notebookWorkspace">
       <!-- Notebook Studio Header Bar -->
-      <div class="card file-info-bar notebook-meta-bar">
+      <div class="card file-info-bar workspace-meta-bar notebook-meta-bar">
         <div class="file-meta-content">
           <div class="file-name-text" id="nbStudioTitleText">📓 Estudio de Libretas y Plantillas Digitales</div>
           <div class="file-pills">
-            <span class="pill">Samsung Notes &amp; GoodNotes</span>
-            <span class="pill">Vectorial 100%</span>
-            <span class="pill">A toda página</span>
+            <span class="pill" id="nbStudioPill1">Samsung Notes &amp; GoodNotes</span>
+            <span class="pill" id="nbStudioPill2">Vectorial 100%</span>
+            <span class="pill" id="nbStudioPill3">Doble Cara &amp; Portadas</span>
           </div>
         </div>
         <div class="workspace-meta-actions">
+          <button type="button" class="btn-secondary-sm" id="resetNotebookStudioBtn" title="Restaurar configuración predeterminada">Restaurar</button>
           <button type="button" class="btn-secondary-sm" id="exitNotebookStudioBtn" title="Volver a convertir diapositivas">← Diapositivas</button>
         </div>
       </div>
@@ -720,6 +723,34 @@
       <div class="workspace-layout">
         <!-- Controls Column -->
         <aside class="controls-sidebar">
+
+          <!-- Smart Presets for Digital Notebook Studio -->
+          <div class="smart-presets-card" id="nbSmartPresetsCard">
+            <div class="smart-presets-header">
+              <div class="smart-presets-title">
+                <span id="nbSmartPresetsTitle">⚡ Plantillas Rápidas</span>
+              </div>
+              <span class="smart-presets-badge">1-Click</span>
+            </div>
+            <div class="smart-presets-grid">
+              <button type="button" class="preset-chip" id="nbPresetUniBtn" title="Cuaderno universitario con espiral, margen a doble cara y portada">
+                <span class="preset-chip-title">🎓 Universitario</span>
+                <span class="preset-chip-desc">Rayado · Espiral Dúplex · Portada</span>
+              </button>
+              <button type="button" class="preset-chip" id="nbPresetStemBtn" title="Cuadrícula técnica 5mm con encabezado y portada científica">
+                <span class="preset-chip-title">🔬 STEM / Física</span>
+                <span class="preset-chip-desc">Cuadrícula 5mm · Portada Ciencia</span>
+              </button>
+              <button type="button" class="preset-chip" id="nbPresetTabletBtn" title="Plantilla Dark OLED de 1 página para Samsung Notes / GoodNotes">
+                <span class="preset-chip-title">📱 Tablet OLED</span>
+                <span class="preset-chip-desc">Dark OLED · Puntos · 1 pág</span>
+              </button>
+              <button type="button" class="preset-chip" id="nbPresetCornellBtn" title="Libreta de estudio Cornell con anillas a doble cara">
+                <span class="preset-chip-title">📝 Cornell Dúplex</span>
+                <span class="preset-chip-desc">Cornell · Anillas Dúplex · Marfil</span>
+              </button>
+            </div>
+          </div>
 
           <!-- Section 01: Tono de Papel (Paper Tone) -->
           <div class="card">
@@ -757,46 +788,58 @@
               <span id="nbPatternSectionLabel">Patrón a Toda Página</span>
               <span class="section-label-sub">02</span>
             </div>
-            <div class="style-grid" role="group" aria-label="Notebook styles">
-              <div class="style-card is-selected" data-nbstyle="lines" tabindex="0" id="nbStyleCardLines">
+            <div class="style-grid" id="nbStyleGrid" role="group" aria-label="Notebook styles">
+              <div class="style-card active is-selected" data-nbstyle="lines" tabindex="0" id="nbStyleCardLines">
                 <div class="style-card-header">
                   <div class="style-card-title-group">
                     <span class="style-card-title" id="nbStyleLinesTitle">Renglones</span>
-                    <span class="style-card-desc" id="nbStyleLinesDesc">Líneas horizontales continuas</span>
                   </div>
+                  <div class="style-num">01</div>
                 </div>
+                <div class="style-swatch style-swatch-lines" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+                <span class="style-card-desc" id="nbStyleLinesDesc">Líneas horizontales continuas</span>
               </div>
               <div class="style-card" data-nbstyle="grid" tabindex="0" id="nbStyleCardGrid">
                 <div class="style-card-header">
                   <div class="style-card-title-group">
                     <span class="style-card-title" id="nbStyleGridTitle">Cuadrícula</span>
-                    <span class="style-card-desc" id="nbStyleGridDesc">Red técnica para fórmulas y gráficos</span>
                   </div>
+                  <div class="style-num">02</div>
                 </div>
+                <div class="style-swatch style-swatch-grid" aria-hidden="true"></div>
+                <span class="style-card-desc" id="nbStyleGridDesc">Red técnica para fórmulas y gráficos</span>
               </div>
               <div class="style-card" data-nbstyle="dots" tabindex="0" id="nbStyleCardDots">
                 <div class="style-card-header">
                   <div class="style-card-title-group">
                     <span class="style-card-title" id="nbStyleDotsTitle">Puntos (Bullet)</span>
-                    <span class="style-card-desc" id="nbStyleDotsDesc">Matriz de puntos sutil</span>
                   </div>
+                  <div class="style-num">03</div>
                 </div>
+                <div class="style-swatch style-swatch-dots" aria-hidden="true"></div>
+                <span class="style-card-desc" id="nbStyleDotsDesc">Matriz de puntos sutil</span>
               </div>
               <div class="style-card" data-nbstyle="cornell" tabindex="0" id="nbStyleCardCornell">
                 <div class="style-card-header">
                   <div class="style-card-title-group">
                     <span class="style-card-title" id="nbStyleCornellTitle">Cornell Notes</span>
-                    <span class="style-card-desc" id="nbStyleCornellDesc">Ideas a la izquierda, notas y resumen</span>
                   </div>
+                  <div class="style-num">04</div>
                 </div>
+                <div class="style-swatch style-swatch-cornell" aria-hidden="true"></div>
+                <span class="style-card-desc" id="nbStyleCornellDesc">Ideas a la izquierda, notas y resumen</span>
               </div>
-              <div class="style-card" data-nbstyle="blank" tabindex="0" id="nbStyleCardBlank">
+              <div class="style-card" data-nbstyle="blank" tabindex="0" id="nbStyleCardBlank" style="grid-column: span 2;">
                 <div class="style-card-header">
                   <div class="style-card-title-group">
                     <span class="style-card-title" id="nbStyleBlankTitle">En Blanco</span>
-                    <span class="style-card-desc" id="nbStyleBlankDesc">Página limpia para dibujo o notas libres</span>
                   </div>
+                  <div class="style-num">05</div>
                 </div>
+                <div class="style-swatch style-swatch-blank" aria-hidden="true"></div>
+                <span class="style-card-desc" id="nbStyleBlankDesc">Página limpia para bocetos, esquemas o escritura libre</span>
               </div>
             </div>
           </div>
@@ -807,66 +850,123 @@
               <span id="nbSpacingSectionLabel">Interlineado / Espaciado</span>
               <span class="section-label-sub">03</span>
             </div>
-            <div class="btn-group" role="group" style="margin-bottom: 0.75rem;">
-              <button type="button" class="btn-chip is-active" data-nbspacing="7" id="nbSpacing7Btn">7 mm (Estándar)</button>
-              <button type="button" class="btn-chip" data-nbspacing="5" id="nbSpacing5Btn">5 mm (Fino / Math)</button>
-              <button type="button" class="btn-chip" data-nbspacing="8.5" id="nbSpacing8Btn">8.5 mm (Amplio)</button>
+            <div class="segmented-control" role="group" style="margin-bottom: 0.75rem;">
+              <button type="button" class="segmented-btn btn-chip" data-nbspacing="5" id="nbSpacing5Btn">5 mm (Fino)</button>
+              <button type="button" class="segmented-btn btn-chip active is-active" data-nbspacing="7" id="nbSpacing7Btn">7 mm (Estándar)</button>
+              <button type="button" class="segmented-btn btn-chip" data-nbspacing="8.5" id="nbSpacing8Btn">8.5 mm (Amplio)</button>
             </div>
-            <div class="option-slider-row">
-              <span class="mono-val" id="nbStepValueLabel">19.8 pt (~7.0 mm)</span>
-              <input type="range" id="nbStepSlider" min="10" max="32" step="0.5" value="19.8" style="width: 100%;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <div class="form-label">
+                <span id="nbSpacingFineLabel">Ajuste preciso</span>
+                <span class="mono-val" id="nbStepValueLabel">19.8 pt (~7.0 mm)</span>
+              </div>
+              <input type="range" id="nbStepSlider" class="range-slider" min="10" max="32" step="0.5" value="19.8">
             </div>
           </div>
 
-          <!-- Section 04: Detalles de Libreta Clásica -->
+          <!-- Section 04: Encuadernación y Detalles de Libreta -->
           <div class="card">
             <div class="section-label">
-              <span id="nbDetailsSectionLabel">Detalles de Libreta</span>
+              <span id="nbDetailsSectionLabel">Encuadernación y Márgenes</span>
               <span class="section-label-sub">04</span>
             </div>
-            <div class="options-list">
-              <label class="checkbox-control">
+
+            <!-- Binding Type -->
+            <div class="form-group" style="margin-bottom: 0.85rem;">
+              <label for="nbBindingSelect" class="form-label">
+                <span id="nbBindingLabel">Tipo de encuadernación</span>
+              </label>
+              <div class="segmented-control" role="group" aria-label="Notebook Binding" style="margin-bottom: 0.45rem;">
+                <button type="button" class="segmented-btn active" id="nbBindingNoneBtn" data-nbbinding="none">
+                  <span id="nbBindingNoneText">Ninguna</span>
+                </button>
+                <button type="button" class="segmented-btn" id="nbBindingBinderBtn" data-nbbinding="binder">
+                  <span id="nbBindingBinderText">Anillas (+11mm)</span>
+                </button>
+                <button type="button" class="segmented-btn" id="nbBindingSpiralBtn" data-nbbinding="spiral">
+                  <span id="nbBindingSpiralText">Espiral (+8mm)</span>
+                </button>
+              </div>
+              <select id="nbBindingSelect" class="form-select select-control hidden" aria-hidden="true">
+                <option value="none" selected id="nbBindingNoneOpt">Ninguna (Pantalla Tablet Completa)</option>
+                <option value="spiral" id="nbBindingSpiralOpt">Espiral / Wire-O (+8 mm canaleta)</option>
+                <option value="binder" id="nbBindingBinderOpt">Anillas Archivador (+11 mm canaleta)</option>
+              </select>
+
+              <!-- Double-Sided (Duplex) Binding Margin Alternation -->
+              <div id="nbBindingOptionsGroup" class="sub-toggle-group" style="margin-top: 0.65rem;">
+                <label class="form-label" style="font-size: 0.74rem; margin-bottom: 0.3rem;">
+                  <span id="nbDuplexLabel">Margen de encuadernación (Lados de impresión)</span>
+                </label>
+                <div class="segmented-control segmented-control-sm" id="nbDuplexControl" style="margin-bottom: 0.5rem;">
+                  <button type="button" class="segmented-btn active" id="nbDuplexSimplexBtn" data-nbduplex="false" title="Margen de encuadernación siempre a la izquierda">
+                    <span id="nbDuplexSimplexText">Una cara (Izquierda)</span>
+                  </button>
+                  <button type="button" class="segmented-btn" id="nbDuplexDuplexBtn" data-nbduplex="true" title="Alterna el margen de encuadernación: Izquierda en páginas impares, Derecha en páginas pares">
+                    <span id="nbDuplexDuplexText">Doble cara (Alternar Izq./Der.)</span>
+                  </button>
+                </div>
+
+                <label class="toggle-control" for="nbHoleGuidesCheck" id="nbHoleGuidesRow" style="margin-top: 0.4rem;">
+                  <input type="checkbox" id="nbHoleGuidesCheck">
+                  <span class="toggle-switch"></span>
+                  <span class="toggle-label" id="nbHoleGuidesLabel" style="font-size: 0.78rem;">Dibujar guías de perforación / espiral</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Classic Notebook Vertical Margin Line -->
+            <div class="form-group" style="margin-top: 0.85rem; margin-bottom: 0.85rem; padding-top: 0.75rem; border-top: 1px dashed var(--border);">
+              <label class="toggle-control" for="nbMarginLineCheck">
                 <input type="checkbox" id="nbMarginLineCheck" checked>
+                <span class="toggle-switch"></span>
                 <div class="checkbox-label-group">
-                  <span class="checkbox-title" id="nbMarginLineTitle">Margen de libreta clásico</span>
-                  <span class="checkbox-desc" id="nbMarginLineDesc">Línea vertical roja/rosa a la izquierda</span>
+                  <span class="toggle-label" id="nbMarginLineTitle">Margen de libreta clásico</span>
+                  <span class="checkbox-desc" id="nbMarginLineDesc">Línea vertical roja/rosa de margen</span>
                 </div>
               </label>
+              <div id="nbMarginLineSideGroup" class="sub-toggle-group" style="margin-top: 0.45rem; margin-left: 2.85rem;">
+                <div class="segmented-control segmented-control-sm">
+                  <button type="button" class="segmented-btn active" id="nbMarginLineLeftBtn" data-mlside="left">
+                    <span id="nbMarginLineLeftText">Siempre a la izquierda</span>
+                  </button>
+                  <button type="button" class="segmented-btn" id="nbMarginLineDuplexBtn" data-mlside="duplex">
+                    <span id="nbMarginLineDuplexText">Alternar Izq. / Der.</span>
+                  </button>
+                </div>
+              </div>
+            </div>
 
-              <label class="checkbox-control">
+            <!-- Study Header -->
+            <div class="form-group" style="margin-bottom: 0.85rem;">
+              <label class="toggle-control" for="nbStudyHeaderCheck">
                 <input type="checkbox" id="nbStudyHeaderCheck">
+                <span class="toggle-switch"></span>
                 <div class="checkbox-label-group">
-                  <span class="checkbox-title" id="nbStudyHeaderTitle">Encabezado de estudio</span>
-                  <span class="checkbox-desc" id="nbStudyHeaderDesc">Barra superior con tema y fecha</span>
+                  <span class="toggle-label" id="nbStudyHeaderTitle">Encabezado de estudio</span>
+                  <span class="checkbox-desc" id="nbStudyHeaderDesc">Barra superior con asignatura y fecha</span>
                 </div>
               </label>
-
-              <div id="nbStudyHeaderFields" style="display: none; padding-left: 1.8rem; margin-top: -0.25rem; margin-bottom: 0.5rem;">
-                <input type="text" class="input-control" id="nbStudyTitleInput" placeholder="Asignatura o Tema (ej. Física Teórica)" style="width: 100%;">
+              <div id="nbStudyHeaderFields" style="display: none; margin-top: 0.5rem; margin-left: 2.85rem;">
+                <input type="text" class="form-input input-control" id="nbStudyTitleInput" placeholder="Asignatura o Tema (ej. Física Teórica)">
               </div>
+            </div>
 
-              <label class="checkbox-control">
+            <!-- Page Numbers -->
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="toggle-control" for="nbPageNumbersCheck">
                 <input type="checkbox" id="nbPageNumbersCheck">
+                <span class="toggle-switch"></span>
                 <div class="checkbox-label-group">
-                  <span class="checkbox-title" id="nbPageNumbersTitle">Números de página en el pie</span>
-                  <span class="checkbox-desc" id="nbPageNumbersDesc">Desactivar para plantilla infinita</span>
+                  <span class="toggle-label" id="nbPageNumbersTitle">Números de página en el pie</span>
+                  <span class="checkbox-desc" id="nbPageNumbersDesc">Desactivar para plantilla infinita en tablet</span>
                 </div>
               </label>
-
-              <div id="nbPageNumberFormatGroup" style="display: none; padding-left: 1.8rem; margin-bottom: 0.5rem;">
-                <div class="btn-group" role="group">
-                  <button type="button" class="btn-chip is-active" id="nbPageFormatTotalBtn">1 / 50</button>
-                  <button type="button" class="btn-chip" id="nbPageFormatSimpleBtn">1</button>
+              <div id="nbPageNumberFormatGroup" style="display: none; margin-top: 0.5rem; margin-left: 2.85rem;">
+                <div class="segmented-control segmented-control-sm" role="group">
+                  <button type="button" class="segmented-btn btn-chip active is-active" id="nbPageFormatTotalBtn">Total (1 / N)</button>
+                  <button type="button" class="segmented-btn btn-chip" id="nbPageFormatSimpleBtn">Simple (1)</button>
                 </div>
-              </div>
-
-              <div class="option-select-row" style="margin-top: 0.5rem;">
-                <label for="nbBindingSelect" class="option-row-label" id="nbBindingLabel">Guías de encuadernación:</label>
-                <select id="nbBindingSelect" class="select-control">
-                  <option value="none" selected id="nbBindingNoneOpt">Ninguna (Pantalla Tablet Completa)</option>
-                  <option value="spiral" id="nbBindingSpiralOpt">Espiral / Wire-O (+8 mm canaleta)</option>
-                  <option value="binder" id="nbBindingBinderOpt">Anillas Archivador (+11 mm canaleta)</option>
-                </select>
               </div>
             </div>
           </div>
@@ -877,62 +977,113 @@
               <span id="nbCoverSectionLabel">Portada Editorial</span>
               <span class="section-label-sub">05</span>
             </div>
-            <label class="checkbox-control" style="margin-bottom: 0.75rem;">
-              <input type="checkbox" id="nbIncludeCoverCheck">
+            <label class="toggle-control" for="nbIncludeCoverCheck" style="margin-bottom: 0.65rem;">
+              <input type="checkbox" id="nbIncludeCoverCheck" checked>
+              <span class="toggle-switch"></span>
               <div class="checkbox-label-group">
-                <span class="checkbox-title" id="nbIncludeCoverTitle">Incluir Portada Editorial</span>
-                <span class="checkbox-desc" id="nbIncludeCoverDesc">Añade página de portada al principio</span>
+                <span class="toggle-label" id="nbIncludeCoverTitle">Incluir Portada Editorial</span>
+                <span class="checkbox-desc" id="nbIncludeCoverDesc">Añade portada de colección al principio del PDF</span>
               </div>
             </label>
 
-            <div id="nbCoverFieldsGroup" style="display: none;">
-              <div class="option-select-row" style="margin-bottom: 0.6rem;">
-                <label for="nbCoverTemplateSelect" class="option-row-label">Diseño de Portada:</label>
-                <select id="nbCoverTemplateSelect" class="select-control">
-                  <optgroup label="Cuadernos Legendarios">
-                    <option value="composition">Composition Book (Agata Marble)</option>
-                    <option value="cahier">Cahier d'Écolier (Sépia / Séyès)</option>
-                    <option value="midori">Midori MD Minimalist</option>
-                    <option value="comp_blue">Composition Navy Wave</option>
-                    <option value="comp_coral">Composition Terracotta</option>
-                    <option value="comp_amber">Composition Gold Onyx</option>
-                    <option value="comp_marbled">Florentine Marbled Paper</option>
-                    <option value="comp_morris">William Morris Botanical</option>
-                  </optgroup>
-                  <optgroup label="Editoriales Clásicas">
-                    <option value="atelier" selected>Atelier Modernist</option>
-                    <option value="gallimard">Gallimard NRF Blanche</option>
-                    <option value="oxford_press">Oxford Academic Press</option>
-                    <option value="penguin">Penguin Classics</option>
-                    <option value="blueprint">Cyanotype Blueprint</option>
-                    <option value="celestial">Celestial Star Atlas</option>
-                    <option value="field_notes">Field Notes Industrial</option>
-                  </optgroup>
-                  <optgroup label="Física & Ciencias (Flat 90s Minimalist)">
-                    <option value="quantum_flat">Mecánica Cuántica III</option>
-                    <option value="biophysics_flat">Biofísica</option>
-                    <option value="complex_systems_flat">Sistemas Complejos</option>
-                    <option value="materials_sim_flat">Simulación Materiales</option>
-                    <option value="solid_state_flat">Física Estado Sólido</option>
-                    <option value="circuits_flat">Instrumentación Electrónica</option>
-                    <option value="nuclear_flat">Física Nuclear y Partículas</option>
-                  </optgroup>
-                  <optgroup label="Épocas & Estilos">
-                    <option value="nineteen00s">1900s Art Nouveau</option>
-                    <option value="twenties">1920s Art Deco</option>
-                    <option value="fifties">1950s Mid-Century</option>
-                    <option value="sixties">1960s Swiss Modernism</option>
-                    <option value="seventies">1970s Apollo Warm</option>
-                    <option value="eighties">1980s Memphis Tech</option>
-                    <option value="nineties">1990s Indie Lookbook</option>
-                    <option value="natural">Natural Forest Green</option>
-                  </optgroup>
-                </select>
+            <div id="nbCoverFieldsGroup" class="sub-form-group">
+              <label for="nbCoverTemplateSelect" class="form-label" style="font-size: 0.75rem; margin-bottom: 0.25rem;">
+                <span id="nbCoverTemplateLabel">Estilo de Portada (55 diseños)</span>
+              </label>
+
+              <!-- Category Filter Pills for Notebook Studio -->
+              <div class="cover-filter-row" id="nbCoverFilterRow" role="group" aria-label="Notebook Cover Categories">
+                <button type="button" class="cover-cat-pill active" data-nb-cover-cat="all">Todas</button>
+                <button type="button" class="cover-cat-pill" data-nb-cover-cat="nbGroupEditorialStandard">Editoriales</button>
+                <button type="button" class="cover-cat-pill" data-nb-cover-cat="nbGroupScienceFlat">Ciencia 90s</button>
+                <button type="button" class="cover-cat-pill" data-nb-cover-cat="nbGroupScience">Ciencia IA</button>
+                <button type="button" class="cover-cat-pill" data-nb-cover-cat="nbGroupNotebooks">Composition</button>
+                <button type="button" class="cover-cat-pill" data-nb-cover-cat="nbGroupClassics">Clásicos</button>
+                <button type="button" class="cover-cat-pill" data-nb-cover-cat="nbGroupDecades">Décadas</button>
+                <button type="button" class="cover-cat-pill" data-nb-cover-cat="nbGroupSeasons">Estaciones</button>
+                <button type="button" class="cover-cat-pill" data-nb-cover-cat="nbGroupRalphLauren">Ralph Lauren</button>
+                <button type="button" class="cover-cat-pill" data-nb-cover-cat="nbGroupNature">Naturaleza</button>
               </div>
 
-              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <input type="text" class="input-control" id="nbCoverTitleInput" placeholder="Título de la Libreta" value="Cuaderno de Apuntes">
-                <input type="text" class="input-control" id="nbCoverAuthorInput" placeholder="Autor o Estudiante (Opcional)">
+              <select id="nbCoverTemplateSelect" class="form-select select-control" style="margin-bottom: 0.5rem;">
+                <optgroup label="Edición Estándar &amp; Editoriales Clásicas (Editorial Presses &amp; Notebooks)" id="nbGroupEditorialStandard">
+                  <option value="penguin">Penguin Classics (1935 Tri-Band Vintage)</option>
+                  <option value="gallimard">Gallimard NRF (Collection Blanche &amp; Filets)</option>
+                  <option value="oxford_press">Oxford Academic Press (Clarendon Monograph)</option>
+                  <option value="cahier">Cahier d'Écolier (French Seyès Notebook)</option>
+                  <option value="midori">Midori MD (Japanese Minimalist &amp; Hanko)</option>
+                  <option value="blueprint">Cyanotype Blueprint (Architectural Drafting)</option>
+                  <option value="celestial">Celestial Star Atlas (Harmonia Macrocosmica)</option>
+                  <option value="field_notes">Field Notes (Industrial Utility &amp; Rubric)</option>
+                </optgroup>
+                <optgroup label="Clásicos / Zara" id="nbGroupClassics">
+                  <option value="atelier" selected>Atelier Notebook (Zara Home Classic)</option>
+                  <option value="george">George 90s (JFK Jr Executive)</option>
+                  <option value="monograph">Archival Monograph (Heritage Bookplate)</option>
+                  <option value="bauhaus">Swiss Modernist (Mid-Century Editorial)</option>
+                </optgroup>
+                <optgroup label="Composition Book" id="nbGroupNotebooks">
+                  <option value="composition">Composition Book (Classic B&amp;W)</option>
+                  <option value="comp_blue">Composition Book (Blue &amp; Gold Wave)</option>
+                  <option value="comp_coral">Composition Book (Coral &amp; Slate Swirl)</option>
+                  <option value="comp_amber">Composition Book (Amber Onyx)</option>
+                  <option value="comp_marbled">Composition Book (Florentine Stone)</option>
+                  <option value="comp_morris">Composition Book (William Morris Flora)</option>
+                  <option value="comp_ukiyoe">Composition Book (Japanese Woodblock)</option>
+                  <option value="comp_flora">Composition Book (Dutch Floral Still Life)</option>
+                  <option value="comp_pastoral">Composition Book (Pastoral Landscape)</option>
+                </optgroup>
+                <optgroup label="Física y Ciencias (Diseño Plano 90s / Flat Minimalist)" id="nbGroupScienceFlat">
+                  <option value="quantum_flat">Mecánica Cuántica III (Diseño Plano · 90s Monograph)</option>
+                  <option value="biophysics_flat">Biofísica (Diseño Plano · Molecular 90s)</option>
+                  <option value="complex_systems_flat">Física de los Sistemas Complejos (Diseño Plano · Chaos Attractor)</option>
+                  <option value="materials_sim_flat">Simulación en Física de Materiales (Diseño Plano · HPC Lattice)</option>
+                  <option value="solid_state_flat">Física del Estado Sólido (Diseño Plano · Brillouin Zone)</option>
+                  <option value="circuits_flat">Fundamentos de Instrumentación Electrónica (Diseño Plano · Schematics)</option>
+                  <option value="nuclear_flat">Física Nuclear &amp; de Partículas (Diseño Plano · Feynman &amp; Collider)</option>
+                </optgroup>
+                <optgroup label="Física y Ciencias (Ilustrada IA / AI Composition)" id="nbGroupScience">
+                  <option value="biophysics_ml">Biofísica (Ilustrada · AlphaFold Cyan)</option>
+                  <option value="atmospheric_chaos">Física de los Sistemas Complejos (Ilustrada · Lorenz Storm)</option>
+                  <option value="fortran_materials">Simulación en Física de Materiales (Ilustrada · Terminal Phosphor)</option>
+                  <option value="nuclear_particles">Física Nuclear &amp; de Partículas (Ilustrada · Collider Cosmic)</option>
+                  <option value="solid_state">Física del Estado Sólido (Ilustrada · Brillouin Zone)</option>
+                  <option value="atomic_physics">Mecánica Cuántica III (Ilustrada · Spectroscopy Violet)</option>
+                  <option value="circuits_instrumentation">Fundamentos de Instrumentación Electrónica (Ilustrada · PCB Green)</option>
+                </optgroup>
+                <optgroup label="Décadas" id="nbGroupDecades">
+                  <option value="nineteen00s">1900s (Art Nouveau Belle Époque)</option>
+                  <option value="nineteen10s">1910s (Edwardian Press Bulletin)</option>
+                  <option value="twenties">1920s (Art Deco Golden Era)</option>
+                  <option value="thirties">1930s (Streamline Moderne)</option>
+                  <option value="forties">1940s (Typewriter Press Brief)</option>
+                  <option value="fifties">Fifties (Mid-Century Pelican 1950s)</option>
+                  <option value="sixties">Sixties (Swiss International 1960s)</option>
+                  <option value="seventies">Seventies (Retro Warm Groove 1970s)</option>
+                  <option value="eighties">Eighties (Memphis Tech 1980s)</option>
+                  <option value="nineties">Nineties (Minimalist Lookbook 1990s)</option>
+                  <option value="twothousands">2000s (Y2K Cyber Millennium)</option>
+                  <option value="twenty10s">2010s (Flat Design &amp; Startup)</option>
+                  <option value="twentytwenties">2020s (Neubrutalism &amp; AI Era)</option>
+                </optgroup>
+                <optgroup label="Estaciones" id="nbGroupSeasons">
+                  <option value="spring">Spring (Vernal Blossom &amp; Sage)</option>
+                  <option value="summer">Summer (Aegean Azure &amp; Gold)</option>
+                  <option value="autumn">Autumn (Terracotta &amp; Amber)</option>
+                  <option value="winter">Winter (Nordic Frost &amp; Slate)</option>
+                </optgroup>
+                <optgroup label="Ralph Lauren" id="nbGroupRalphLauren">
+                  <option value="polo">Polo (Collegiate Navy &amp; Shield)</option>
+                  <option value="equestrian">Equestrian (Heritage Green &amp; Crest)</option>
+                </optgroup>
+                <optgroup label="Naturaleza" id="nbGroupNature">
+                  <option value="natural">Natural (Deep Forest Editorial)</option>
+                </optgroup>
+              </select>
+
+              <div style="display: flex; flex-direction: column; gap: 0.45rem;">
+                <input type="text" class="form-input input-control" id="nbCoverTitleInput" placeholder="Título de la Libreta" value="Cuaderno de Apuntes">
+                <input type="text" class="form-input input-control" id="nbCoverAuthorInput" placeholder="Autor, Asignatura o Curso (Opcional)">
               </div>
             </div>
           </div>
@@ -943,47 +1094,80 @@
               <span id="nbPagesSectionLabel">Páginas y Formato</span>
               <span class="section-label-sub">06</span>
             </div>
-            <div class="option-select-row" style="margin-bottom: 0.75rem;">
-              <label for="nbPaperSizeSelect" class="option-row-label">Tamaño de papel:</label>
-              <select id="nbPaperSizeSelect" class="select-control">
-                <option value="a4" selected>DIN A4 (Ideal para Tablet &amp; Impresión)</option>
+            <div class="form-group" style="margin-bottom: 0.85rem;">
+              <label for="nbPaperSizeSelect" class="form-label" id="nbPaperSizeLabel">Tamaño de papel</label>
+              <select id="nbPaperSizeSelect" class="form-select select-control">
+                <option value="a4" selected>DIN A4 (210 × 297 mm · Tablet &amp; Impresión)</option>
                 <option value="letter">US Letter (216 × 279 mm)</option>
                 <option value="legal">US Legal (216 × 356 mm)</option>
-                <option value="a3">DIN A3 (Lienzo grande)</option>
+                <option value="a3">DIN A3 (297 × 420 mm · Lienzo grande)</option>
               </select>
             </div>
 
-            <div style="margin-bottom: 0.5rem;">
-              <span class="option-row-label" style="display: block; margin-bottom: 0.35rem;" id="nbPageCountHeader">Número de hojas:</span>
-              <div class="btn-group" role="group" style="flex-wrap: wrap;">
-                <button type="button" class="btn-chip" data-nbpages="1" id="nbPages1Btn" title="Plantilla maestra: en Samsung Notes añade páginas infinitas de esta plantilla">1 pág (Plantilla)</button>
-                <button type="button" class="btn-chip" data-nbpages="25" id="nbPages25Btn">25 págs</button>
-                <button type="button" class="btn-chip is-active" data-nbpages="50" id="nbPages50Btn">50 págs</button>
-                <button type="button" class="btn-chip" data-nbpages="80" id="nbPages80Btn">80 págs</button>
-                <button type="button" class="btn-chip" data-nbpages="100" id="nbPages100Btn">100 págs</button>
+            <div class="form-group" style="margin-bottom: 0;">
+              <div class="form-label">
+                <span id="nbPageCountHeader">Número de páginas interiores</span>
+              </div>
+              <div class="segmented-control segmented-control-sm" role="group" style="margin-bottom: 0.5rem; flex-wrap: wrap;">
+                <button type="button" class="segmented-btn btn-chip" data-nbpages="1" id="nbPages1Btn" title="Plantilla maestra: en Samsung Notes añade páginas infinitas de esta plantilla">1 pág</button>
+                <button type="button" class="segmented-btn btn-chip" data-nbpages="25" id="nbPages25Btn">25 págs</button>
+                <button type="button" class="segmented-btn btn-chip active is-active" data-nbpages="50" id="nbPages50Btn">50 págs</button>
+                <button type="button" class="segmented-btn btn-chip" data-nbpages="80" id="nbPages80Btn">80 págs</button>
+                <button type="button" class="segmented-btn btn-chip" data-nbpages="100" id="nbPages100Btn">100 págs</button>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <input type="number" class="form-input input-control" id="nbPagesInput" min="1" max="500" value="50" style="width: 110px;">
+                <span style="font-size: 0.75rem; color: var(--text-muted);" id="nbPagesCustomHint">páginas (1–500)</span>
               </div>
             </div>
-            <input type="number" class="input-control" id="nbPagesInput" min="1" max="500" value="50" style="width: 100px; margin-top: 0.25rem;">
           </div>
 
-          <!-- Section 07: Botón de Descarga Inmediata -->
-          <div class="card" style="background: var(--bg-surface-elevated); border-color: var(--border-dark);">
-            <button type="button" class="btn-primary" id="downloadNotebookStudioBtn" style="width: 100%; justify-content: center; padding: 0.85rem 1rem; font-size: 1rem; font-weight: 700;">
-              <span id="downloadNotebookStudioBtnText">📥 Descargar Libreta PDF</span>
+          <!-- Section 07: Acciones de Descarga e Impresión -->
+          <div class="action-stack">
+            <button type="button" class="btn-cta-lg" id="downloadNotebookStudioBtn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span id="downloadNotebookStudioBtnText">Descargar Libreta PDF</span>
+            </button>
+            <button type="button" class="btn-secondary" id="printNotebookStudioBtn" style="width: 100%;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              <span id="printNotebookStudioBtnText">Imprimir Libreta</span>
             </button>
           </div>
 
         </aside>
 
         <!-- Preview Column -->
-        <section class="preview-stage" id="nbPreviewStage" aria-label="Notebook live preview">
+        <section class="preview-pane preview-stage" id="nbPreviewStage" aria-label="Notebook live preview">
           <!-- Toolbar over canvas -->
-          <div class="preview-controls-bar">
-            <div class="preview-tabs-track">
-              <button type="button" class="btn-secondary-xs is-active" id="nbTabSheetBtn">📄 Hoja de Notas</button>
-              <button type="button" class="btn-secondary-xs" id="nbTabCoverBtn" style="display: none;">🎨 Portada</button>
+          <div class="preview-toolbar preview-controls-bar">
+            <div class="toolbar-group preview-tabs-track">
+              <button type="button" class="tool-btn active is-active" id="nbTabSheetBtn">📄 Hoja Interior</button>
+              <button type="button" class="tool-btn" id="nbTabCoverBtn">🎨 Portada</button>
             </div>
-            <div class="preview-status-pill" id="nbPreviewBadge">Live Stylus Preview</div>
+
+            <!-- Page & Recto/Verso Side Switcher -->
+            <div class="toolbar-group" id="nbSheetNavGroup">
+              <button type="button" class="nav-btn" id="nbPrevPageBtn" title="Página anterior (Impar / Par)" aria-label="Previous notebook page">←</button>
+              <span class="zoom-level-text" id="nbPageIndicator" style="min-width: 82px;">Pág. 1 / 50</span>
+              <button type="button" class="nav-btn" id="nbNextPageBtn" title="Página siguiente (Impar / Par)" aria-label="Next notebook page">→</button>
+              <button type="button" class="tool-btn active" id="nbSideRectoBtn" title="Ver página Impar (Recto · Margen Izquierdo)">Impar (Izq.)</button>
+              <button type="button" class="tool-btn" id="nbSideVersoBtn" title="Ver página Par (Verso · Margen Derecho en Dúplex)">Par (Der.)</button>
+            </div>
+
+            <div class="toolbar-group">
+              <button type="button" class="tool-btn" id="nbZoomOutBtn" title="Reducir zoom">−</button>
+              <span class="zoom-level-text" id="nbZoomLevelText">100%</span>
+              <button type="button" class="tool-btn" id="nbZoomInBtn" title="Aumentar zoom">+</button>
+              <button type="button" class="tool-btn" id="nbZoomFitBtn" title="Ajustar página">Fit</button>
+            </div>
           </div>
 
           <div class="paper-container" id="nbPaperContainer">

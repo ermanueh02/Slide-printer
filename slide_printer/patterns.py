@@ -137,6 +137,7 @@ def create_notes_overlay(
     gutter_margin: float = 0.0,
     paper_tint: str = "white",
     margin_line: bool = False,
+    mirror_margin_line: bool = False,
 ) -> PageObject:
     """Creates a PDF overlay page containing the notes pattern.
 
@@ -293,8 +294,8 @@ def create_notes_overlay(
 
     # Optional vertical red/grey margin line (classic school / collegiate notebook style)
     if margin_line and norm_style in ("lines", "lineas", "line", "cornell"):
-        margin_x = x1 + 60.0  # ~21 mm from writing edge
-        if margin_x < x2 - 50.0:
+        margin_x = (x2 - 60.0) if (is_verso and mirror_margin_line) else (x1 + 60.0)
+        if x1 + 40.0 < margin_x < x2 - 40.0:
             if is_dark_paper:
                 c.setStrokeColor(Color(0.95, 0.40, 0.45, alpha=0.35))
             else:
@@ -348,6 +349,7 @@ def create_notebook_page(
     gutter_margin: float = 0.0,
     paper_tint: str = "white",
     margin_line: bool = False,
+    mirror_margin_line: bool = False,
 ) -> PageObject:
     """Creates a full-sheet note page (for notebooks and notepads).
 
@@ -386,6 +388,7 @@ def create_notebook_page(
         gutter_margin=gutter_margin,
         paper_tint=paper_tint,
         margin_line=margin_line,
+        mirror_margin_line=mirror_margin_line,
     )
 
 

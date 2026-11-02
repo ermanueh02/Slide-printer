@@ -4302,14 +4302,19 @@
     const totalPages = options.totalPages || options.numPages || 50;
     const binding = (options.binding || 'none').toLowerCase();
     const holeGuides = Boolean(options.holeGuides);
-    const gutterMargin = options.gutter !== undefined
+    const duplex = Boolean(options.duplex);
+    const gutterMargin = (options.gutter !== undefined && Number(options.gutter) > 0)
       ? Number(options.gutter)
-      : (binding === 'binder' ? 30.0 : (binding === 'spiral' ? 22.0 : 0.0));
+      : (binding === 'binder' ? 30.0 : (binding === 'spiral' ? 22.0 : (duplex ? 22.0 : 0.0)));
     const studyHeader = Boolean(options.studyHeader);
     const studyTitle = options.studyTitle || '';
     const paperTint = (options.paperTint || 'ivory').toLowerCase();
     const marginLine = Boolean(options.marginLine);
+    const mirrorMarginLine = options.mirrorMarginLine !== undefined ? Boolean(options.mirrorMarginLine) : duplex;
     const activeTab = options.activeTab || 'sheet'; // 'sheet' | 'cover'
+    const pageNum = options.pageNum !== undefined ? Math.max(1, Number(options.pageNum)) : 1;
+    const isOddSheet = options.isVerso !== undefined ? !options.isVerso : (pageNum % 2 === 1);
+    const isVerso = duplex && !isOddSheet;
 
     const scaleFactor = Math.max(dpr, 2);
     canvas.width = Math.round(paperWidth * scaleFactor);
@@ -4327,10 +4332,12 @@
     if (activeTab === 'cover') {
       renderPreviewEditorialCover(ctx, paperWidth, paperHeight, {
         ...options,
+        gutterMargin,
+        pageNum: 1,
         isNotebook: true,
       });
-      if (holeGuides && binding !== 'none') {
-        drawPreviewBindingGuides(ctx, paperWidth, paperHeight, binding, false, false, holeGuides);
+      if (binding !== 'none') {
+        drawPreviewBindingGuides(ctx, paperWidth, paperHeight, binding, duplex, true, holeGuides);
       }
       ctx.restore();
       return;
@@ -4358,7 +4365,8 @@
     ctx.lineWidth = 1;
     ctx.strokeRect(0, 0, paperWidth, paperHeight);
 
-    const xOffset = margin + gutterMargin;
+    const leftGutter = isVerso ? 0 : gutterMargin;
+    const xOffset = margin + leftGutter;
     const availableWidth = paperWidth - 2 * margin - gutterMargin;
     const x1 = xOffset;
     const x2 = xOffset + availableWidth;
@@ -4477,8 +4485,9 @@
 
     // Classic Red/Pink Margin line
     if (marginLine && (style === 'lines' || style === 'cornell')) {
-      const redMarginX = x1 + 52;
-      if (redMarginX < x2 - 40) {
+      const mirrorLine = mirrorMarginLine && isVerso;
+      const redMarginX = mirrorLine ? (x2 - 52) : (x1 + 52);
+      if (redMarginX > x1 + 40 && redMarginX < x2 - 40) {
         ctx.strokeStyle = isDark ? 'rgba(245, 110, 120, 0.40)' : 'rgba(220, 60, 60, 0.32)';
         ctx.lineWidth = 0.7;
         ctx.beginPath();
@@ -4490,7 +4499,7 @@
 
     // Footer Page Number
     if (pageNumbers) {
-      const numStr = pageNumberFormat === 'total' ? `1 / ${totalPages}` : '1';
+      const numStr = pageNumberFormat === 'total' ? `${pageNum} / ${totalPages}` : String(pageNum);
       ctx.font = '500 8.5px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = isDark ? 'rgba(220, 230, 245, 0.65)' : 'rgba(70, 70, 70, 0.65)';
       ctx.textAlign = 'center';
@@ -4498,8 +4507,19 @@
     }
 
     // Optional Binding guides
-    if (holeGuides && binding !== 'none') {
-      drawPreviewBindingGuides(ctx, paperWidth, paperHeight, binding, false, false, holeGuides);
+    if (binding !== 'none') {
+      drawPreviewBindingGuides(ctx, paperWidth, paperHeight, binding, duplex, isOddSheet, holeGuides);
+    } else if (duplex && gutterMargin > 0) {
+      const spineX = isVerso ? (paperWidth - gutterMargin) : gutterMargin;
+      ctx.save();
+      ctx.strokeStyle = isDark ? 'rgba(220, 230, 245, 0.24)' : 'rgba(100, 100, 115, 0.28)';
+      ctx.lineWidth = 0.6;
+      ctx.setLineDash([3, 4]);
+      ctx.beginPath();
+      ctx.moveTo(spineX, 24);
+      ctx.lineTo(spineX, paperHeight - 24);
+      ctx.stroke();
+      ctx.restore();
     }
 
     ctx.restore();

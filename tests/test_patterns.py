@@ -296,8 +296,53 @@ def test_create_notebook_page_tints_margin_and_cornell():
     assert isinstance(oled_page, PageObject)
 
 
+def test_create_notebook_page_duplex_and_mirror_margin_line():
+    from slide_printer.patterns import create_notebook_page
+    a4_size = PAPER_SIZES["a4"]
+    margin = 40.0
+    gutter = 30.0
+    width = a4_size[0] - 2 * margin - gutter
+
+    recto_page = create_notebook_page(
+        page_size=a4_size,
+        margin=margin + gutter,
+        width=width,
+        bottom_margin=margin,
+        style="lines",
+        margin_line=True,
+        mirror_margin_line=True,
+        binding="binder",
+        hole_guides=True,
+        is_verso=False,
+        gutter_margin=gutter,
+        page_number=1,
+        total_pages=10,
+    )
+    verso_page = create_notebook_page(
+        page_size=a4_size,
+        margin=margin,
+        width=width,
+        bottom_margin=margin,
+        style="lines",
+        margin_line=True,
+        mirror_margin_line=True,
+        binding="binder",
+        hole_guides=True,
+        is_verso=True,
+        gutter_margin=gutter,
+        page_number=2,
+        total_pages=10,
+    )
+    assert isinstance(recto_page, PageObject)
+    assert isinstance(verso_page, PageObject)
+    assert "1 / 10" in recto_page.extract_text()
+    assert "2 / 10" in verso_page.extract_text()
+
+
+
 def test_editorial_covers_with_binding_gutter():
     """Verify that editorial covers render correctly with binding gutter and hole guides."""
+    from slide_printer.patterns import generate_cover_page
     a4_size = PAPER_SIZES["a4"]
     editorial_templates = [
         "penguin",

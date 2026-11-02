@@ -109,6 +109,7 @@
       optCoverCleanFirst: "1st slide as cover (No notes)",
       optCoverGenerate: "Generate editorial cover",
       coverTemplateLabel: "Cover Template Style",
+      groupEditorialStandard: "Editorial Standards (Monochrome)",
       groupClassics: "Classics / Zara",
       groupNotebooks: "Composition Books",
       groupScienceFlat: "Physics & Sciences (Flat 90s Minimalist)",
@@ -117,6 +118,14 @@
       groupSeasons: "Seasons",
       groupRalphLauren: "Ralph Lauren",
       groupNature: "Nature",
+      optTemplateNineteen00s: "1900s (Belle Époque & Art Nouveau)",
+      optTemplateNineteen10s: "1910s (Early Avant-Garde Gazette)",
+      optTemplateTwenties: "1920s (Art Deco & Geometric Gold)",
+      optTemplateThirties: "1930s (Streamline Moderne Press)",
+      optTemplateForties: "1940s (Wartime Technical Manual)",
+      optTemplateTwothousands: "2000s (Y2K Cyber & Chrome Vector)",
+      optTemplateTwenty10s: "2010s (Kinfolk Minimalist Editorial)",
+      optTemplateTwentytwenties: "2020s (Neo-Brutalist Swiss Spec)",
       optTemplateQuantumFlat: "Quantum Mechanics III (Flat Minimalist · 90s Monograph)",
       optTemplateBiophysicsFlat: "Biophysics (Flat Minimalist · Molecular 90s)",
       optTemplateComplexSystemsFlat: "Physics of Complex Systems (Flat Minimalist · Chaos Attractor)",
@@ -283,6 +292,7 @@
       optCoverCleanFirst: "1ª diapositiva como portada (sin notas)",
       optCoverGenerate: "Generar portada nueva",
       coverTemplateLabel: "Estilo de portada editorial",
+      groupEditorialStandard: "Estándares Editoriales (Monocromo)",
       groupClassics: "Clásicos / Zara",
       groupNotebooks: "Composition Book",
       groupScienceFlat: "Física y Ciencias (Diseño Plano 90s)",
@@ -291,6 +301,14 @@
       groupSeasons: "Estaciones",
       groupRalphLauren: "Ralph Lauren",
       groupNature: "Naturaleza",
+      optTemplateNineteen00s: "Años 1900 (Belle Époque & Art Nouveau)",
+      optTemplateNineteen10s: "Años 1910 (Gaceta Vanguardista)",
+      optTemplateTwenties: "Años 20 (Art Déco & Geometría Dorada)",
+      optTemplateThirties: "Años 30 (Streamline Moderne Editorial)",
+      optTemplateForties: "Años 40 (Manual Técnico de Archivo)",
+      optTemplateTwothousands: "Años 2000 (Y2K Cyber & Vector Cromo)",
+      optTemplateTwenty10s: "Años 2010 (Kinfolk Minimalista Editorial)",
+      optTemplateTwentytwenties: "Años 2020 (Neo-Brutalismo Suizo)",
       optTemplateQuantumFlat: "Mecánica Cuántica III (Diseño Plano · Monografía 90s)",
       optTemplateBiophysicsFlat: "Biofísica (Diseño Plano · Molecular 90s)",
       optTemplateComplexSystemsFlat: "Física de los Sistemas Complejos (Diseño Plano · Atractor Caos)",
@@ -457,6 +475,7 @@
       optCoverCleanFirst: "1ª diapositiva como portada (sen notas)",
       optCoverGenerate: "Xerar portada nova",
       coverTemplateLabel: "Estilo de portada editorial",
+      groupEditorialStandard: "Estándares Editoriais (Monocromo)",
       groupClassics: "Clásicos / Zara",
       groupNotebooks: "Composition Book",
       groupScienceFlat: "Física e Ciencias (Deseño Plano 90s)",
@@ -465,6 +484,14 @@
       groupSeasons: "Estacións",
       groupRalphLauren: "Ralph Lauren",
       groupNature: "Natureza",
+      optTemplateNineteen00s: "Anos 1900 (Belle Époque & Art Nouveau)",
+      optTemplateNineteen10s: "Anos 1910 (Gaceta Vangardista)",
+      optTemplateTwenties: "Anos 20 (Art Déco & Xeometría Dourada)",
+      optTemplateThirties: "Anos 30 (Streamline Moderne Editorial)",
+      optTemplateForties: "Anos 40 (Manual Técnico de Arquivo)",
+      optTemplateTwothousands: "Anos 2000 (Y2K Cyber & Vector Cromo)",
+      optTemplateTwenty10s: "Anos 2010 (Kinfolk Minimalista Editorial)",
+      optTemplateTwentytwenties: "Anos 2020 (Neo-Brutalismo Suízo)",
       optTemplateQuantumFlat: "Mecánica Cuántica III (Deseño Plano · Monografía 90s)",
       optTemplateBiophysicsFlat: "Biofísica (Deseño Plano · Molecular 90s)",
       optTemplateComplexSystemsFlat: "Física dos Sistemas Complexos (Deseño Plano · Atractor Caos)",
@@ -855,6 +882,7 @@
       const el = document.getElementById(id);
       if (el && label) el.label = label;
     };
+    setOptgroupLabel('groupEditorialStandard', dict.groupEditorialStandard);
     setOptgroupLabel('groupClassics', dict.groupClassics);
     setOptgroupLabel('groupNotebooks', dict.groupNotebooks);
     setOptgroupLabel('groupScienceFlat', dict.groupScienceFlat);
@@ -864,6 +892,14 @@
     setOptgroupLabel('groupRalphLauren', dict.groupRalphLauren);
     setOptgroupLabel('groupNature', dict.groupNature);
 
+    setText('optTemplateNineteen00s', dict.optTemplateNineteen00s);
+    setText('optTemplateNineteen10s', dict.optTemplateNineteen10s);
+    setText('optTemplateTwenties', dict.optTemplateTwenties);
+    setText('optTemplateThirties', dict.optTemplateThirties);
+    setText('optTemplateForties', dict.optTemplateForties);
+    setText('optTemplateTwothousands', dict.optTemplateTwothousands);
+    setText('optTemplateTwenty10s', dict.optTemplateTwenty10s);
+    setText('optTemplateTwentytwenties', dict.optTemplateTwentytwenties);
     setText('optTemplateQuantumFlat', dict.optTemplateQuantumFlat);
     setText('optTemplateBiophysicsFlat', dict.optTemplateBiophysicsFlat);
     setText('optTemplateComplexSystemsFlat', dict.optTemplateComplexSystemsFlat);
@@ -915,6 +951,23 @@
     setText('optTemplatePolo', dict.optTemplatePolo);
     setText('optTemplateEquestrian', dict.optTemplateEquestrian);
     setText('optTemplateNatural', dict.optTemplateNatural);
+
+    // Sync localized cover template labels & options into Notebook Studio's #nbCoverTemplateSelect
+    const mainCoverSelect = document.getElementById('coverTemplateSelect');
+    const nbCoverSelect = document.getElementById('nbCoverTemplateSelect');
+    if (mainCoverSelect && nbCoverSelect) {
+      const mainGroups = mainCoverSelect.querySelectorAll('optgroup');
+      const nbGroups = nbCoverSelect.querySelectorAll('optgroup');
+      mainGroups.forEach((mg, idx) => {
+        if (nbGroups[idx]) nbGroups[idx].label = mg.label;
+      });
+      const mainOpts = mainCoverSelect.querySelectorAll('option');
+      mainOpts.forEach((mo) => {
+        const nbOpt = nbCoverSelect.querySelector(`option[value="${mo.value}"]`);
+        if (nbOpt) nbOpt.textContent = mo.textContent;
+      });
+    }
+
     const coverTitleInput = document.getElementById('coverTitleInput');
     if (coverTitleInput && dict.coverTitlePlaceholder) coverTitleInput.placeholder = dict.coverTitlePlaceholder;
     const coverAuthorInput = document.getElementById('coverAuthorInput');
@@ -1180,19 +1233,23 @@
       style: 'lines',
       step: 19.8,
       marginLine: true,
+      mirrorMarginLine: false,
       studyHeader: false,
       studyTitle: '',
-      pageNumbers: false,
+      pageNumbers: true,
       pageNumberFormat: 'total',
       binding: 'none',
+      duplex: false,
       holeGuides: false,
-      includeCover: false,
+      includeCover: true,
       coverTemplate: 'atelier',
       coverTitle: 'Cuaderno de Apuntes',
       coverAuthor: '',
       paperSize: 'a4',
       numPages: 50,
       activeTab: 'sheet',
+      previewPage: 1,
+      zoom: 1.0,
     };
 
     const initialHero = document.getElementById('initialHero');
@@ -1205,8 +1262,38 @@
     const generateNotebookWorkspaceBtn = document.getElementById('generateNotebookWorkspaceBtn');
     const nbPreviewCanvas = document.getElementById('nbPreviewCanvas');
 
+    function applyNotebookZoom() {
+      if (!nbPreviewCanvas) return;
+      nbPreviewCanvas.style.transform = `scale(${notebookState.zoom})`;
+      nbPreviewCanvas.style.transformOrigin = 'center top';
+      const nbZoomLevelText = document.getElementById('nbZoomLevelText');
+      if (nbZoomLevelText) {
+        nbZoomLevelText.textContent = `${Math.round(notebookState.zoom * 100)}%`;
+      }
+    }
+
+    function setNotebookPreviewTab(tab) {
+      notebookState.activeTab = tab;
+      const nbTabSheetBtn = document.getElementById('nbTabSheetBtn');
+      const nbTabCoverBtn = document.getElementById('nbTabCoverBtn');
+      if (nbTabSheetBtn) nbTabSheetBtn.classList.toggle('is-active', tab === 'sheet');
+      if (nbTabCoverBtn) nbTabCoverBtn.classList.toggle('is-active', tab === 'cover');
+    }
+
     function renderNotebookStudioPreview() {
       if (!nbPreviewCanvas || !SlidePrinterPreview.renderNotebookPreview) return;
+
+      if (notebookState.previewPage > notebookState.numPages) {
+        notebookState.previewPage = notebookState.numPages;
+      }
+      if (notebookState.previewPage < 1) {
+        notebookState.previewPage = 1;
+      }
+
+      const gutterVal = notebookState.binding === 'binder'
+        ? 30
+        : (notebookState.binding === 'spiral' ? 22 : (notebookState.duplex ? 22 : 0));
+
       SlidePrinterPreview.renderNotebookPreview(nbPreviewCanvas, {
         paperDimensions: SlidePrinterEngine.PAPER_SIZES[notebookState.paperSize] || SlidePrinterEngine.PAPER_SIZES.a4,
         margin: 40.0,
@@ -1216,17 +1303,42 @@
         pageNumberFormat: notebookState.pageNumberFormat,
         totalPages: notebookState.numPages,
         numPages: notebookState.numPages,
+        pageNum: notebookState.previewPage,
         binding: notebookState.binding,
+        gutter: gutterVal,
+        duplex: notebookState.duplex,
         holeGuides: notebookState.holeGuides,
         studyHeader: notebookState.studyHeader,
         studyTitle: notebookState.studyTitle,
         paperTint: notebookState.paperTint,
         marginLine: notebookState.marginLine,
+        mirrorMarginLine: notebookState.mirrorMarginLine,
         activeTab: notebookState.activeTab,
         coverTemplate: notebookState.coverTemplate,
         coverTitle: notebookState.coverTitle,
         coverAuthor: notebookState.coverAuthor,
       });
+
+      // Update page navigator & Recto/Verso indicators
+      const nbPageIndicator = document.getElementById('nbPageIndicator');
+      const nbPrevPageBtn = document.getElementById('nbPrevPageBtn');
+      const nbNextPageBtn = document.getElementById('nbNextPageBtn');
+      const nbSideRectoBtn = document.getElementById('nbSideRectoBtn');
+      const nbSideVersoBtn = document.getElementById('nbSideVersoBtn');
+      const isOdd = (notebookState.previewPage % 2) === 1;
+
+      if (nbPageIndicator) {
+        if (notebookState.activeTab === 'cover') {
+          nbPageIndicator.textContent = 'Portada Editorial';
+        } else {
+          const sideLabel = isOdd ? 'Impar · Izq.' : 'Par · Der.';
+          nbPageIndicator.textContent = `Pág. ${notebookState.previewPage}/${notebookState.numPages} (${sideLabel})`;
+        }
+      }
+      if (nbPrevPageBtn) nbPrevPageBtn.disabled = (notebookState.activeTab === 'cover' || notebookState.previewPage <= 1);
+      if (nbNextPageBtn) nbNextPageBtn.disabled = (notebookState.activeTab === 'cover' || notebookState.previewPage >= notebookState.numPages);
+      if (nbSideRectoBtn) nbSideRectoBtn.classList.toggle('active', notebookState.activeTab === 'sheet' && isOdd);
+      if (nbSideVersoBtn) nbSideVersoBtn.classList.toggle('active', notebookState.activeTab === 'sheet' && !isOdd);
 
       // Update footer summary
       const summaryElem = document.getElementById('nbPreviewSummaryText');
@@ -1234,10 +1346,102 @@
         const tintNames = { ivory: 'Papel Marfil', white: 'Blanco Puro', dark: 'Dark OLED', legal: 'Amarillo Legal', sage: 'Menta Suave' };
         const styleNames = { lines: 'Renglones', grid: 'Cuadrícula', dots: 'Puntos', cornell: 'Cornell Notes', blank: 'En Blanco' };
         const mm = (notebookState.step * 25.4 / 72).toFixed(1);
+        const duplexPart = notebookState.duplex ? ' · Doble Cara (Alterno Izq./Der.)' : '';
         const coverPart = notebookState.includeCover ? ' · Con Portada' : '';
-        const marginPart = notebookState.marginLine ? ' · Margen Clásico' : '';
-        summaryElem.textContent = `${notebookState.paperSize.toUpperCase()} · ${tintNames[notebookState.paperTint] || 'Papel'} · ${styleNames[notebookState.style] || 'Líneas'} (${mm} mm) · ${notebookState.numPages} págs${marginPart}${coverPart}`;
+        const marginPart = notebookState.marginLine
+          ? (notebookState.mirrorMarginLine && notebookState.duplex ? ' · Margen Alterno' : ' · Margen Clásico')
+          : '';
+        summaryElem.textContent = `${notebookState.paperSize.toUpperCase()} · ${tintNames[notebookState.paperTint] || 'Papel'} · ${styleNames[notebookState.style] || 'Líneas'} (${mm} mm) · ${notebookState.numPages} págs${duplexPart}${marginPart}${coverPart}`;
       }
+    }
+
+    function syncNotebookStudioDOM() {
+      // Tint chips
+      document.querySelectorAll('.tint-chip').forEach(c => {
+        c.classList.toggle('is-active', c.getAttribute('data-tint') === notebookState.paperTint);
+      });
+      // Style cards
+      document.querySelectorAll('[data-nbstyle]').forEach(c => {
+        c.classList.toggle('is-selected', c.getAttribute('data-nbstyle') === notebookState.style);
+      });
+      // Step slider & spacing buttons
+      const nbStepSlider = document.getElementById('nbStepSlider');
+      const nbStepValueLabel = document.getElementById('nbStepValueLabel');
+      const mm = (notebookState.step * 25.4 / 72).toFixed(1);
+      if (nbStepSlider) nbStepSlider.value = notebookState.step.toFixed(1);
+      if (nbStepValueLabel) nbStepValueLabel.textContent = `${notebookState.step.toFixed(1)} pt (~${mm} mm)`;
+      document.querySelectorAll('[data-nbspacing]').forEach(b => {
+        const bMm = parseFloat(b.getAttribute('data-nbspacing') || '0');
+        b.classList.toggle('is-active', Math.abs(bMm - parseFloat(mm)) < 0.3);
+      });
+      // Margin line & mirror margin line
+      const nbMarginLineCheck = document.getElementById('nbMarginLineCheck');
+      const nbMarginLineSideGroup = document.getElementById('nbMarginLineSideGroup');
+      const nbMarginLineLeftBtn = document.getElementById('nbMarginLineLeftBtn');
+      const nbMarginLineDuplexBtn = document.getElementById('nbMarginLineDuplexBtn');
+      if (nbMarginLineCheck) nbMarginLineCheck.checked = notebookState.marginLine;
+      if (nbMarginLineSideGroup) nbMarginLineSideGroup.style.display = notebookState.marginLine ? 'block' : 'none';
+      if (nbMarginLineLeftBtn) nbMarginLineLeftBtn.classList.toggle('active', !notebookState.mirrorMarginLine);
+      if (nbMarginLineDuplexBtn) nbMarginLineDuplexBtn.classList.toggle('active', notebookState.mirrorMarginLine);
+
+      // Study header
+      const nbStudyHeaderCheck = document.getElementById('nbStudyHeaderCheck');
+      const nbStudyHeaderFields = document.getElementById('nbStudyHeaderFields');
+      const nbStudyTitleInput = document.getElementById('nbStudyTitleInput');
+      if (nbStudyHeaderCheck) nbStudyHeaderCheck.checked = notebookState.studyHeader;
+      if (nbStudyHeaderFields) nbStudyHeaderFields.style.display = notebookState.studyHeader ? 'block' : 'none';
+      if (nbStudyTitleInput) nbStudyTitleInput.value = notebookState.studyTitle;
+
+      // Page numbers
+      const nbPageNumbersCheck = document.getElementById('nbPageNumbersCheck');
+      const nbPageNumberFormatGroup = document.getElementById('nbPageNumberFormatGroup');
+      const nbPageFormatTotalBtn = document.getElementById('nbPageFormatTotalBtn');
+      const nbPageFormatSimpleBtn = document.getElementById('nbPageFormatSimpleBtn');
+      if (nbPageNumbersCheck) nbPageNumbersCheck.checked = notebookState.pageNumbers;
+      if (nbPageNumberFormatGroup) nbPageNumberFormatGroup.style.display = notebookState.pageNumbers ? 'block' : 'none';
+      if (nbPageFormatTotalBtn) nbPageFormatTotalBtn.classList.toggle('active', notebookState.pageNumberFormat === 'total');
+      if (nbPageFormatSimpleBtn) nbPageFormatSimpleBtn.classList.toggle('active', notebookState.pageNumberFormat === 'simple');
+
+      // Binding & Duplex & Hole guides
+      const nbBindingSelect = document.getElementById('nbBindingSelect');
+      const nbBindingNoneBtn = document.getElementById('nbBindingNoneBtn');
+      const nbBindingBinderBtn = document.getElementById('nbBindingBinderBtn');
+      const nbBindingSpiralBtn = document.getElementById('nbBindingSpiralBtn');
+      const nbDuplexSimplexBtn = document.getElementById('nbDuplexSimplexBtn');
+      const nbDuplexDuplexBtn = document.getElementById('nbDuplexDuplexBtn');
+      const nbHoleGuidesCheck = document.getElementById('nbHoleGuidesCheck');
+      if (nbBindingSelect) nbBindingSelect.value = notebookState.binding;
+      if (nbBindingNoneBtn) nbBindingNoneBtn.classList.toggle('active', notebookState.binding === 'none');
+      if (nbBindingBinderBtn) nbBindingBinderBtn.classList.toggle('active', notebookState.binding === 'binder');
+      if (nbBindingSpiralBtn) nbBindingSpiralBtn.classList.toggle('active', notebookState.binding === 'spiral');
+      if (nbDuplexSimplexBtn) nbDuplexSimplexBtn.classList.toggle('active', !notebookState.duplex);
+      if (nbDuplexDuplexBtn) nbDuplexDuplexBtn.classList.toggle('active', notebookState.duplex);
+      if (nbHoleGuidesCheck) nbHoleGuidesCheck.checked = notebookState.holeGuides;
+
+      // Cover
+      const nbIncludeCoverCheck = document.getElementById('nbIncludeCoverCheck');
+      const nbCoverFieldsGroup = document.getElementById('nbCoverFieldsGroup');
+      const nbTabCoverBtn = document.getElementById('nbTabCoverBtn');
+      const nbCoverTemplateSelect = document.getElementById('nbCoverTemplateSelect');
+      const nbCoverTitleInput = document.getElementById('nbCoverTitleInput');
+      const nbCoverAuthorInput = document.getElementById('nbCoverAuthorInput');
+      if (nbIncludeCoverCheck) nbIncludeCoverCheck.checked = notebookState.includeCover;
+      if (nbCoverFieldsGroup) nbCoverFieldsGroup.style.display = notebookState.includeCover ? 'block' : 'none';
+      if (nbTabCoverBtn) nbTabCoverBtn.style.display = notebookState.includeCover ? 'inline-flex' : 'none';
+      if (nbCoverTemplateSelect) nbCoverTemplateSelect.value = notebookState.coverTemplate;
+      if (nbCoverTitleInput) nbCoverTitleInput.value = notebookState.coverTitle;
+      if (nbCoverAuthorInput) nbCoverAuthorInput.value = notebookState.coverAuthor;
+
+      // Paper size & pages
+      const nbPaperSizeSelect = document.getElementById('nbPaperSizeSelect');
+      const nbPagesInput = document.getElementById('nbPagesInput');
+      if (nbPaperSizeSelect) nbPaperSizeSelect.value = notebookState.paperSize;
+      if (nbPagesInput) nbPagesInput.value = notebookState.numPages;
+      document.querySelectorAll('[data-nbpages]').forEach(b => {
+        b.classList.toggle('is-active', b.getAttribute('data-nbpages') === String(notebookState.numPages));
+      });
+
+      setNotebookPreviewTab(notebookState.activeTab);
     }
 
     function openNotebookStudio() {
@@ -1254,6 +1458,7 @@
         navModeSlidesBtn.setAttribute('aria-selected', 'false');
       }
 
+      syncNotebookStudioDOM();
       renderNotebookStudioPreview();
     }
 
@@ -1269,9 +1474,9 @@
         navModeNotebookBtn.setAttribute('aria-selected', 'false');
       }
 
-      if (state.pdfDoc && state.filesQueue && state.filesQueue.length > 0) {
+      if (state.pdfjsDoc && state.files && state.files.length > 0) {
         if (workspace) workspace.classList.remove('hidden');
-        renderActivePage();
+        renderCurrentPreview();
       } else {
         if (initialHero) initialHero.classList.remove('hidden');
       }
@@ -1283,12 +1488,130 @@
     if (exitNotebookStudioBtn) exitNotebookStudioBtn.addEventListener('click', exitNotebookStudio);
     if (generateNotebookWorkspaceBtn) generateNotebookWorkspaceBtn.addEventListener('click', openNotebookStudio);
 
+    // Notebook Smart Presets
+    const nbPresetUniBtn = document.getElementById('nbPresetUniBtn');
+    const nbPresetStemBtn = document.getElementById('nbPresetStemBtn');
+    const nbPresetTabletBtn = document.getElementById('nbPresetTabletBtn');
+    const nbPresetCornellBtn = document.getElementById('nbPresetCornellBtn');
+    const resetNotebookStudioBtn = document.getElementById('resetNotebookStudioBtn');
+
+    if (nbPresetUniBtn) {
+      nbPresetUniBtn.addEventListener('click', () => {
+        notebookState.paperTint = 'ivory';
+        notebookState.style = 'lines';
+        notebookState.step = 7 * 72 / 25.4;
+        notebookState.marginLine = true;
+        notebookState.mirrorMarginLine = true;
+        notebookState.binding = 'binder';
+        notebookState.duplex = true;
+        notebookState.holeGuides = true;
+        notebookState.pageNumbers = true;
+        notebookState.pageNumberFormat = 'total';
+        notebookState.includeCover = true;
+        notebookState.coverTemplate = 'atelier';
+        notebookState.activeTab = 'sheet';
+        syncNotebookStudioDOM();
+        renderNotebookStudioPreview();
+        showToast('🎓 Preset <strong>Universitaria Dúplex</strong> aplicado');
+      });
+    }
+
+    if (nbPresetStemBtn) {
+      nbPresetStemBtn.addEventListener('click', () => {
+        notebookState.paperTint = 'white';
+        notebookState.style = 'grid';
+        notebookState.step = 5 * 72 / 25.4;
+        notebookState.marginLine = false;
+        notebookState.mirrorMarginLine = false;
+        notebookState.binding = 'spiral';
+        notebookState.duplex = true;
+        notebookState.holeGuides = true;
+        notebookState.studyHeader = true;
+        notebookState.pageNumbers = true;
+        notebookState.includeCover = true;
+        notebookState.coverTemplate = 'quantum_flat';
+        notebookState.activeTab = 'sheet';
+        syncNotebookStudioDOM();
+        renderNotebookStudioPreview();
+        showToast('🔬 Preset <strong>Ingeniería &amp; STEM</strong> aplicado');
+      });
+    }
+
+    if (nbPresetTabletBtn) {
+      nbPresetTabletBtn.addEventListener('click', () => {
+        notebookState.paperTint = 'dark';
+        notebookState.style = 'dots';
+        notebookState.step = 5 * 72 / 25.4;
+        notebookState.marginLine = false;
+        notebookState.mirrorMarginLine = false;
+        notebookState.binding = 'none';
+        notebookState.duplex = false;
+        notebookState.holeGuides = false;
+        notebookState.pageNumbers = true;
+        notebookState.includeCover = true;
+        notebookState.coverTemplate = 'biophysics';
+        notebookState.activeTab = 'sheet';
+        syncNotebookStudioDOM();
+        renderNotebookStudioPreview();
+        showToast('🌙 Preset <strong>iPad / GoodNotes OLED</strong> aplicado');
+      });
+    }
+
+    if (nbPresetCornellBtn) {
+      nbPresetCornellBtn.addEventListener('click', () => {
+        notebookState.paperTint = 'legal';
+        notebookState.style = 'cornell';
+        notebookState.step = 7 * 72 / 25.4;
+        notebookState.marginLine = false;
+        notebookState.studyHeader = true;
+        notebookState.binding = 'binder';
+        notebookState.duplex = true;
+        notebookState.holeGuides = false;
+        notebookState.pageNumbers = true;
+        notebookState.includeCover = true;
+        notebookState.coverTemplate = 'oxford_press';
+        notebookState.activeTab = 'sheet';
+        syncNotebookStudioDOM();
+        renderNotebookStudioPreview();
+        showToast('🏛️ Preset <strong>Método Cornell</strong> aplicado');
+      });
+    }
+
+    if (resetNotebookStudioBtn) {
+      resetNotebookStudioBtn.addEventListener('click', () => {
+        notebookState.paperTint = 'ivory';
+        notebookState.style = 'lines';
+        notebookState.step = 19.8;
+        notebookState.marginLine = true;
+        notebookState.mirrorMarginLine = false;
+        notebookState.studyHeader = false;
+        notebookState.studyTitle = '';
+        notebookState.pageNumbers = true;
+        notebookState.pageNumberFormat = 'total';
+        notebookState.binding = 'none';
+        notebookState.duplex = false;
+        notebookState.holeGuides = false;
+        notebookState.includeCover = true;
+        notebookState.coverTemplate = 'atelier';
+        notebookState.coverTitle = 'Cuaderno de Apuntes';
+        notebookState.coverAuthor = '';
+        notebookState.paperSize = 'a4';
+        notebookState.numPages = 50;
+        notebookState.previewPage = 1;
+        notebookState.activeTab = 'sheet';
+        syncNotebookStudioDOM();
+        renderNotebookStudioPreview();
+        showToast('Valores de la libreta restablecidos');
+      });
+    }
+
     // Tint chips
     document.querySelectorAll('.tint-chip').forEach(chip => {
       chip.addEventListener('click', () => {
         document.querySelectorAll('.tint-chip').forEach(c => c.classList.remove('is-active'));
         chip.classList.add('is-active');
         notebookState.paperTint = chip.getAttribute('data-tint') || 'ivory';
+        setNotebookPreviewTab('sheet');
         renderNotebookStudioPreview();
       });
     });
@@ -1299,6 +1622,7 @@
         document.querySelectorAll('[data-nbstyle]').forEach(c => c.classList.remove('is-selected'));
         card.classList.add('is-selected');
         notebookState.style = card.getAttribute('data-nbstyle') || 'lines';
+        setNotebookPreviewTab('sheet');
         renderNotebookStudioPreview();
       });
     });
@@ -1315,6 +1639,7 @@
         notebookState.step = pt;
         if (nbStepSlider) nbStepSlider.value = pt.toFixed(1);
         if (nbStepValueLabel) nbStepValueLabel.textContent = `${pt.toFixed(1)} pt (~${mm.toFixed(1)} mm)`;
+        setNotebookPreviewTab('sheet');
         renderNotebookStudioPreview();
       });
     });
@@ -1326,15 +1651,45 @@
         notebookState.step = pt;
         if (nbStepValueLabel) nbStepValueLabel.textContent = `${pt.toFixed(1)} pt (~${mm} mm)`;
         document.querySelectorAll('[data-nbspacing]').forEach(b => b.classList.remove('is-active'));
+        setNotebookPreviewTab('sheet');
         renderNotebookStudioPreview();
       });
     }
 
-    // Stationery options
+    // Stationery options: Margin Line & Alternating Margin Line
     const nbMarginLineCheck = document.getElementById('nbMarginLineCheck');
+    const nbMarginLineSideGroup = document.getElementById('nbMarginLineSideGroup');
+    const nbMarginLineLeftBtn = document.getElementById('nbMarginLineLeftBtn');
+    const nbMarginLineDuplexBtn = document.getElementById('nbMarginLineDuplexBtn');
     if (nbMarginLineCheck) {
       nbMarginLineCheck.addEventListener('change', (e) => {
         notebookState.marginLine = e.target.checked;
+        if (nbMarginLineSideGroup) nbMarginLineSideGroup.style.display = e.target.checked ? 'block' : 'none';
+        setNotebookPreviewTab('sheet');
+        renderNotebookStudioPreview();
+      });
+    }
+    if (nbMarginLineLeftBtn && nbMarginLineDuplexBtn) {
+      nbMarginLineLeftBtn.addEventListener('click', () => {
+        notebookState.mirrorMarginLine = false;
+        nbMarginLineLeftBtn.classList.add('active');
+        nbMarginLineDuplexBtn.classList.remove('active');
+        setNotebookPreviewTab('sheet');
+        renderNotebookStudioPreview();
+      });
+      nbMarginLineDuplexBtn.addEventListener('click', () => {
+        notebookState.mirrorMarginLine = true;
+        notebookState.duplex = true;
+        nbMarginLineDuplexBtn.classList.add('active');
+        nbMarginLineLeftBtn.classList.remove('active');
+        const nbDuplexSimplexBtn = document.getElementById('nbDuplexSimplexBtn');
+        const nbDuplexDuplexBtn = document.getElementById('nbDuplexDuplexBtn');
+        if (nbDuplexSimplexBtn) nbDuplexSimplexBtn.classList.remove('active');
+        if (nbDuplexDuplexBtn) nbDuplexDuplexBtn.classList.add('active');
+        setNotebookPreviewTab('sheet');
+        if (notebookState.previewPage === 1 && notebookState.numPages >= 2) {
+          notebookState.previewPage = 2;
+        }
         renderNotebookStudioPreview();
       });
     }
@@ -1346,12 +1701,14 @@
       nbStudyHeaderCheck.addEventListener('change', (e) => {
         notebookState.studyHeader = e.target.checked;
         if (nbStudyHeaderFields) nbStudyHeaderFields.style.display = e.target.checked ? 'block' : 'none';
+        setNotebookPreviewTab('sheet');
         renderNotebookStudioPreview();
       });
     }
     if (nbStudyTitleInput) {
       nbStudyTitleInput.addEventListener('input', (e) => {
         notebookState.studyTitle = e.target.value;
+        setNotebookPreviewTab('sheet');
         renderNotebookStudioPreview();
       });
     }
@@ -1364,30 +1721,97 @@
       nbPageNumbersCheck.addEventListener('change', (e) => {
         notebookState.pageNumbers = e.target.checked;
         if (nbPageNumberFormatGroup) nbPageNumberFormatGroup.style.display = e.target.checked ? 'block' : 'none';
+        setNotebookPreviewTab('sheet');
         renderNotebookStudioPreview();
       });
     }
     if (nbPageFormatTotalBtn && nbPageFormatSimpleBtn) {
       nbPageFormatTotalBtn.addEventListener('click', () => {
+        nbPageFormatTotalBtn.classList.add('active');
         nbPageFormatTotalBtn.classList.add('is-active');
+        nbPageFormatSimpleBtn.classList.remove('active');
         nbPageFormatSimpleBtn.classList.remove('is-active');
         notebookState.pageNumberFormat = 'total';
+        setNotebookPreviewTab('sheet');
         renderNotebookStudioPreview();
       });
       nbPageFormatSimpleBtn.addEventListener('click', () => {
+        nbPageFormatSimpleBtn.classList.add('active');
         nbPageFormatSimpleBtn.classList.add('is-active');
+        nbPageFormatTotalBtn.classList.remove('active');
         nbPageFormatTotalBtn.classList.remove('is-active');
         notebookState.pageNumberFormat = 'simple';
+        setNotebookPreviewTab('sheet');
         renderNotebookStudioPreview();
       });
     }
 
+    // Binding Type (None, Binder, Spiral) + Double-Sided Duplex Alternation + Hole Guides
     const nbBindingSelect = document.getElementById('nbBindingSelect');
+    const nbBindingNoneBtn = document.getElementById('nbBindingNoneBtn');
+    const nbBindingBinderBtn = document.getElementById('nbBindingBinderBtn');
+    const nbBindingSpiralBtn = document.getElementById('nbBindingSpiralBtn');
+    const nbDuplexSimplexBtn = document.getElementById('nbDuplexSimplexBtn');
+    const nbDuplexDuplexBtn = document.getElementById('nbDuplexDuplexBtn');
+    const nbHoleGuidesCheck = document.getElementById('nbHoleGuidesCheck');
+
+    function setNotebookBindingMode(mode) {
+      notebookState.binding = mode;
+      notebookState.holeGuides = (mode !== 'none');
+      if (nbBindingSelect) nbBindingSelect.value = mode;
+      if (nbBindingNoneBtn) nbBindingNoneBtn.classList.toggle('active', mode === 'none');
+      if (nbBindingBinderBtn) nbBindingBinderBtn.classList.toggle('active', mode === 'binder');
+      if (nbBindingSpiralBtn) nbBindingSpiralBtn.classList.toggle('active', mode === 'spiral');
+      if (nbHoleGuidesCheck) nbHoleGuidesCheck.checked = notebookState.holeGuides;
+      setNotebookPreviewTab('sheet');
+      renderNotebookStudioPreview();
+    }
+
+    if (nbBindingNoneBtn) nbBindingNoneBtn.addEventListener('click', () => setNotebookBindingMode('none'));
+    if (nbBindingBinderBtn) nbBindingBinderBtn.addEventListener('click', () => setNotebookBindingMode('binder'));
+    if (nbBindingSpiralBtn) nbBindingSpiralBtn.addEventListener('click', () => setNotebookBindingMode('spiral'));
     if (nbBindingSelect) {
-      nbBindingSelect.addEventListener('change', (e) => {
-        notebookState.binding = e.target.value;
-        notebookState.holeGuides = (e.target.value !== 'none');
+      nbBindingSelect.addEventListener('change', (e) => setNotebookBindingMode(e.target.value));
+    }
+
+    if (nbDuplexSimplexBtn && nbDuplexDuplexBtn) {
+      nbDuplexSimplexBtn.addEventListener('click', () => {
+        notebookState.duplex = false;
+        notebookState.mirrorMarginLine = false;
+        nbDuplexSimplexBtn.classList.add('active');
+        nbDuplexDuplexBtn.classList.remove('active');
+        if (nbMarginLineLeftBtn) nbMarginLineLeftBtn.classList.add('active');
+        if (nbMarginLineDuplexBtn) nbMarginLineDuplexBtn.classList.remove('active');
+        setNotebookPreviewTab('sheet');
+        notebookState.previewPage = 1;
         renderNotebookStudioPreview();
+      });
+
+      nbDuplexDuplexBtn.addEventListener('click', () => {
+        notebookState.duplex = true;
+        notebookState.mirrorMarginLine = true;
+        nbDuplexDuplexBtn.classList.add('active');
+        nbDuplexSimplexBtn.classList.remove('active');
+        if (nbMarginLineLeftBtn) nbMarginLineLeftBtn.classList.remove('active');
+        if (nbMarginLineDuplexBtn) nbMarginLineDuplexBtn.classList.add('active');
+        setNotebookPreviewTab('sheet');
+        if (notebookState.previewPage === 1 && notebookState.numPages >= 2) {
+          notebookState.previewPage = 2;
+        }
+        renderNotebookStudioPreview();
+        showToast('↔ <strong>Doble cara activado</strong>: alternando márgenes entre páginas Impares (Izq.) y Pares (Der.)');
+      });
+    }
+
+    if (nbHoleGuidesCheck) {
+      nbHoleGuidesCheck.addEventListener('change', (e) => {
+        notebookState.holeGuides = Boolean(e.target.checked);
+        if (notebookState.holeGuides && notebookState.binding === 'none') {
+          setNotebookBindingMode('binder');
+        } else {
+          setNotebookPreviewTab('sheet');
+          renderNotebookStudioPreview();
+        }
       });
     }
 
@@ -1402,12 +1826,11 @@
       nbIncludeCoverCheck.addEventListener('change', (e) => {
         notebookState.includeCover = e.target.checked;
         if (nbCoverFieldsGroup) nbCoverFieldsGroup.style.display = e.target.checked ? 'block' : 'none';
-        if (nbTabCoverBtn) nbTabCoverBtn.style.display = e.target.checked ? 'inline-block' : 'none';
-        if (!e.target.checked && notebookState.activeTab === 'cover') {
-          notebookState.activeTab = 'sheet';
-          const nbTabSheetBtn = document.getElementById('nbTabSheetBtn');
-          if (nbTabSheetBtn) nbTabSheetBtn.classList.add('is-active');
-          if (nbTabCoverBtn) nbTabCoverBtn.classList.remove('is-active');
+        if (nbTabCoverBtn) nbTabCoverBtn.style.display = e.target.checked ? 'inline-flex' : 'none';
+        if (e.target.checked) {
+          setNotebookPreviewTab('cover');
+        } else if (notebookState.activeTab === 'cover') {
+          setNotebookPreviewTab('sheet');
         }
         renderNotebookStudioPreview();
       });
@@ -1415,18 +1838,32 @@
     if (nbCoverTemplateSelect) {
       nbCoverTemplateSelect.addEventListener('change', (e) => {
         notebookState.coverTemplate = e.target.value;
+        if (notebookState.includeCover) {
+          setNotebookPreviewTab('cover');
+        }
         renderNotebookStudioPreview();
       });
     }
+    window.addEventListener('slideprinter-cover-loaded', () => {
+      if (notebookWorkspace && !notebookWorkspace.classList.contains('hidden') && notebookState.activeTab === 'cover') {
+        renderNotebookStudioPreview();
+      }
+    });
     if (nbCoverTitleInput) {
       nbCoverTitleInput.addEventListener('input', (e) => {
         notebookState.coverTitle = e.target.value;
+        if (notebookState.includeCover) {
+          setNotebookPreviewTab('cover');
+        }
         renderNotebookStudioPreview();
       });
     }
     if (nbCoverAuthorInput) {
       nbCoverAuthorInput.addEventListener('input', (e) => {
         notebookState.coverAuthor = e.target.value;
+        if (notebookState.includeCover) {
+          setNotebookPreviewTab('cover');
+        }
         renderNotebookStudioPreview();
       });
     }
@@ -1463,20 +1900,107 @@
       });
     }
 
-    // Preview tabs
+    // Preview tabs & Page Stepper & Recto/Verso Switcher & Zoom
     const nbTabSheetBtn = document.getElementById('nbTabSheetBtn');
+    const nbPrevPageBtn = document.getElementById('nbPrevPageBtn');
+    const nbNextPageBtn = document.getElementById('nbNextPageBtn');
+    const nbSideRectoBtn = document.getElementById('nbSideRectoBtn');
+    const nbSideVersoBtn = document.getElementById('nbSideVersoBtn');
+    const nbZoomInBtn = document.getElementById('nbZoomInBtn');
+    const nbZoomOutBtn = document.getElementById('nbZoomOutBtn');
+    const nbZoomFitBtn = document.getElementById('nbZoomFitBtn');
+
     if (nbTabSheetBtn && nbTabCoverBtn) {
       nbTabSheetBtn.addEventListener('click', () => {
-        nbTabSheetBtn.classList.add('is-active');
-        nbTabCoverBtn.classList.remove('is-active');
-        notebookState.activeTab = 'sheet';
+        setNotebookPreviewTab('sheet');
         renderNotebookStudioPreview();
       });
       nbTabCoverBtn.addEventListener('click', () => {
-        nbTabCoverBtn.classList.add('is-active');
-        nbTabSheetBtn.classList.remove('is-active');
-        notebookState.activeTab = 'cover';
+        setNotebookPreviewTab('cover');
         renderNotebookStudioPreview();
+      });
+    }
+
+    if (nbPrevPageBtn) {
+      nbPrevPageBtn.addEventListener('click', () => {
+        setNotebookPreviewTab('sheet');
+        if (notebookState.previewPage > 1) {
+          notebookState.previewPage--;
+          renderNotebookStudioPreview();
+        }
+      });
+    }
+    if (nbNextPageBtn) {
+      nbNextPageBtn.addEventListener('click', () => {
+        setNotebookPreviewTab('sheet');
+        if (notebookState.previewPage < notebookState.numPages) {
+          notebookState.previewPage++;
+          renderNotebookStudioPreview();
+        }
+      });
+    }
+    if (nbSideRectoBtn) {
+      nbSideRectoBtn.addEventListener('click', () => {
+        setNotebookPreviewTab('sheet');
+        if (notebookState.previewPage % 2 === 0) {
+          notebookState.previewPage = Math.max(1, notebookState.previewPage - 1);
+        }
+        renderNotebookStudioPreview();
+      });
+    }
+    if (nbSideVersoBtn) {
+      nbSideVersoBtn.addEventListener('click', () => {
+        setNotebookPreviewTab('sheet');
+        if (notebookState.previewPage % 2 === 1) {
+          notebookState.previewPage = Math.min(notebookState.numPages, notebookState.previewPage + 1);
+        }
+        renderNotebookStudioPreview();
+      });
+    }
+    if (nbZoomInBtn) {
+      nbZoomInBtn.addEventListener('click', () => {
+        notebookState.zoom = Math.min(2.2, Math.round((notebookState.zoom + 0.15) * 100) / 100);
+        applyNotebookZoom();
+      });
+    }
+    if (nbZoomOutBtn) {
+      nbZoomOutBtn.addEventListener('click', () => {
+        notebookState.zoom = Math.max(0.5, Math.round((notebookState.zoom - 0.15) * 100) / 100);
+        applyNotebookZoom();
+      });
+    }
+    if (nbZoomFitBtn) {
+      nbZoomFitBtn.addEventListener('click', () => {
+        notebookState.zoom = 1.0;
+        applyNotebookZoom();
+      });
+    }
+
+    async function buildNotebookPdfBytes() {
+      const gutterVal = notebookState.binding === 'binder'
+        ? 30
+        : (notebookState.binding === 'spiral' ? 22 : (notebookState.duplex ? 22 : 0));
+      return await SlidePrinterEngine.generateNotebook({
+        numPages: notebookState.numPages,
+        style: notebookState.style,
+        paperSize: notebookState.paperSize,
+        margin: 40,
+        step: notebookState.step,
+        paperTint: notebookState.paperTint,
+        marginLine: notebookState.marginLine,
+        mirrorMarginLine: notebookState.mirrorMarginLine,
+        binding: notebookState.binding,
+        gutter: gutterVal,
+        duplex: notebookState.duplex,
+        holeGuides: notebookState.holeGuides,
+        pageNumbers: notebookState.pageNumbers,
+        pageNumberFormat: notebookState.pageNumberFormat,
+        coverMode: notebookState.includeCover ? 'generate' : 'none',
+        coverTemplate: notebookState.coverTemplate,
+        coverTitle: notebookState.coverTitle || 'Cuaderno',
+        coverAuthor: notebookState.coverAuthor || '',
+        studyHeader: notebookState.studyHeader,
+        studyTitle: notebookState.studyTitle || '',
       });
     }
 
@@ -1487,27 +2011,7 @@
         e.preventDefault();
         showToast(`Generando libreta (${notebookState.numPages} páginas)...`);
         try {
-          const outBytes = await SlidePrinterEngine.generateNotebook({
-            numPages: notebookState.numPages,
-            style: notebookState.style,
-            paperSize: notebookState.paperSize,
-            margin: 40,
-            step: notebookState.step,
-            paperTint: notebookState.paperTint,
-            marginLine: notebookState.marginLine,
-            binding: notebookState.binding,
-            gutter: notebookState.binding === 'binder' ? 30 : (notebookState.binding === 'spiral' ? 22 : 0),
-            holeGuides: notebookState.holeGuides,
-            pageNumbers: notebookState.pageNumbers,
-            pageNumberFormat: notebookState.pageNumberFormat,
-            coverMode: notebookState.includeCover ? 'generate' : 'none',
-            coverTemplate: notebookState.coverTemplate,
-            coverTitle: notebookState.coverTitle || 'Cuaderno',
-            coverAuthor: notebookState.coverAuthor || '',
-            studyHeader: notebookState.studyHeader,
-            studyTitle: notebookState.studyTitle || '',
-          });
-
+          const outBytes = await buildNotebookPdfBytes();
           const blob = new Blob([outBytes], { type: 'application/pdf' });
           const safeTitle = (notebookState.coverTitle || 'cuaderno').replace(/[^a-zA-Z0-9_\-]/g, '_');
           const safeName = `${safeTitle}_${notebookState.style}.pdf`;
@@ -1515,6 +2019,30 @@
           showToast(`✔ Libreta descargada correctamente (${notebookState.numPages} páginas)`);
         } catch (err) {
           showToast(`Error al generar libreta: ${err.message}`);
+        }
+      });
+    }
+
+    // Print Button
+    const printNotebookStudioBtn = document.getElementById('printNotebookStudioBtn');
+    if (printNotebookStudioBtn) {
+      printNotebookStudioBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const printWindow = window.open('', '_blank');
+        showToast(`Preparando libreta para imprimir (${notebookState.numPages} páginas)...`);
+        try {
+          const outBytes = await buildNotebookPdfBytes();
+          const blob = new Blob([outBytes], { type: 'application/pdf' });
+          const blobUrl = URL.createObjectURL(blob);
+          if (printWindow && !printWindow.closed) {
+            printWindow.location.href = blobUrl;
+          } else {
+            const safeTitle = (notebookState.coverTitle || 'cuaderno').replace(/[^a-zA-Z0-9_\-]/g, '_');
+            triggerDownload(blob, `${safeTitle}_${notebookState.style}_print.pdf`);
+          }
+        } catch (err) {
+          if (printWindow && !printWindow.closed) printWindow.close();
+          showToast(`Error al preparar impresión: ${err.message}`);
         }
       });
     }
@@ -1817,7 +2345,7 @@
 
   function updateStyleSelectionUI() {
     const dict = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
-    const styleOptions = document.querySelectorAll('.style-card');
+    const styleOptions = document.querySelectorAll('#workspace .style-card');
 
     styleOptions.forEach(card => {
       const s = card.getAttribute('data-style');
@@ -1877,7 +2405,7 @@
     setupPreviewToolbar();
     setupKeyboardShortcutsModal();
 
-    const styleOptions = document.querySelectorAll('.style-card');
+    const styleOptions = document.querySelectorAll('#workspace .style-card');
     const paperSelect = document.getElementById('paperSelect');
     const marginSlider = document.getElementById('marginSlider');
     const marginValue = document.getElementById('marginValue');
@@ -2011,7 +2539,11 @@
         state.coverTemplate = e.target.value;
         savePresets();
         if (state.coverMode === 'generate') {
-          renderCurrentPreview();
+          if (state.currentPage !== 1) {
+            goToPage(1);
+          } else {
+            renderCurrentPreview();
+          }
         }
       });
       window.addEventListener('slideprinter-cover-loaded', () => {
@@ -3131,44 +3663,57 @@
 
   // --- Web 2.0: Cover Category Filter ---
   function setupCoverFilter() {
-    const pills = document.querySelectorAll('.cover-cat-pill');
-    const select = document.getElementById('coverTemplateSelect');
-    if (!select || pills.length === 0) return;
+    function bindFilterRow(filterRowId, selectId, onChangeCallback) {
+      const filterRow = document.getElementById(filterRowId);
+      const select = document.getElementById(selectId);
+      if (!filterRow || !select) return;
+      const pills = filterRow.querySelectorAll('.cover-cat-pill');
+      if (pills.length === 0) return;
 
-    pills.forEach((pill) => {
-      pill.addEventListener('click', () => {
-        pills.forEach((p) => p.classList.remove('active'));
-        pill.classList.add('active');
-        const cat = pill.getAttribute('data-cover-cat');
-        state.coverCategory = cat;
+      pills.forEach((pill) => {
+        pill.addEventListener('click', () => {
+          pills.forEach((p) => p.classList.remove('active'));
+          pill.classList.add('active');
+          const cat = pill.getAttribute('data-cover-cat') || pill.getAttribute('data-nb-cover-cat') || 'all';
 
-        const optgroups = select.querySelectorAll('optgroup');
-        optgroups.forEach((group) => {
-          if (cat === 'all' || group.id === cat) {
-            group.style.display = '';
-          } else {
-            group.style.display = 'none';
-          }
-        });
+          const optgroups = select.querySelectorAll('optgroup');
+          optgroups.forEach((group) => {
+            const groupCat = group.getAttribute('data-cat-id') || group.id;
+            const show = (cat === 'all' || groupCat === cat);
+            group.hidden = !show;
+            group.disabled = !show;
+            group.style.display = show ? '' : 'none';
+          });
 
-        // If currently selected option is now hidden in filtered view, switch to first visible
-        const currentGroup = select.selectedOptions[0]?.parentElement;
-        if (cat !== 'all' && currentGroup && currentGroup.id !== cat) {
-          const targetGroup = document.getElementById(cat);
-          if (targetGroup) {
-            const firstOpt = targetGroup.querySelector('option');
-            if (firstOpt) {
-              select.value = firstOpt.value;
-              state.coverTemplate = firstOpt.value;
-              savePresets();
-              if (state.coverMode === 'generate' && state.currentPage === 1) {
-                renderCurrentPreview();
+          // If currently selected option is now hidden in filtered view, switch to first visible
+          const currentGroup = select.selectedOptions[0]?.parentElement;
+          const currentGroupCat = currentGroup?.getAttribute('data-cat-id') || currentGroup?.id;
+          if (cat !== 'all' && currentGroupCat !== cat) {
+            const targetGroup = Array.from(optgroups).find(
+              (g) => (g.getAttribute('data-cat-id') || g.id) === cat
+            );
+            if (targetGroup) {
+              const firstOpt = targetGroup.querySelector('option');
+              if (firstOpt) {
+                select.value = firstOpt.value;
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+                if (onChangeCallback) onChangeCallback(firstOpt.value, cat);
               }
             }
           }
-        }
+        });
       });
+    }
+
+    // Bind main Slide Workspace cover category filter
+    bindFilterRow('coverFilterRow', 'coverTemplateSelect', (val, cat) => {
+      state.coverCategory = cat;
+      state.coverTemplate = val;
+      savePresets();
     });
+
+    // Bind Digital Notebook Studio cover category filter
+    bindFilterRow('nbCoverFilterRow', 'nbCoverTemplateSelect');
   }
 
   // --- Web 2.0: Zoom Engine ---

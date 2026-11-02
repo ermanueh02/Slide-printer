@@ -89,6 +89,19 @@ def test_html_pwa_integration():
     assert 'name="apple-mobile-web-app-capable" content="yes"' in html
     assert 'apple-touch-icon' in html
     assert 'id="installAppBtn"' in html
+    assert 'id="nbDuplexDuplexBtn"' in html
+    assert 'id="nbMarginLineDuplexBtn"' in html
+
+    # Verify both #coverTemplateSelect and #nbCoverTemplateSelect contain all 55 canonical cover templates
+    from slide_printer.constants import COVER_TEMPLATES, COVER_TEMPLATE_ALIASES
+    for select_id in ('coverTemplateSelect', 'nbCoverTemplateSelect'):
+        m = re.search(rf'<select[^>]*id="{select_id}"[^>]*>(.*?)</select>', html, re.DOTALL)
+        assert m, f'Missing #{select_id} in web/index.html'
+        opts = re.findall(r'<option[^>]*value="([^"]+)"', m.group(1))
+        assert len(opts) == 55, f'Expected 55 cover templates in #{select_id}, got {len(opts)}'
+        for tpl in COVER_TEMPLATES:
+            canonical = COVER_TEMPLATE_ALIASES.get(tpl, tpl)
+            assert canonical in opts, f'Cover template {canonical} missing from #{select_id}'
 
 
 def test_app_js_pwa_registration():
