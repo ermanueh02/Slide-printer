@@ -586,9 +586,47 @@
     const courierBold = fontMap.courierBold || helveticaBold;
     const courierOblique = fontMap.courierOblique || courierFont;
 
+    // Safe WinAnsi encoding utility: guarantees no unencoded character causes pdf-lib to crash
+    function toWinAnsi(str) {
+      if (!str) return '';
+      const map = {
+        'Ĥ': 'H', 'ħ': 'h', 'ż': 'z', 'ẋ': 'x', 'ẏ': 'y',
+        'Γ': 'Gamma', 'Δ': 'Delta', 'Φ': 'Phi', 'β': 'beta', 'γ': 'gamma', 'δ': 'delta',
+        'π': 'pi', 'ρ': 'rho', 'σ': 'sigma', 'ψ': 'psi', 'ω': 'omega',
+        '⁰': '0', '⁺': '+', '⁻': '-', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9',
+        '⅙': '1/6', '½': '1/2', '⅓': '1/3', '¼': '1/4', '¾': '3/4',
+        '∇': 'grad', '√': 'sqrt', '∞': 'inf', '≈': '~=', '≥': '>=', '≤': '<=',
+        '⟨': '<', '⟩': '>', '⃗': '', '·': '·', '✦': '*'
+      };
+      return String(str).split('').map(ch => {
+        if (map[ch] !== undefined) return map[ch];
+        const code = ch.charCodeAt(0);
+        if (code >= 32 && code <= 126) return ch;
+        if (code >= 160 && code <= 255) return ch;
+        if ([0x2022, 0x2013, 0x2014, 0x2018, 0x2019, 0x201C, 0x201D, 0x20AC, 0x2030, 0x2026, 0x00B7].includes(code)) return ch;
+        return '';
+      }).join('');
+    }
+
     const tpl = (options.coverTemplate || 'atelier').toLowerCase();
-    const titleText = (options.title || 'Presentation').trim();
-    const todayStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const titleText = toWinAnsi(options.coverTitle || options.title || 'Presentation').trim();
+    const subTitleText = toWinAnsi(options.coverSubtitle || options.subtitle || options.studyTitle || '').trim();
+    const authorText = toWinAnsi(options.coverAuthor || options.author || '').trim();
+    const todayStr = toWinAnsi((options.coverDate !== undefined && options.coverDate !== null && String(options.coverDate).trim() !== '')
+      ? String(options.coverDate).trim()
+      : ((options.date !== undefined && options.date !== null && String(options.date).trim() !== '')
+          ? String(options.date).trim()
+          : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))).trim();
+
+    options.title = titleText;
+    options.coverTitle = titleText;
+    options.subtitle = subTitleText;
+    options.studyTitle = subTitleText;
+    options.coverSubtitle = subTitleText;
+    options.author = authorText;
+    options.coverAuthor = authorText;
+    options.coverDate = todayStr;
+    options.date = todayStr;
 
     const gutterMap = { binder: 30.0, ring: 30.0, rings: 30.0, spiral: 22.0, espiral: 22.0, coil: 22.0, none: 0.0 };
     const binding = (options.binding || 'none').toLowerCase();
@@ -615,28 +653,6 @@
         console.warn('Could not load cover texture image:', name, err);
       }
       return null;
-    }
-
-    // Safe WinAnsi encoding utility: guarantees no unencoded character causes pdf-lib to crash
-    function toWinAnsi(str) {
-      if (!str) return '';
-      const map = {
-        'Ĥ': 'H', 'ħ': 'h', 'ż': 'z', 'ẋ': 'x', 'ẏ': 'y',
-        'Γ': 'Gamma', 'Δ': 'Delta', 'Φ': 'Phi', 'β': 'beta', 'γ': 'gamma', 'δ': 'delta',
-        'π': 'pi', 'ρ': 'rho', 'σ': 'sigma', 'ψ': 'psi', 'ω': 'omega',
-        '⁰': '0', '⁺': '+', '⁻': '-', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9',
-        '⅙': '1/6', '½': '1/2', '⅓': '1/3', '¼': '1/4', '¾': '3/4',
-        '∇': 'grad', '√': 'sqrt', '∞': 'inf', '≈': '~=', '≥': '>=', '≤': '<=',
-        '⟨': '<', '⟩': '>', '⃗': '', '·': '·', '✦': '*'
-      };
-      return String(str).split('').map(ch => {
-        if (map[ch] !== undefined) return map[ch];
-        const code = ch.charCodeAt(0);
-        if (code >= 32 && code <= 126) return ch;
-        if (code >= 160 && code <= 255) return ch;
-        if ([0x2022, 0x2013, 0x2014, 0x2018, 0x2019, 0x201C, 0x201D, 0x20AC, 0x2030, 0x2026, 0x00B7].includes(code)) return ch;
-        return '';
-      }).join('');
     }
 
     // Helper: Safely draw text ensuring WinAnsi compatibility
@@ -4873,7 +4889,12 @@
       }
 
       if (options.studyTitle && helveticaBold) {
-        page.drawText(options.studyTitle.toUpperCase(), { x: x1, y: tY - 6, size: 11.5, font: helveticaBold, color: rgb(0.96, 0.42, 0.14) });
+        const subLines = wrapText(helveticaBold, options.studyTitle.toUpperCase(), 11.5, w - 20);
+        let subY = tY - 6;
+        for (const sLine of subLines) {
+          page.drawText(sLine, { x: x1, y: subY, size: 11.5, font: helveticaBold, color: rgb(0.96, 0.42, 0.14) });
+          subY -= 16;
+        }
       }
 
       const tblY = m + 140;
@@ -5111,13 +5132,22 @@
 
     // 1. Optional Generated Editorial Cover
     if (hasGenCover) {
+      const coverSubtitle = (options.coverSubtitle || studyTitle || options.subtitle || '').trim();
+      const coverAuthor = (options.coverAuthor || options.author || '').trim();
+      const coverDate = (options.coverDate !== undefined && options.coverDate !== null && String(options.coverDate).trim() !== '')
+        ? String(options.coverDate).trim()
+        : (options.date ? String(options.date).trim() : '');
       const coverPage = await generateCoverPage(
         outDoc,
         {
           paperDimensions: [paperWidth, paperHeight],
           title: options.coverTitle || options.title || 'Presentation',
-          subtitle: studyTitle,
-          author: options.coverAuthor || options.author || '',
+          subtitle: coverSubtitle,
+          studyTitle: coverSubtitle,
+          coverSubtitle: coverSubtitle,
+          author: coverAuthor,
+          coverAuthor: coverAuthor,
+          coverDate: coverDate,
           coverTemplate: options.coverTemplate || 'atelier',
           numSlides: selectedIndices.length,
           margin: margin,
@@ -5374,13 +5404,22 @@
 
     // 1. Optional Generated Editorial Cover
     if (hasGenCover) {
+      const coverSubtitle = (options.coverSubtitle || studyTitle || options.subtitle || 'Notebook').trim();
+      const coverAuthor = (options.coverAuthor || options.author || '').trim();
+      const coverDate = (options.coverDate !== undefined && options.coverDate !== null && String(options.coverDate).trim() !== '')
+        ? String(options.coverDate).trim()
+        : (options.date ? String(options.date).trim() : '');
       const coverPage = await generateCoverPage(
         outDoc,
         {
           paperDimensions: [paperWidth, paperHeight],
           title: options.coverTitle || options.title || 'Notebook',
-          subtitle: studyTitle || 'Notebook',
-          author: options.coverAuthor || options.author || '',
+          subtitle: coverSubtitle,
+          studyTitle: coverSubtitle,
+          coverSubtitle: coverSubtitle,
+          author: coverAuthor,
+          coverAuthor: coverAuthor,
+          coverDate: coverDate,
           coverTemplate: options.coverTemplate || 'atelier',
           numSlides: numPages,
           grayscale: Boolean(options.grayscale),

@@ -582,8 +582,24 @@
 
   function renderPreviewEditorialCover(ctx, pw, ph, options) {
     const tpl = (options.coverTemplate || 'atelier').toLowerCase();
-    const titleText = options.coverTitle || 'Presentation';
-    const dateFormatted = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const titleText = (options.coverTitle || options.title || 'Presentation').trim();
+    const subTitleText = (options.coverSubtitle || options.subtitle || options.studyTitle || '').trim();
+    const authorText = (options.coverAuthor || options.author || '').trim();
+    const dateFormatted = (options.coverDate !== undefined && options.coverDate !== null && String(options.coverDate).trim() !== '')
+      ? String(options.coverDate).trim()
+      : ((options.date !== undefined && options.date !== null && String(options.date).trim() !== '')
+          ? String(options.date).trim()
+          : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
+
+    options.coverTitle = titleText;
+    options.title = titleText;
+    options.coverSubtitle = subTitleText;
+    options.subtitle = subTitleText;
+    options.studyTitle = subTitleText;
+    options.coverAuthor = authorText;
+    options.author = authorText;
+    options.coverDate = dateFormatted;
+    options.date = dateFormatted;
 
     const gutterMap = { binder: 30.0, ring: 30.0, rings: 30.0, spiral: 22.0, espiral: 22.0, coil: 22.0, none: 0.0 };
     const binding = (options.binding || 'none').toLowerCase();
@@ -4163,7 +4179,7 @@
       if (options.studyTitle) {
         ctx.font = '700 11.5px system-ui, -apple-system, sans-serif';
         ctx.fillStyle = '#f56b23';
-        ctx.fillText(options.studyTitle.toUpperCase(), x1, endTitleY + 22);
+        drawWrappedText(ctx, options.studyTitle.toUpperCase(), x1, endTitleY + 22, w - 20, 16);
       }
 
       const tblH = 130;

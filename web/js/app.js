@@ -177,7 +177,9 @@
       optTemplateEquestrian: "Equestrian (Heritage Green & Crest)",
       optTemplateNatural: "Natural (Deep Forest Editorial)",
       coverTitlePlaceholder: "Cover title",
+      coverSubtitlePlaceholder: "Cover subtitle / Topic (optional)",
       coverAuthorPlaceholder: "Author / Student / Subject",
+      coverDatePlaceholder: "Date of entry (DATE OF ENTRY)",
       pageRangeLabel: "Slide Range",
       pageRangePlaceholder: "All (e.g. 1-10, 2-, 15)",
       gutterLabel: "Binder / Ring margin (+11 mm)",
@@ -360,7 +362,9 @@
       optTemplateEquestrian: "Hípica / Equestrian (Verde Inglés y Emblema)",
       optTemplateNatural: "Natural (Editorial Verde Bosque)",
       coverTitlePlaceholder: "Título para la portada",
+      coverSubtitlePlaceholder: "Subtítulo / Tema (opcional)",
       coverAuthorPlaceholder: "Autor / Estudiante / Asignatura",
+      coverDatePlaceholder: "Fecha de registro (DATE OF ENTRY)",
       pageRangeLabel: "Rango de diapositivas",
       pageRangePlaceholder: "Todas (ej. 1-10, 15)",
       gutterLabel: "Margen para archivador / anillas (+11 mm)",
@@ -543,7 +547,9 @@
       optTemplateEquestrian: "Hípica / Equestrian (Verde Inglés e Emblema)",
       optTemplateNatural: "Natural (Editorial Verde Bosque)",
       coverTitlePlaceholder: "Título para a portada",
+      coverSubtitlePlaceholder: "Subtítulo / Tema (opcional)",
       coverAuthorPlaceholder: "Autor / Estudante / Materia",
+      coverDatePlaceholder: "Data de rexistro (DATE OF ENTRY)",
       pageRangeLabel: "Rango de diapositivas",
       pageRangePlaceholder: "Todas (ex. 1-10, 15)",
       gutterLabel: "Marxe para arquivador / anelas (+11 mm)",
@@ -572,6 +578,10 @@
     }
   }
 
+  function getDefaultCoverDate() {
+    return new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
   // App State
   const state = {
     files: [],
@@ -593,7 +603,9 @@
     coverMode: 'generate',
     coverTemplate: 'atelier',
     coverTitle: '',
+    coverSubtitle: '',
     coverAuthor: '',
+    coverDate: getDefaultCoverDate(),
     pageRanges: '',
     binding: 'none',
     gutter: 0,
@@ -698,12 +710,16 @@
     const coverTemplateSelect = document.getElementById('coverTemplateSelect');
     const coverMetaFields = document.getElementById('coverMetaFields');
     const coverTitleInput = document.getElementById('coverTitleInput');
+    const coverSubtitleInput = document.getElementById('coverSubtitleInput');
     const coverAuthorInput = document.getElementById('coverAuthorInput');
+    const coverDateInput = document.getElementById('coverDateInput');
     if (coverSelect) coverSelect.value = state.coverMode;
     if (coverTemplateSelect) coverTemplateSelect.value = state.coverTemplate || 'atelier';
     if (coverMetaFields) coverMetaFields.classList.toggle('hidden', state.coverMode !== 'generate');
     if (coverTitleInput) coverTitleInput.value = state.coverTitle;
+    if (coverSubtitleInput) coverSubtitleInput.value = state.coverSubtitle;
     if (coverAuthorInput) coverAuthorInput.value = state.coverAuthor;
+    if (coverDateInput) coverDateInput.value = state.coverDate || getDefaultCoverDate();
 
     // Slide range
     const pageRangeInput = document.getElementById('pageRangeInput');
@@ -970,8 +986,17 @@
 
     const coverTitleInput = document.getElementById('coverTitleInput');
     if (coverTitleInput && dict.coverTitlePlaceholder) coverTitleInput.placeholder = dict.coverTitlePlaceholder;
+    const coverSubtitleInput = document.getElementById('coverSubtitleInput');
+    if (coverSubtitleInput && dict.coverSubtitlePlaceholder) coverSubtitleInput.placeholder = dict.coverSubtitlePlaceholder;
     const coverAuthorInput = document.getElementById('coverAuthorInput');
     if (coverAuthorInput && dict.coverAuthorPlaceholder) coverAuthorInput.placeholder = dict.coverAuthorPlaceholder;
+    const coverDateInput = document.getElementById('coverDateInput');
+    if (coverDateInput && dict.coverDatePlaceholder) coverDateInput.placeholder = dict.coverDatePlaceholder;
+
+    const nbCoverSubtitleInput = document.getElementById('nbCoverSubtitleInput');
+    if (nbCoverSubtitleInput && dict.coverSubtitlePlaceholder) nbCoverSubtitleInput.placeholder = dict.coverSubtitlePlaceholder;
+    const nbCoverDateInput = document.getElementById('nbCoverDateInput');
+    if (nbCoverDateInput && dict.coverDatePlaceholder) nbCoverDateInput.placeholder = dict.coverDatePlaceholder;
 
     // Slide Range
     setText('pageRangeLabelText', dict.pageRangeLabel);
@@ -1244,7 +1269,9 @@
       includeCover: true,
       coverTemplate: 'atelier',
       coverTitle: 'Cuaderno de Apuntes',
+      coverSubtitle: '',
       coverAuthor: '',
+      coverDate: getDefaultCoverDate(),
       paperSize: 'a4',
       numPages: 50,
       activeTab: 'sheet',
@@ -1316,7 +1343,9 @@
         activeTab: notebookState.activeTab,
         coverTemplate: notebookState.coverTemplate,
         coverTitle: notebookState.coverTitle,
+        coverSubtitle: notebookState.coverSubtitle,
         coverAuthor: notebookState.coverAuthor,
+        coverDate: notebookState.coverDate,
       });
 
       // Update page navigator & Recto/Verso indicators
@@ -1424,13 +1453,17 @@
       const nbTabCoverBtn = document.getElementById('nbTabCoverBtn');
       const nbCoverTemplateSelect = document.getElementById('nbCoverTemplateSelect');
       const nbCoverTitleInput = document.getElementById('nbCoverTitleInput');
+      const nbCoverSubtitleInput = document.getElementById('nbCoverSubtitleInput');
       const nbCoverAuthorInput = document.getElementById('nbCoverAuthorInput');
+      const nbCoverDateInput = document.getElementById('nbCoverDateInput');
       if (nbIncludeCoverCheck) nbIncludeCoverCheck.checked = notebookState.includeCover;
       if (nbCoverFieldsGroup) nbCoverFieldsGroup.style.display = notebookState.includeCover ? 'block' : 'none';
       if (nbTabCoverBtn) nbTabCoverBtn.style.display = notebookState.includeCover ? 'inline-flex' : 'none';
       if (nbCoverTemplateSelect) nbCoverTemplateSelect.value = notebookState.coverTemplate;
       if (nbCoverTitleInput) nbCoverTitleInput.value = notebookState.coverTitle;
+      if (nbCoverSubtitleInput) nbCoverSubtitleInput.value = notebookState.coverSubtitle || '';
       if (nbCoverAuthorInput) nbCoverAuthorInput.value = notebookState.coverAuthor;
+      if (nbCoverDateInput) nbCoverDateInput.value = notebookState.coverDate || getDefaultCoverDate();
 
       // Paper size & pages
       const nbPaperSizeSelect = document.getElementById('nbPaperSizeSelect');
@@ -1858,9 +1891,29 @@
         renderNotebookStudioPreview();
       });
     }
+    const nbCoverSubtitleInput = document.getElementById('nbCoverSubtitleInput');
+    if (nbCoverSubtitleInput) {
+      nbCoverSubtitleInput.addEventListener('input', (e) => {
+        notebookState.coverSubtitle = e.target.value;
+        if (notebookState.includeCover) {
+          setNotebookPreviewTab('cover');
+        }
+        renderNotebookStudioPreview();
+      });
+    }
     if (nbCoverAuthorInput) {
       nbCoverAuthorInput.addEventListener('input', (e) => {
         notebookState.coverAuthor = e.target.value;
+        if (notebookState.includeCover) {
+          setNotebookPreviewTab('cover');
+        }
+        renderNotebookStudioPreview();
+      });
+    }
+    const nbCoverDateInput = document.getElementById('nbCoverDateInput');
+    if (nbCoverDateInput) {
+      nbCoverDateInput.addEventListener('input', (e) => {
+        notebookState.coverDate = e.target.value;
         if (notebookState.includeCover) {
           setNotebookPreviewTab('cover');
         }
@@ -1998,7 +2051,9 @@
         coverMode: notebookState.includeCover ? 'generate' : 'none',
         coverTemplate: notebookState.coverTemplate,
         coverTitle: notebookState.coverTitle || 'Cuaderno',
+        coverSubtitle: notebookState.coverSubtitle || notebookState.studyTitle || '',
         coverAuthor: notebookState.coverAuthor || '',
+        coverDate: notebookState.coverDate,
         studyHeader: notebookState.studyHeader,
         studyTitle: notebookState.studyTitle || '',
       });
@@ -2213,7 +2268,9 @@
     // Reset document-specific fields so past notes/titles never pollute a new file
     state.studyTitle = '';
     state.coverTitle = getBaseFileName();
+    state.coverSubtitle = '';
     state.coverAuthor = '';
+    state.coverDate = getDefaultCoverDate();
     state.pageRanges = '';
     state.coverMode = 'generate';
     state.coverTemplate = state.coverTemplate || 'atelier';
@@ -2222,7 +2279,9 @@
     const coverSelect = document.getElementById('coverSelect');
     const coverMetaFields = document.getElementById('coverMetaFields');
     const coverTitleInput = document.getElementById('coverTitleInput');
+    const coverSubtitleInput = document.getElementById('coverSubtitleInput');
     const coverAuthorInput = document.getElementById('coverAuthorInput');
+    const coverDateInput = document.getElementById('coverDateInput');
     const studyHeaderToggle = document.getElementById('studyHeaderToggle');
     const studyHeaderField = document.getElementById('studyHeaderField');
     const studyTitleInput = document.getElementById('studyTitleInput');
@@ -2231,7 +2290,9 @@
     if (coverSelect) coverSelect.value = 'generate';
     if (coverMetaFields) coverMetaFields.classList.remove('hidden');
     if (coverTitleInput) coverTitleInput.value = state.coverTitle;
+    if (coverSubtitleInput) coverSubtitleInput.value = '';
     if (coverAuthorInput) coverAuthorInput.value = '';
+    if (coverDateInput) coverDateInput.value = state.coverDate;
     if (studyHeaderToggle) studyHeaderToggle.checked = false;
     if (studyHeaderField) studyHeaderField.classList.add('hidden');
     if (studyTitleInput) studyTitleInput.value = '';
@@ -2513,7 +2574,9 @@
     const coverTemplateSelect = document.getElementById('coverTemplateSelect');
     const coverMetaFields = document.getElementById('coverMetaFields');
     const coverTitleInput = document.getElementById('coverTitleInput');
+    const coverSubtitleInput = document.getElementById('coverSubtitleInput');
     const coverAuthorInput = document.getElementById('coverAuthorInput');
+    const coverDateInput = document.getElementById('coverDateInput');
 
     if (coverSelect) {
       coverSelect.addEventListener('change', (e) => {
@@ -2561,9 +2624,27 @@
         }
       });
     }
+    if (coverSubtitleInput) {
+      coverSubtitleInput.addEventListener('input', (e) => {
+        state.coverSubtitle = e.target.value;
+        savePresets();
+        if (state.coverMode === 'generate') {
+          renderCurrentPreview();
+        }
+      });
+    }
     if (coverAuthorInput) {
       coverAuthorInput.addEventListener('input', (e) => {
         state.coverAuthor = e.target.value;
+        savePresets();
+        if (state.coverMode === 'generate') {
+          renderCurrentPreview();
+        }
+      });
+    }
+    if (coverDateInput) {
+      coverDateInput.addEventListener('input', (e) => {
+        state.coverDate = e.target.value;
         savePresets();
         if (state.coverMode === 'generate') {
           renderCurrentPreview();
@@ -2661,7 +2742,7 @@
       studyTitleInput.addEventListener('input', (e) => {
         state.studyTitle = e.target.value;
         savePresets();
-        if (state.studyHeader) {
+        if (state.studyHeader || state.coverMode === 'generate') {
           renderCurrentPreview();
         }
       });
@@ -2783,7 +2864,9 @@
         state.coverMode = 'generate';
         state.coverTemplate = 'atelier';
         state.coverTitle = getBaseFileName();
+        state.coverSubtitle = '';
         state.coverAuthor = '';
+        state.coverDate = getDefaultCoverDate();
         state.studyHeader = false;
         state.studyTitle = '';
 
@@ -2791,7 +2874,9 @@
         const coverTemplateSelect = document.getElementById('coverTemplateSelect');
         const coverMetaFields = document.getElementById('coverMetaFields');
         const coverTitleInput = document.getElementById('coverTitleInput');
+        const coverSubtitleInput = document.getElementById('coverSubtitleInput');
         const coverAuthorInput = document.getElementById('coverAuthorInput');
+        const coverDateInput = document.getElementById('coverDateInput');
         const studyHeaderToggle = document.getElementById('studyHeaderToggle');
         const studyHeaderField = document.getElementById('studyHeaderField');
         const studyTitleInput = document.getElementById('studyTitleInput');
@@ -2800,7 +2885,9 @@
         if (coverTemplateSelect) coverTemplateSelect.value = 'atelier';
         if (coverMetaFields) coverMetaFields.classList.remove('hidden');
         if (coverTitleInput) coverTitleInput.value = state.coverTitle;
+        if (coverSubtitleInput) coverSubtitleInput.value = '';
         if (coverAuthorInput) coverAuthorInput.value = '';
+        if (coverDateInput) coverDateInput.value = state.coverDate;
         if (studyHeaderToggle) studyHeaderToggle.checked = false;
         if (studyHeaderField) studyHeaderField.classList.add('hidden');
         if (studyTitleInput) studyTitleInput.value = '';
@@ -3062,7 +3149,9 @@
         coverMode: state.coverMode,
         coverTemplate: state.coverTemplate || 'atelier',
         coverTitle: state.coverTitle || getBaseFileName(),
+        coverSubtitle: state.coverSubtitle,
         coverAuthor: state.coverAuthor,
+        coverDate: state.coverDate,
         ecoPrint: state.ecoPrint,
         selectedIndices: selectedIndices,
       }
@@ -3148,7 +3237,9 @@
               coverMode: state.coverMode,
               coverTemplate: state.coverTemplate || 'atelier',
               coverTitle: state.coverTitle,
+              coverSubtitle: state.coverSubtitle,
               coverAuthor: state.coverAuthor,
+              coverDate: state.coverDate,
               pageRanges: state.pageRanges,
               studyHeader: state.studyHeader,
               studyTitle: state.studyTitle,
@@ -3207,7 +3298,9 @@
           coverMode: state.coverMode,
           coverTemplate: state.coverTemplate || 'atelier',
           coverTitle: state.coverTitle,
+          coverSubtitle: state.coverSubtitle,
           coverAuthor: state.coverAuthor,
+          coverDate: state.coverDate,
           pageRanges: state.pageRanges,
           studyHeader: state.studyHeader,
           studyTitle: state.studyTitle,
@@ -3279,7 +3372,9 @@
             coverMode: state.coverMode,
             coverTemplate: state.coverTemplate || 'atelier',
             coverTitle: state.coverTitle,
+            coverSubtitle: state.coverSubtitle,
             coverAuthor: state.coverAuthor,
+            coverDate: state.coverDate,
             pageRanges: state.pageRanges,
             studyHeader: state.studyHeader,
             studyTitle: state.studyTitle,
@@ -3423,7 +3518,9 @@
           coverMode: state.coverMode,
           coverTemplate: state.coverTemplate || 'atelier',
           coverTitle: state.coverTitle,
+          coverSubtitle: state.coverSubtitle,
           coverAuthor: state.coverAuthor,
+          coverDate: state.coverDate,
           pageRanges: state.pageRanges,
           studyHeader: state.studyHeader,
           studyTitle: state.studyTitle,

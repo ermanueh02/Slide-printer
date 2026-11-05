@@ -150,7 +150,9 @@ class SlidePrinter:
         grayscale: bool = DEFAULT_GRAYSCALE,
         cover_mode: str = DEFAULT_COVER_MODE,
         cover_title: Optional[str] = None,
+        cover_subtitle: Optional[str] = None,
         cover_author: Optional[str] = None,
+        cover_date: Optional[str] = None,
         cover_template: str = "atelier",
         paper_tint: str = "white",
         margin_line: bool = False,
@@ -197,7 +199,9 @@ class SlidePrinter:
         self.grayscale = bool(grayscale)
         self.cover_mode = str(cover_mode).lower()
         self.cover_title = cover_title
+        self.cover_subtitle = cover_subtitle
         self.cover_author = cover_author
+        self.cover_date = cover_date
         raw_tpl = str(cover_template).lower().strip()
         self.cover_template = COVER_TEMPLATE_ALIASES.get(raw_tpl, raw_tpl)
         self.paper_tint = str(paper_tint or "white").lower().strip()
@@ -455,12 +459,13 @@ class SlidePrinter:
 
             # 1. Prepend generated cover page if requested
             if has_gen_cover:
-                today_str = datetime.date.today().strftime("%B %d, %Y")
+                today_str = self.cover_date or datetime.date.today().strftime("%B %d, %Y")
                 cover_title = self.cover_title or base_name.replace("_", " ").title()
+                cover_sub = self.cover_subtitle or self.study_title
                 cover_page = generate_cover_page(
                     page_size=self.paper_dimensions,
                     title=cover_title,
-                    subtitle=self.study_title,
+                    subtitle=cover_sub,
                     author=self.cover_author,
                     date_str=today_str,
                     num_slides=len(selected_indices),
@@ -618,12 +623,13 @@ class SlidePrinter:
 
             # 1. Prepend cover if requested
             if has_gen_cover:
-                today_str = datetime.date.today().strftime("%B %d, %Y")
+                today_str = self.cover_date or datetime.date.today().strftime("%B %d, %Y")
                 cover_title = self.cover_title or clean_base.replace("_", " ").title()
+                cover_sub = self.cover_subtitle or self.study_title or "Notebook"
                 cover_page = generate_cover_page(
                     page_size=self.paper_dimensions,
                     title=cover_title,
-                    subtitle=self.study_title or "Notebook",
+                    subtitle=cover_sub,
                     author=self.cover_author,
                     date_str=today_str,
                     num_slides=num_pages,

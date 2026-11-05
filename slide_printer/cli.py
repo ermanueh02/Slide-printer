@@ -843,6 +843,20 @@ Examples:
         help="Student, author, or presenter name for the generated cover page.",
     )
     parser.add_argument(
+        "--cover-subtitle",
+        dest="cover_subtitle",
+        type=str,
+        default=None,
+        help="Custom subtitle for the generated cover page or notebook.",
+    )
+    parser.add_argument(
+        "--cover-date",
+        dest="cover_date",
+        type=str,
+        default=None,
+        help="Custom date string for the cover page (DATE OF ENTRY).",
+    )
+    parser.add_argument(
         "--layout",
         choices=["1-up", "2-up"],
         default="1-up",
@@ -1100,7 +1114,9 @@ def main(argv: Optional[List[str]] = None) -> int:
         cover_mode=cover_mode,
         cover_template=getattr(args, "cover_template", "atelier"),
         cover_title=args.cover_title,
+        cover_subtitle=getattr(args, "cover_subtitle", None),
         cover_author=args.cover_author,
+        cover_date=getattr(args, "cover_date", None),
         paper_tint=getattr(args, "paper_tint", "white"),
         margin_line=getattr(args, "margin_line", False),
     )
