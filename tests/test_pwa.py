@@ -101,15 +101,16 @@ def test_html_pwa_integration():
     assert '<option value="a5"' in html
     assert 'id="optA5"' in html
 
-    # Verify both #coverTemplateSelect and #nbCoverTemplateSelect contain all 55 canonical cover templates
+    # Verify both #coverTemplateSelect and #nbCoverTemplateSelect contain all 67 canonical cover templates
     from slide_printer.constants import COVER_TEMPLATES, COVER_TEMPLATE_ALIASES
+    canonical_templates = {COVER_TEMPLATE_ALIASES.get(tpl, tpl) for tpl in COVER_TEMPLATES}
+    assert len(canonical_templates) == 67
     for select_id in ('coverTemplateSelect', 'nbCoverTemplateSelect'):
         m = re.search(rf'<select[^>]*id="{select_id}"[^>]*>(.*?)</select>', html, re.DOTALL)
         assert m, f'Missing #{select_id} in web/index.html'
         opts = re.findall(r'<option[^>]*value="([^"]+)"', m.group(1))
-        assert len(opts) == 55, f'Expected 55 cover templates in #{select_id}, got {len(opts)}'
-        for tpl in COVER_TEMPLATES:
-            canonical = COVER_TEMPLATE_ALIASES.get(tpl, tpl)
+        assert len(opts) == len(canonical_templates), f'Expected {len(canonical_templates)} cover templates in #{select_id}, got {len(opts)}'
+        for canonical in canonical_templates:
             assert canonical in opts, f'Cover template {canonical} missing from #{select_id}'
 
 

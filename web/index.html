@@ -421,16 +421,17 @@
               <div id="coverMetaFields" class="sub-form-group" style="margin-top: 0.5rem;">
                 <div class="cover-style-toolbar">
                   <label for="coverTemplateSelect" class="form-label" style="font-size: 0.75rem; margin-bottom: 0;"><span id="coverTemplateLabelText">Cover Style</span></label>
-                  <button type="button" class="btn-chip cover-gallery-trigger" id="openCoverGalleryBtn" title="Browse visual gallery of all 55 cover designs">
-                    <span id="openCoverGalleryText">🎨 Visual Gallery (55)</span>
+                  <button type="button" class="btn-chip cover-gallery-trigger" id="openCoverGalleryBtn" title="Browse visual gallery of all 67 cover designs">
+                    <span id="openCoverGalleryText">🎨 Visual Gallery (67)</span>
                   </button>
                 </div>
                 <div class="cover-search-wrap">
-                  <input type="search" id="coverSearchInput" class="form-input cover-search-input" placeholder="Search 55 covers (e.g. Penguin, Quantum, 1980s)...">
+                  <input type="search" id="coverSearchInput" class="form-input cover-search-input" placeholder="Search 67 covers (e.g. Cassette, Juno, Noir, Penguin)...">
                 </div>
                 <!-- Category Filter Pills -->
                 <div class="cover-filter-row" id="coverFilterRow" role="group" aria-label="Cover Categories">
                   <button type="button" class="cover-cat-pill active" data-cover-cat="all">All</button>
+                  <button type="button" class="cover-cat-pill" data-cover-cat="groupSignature">★ Signature</button>
                   <button type="button" class="cover-cat-pill" data-cover-cat="groupEditorialStandard">Editorial &amp; Presses</button>
                   <button type="button" class="cover-cat-pill" data-cover-cat="groupScienceFlat">USC Flat 90s</button>
                   <button type="button" class="cover-cat-pill" data-cover-cat="groupScience">USC Illustrated</button>
@@ -442,6 +443,20 @@
                   <button type="button" class="cover-cat-pill" data-cover-cat="groupNature">Nature</button>
                 </div>
                 <select id="coverTemplateSelect" class="form-select" style="margin-bottom: 0.35rem;">
+                  <optgroup label="★ Colección Signature (Hi-Fi, Cine, Synth, Café &amp; LaTeX)" id="groupSignature">
+                    <option value="cassette_hifi" id="optTemplateCassetteHifi">Chrome Cassette Hi-Fi (Type II · 90 Min · Analog Master)</option>
+                    <option value="juno_synth" id="optTemplateJunoSynth">Roland Juno Synth Panel (80s Polyphonic Studio)</option>
+                    <option value="noir_gotham" id="optTemplateNoirGotham">Noir Detective Dossier (Year One &amp; Twin Peaks)</option>
+                    <option value="barista_brew" id="optTemplateBaristaBrew">Specialty Coffee Ledger (Moka Pot &amp; Pour-Over)</option>
+                    <option value="vinyl_prog" id="optTemplateVinylProg">70s Prog &amp; Yacht Rock Gatefold (ECM / 33⅓ RPM)</option>
+                    <option value="oxford_stripe" id="optTemplateOxfordStripe">Sartorial Oxford Stripe (Tailored Bengal Pinstripe)</option>
+                    <option value="miami_vice" id="optTemplateMiamiVice">Miami Vice 1984 (Neon Art Deco · Vice City Horizon)</option>
+                    <option value="blade_runner" id="optTemplateBladeRunner">Blade Runner 2019 (Voight-Kampff · Tyrell Neo-Noir)</option>
+                    <option value="stranger_things" id="optTemplateStrangerThings">Hawkins 1983 (Upside Down · 80s Sci-Fi Paperback)</option>
+                    <option value="barry_lyndon" id="optTemplateBarryLyndon">Kubrick Candlelight (Barry Lyndon · 18th-C. Folio)</option>
+                    <option value="latex_monograph" id="optTemplateLatexMonograph">First Principles LaTeX (Computational Physics Monograph)</option>
+                    <option value="compact_disc" id="optTemplateCompactDisc">Compact Disc 1982 (44.1 kHz PCM · Lossless Archive)</option>
+                  </optgroup>
                   <optgroup label="Edición Estándar &amp; Editoriales Clásicas (Editorial Presses &amp; Notebooks)" id="groupEditorialStandard">
                     <option value="penguin" id="optTemplatePenguin">Penguin Classics (1935 Tri-Band Vintage)</option>
                     <option value="gallimard" id="optTemplateGallimard">Gallimard NRF (Collection Blanche &amp; Filets)</option>
@@ -1026,19 +1041,20 @@
             <div id="nbCoverFieldsGroup" class="sub-form-group">
               <div class="cover-style-toolbar">
                 <label for="nbCoverTemplateSelect" class="form-label" style="font-size: 0.75rem; margin-bottom: 0;">
-                  <span id="nbCoverTemplateLabel">Estilo de Portada (55 diseños)</span>
+                  <span id="nbCoverTemplateLabel">Estilo de Portada (67 diseños)</span>
                 </label>
-                <button type="button" class="btn-chip cover-gallery-trigger" id="nbOpenCoverGalleryBtn" title="Explorar galería visual de las 55 portadas">
-                  <span id="nbOpenCoverGalleryText">🎨 Galería Visual (55)</span>
+                <button type="button" class="btn-chip cover-gallery-trigger" id="nbOpenCoverGalleryBtn" title="Explorar galería visual de las 67 portadas">
+                  <span id="nbOpenCoverGalleryText">🎨 Galería Visual (67)</span>
                 </button>
               </div>
               <div class="cover-search-wrap">
-                <input type="search" id="nbCoverSearchInput" class="form-input cover-search-input" placeholder="Buscar entre 55 portadas (ej. Penguin, Cuántica, 1980s)...">
+                <input type="search" id="nbCoverSearchInput" class="form-input cover-search-input" placeholder="Buscar entre 67 portadas (ej. Cassette, Juno, Noir, Penguin)...">
               </div>
 
               <!-- Category Filter Pills for Notebook Studio -->
               <div class="cover-filter-row" id="nbCoverFilterRow" role="group" aria-label="Notebook Cover Categories">
                 <button type="button" class="cover-cat-pill active" data-nb-cover-cat="all">Todas</button>
+                <button type="button" class="cover-cat-pill" data-nb-cover-cat="nbGroupSignature">★ Signature</button>
                 <button type="button" class="cover-cat-pill" data-nb-cover-cat="nbGroupEditorialStandard">Editoriales</button>
                 <button type="button" class="cover-cat-pill" data-nb-cover-cat="nbGroupScienceFlat">Ciencia 90s</button>
                 <button type="button" class="cover-cat-pill" data-nb-cover-cat="nbGroupScience">Ciencia IA</button>
@@ -1051,6 +1067,20 @@
               </div>
 
               <select id="nbCoverTemplateSelect" class="form-select select-control" style="margin-bottom: 0.5rem;">
+                <optgroup label="★ Colección Signature (Hi-Fi, Cine, Synth, Café &amp; LaTeX)" id="nbGroupSignature">
+                  <option value="cassette_hifi">Chrome Cassette Hi-Fi (Type II · 90 Min · Analog Master)</option>
+                  <option value="juno_synth">Roland Juno Synth Panel (80s Polyphonic Studio)</option>
+                  <option value="noir_gotham">Noir Detective Dossier (Year One &amp; Twin Peaks)</option>
+                  <option value="barista_brew">Specialty Coffee Ledger (Moka Pot &amp; Pour-Over)</option>
+                  <option value="vinyl_prog">70s Prog &amp; Yacht Rock Gatefold (ECM / 33⅓ RPM)</option>
+                  <option value="oxford_stripe">Sartorial Oxford Stripe (Tailored Bengal Pinstripe)</option>
+                  <option value="miami_vice">Miami Vice 1984 (Neon Art Deco · Vice City Horizon)</option>
+                  <option value="blade_runner">Blade Runner 2019 (Voight-Kampff · Tyrell Neo-Noir)</option>
+                  <option value="stranger_things">Hawkins 1983 (Upside Down · 80s Sci-Fi Paperback)</option>
+                  <option value="barry_lyndon">Kubrick Candlelight (Barry Lyndon · 18th-C. Folio)</option>
+                  <option value="latex_monograph">First Principles LaTeX (Computational Physics Monograph)</option>
+                  <option value="compact_disc">Compact Disc 1982 (44.1 kHz PCM · Lossless Archive)</option>
+                </optgroup>
                 <optgroup label="Edición Estándar &amp; Editoriales Clásicas (Editorial Presses &amp; Notebooks)" id="nbGroupEditorialStandard">
                   <option value="penguin">Penguin Classics (1935 Tri-Band Vintage)</option>
                   <option value="gallimard">Gallimard NRF (Collection Blanche &amp; Filets)</option>
@@ -1252,14 +1282,15 @@
       <div class="cover-gallery-header">
         <div>
           <div class="cover-gallery-title" id="coverGalleryModalTitle">Editorial &amp; Scientific Cover Gallery</div>
-          <div class="cover-gallery-sub" id="coverGalleryModalSub">55 curated designs · Click any cover to apply</div>
+          <div class="cover-gallery-sub" id="coverGalleryModalSub">67 curated designs · Click any cover to apply</div>
         </div>
         <button type="button" class="icon-btn" id="closeCoverGalleryBtn" aria-label="Close gallery">✕</button>
       </div>
       <div class="cover-gallery-controls">
         <input type="search" id="coverGallerySearchInput" class="form-input cover-gallery-search" placeholder="Filter covers by name, style, physics subject, decade...">
         <div class="cover-filter-row" id="coverGalleryCatRow" role="group" aria-label="Gallery Categories">
-          <button type="button" class="cover-cat-pill active" data-gal-cat="all">All (55)</button>
+          <button type="button" class="cover-cat-pill active" data-gal-cat="all">All (67)</button>
+          <button type="button" class="cover-cat-pill" data-gal-cat="groupSignature">★ Signature</button>
           <button type="button" class="cover-cat-pill" data-gal-cat="groupEditorialStandard">Editorial</button>
           <button type="button" class="cover-cat-pill" data-gal-cat="groupScienceFlat">Physics Flat 90s</button>
           <button type="button" class="cover-cat-pill" data-gal-cat="groupScience">Physics Illustrated</button>

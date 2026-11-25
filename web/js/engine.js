@@ -657,9 +657,9 @@
     const GL_MONTHS = ['xaneiro', 'febreiro', 'marzo', 'abril', 'maio', 'xuño', 'xullo', 'agosto', 'setembro', 'outubro', 'novembro', 'decembro'];
     const FR_MONTHS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
     const LATIN_ABBR_MONTHS = ['Ian.', 'Feb.', 'Mar.', 'Apr.', 'Mai.', 'Iun.', 'Iul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
-    const ISO_DATE_TEMPLATES = new Set(['blueprint', 'field_notes', 'circuits_instrumentation', 'circuits_flat', 'materials_sim', 'materials_sim_flat']);
-    const DOT_TIMESTAMP_TEMPLATES = new Set(['forties', '1940s', 'eighties', '1980s', 'nineties', '1990s', 'twothousands', '2000s', 'twentytwenties', '2020s']);
-    const SWISS_DATE_TEMPLATES = new Set(['sixties', '1960s', 'twenty10s', '2010s', 'midori', 'swiss']);
+    const ISO_DATE_TEMPLATES = new Set(['blueprint', 'field_notes', 'circuits_instrumentation', 'circuits_flat', 'materials_sim', 'materials_sim_flat', 'juno_synth', 'blade_runner', 'latex_monograph']);
+    const DOT_TIMESTAMP_TEMPLATES = new Set(['forties', '1940s', 'eighties', '1980s', 'nineties', '1990s', 'twothousands', '2000s', 'twentytwenties', '2020s', 'cassette_hifi', 'miami_vice', 'compact_disc']);
+    const SWISS_DATE_TEMPLATES = new Set(['sixties', '1960s', 'twenty10s', '2010s', 'midori', 'swiss', 'vinyl_prog']);
     const FRENCH_DATE_TEMPLATES = new Set(['gallimard', 'cahier']);
 
     function parseCoverDateInput(raw) {
@@ -5019,6 +5019,814 @@
       const dStr = 'DURABLE BOUND EDITION · PRINTED IN GALICIA · SLIDE-PRINTER STANDARD';
       const dW2 = helveticaFont.widthOfTextAtSize(dStr, 6.5);
       page.drawText(dStr, { x: centerX - dW2 / 2, y: tblY - 116, size: 6.5, font: helveticaFont, color: rgb(0.45, 0.42, 0.38) });
+
+    } else if (tpl === 'cassette_hifi') {
+      // Chrome Cassette Hi-Fi (Type II · 90 Min)
+      const bg = rgb(0.086, 0.090, 0.106);
+      const gold = rgb(0.84, 0.69, 0.36);
+      const vermilion = rgb(0.84, 0.25, 0.19);
+      const amber = rgb(0.88, 0.56, 0.18);
+      const cobalt = rgb(0.24, 0.48, 0.72);
+      const ivory = rgb(0.95, 0.93, 0.88);
+      const muted = rgb(0.62, 0.63, 0.66);
+
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: bg });
+
+      const stripeY = ph - 66;
+      [vermilion, amber, gold, cobalt].forEach((col, idx) => {
+        page.drawRectangle({ x: leftGutter, y: stripeY - idx * 7, width: pw - leftGutter - rightGutter, height: 4.5, color: col });
+      });
+
+      const m = Math.max(options.margin || 28, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      const hdrL = 'HIGH BIAS 70us EQ · TYPE II (CrO2)';
+      const hdrR = 'C-90 · -14 LUFS MASTER';
+      page.drawText(hdrL, { x: x1, y: ph - 44, size: 7.5, font: courierBold, color: gold });
+      page.drawText(hdrR, { x: x2 - courierBold.widthOfTextAtSize(hdrR, 7.5), y: ph - 44, size: 7.5, font: courierBold, color: gold });
+
+      const titleSize = w > 360 ? 24 : 19;
+      const lines = wrapText(helveticaBold, titleText.toUpperCase(), titleSize, w - 16);
+      let ty = ph - 132;
+      for (const line of lines.slice(0, 3)) {
+        page.drawText(line, { x: x1, y: ty, size: titleSize, font: helveticaBold, color: ivory });
+        ty -= (titleSize + 6);
+      }
+      if (subTitleText) {
+        page.drawText(subTitleText, { x: x1, y: ty - 2, size: 11.5, font: timesItalic, color: gold });
+      }
+
+      // Compact Cassette Shell
+      const cw = Math.min(w * 0.78, 280);
+      const ch = cw * 0.62;
+      const cx0 = centerX - cw / 2;
+      const cy0 = ph * 0.44 - ch / 2;
+
+      page.drawRectangle({ x: cx0, y: cy0, width: cw, height: ch, color: rgb(0.14, 0.15, 0.18), borderColor: gold, borderWidth: 1.2 });
+      page.drawRectangle({ x: cx0 + cw * 0.06, y: cy0 + ch * 0.28, width: cw * 0.88, height: ch * 0.60, color: rgb(0.95, 0.92, 0.85), borderColor: rgb(0.75, 0.70, 0.60), borderWidth: 0.5 });
+      page.drawRectangle({ x: cx0 + cw * 0.06, y: cy0 + ch * 0.74, width: cw * 0.88, height: ch * 0.14, color: vermilion });
+      page.drawText('SIDE A · ANALOG ARCHIVE', { x: cx0 + cw * 0.09, y: cy0 + ch * 0.78, size: 7, font: helveticaBold, color: ivory });
+      const dolbyTxt = 'DOLBY B-C NR';
+      page.drawText(dolbyTxt, { x: cx0 + cw * 0.91 - helveticaBold.widthOfTextAtSize(dolbyTxt, 7), y: cy0 + ch * 0.78, size: 7, font: helveticaBold, color: ivory });
+
+      const winW = cw * 0.54;
+      const winH = ch * 0.26;
+      const winX = centerX - winW / 2;
+      const winY = cy0 + ch * 0.36;
+      page.drawRectangle({ x: winX, y: winY, width: winW, height: winH, color: rgb(0.08, 0.08, 0.10), borderColor: rgb(0.35, 0.35, 0.40), borderWidth: 0.7 });
+
+      const reelR = winH * 0.36;
+      [winX + winW * 0.25, winX + winW * 0.75].forEach((rx) => {
+        const ry = winY + winH / 2;
+        page.drawCircle({ x: rx, y: ry, size: reelR, color: ivory, borderColor: gold, borderWidth: 0.8 });
+        page.drawCircle({ x: rx, y: ry, size: reelR * 0.48, color: rgb(0.10, 0.10, 0.12) });
+      });
+
+      page.drawRectangle({ x: cx0 + cw * 0.22, y: cy0, width: cw * 0.56, height: ch * 0.19, color: rgb(0.11, 0.12, 0.14), borderColor: rgb(0.45, 0.46, 0.50), borderWidth: 0.7 });
+
+      // VU Meter scale
+      const vuY = cy0 - 36;
+      page.drawLine({ start: { x: x1, y: vuY }, end: { x: x2, y: vuY }, thickness: 0.6, color: rgb(0.35, 0.36, 0.40) });
+      const ticks = ['-20', '-10', '-7', '-3', '0', '+3dB'];
+      ticks.forEach((lbl, idx) => {
+        const tx = x1 + (w * idx / (ticks.length - 1));
+        const isRed = (lbl === '0' || lbl === '+3dB');
+        page.drawLine({ start: { x: tx, y: vuY }, end: { x: tx, y: vuY + (isRed ? 7 : 4.5) }, thickness: 0.8, color: isRed ? vermilion : gold });
+        const tw = courierBold.widthOfTextAtSize(lbl, 6.5);
+        page.drawText(lbl, { x: tx - tw / 2, y: vuY - 10, size: 6.5, font: courierBold, color: isRed ? vermilion : muted });
+      });
+
+      const metaY = m + 36;
+      page.drawLine({ start: { x: x1, y: metaY + 18 }, end: { x: x2, y: metaY + 18 }, thickness: 0.6, color: gold, opacity: 0.45 });
+      page.drawText(authorText || 'ANALOG STUDIO RECORDING', { x: x1, y: metaY, size: 8.5, font: courierBold, color: ivory });
+      page.drawText(todayStr, { x: x2 - courierBold.widthOfTextAtSize(todayStr, 8.5), y: metaY, size: 8.5, font: courierBold, color: gold });
+      if (options.numSlides) {
+        const sWord = options.isNotebook ? 'PAGES' : 'SLIDES';
+        page.drawText(`PROGRAM LENGTH: ${options.numSlides} ${sWord} · INDEXED NOTES`, { x: x1, y: metaY - 14, size: 7, font: courierFont, color: muted });
+      }
+
+    } else if (tpl === 'juno_synth') {
+      // Roland Juno / Analog Synth Panel (80s Studio Console)
+      const chassis = rgb(0.11, 0.125, 0.145);
+      const junoBlue = rgb(0.17, 0.42, 0.66);
+      const junoRed = rgb(0.79, 0.22, 0.22);
+      const panelSilver = rgb(0.88, 0.89, 0.91);
+      const ledAmber = rgb(0.95, 0.64, 0.18);
+      const muted = rgb(0.60, 0.64, 0.70);
+
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: chassis });
+
+      const m = Math.max(options.margin || 28, 30);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+
+      page.drawRectangle({ x: x1, y: ph - m - 24, width: w, height: 14, color: junoBlue });
+      page.drawRectangle({ x: x1, y: ph - m - 30, width: w, height: 4, color: junoRed });
+      page.drawText('PROGRAMMABLE POLYPHONIC SYNTHESIZER · JUNO-DS SERIES', { x: x1 + 8, y: ph - m - 20, size: 8.2, font: helveticaBold, color: rgb(1, 1, 1) });
+      const chTxt = 'CHORUS I / II';
+      page.drawText(chTxt, { x: x2 - 8 - helveticaBold.widthOfTextAtSize(chTxt, 8.2), y: ph - m - 20, size: 8.2, font: helveticaBold, color: rgb(1, 1, 1) });
+
+      const titleSize = w > 360 ? 24 : 18;
+      const lines = wrapText(helveticaBold, titleText, titleSize, w - 12);
+      let ty = ph - m - 78;
+      for (const line of lines.slice(0, 3)) {
+        page.drawText(line, { x: x1, y: ty, size: titleSize, font: helveticaBold, color: panelSilver });
+        ty -= (titleSize + 6);
+      }
+      if (subTitleText) {
+        page.drawText(`// ${subTitleText}`, { x: x1, y: ty - 4, size: 10.5, font: courierFont, color: ledAmber });
+      }
+
+      const panelH = Math.min(145, ph * 0.22);
+      const panelY = ph * 0.42 - panelH / 2;
+      page.drawRectangle({ x: x1, y: panelY, width: w, height: panelH, color: rgb(0.15, 0.17, 0.20), borderColor: junoBlue, borderWidth: 1.0 });
+
+      const sections = [['DCO', 0.68], ['SUB', 0.42], ['HPF', 0.30], ['VCF', 0.76], ['RES', 0.55], ['VCA', 0.82], ['ENV', 0.60], ['LFO', 0.48]];
+      const colW = w / sections.length;
+      sections.forEach(([lbl, val], idx) => {
+        const sx = x1 + colW * (idx + 0.5);
+        const lw = helveticaBold.widthOfTextAtSize(lbl, 6.5);
+        page.drawText(lbl, { x: sx - lw / 2, y: panelY + panelH - 14, size: 6.5, font: helveticaBold, color: panelSilver });
+        const trBot = panelY + 22;
+        const trTop = panelY + panelH - 28;
+        page.drawLine({ start: { x: sx, y: trBot }, end: { x: sx, y: trTop }, thickness: 3.0, color: rgb(0.06, 0.07, 0.08) });
+        for (let t = 0; t < 5; t++) {
+          const tyTick = trBot + (trTop - trBot) * (t / 4);
+          page.drawLine({ start: { x: sx - 8, y: tyTick }, end: { x: sx - 4, y: tyTick }, thickness: 0.4, color: rgb(0.45, 0.48, 0.54) });
+          page.drawLine({ start: { x: sx + 4, y: tyTick }, end: { x: sx + 8, y: tyTick }, thickness: 0.4, color: rgb(0.45, 0.48, 0.54) });
+        }
+        const capY = trBot + (trTop - trBot) * val;
+        page.drawRectangle({ x: sx - 6.5, y: capY - 4, width: 13, height: 8, color: rgb(0.24, 0.26, 0.30), borderColor: panelSilver, borderWidth: 0.7 });
+        page.drawLine({ start: { x: sx - 5, y: capY }, end: { x: sx + 5, y: capY }, thickness: 1.2, color: (idx === 3 || idx === 4) ? junoRed : ledAmber });
+        page.drawCircle({ x: sx, y: panelY + 11, size: 2.2, color: (idx === 0 || idx === 3 || idx === 5) ? junoRed : rgb(0.25, 0.28, 0.32) });
+      });
+
+      const kbH = 54;
+      const kbY = m + 64;
+      const numWhite = 14;
+      const wkW = w / numWhite;
+      for (let i = 0; i < numWhite; i++) {
+        page.drawRectangle({ x: x1 + i * wkW, y: kbY, width: wkW, height: kbH, color: rgb(0.95, 0.95, 0.94), borderColor: rgb(0.12, 0.13, 0.15), borderWidth: 0.6 });
+      }
+      [0, 1, 3, 4, 5, 7, 8, 10, 11, 12].forEach((bIdx) => {
+        if (bIdx < numWhite - 1) {
+          page.drawRectangle({ x: x1 + (bIdx + 0.68) * wkW, y: kbY + kbH * 0.38, width: wkW * 0.64, height: kbH * 0.62, color: rgb(0.08, 0.09, 0.11) });
+        }
+      });
+
+      page.drawText(`PATCH: ${authorText || 'STUDIO SESSION'}`, { x: x1, y: m + 28, size: 8.5, font: courierBold, color: panelSilver });
+      page.drawText(todayStr, { x: x2 - courierBold.widthOfTextAtSize(todayStr, 8.5), y: m + 28, size: 8.5, font: courierBold, color: ledAmber });
+      if (options.numSlides) {
+        const sWord = options.isNotebook ? 'PAGES' : 'SLIDES';
+        page.drawText(`BANK A · ${options.numSlides} ${sWord} · MIDI CH 01`, { x: x1, y: m + 14, size: 7, font: courierFont, color: muted });
+      }
+
+    } else if (tpl === 'noir_gotham') {
+      // Noir Detective Dossier (Year One / Twin Peaks)
+      const obsidian = rgb(0.055, 0.062, 0.082);
+      const amberBeam = rgb(0.84, 0.62, 0.21);
+      const crimson = rgb(0.72, 0.14, 0.18);
+      const ivory = rgb(0.95, 0.93, 0.88);
+      const slate = rgb(0.56, 0.58, 0.64);
+
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: obsidian });
+
+      const m = Math.max(options.margin || 28, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+
+      // Subtle amber diagonal accent lines
+      page.drawLine({ start: { x: leftGutter, y: ph * 0.78 }, end: { x: pw - rightGutter, y: ph * 0.44 }, thickness: 28, color: amberBeam, opacity: 0.09 });
+      page.drawRectangle({ x: x1, y: m, width: w, height: ph - 2 * m, borderColor: amberBeam, borderWidth: 0.9, borderOpacity: 0.45 });
+
+      const boxW = 56, boxH = 62;
+      const boxX = x1 + 14, boxY = ph - m - 14 - boxH;
+      page.drawRectangle({ x: boxX, y: boxY, width: boxW, height: boxH, color: amberBeam });
+      const nfW = helveticaBold.widthOfTextAtSize('NOIR FILE', 7);
+      page.drawText('NOIR FILE', { x: boxX + (boxW - nfW) / 2, y: ph - m - 28, size: 7, font: helveticaBold, color: obsidian });
+      const numW = timesBold.widthOfTextAtSize('01', 20);
+      page.drawText('01', { x: boxX + (boxW - numW) / 2, y: ph - m - 54, size: 20, font: timesBold, color: obsidian });
+      const yoW = courierBold.widthOfTextAtSize('YEAR ONE', 6);
+      page.drawText('YEAR ONE', { x: boxX + (boxW - yoW) / 2, y: ph - m - 69, size: 6, font: courierBold, color: obsidian });
+
+      const confTxt = 'CONFIDENTIAL ARCHIVE · CASEBOOK';
+      page.drawText(confTxt, { x: x2 - 14 - courierBold.widthOfTextAtSize(confTxt, 7.5), y: ph - m - 28, size: 7.5, font: courierBold, color: slate });
+      const dUp = todayStr.toUpperCase();
+      page.drawText(dUp, { x: x2 - 14 - courierBold.widthOfTextAtSize(dUp, 7.5), y: ph - m - 42, size: 7.5, font: courierBold, color: crimson });
+
+      const titleSize = w > 360 ? 28 : 21;
+      const lines = wrapText(timesBold, titleText.toUpperCase(), titleSize, w - 36);
+      let ty = ph * 0.62;
+      for (const line of lines.slice(0, 3)) {
+        page.drawText(line, { x: x1 + 18, y: ty, size: titleSize, font: timesBold, color: ivory });
+        ty -= (titleSize + 7);
+      }
+      if (subTitleText) {
+        page.drawText(subTitleText, { x: x1 + 18, y: ty - 4, size: 12.5, font: timesItalic, color: amberBeam });
+      }
+
+      // Red Room chevron zigzag
+      const zigY = ph * 0.34;
+      const zigSteps = 16;
+      const stepX = (w - 36) / zigSteps;
+      for (let i = 0; i < zigSteps; i++) {
+        const zx1 = x1 + 18 + i * stepX;
+        const zy1 = zigY + (i % 2 === 0 ? 5.5 : -5.5);
+        const zx2 = x1 + 18 + (i + 1) * stepX;
+        const zy2 = zigY + ((i + 1) % 2 === 0 ? 5.5 : -5.5);
+        page.drawLine({ start: { x: zx1, y: zy1 }, end: { x: zx2, y: zy2 }, thickness: 1.5, color: crimson });
+      }
+
+      // Art-Deco Gotham skyline
+      const skyBase = m + 46;
+      const buildings = [
+        [0.00, 0.08, 42], [0.08, 0.07, 74], [0.15, 0.10, 56],
+        [0.25, 0.08, 96], [0.33, 0.09, 64], [0.42, 0.11, 118],
+        [0.53, 0.09, 82], [0.62, 0.10, 102], [0.72, 0.08, 60],
+        [0.80, 0.11, 86], [0.91, 0.09, 48],
+      ];
+      const hScale = ph < 650 ? 0.75 : 1.0;
+      buildings.forEach(([bxF, bwF, bh]) => {
+        page.drawRectangle({ x: x1 + 14 + (w - 28) * bxF, y: skyBase, width: (w - 28) * bwF - 1.5, height: bh * hScale, color: rgb(0.11, 0.125, 0.16) });
+      });
+
+      page.drawText((authorText || 'DETECTIVE DIVISION').toUpperCase(), { x: x1 + 18, y: m + 20, size: 8.5, font: courierBold, color: ivory });
+      if (options.numSlides) {
+        const sWord = options.isNotebook ? 'PAGES' : 'SLIDES';
+        const clTxt = `${options.numSlides} ${sWord} · CLASSIFIED`;
+        page.drawText(clTxt, { x: x2 - 18 - courierBold.widthOfTextAtSize(clTxt, 8.5), y: m + 20, size: 8.5, font: courierBold, color: amberBeam });
+      }
+
+    } else if (tpl === 'barista_brew') {
+      // Specialty Coffee Ledger (Moka & Pour-Over)
+      const kraft = rgb(0.957, 0.929, 0.878);
+      const espresso = rgb(0.17, 0.12, 0.086);
+      const copper = rgb(0.70, 0.35, 0.165);
+      const crema = rgb(0.54, 0.43, 0.34);
+
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: kraft });
+
+      const m = Math.max(options.margin || 28, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      page.drawRectangle({ x: x1, y: m, width: w, height: ph - 2 * m, borderColor: espresso, borderWidth: 1.2 });
+      page.drawRectangle({ x: x1 + 6, y: m + 6, width: w - 12, height: ph - 2 * m - 12, borderColor: copper, borderWidth: 0.5 });
+
+      const hdr = 'SPECIALTY BREW LEDGER · MOKA · POUR-OVER · COLD BREW';
+      page.drawText(hdr, { x: centerX - courierBold.widthOfTextAtSize(hdr, 7.2) / 2, y: ph - m - 28, size: 7.2, font: courierBold, color: copper });
+      page.drawLine({ start: { x: x1 + 24, y: ph - m - 38 }, end: { x: x2 - 24, y: ph - m - 38 }, thickness: 0.5, color: espresso, opacity: 0.25 });
+
+      const titleSize = w > 360 ? 25 : 19;
+      const lines = wrapText(timesBold, titleText, titleSize, w - 48);
+      let ty = ph - m - 84;
+      for (const line of lines.slice(0, 3)) {
+        page.drawText(line, { x: centerX - timesBold.widthOfTextAtSize(line, titleSize) / 2, y: ty, size: titleSize, font: timesBold, color: espresso });
+        ty -= (titleSize + 7);
+      }
+      if (subTitleText) {
+        page.drawText(subTitleText, { x: centerX - timesItalic.widthOfTextAtSize(subTitleText, 12) / 2, y: ty - 2, size: 12, font: timesItalic, color: copper });
+      }
+
+      // Geometric Moka Pot Elevation
+      const mkS = Math.min(w * 0.34, 118);
+      const mkCx = centerX;
+      const mkBy = ph * 0.35;
+      // Base + collar + upper carafe + lid + knob + handle + steam
+      page.drawRectangle({ x: mkCx - mkS * 0.36, y: mkBy, width: mkS * 0.72, height: mkS * 0.44, color: rgb(0.91, 0.87, 0.80), borderColor: espresso, borderWidth: 1.3 });
+      page.drawRectangle({ x: mkCx - mkS * 0.31, y: mkBy + mkS * 0.44, width: mkS * 0.62, height: mkS * 0.08, color: copper, borderColor: espresso, borderWidth: 1.0 });
+      page.drawRectangle({ x: mkCx - mkS * 0.38, y: mkBy + mkS * 0.52, width: mkS * 0.76, height: mkS * 0.54, color: rgb(0.94, 0.90, 0.84), borderColor: espresso, borderWidth: 1.3 });
+      page.drawLine({ start: { x: mkCx, y: mkBy }, end: { x: mkCx, y: mkBy + mkS * 1.06 }, thickness: 0.6, color: espresso, opacity: 0.45 });
+      page.drawRectangle({ x: mkCx - mkS * 0.34, y: mkBy + mkS * 1.06, width: mkS * 0.68, height: mkS * 0.12, color: copper, borderColor: espresso, borderWidth: 1.1 });
+      page.drawRectangle({ x: mkCx - mkS * 0.07, y: mkBy + mkS * 1.18, width: mkS * 0.14, height: mkS * 0.09, color: espresso });
+      // Handle
+      page.drawLine({ start: { x: mkCx + mkS * 0.38, y: mkBy + mkS * 0.96 }, end: { x: mkCx + mkS * 0.60, y: mkBy + mkS * 0.92 }, thickness: 2.6, color: espresso });
+      page.drawLine({ start: { x: mkCx + mkS * 0.60, y: mkBy + mkS * 0.92 }, end: { x: mkCx + mkS * 0.55, y: mkBy + mkS * 0.56 }, thickness: 2.6, color: espresso });
+      page.drawLine({ start: { x: mkCx + mkS * 0.55, y: mkBy + mkS * 0.56 }, end: { x: mkCx + mkS * 0.38, y: mkBy + mkS * 0.56 }, thickness: 2.6, color: espresso });
+      // Steam
+      [-12, 0, 12].forEach((dx) => {
+        page.drawLine({ start: { x: mkCx + dx, y: mkBy + mkS * 1.34 }, end: { x: mkCx + dx + 3, y: mkBy + mkS * 1.50 }, thickness: 0.9, color: copper });
+      });
+
+      const specY = m + 66;
+      page.drawLine({ start: { x: x1 + 20, y: specY + 18 }, end: { x: x2 - 20, y: specY + 18 }, thickness: 0.7, color: espresso });
+      const specTxt = 'RATIO 1:16 · 93°C · MEDIUM ROAST · EXTRACTION NOTES';
+      page.drawText(specTxt, { x: centerX - courierBold.widthOfTextAtSize(specTxt, 7) / 2, y: specY + 4, size: 7, font: courierBold, color: copper });
+      const authL = authorText || 'Roaster & Kitchen Compendium';
+      page.drawText(authL, { x: centerX - timesBold.widthOfTextAtSize(authL, 10.5) / 2, y: specY - 16, size: 10.5, font: timesBold, color: espresso });
+      const ext = options.numSlides ? ` · ${options.numSlides} ${options.isNotebook ? 'Pages' : 'Slides'}` : '';
+      const dLine = `${todayStr}${ext}`;
+      page.drawText(dLine, { x: centerX - timesItalic.widthOfTextAtSize(dLine, 9) / 2, y: specY - 32, size: 9, font: timesItalic, color: crema });
+
+    } else if (tpl === 'vinyl_prog') {
+      // 70s Prog & Yacht Rock Gatefold (ECM / Hipgnosis LP Sleeve)
+      const bone = rgb(0.965, 0.953, 0.922);
+      const ink = rgb(0.10, 0.105, 0.12);
+      const burntOrange = rgb(0.84, 0.34, 0.14);
+      const ochre = rgb(0.87, 0.67, 0.22);
+      const teal = rgb(0.14, 0.44, 0.46);
+      const muted = rgb(0.42, 0.42, 0.40);
+
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: bone });
+
+      const m = Math.max(options.margin || 28, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+
+      page.drawText('STEREO 33 1/3 RPM · HI-FI GATEFOLD ARCHIVE', { x: x1, y: ph - m - 14, size: 7.5, font: helveticaBold, color: muted });
+      const catR = `CAT. NO. SP-77 · ${todayStr}`;
+      page.drawText(catR, { x: x2 - helveticaBold.widthOfTextAtSize(catR, 7.5), y: ph - m - 14, size: 7.5, font: helveticaBold, color: muted });
+      page.drawLine({ start: { x: x1, y: ph - m - 22 }, end: { x: x2, y: ph - m - 22 }, thickness: 1.4, color: ink });
+
+      const artSize = Math.min(w * 0.56, 200);
+      const sleeveX = x1 + (w - artSize * 1.32) / 2;
+      const sleeveY = ph * 0.46 - artSize / 2;
+      const discR = artSize * 0.46;
+      const discCx = sleeveX + artSize * 0.92;
+      const discCy = sleeveY + artSize / 2;
+
+      page.drawCircle({ x: discCx, y: discCy, size: discR, color: ink });
+      [0.88, 0.78, 0.68, 0.58].forEach((frac) => {
+        page.drawCircle({ x: discCx, y: discCy, size: discR * frac, borderColor: rgb(0.28, 0.29, 0.32), borderWidth: 0.45 });
+      });
+      page.drawCircle({ x: discCx, y: discCy, size: discR * 0.36, color: burntOrange });
+      page.drawCircle({ x: discCx, y: discCy, size: discR * 0.20, color: ochre });
+      page.drawCircle({ x: discCx, y: discCy, size: discR * 0.06, color: bone });
+
+      page.drawRectangle({ x: sleeveX, y: sleeveY, width: artSize, height: artSize, color: rgb(0.14, 0.16, 0.19), borderColor: ink, borderWidth: 0.8 });
+      const bandH = artSize * 0.11;
+      page.drawRectangle({ x: sleeveX, y: sleeveY + artSize * 0.62, width: artSize, height: bandH, color: burntOrange });
+      page.drawRectangle({ x: sleeveX, y: sleeveY + artSize * 0.51, width: artSize, height: bandH, color: ochre });
+      page.drawRectangle({ x: sleeveX, y: sleeveY + artSize * 0.40, width: artSize, height: bandH, color: teal });
+
+      const titleSize = w > 360 ? 25 : 19;
+      const lines = wrapText(helveticaBold, titleText, titleSize, w - 12);
+      let ty = sleeveY - 38;
+      for (const line of lines.slice(0, 3)) {
+        page.drawText(line, { x: x1, y: ty, size: titleSize, font: helveticaBold, color: ink });
+        ty -= (titleSize + 6);
+      }
+      if (subTitleText) {
+        page.drawText(subTitleText, { x: x1, y: ty - 2, size: 11.5, font: helveticaOblique, color: burntOrange });
+      }
+
+      page.drawLine({ start: { x: x1, y: m + 36 }, end: { x: x2, y: m + 36 }, thickness: 0.6, color: ink, opacity: 0.25 });
+      page.drawText((authorText || 'SIDE A · PROGRESSIVE EDITION').toUpperCase(), { x: x1, y: m + 20, size: 8.5, font: helveticaBold, color: ink });
+      if (options.numSlides) {
+        const sWord = options.isNotebook ? 'TRACKS / PAGES' : 'SLIDES';
+        const trTxt = `${options.numSlides} ${sWord}`;
+        page.drawText(trTxt, { x: x2 - courierFont.widthOfTextAtSize(trTxt, 7.5), y: m + 20, size: 7.5, font: courierFont, color: muted });
+      }
+
+    } else if (tpl === 'oxford_stripe') {
+      // Sartorial Oxford Stripe (Tailored Bengal Pinstripe & Woven Bookplate)
+      const fabric = rgb(0.973, 0.976, 0.984);
+      const stripeBlue = rgb(0.76, 0.83, 0.90);
+      const navy = rgb(0.09, 0.15, 0.26);
+      const burgundy = rgb(0.49, 0.13, 0.18);
+      const gold = rgb(0.76, 0.63, 0.36);
+      const ivory = rgb(0.98, 0.97, 0.94);
+
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: fabric });
+      for (let sx = leftGutter; sx < pw - rightGutter; sx += 14) {
+        page.drawRectangle({ x: sx, y: 0, width: 2.2, height: ph, color: stripeBlue });
+        page.drawRectangle({ x: sx + 3.4, y: 0, width: 0.8, height: ph, color: stripeBlue, opacity: 0.45 });
+      }
+
+      const m = Math.max(options.margin || 28, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      const plateW = Math.min(w * 0.84, 340);
+      const plateH = Math.min(ph * 0.56, 360);
+      const px0 = centerX - plateW / 2;
+      const py0 = ph * 0.50 - plateH / 2;
+
+      page.drawRectangle({ x: px0 + 4, y: py0 - 4, width: plateW, height: plateH, color: rgb(0.05, 0.08, 0.14), opacity: 0.18 });
+      page.drawRectangle({ x: px0, y: py0, width: plateW, height: plateH, color: navy, borderColor: gold, borderWidth: 1.1 });
+      page.drawRectangle({ x: px0 + 9, y: py0 + 9, width: plateW - 18, height: plateH - 18, borderColor: gold, borderWidth: 0.6, borderOpacity: 0.65 });
+
+      page.drawRectangle({ x: px0 + 10, y: py0 + plateH - 34, width: plateW - 20, height: 14, color: burgundy });
+      const sartTxt = 'S A R T O R I A L   E D I T I O N';
+      page.drawText(sartTxt, { x: centerX - timesFont.widthOfTextAtSize(sartTxt, 7) / 2, y: py0 + plateH - 29.5, size: 7, font: timesFont, color: ivory });
+
+      const titleSize = plateW > 270 ? 22 : 17;
+      const lines = wrapText(timesBold, titleText, titleSize, plateW - 44);
+      let ty = py0 + plateH * 0.62 + (lines.length - 1) * (titleSize * 0.45);
+      for (const line of lines.slice(0, 3)) {
+        page.drawText(line, { x: centerX - timesBold.widthOfTextAtSize(line, titleSize) / 2, y: ty, size: titleSize, font: timesBold, color: ivory });
+        ty -= (titleSize + 7);
+      }
+      if (subTitleText) {
+        page.drawText(subTitleText, { x: centerX - timesItalic.widthOfTextAtSize(subTitleText, 11.5) / 2, y: ty - 4, size: 11.5, font: timesItalic, color: gold });
+      }
+
+      page.drawLine({ start: { x: centerX - 34, y: py0 + 78 }, end: { x: centerX + 34, y: py0 + 78 }, thickness: 0.6, color: gold });
+      const authL = authorText || 'Tailored Archive';
+      page.drawText(authL, { x: centerX - timesFont.widthOfTextAtSize(authL, 10) / 2, y: py0 + 56, size: 10, font: timesFont, color: ivory });
+      page.drawText(todayStr, { x: centerX - timesItalic.widthOfTextAtSize(todayStr, 8.8) / 2, y: py0 + 38, size: 8.8, font: timesItalic, color: gold });
+      if (options.numSlides) {
+        const sWord = options.isNotebook ? 'Pages' : 'Slides';
+        const pTxt = `${options.numSlides} ${sWord} · Bespoke Bound`;
+        page.drawText(pTxt, { x: centerX - helveticaFont.widthOfTextAtSize(pTxt, 7) / 2, y: py0 + 22, size: 7, font: helveticaFont, color: rgb(0.75, 0.78, 0.84) });
+      }
+
+    } else if (tpl === 'miami_vice') {
+      // Miami Vice / Vice City 1984 (Neon Art Deco Horizon)
+      const night = rgb(0.055, 0.086, 0.165);
+      const magenta = rgb(0.98, 0.18, 0.56);
+      const cyan = rgb(0.04, 0.86, 0.96);
+      const sunset = rgb(0.99, 0.48, 0.24);
+      const gold = rgb(0.99, 0.78, 0.25);
+      const white = rgb(0.97, 0.98, 1.0);
+
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: night });
+
+      const m = Math.max(options.margin || 28, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      page.drawRectangle({ x: x1, y: m, width: w, height: ph - 2 * m, borderColor: cyan, borderWidth: 1.4 });
+      page.drawRectangle({ x: x1 + 5.5, y: m + 5.5, width: w - 11, height: ph - 2 * m - 11, borderColor: magenta, borderWidth: 0.8 });
+
+      page.drawText('OCEAN DRIVE · 1984 · STEREO FM', { x: x1 + 16, y: ph - m - 24, size: 7.5, font: helveticaBold, color: cyan });
+      const viceR = `VICE EDITION · ${todayStr}`;
+      page.drawText(viceR, { x: x2 - 16 - helveticaBold.widthOfTextAtSize(viceR, 7.5), y: ph - m - 24, size: 7.5, font: helveticaBold, color: magenta });
+
+      const titleSize = w > 360 ? 26 : 20;
+      const lines = wrapText(helveticaBold, titleText.toUpperCase(), titleSize, w - 40);
+      let ty = ph - m - 78;
+      for (const line of lines.slice(0, 3)) {
+        page.drawText(line, { x: x1 + 18, y: ty, size: titleSize, font: helveticaBold, color: white });
+        ty -= (titleSize + 6);
+      }
+      if (subTitleText) {
+        page.drawText(subTitleText, { x: x1 + 18, y: ty - 2, size: 12, font: helveticaOblique, color: magenta });
+      }
+
+      const sunR = Math.min(w * 0.24, 82);
+      const sunCx = centerX;
+      const sunCy = ph * 0.43;
+      page.drawCircle({ x: sunCx, y: sunCy, size: sunR, color: gold });
+      page.drawCircle({ x: sunCx, y: sunCy - sunR * 0.14, size: sunR * 0.86, color: sunset });
+      page.drawCircle({ x: sunCx, y: sunCy - sunR * 0.30, size: sunR * 0.68, color: magenta });
+
+      [0.05, 0.22, 0.38, 0.54, 0.70, 0.84].forEach((frac, idx) => {
+        const sy = sunCy - sunR * frac;
+        const sh = 2.2 + idx * 1.1;
+        page.drawRectangle({ x: sunCx - sunR - 2, y: sy - sh / 2, width: 2 * sunR + 4, height: sh, color: night });
+      });
+
+      const horY = sunCy - sunR * 0.88;
+      page.drawLine({ start: { x: x1 + 14, y: horY }, end: { x: x2 - 14, y: horY }, thickness: 1.2, color: cyan });
+      const gridBot = m + 56;
+      for (let i = 1; i <= 6; i++) {
+        const frac = Math.pow(i / 6, 1.45);
+        const gy = horY - (horY - gridBot) * frac;
+        page.drawLine({ start: { x: x1 + 14, y: gy }, end: { x: x2 - 14, y: gy }, thickness: 0.6, color: magenta, opacity: 0.55 });
+      }
+      for (let i = -4; i <= 4; i++) {
+        const bx = centerX + i * (w * 0.115);
+        const tx = centerX + i * (w * 0.038);
+        page.drawLine({ start: { x: tx, y: horY }, end: { x: bx, y: gridBot }, thickness: 0.6, color: magenta, opacity: 0.55 });
+      }
+
+      page.drawText((authorText || 'MIAMI NIGHT ARCHIVE').toUpperCase(), { x: x1 + 16, y: m + 22, size: 8.5, font: helveticaBold, color: white });
+      if (options.numSlides) {
+        const sWord = options.isNotebook ? 'PAGES' : 'SLIDES';
+        const ndTxt = `${options.numSlides} ${sWord} · NEON DECO`;
+        page.drawText(ndTxt, { x: x2 - 16 - courierBold.widthOfTextAtSize(ndTxt, 8), y: m + 22, size: 8, font: courierBold, color: cyan });
+      }
+
+    } else if (tpl === 'blade_runner') {
+      // Blade Runner 2019 (Voight-Kampff Reticle & Tyrell Neo-Noir)
+      const asphalt = rgb(0.04, 0.052, 0.072);
+      const amber = rgb(0.92, 0.56, 0.16);
+      const cyan = rgb(0.20, 0.72, 0.80);
+      const ivory = rgb(0.94, 0.92, 0.88);
+      const muted = rgb(0.50, 0.54, 0.60);
+
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: asphalt });
+
+      const m = Math.max(options.margin || 28, 30);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      for (let i = 0; i < 18; i++) {
+        const rx = x1 + (w * ((i * 37) % 100) / 100);
+        const ry = m + (ph - 2 * m) * (((i * 53 + 17) % 100) / 100);
+        page.drawLine({ start: { x: rx, y: ry }, end: { x: rx - 8, y: ry - 34 }, thickness: 0.5, color: cyan, opacity: 0.14 });
+      }
+
+      page.drawLine({ start: { x: x1, y: ph - m - 20 }, end: { x: x2, y: ph - m - 20 }, thickness: 0.8, color: amber });
+      page.drawText('VOIGHT-KAMPFF · NEXUS-6 DIAGNOSTIC', { x: x1, y: ph - m - 12, size: 7.2, font: courierBold, color: amber });
+      const laTxt = `LA 2019 · ${todayStr}`;
+      page.drawText(laTxt, { x: x2 - courierBold.widthOfTextAtSize(laTxt, 7.2), y: ph - m - 12, size: 7.2, font: courierBold, color: cyan });
+
+      const titleSize = w > 360 ? 24 : 18.5;
+      const lines = wrapText(helveticaBold, titleText.toUpperCase(), titleSize, w - 16);
+      let ty = ph - m - 64;
+      for (const line of lines.slice(0, 3)) {
+        page.drawText(line, { x: x1, y: ty, size: titleSize, font: helveticaBold, color: ivory });
+        ty -= (titleSize + 6);
+      }
+      if (subTitleText) {
+        page.drawText(`>> ${subTitleText}`, { x: x1, y: ty - 4, size: 10.5, font: courierFont, color: amber });
+      }
+
+      const retR = Math.min(w * 0.25, 86);
+      const retCx = centerX;
+      const retCy = ph * 0.44;
+      page.drawCircle({ x: retCx, y: retCy, size: retR, borderColor: amber, borderWidth: 0.6, borderOpacity: 0.35 });
+      page.drawCircle({ x: retCx, y: retCy, size: retR * 0.74, borderColor: amber, borderWidth: 1.1 });
+      page.drawCircle({ x: retCx, y: retCy, size: retR * 0.44, borderColor: cyan, borderWidth: 0.7 });
+      page.drawCircle({ x: retCx, y: retCy, size: retR * 0.22, color: amber, opacity: 0.22 });
+      page.drawCircle({ x: retCx, y: retCy, size: retR * 0.08, color: amber });
+
+      page.drawLine({ start: { x: retCx - retR * 1.18, y: retCy }, end: { x: retCx - retR * 0.52, y: retCy }, thickness: 0.8, color: amber });
+      page.drawLine({ start: { x: retCx + retR * 0.52, y: retCy }, end: { x: retCx + retR * 1.18, y: retCy }, thickness: 0.8, color: amber });
+      page.drawLine({ start: { x: retCx, y: retCy - retR * 1.18 }, end: { x: retCx, y: retCy - retR * 0.52 }, thickness: 0.8, color: amber });
+      page.drawLine({ start: { x: retCx, y: retCy + retR * 0.52 }, end: { x: retCx, y: retCy + retR * 1.18 }, thickness: 0.8, color: amber });
+
+      page.drawText('EMPATHY RESPONSE: 0.84', { x: x1, y: retCy + retR * 0.9, size: 6.5, font: courierFont, color: muted });
+      const pupTxt = 'PUPIL DILATION: NOMINAL';
+      page.drawText(pupTxt, { x: x2 - courierFont.widthOfTextAtSize(pupTxt, 6.5), y: retCy - retR * 0.9, size: 6.5, font: courierFont, color: muted });
+
+      // Stepped Tyrell Ziggurat silhouette
+      const pyrBase = m + 42;
+      const pyrH = ph >= 650 ? 56 : 40;
+      const tiers = 5;
+      for (let t = 0; t < tiers; t++) {
+        const f = t / tiers;
+        const tw = w * (0.76 - f * 0.42);
+        const th = pyrH / tiers;
+        page.drawRectangle({ x: centerX - tw / 2, y: pyrBase + t * th, width: tw, height: th, color: rgb(0.10, 0.12, 0.16), borderColor: amber, borderWidth: 0.5, borderOpacity: 0.4 });
+      }
+
+      page.drawText((authorText || 'TYRELL ARCHIVE DIVISION').toUpperCase(), { x: x1, y: m + 16, size: 8, font: courierBold, color: ivory });
+      if (options.numSlides) {
+        const sWord = options.isNotebook ? 'PAGES' : 'SLIDES';
+        const owTxt = `${options.numSlides} ${sWord} · OFF-WORLD`;
+        page.drawText(owTxt, { x: x2 - courierBold.widthOfTextAtSize(owTxt, 8), y: m + 16, size: 8, font: courierBold, color: amber });
+      }
+
+    } else if (tpl === 'stranger_things') {
+      // Hawkins 1983 / Upside Down (80s Sci-Fi Horror Paperback)
+      const voidBg = rgb(0.035, 0.032, 0.048);
+      const crimson = rgb(0.84, 0.14, 0.16);
+      const glowRed = rgb(0.55, 0.08, 0.11);
+      const parchment = rgb(0.95, 0.92, 0.88);
+      const ash = rgb(0.68, 0.66, 0.72);
+
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: voidBg });
+
+      const m = Math.max(options.margin || 28, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      page.drawRectangle({ x: x1, y: m, width: w, height: ph - 2 * m, borderColor: crimson, borderWidth: 0.7, borderOpacity: 0.35 });
+
+      const hwk = 'HAWKINS NATIONAL LABORATORY · INDIANA · 1983';
+      page.drawText(hwk, { x: centerX - courierBold.widthOfTextAtSize(hwk, 7.2) / 2, y: ph - m - 26, size: 7.2, font: courierBold, color: ash });
+
+      const titleSize = w > 360 ? 27 : 20;
+      const lines = wrapText(timesBold, titleText.toUpperCase(), titleSize, w - 36).slice(0, 3);
+      const topBarY = ph * 0.72;
+      page.drawLine({ start: { x: x1 + 18, y: topBarY }, end: { x: x2 - 18, y: topBarY }, thickness: 2.2, color: crimson });
+      page.drawLine({ start: { x: x1 + 18, y: topBarY + 4 }, end: { x: x2 - 18, y: topBarY + 4 }, thickness: 0.7, color: glowRed });
+
+      let ty = topBarY - titleSize - 8;
+      for (const line of lines) {
+        page.drawText(line, { x: centerX - timesBold.widthOfTextAtSize(line, titleSize) / 2, y: ty, size: titleSize, font: timesBold, color: crimson });
+        ty -= (titleSize + 6);
+      }
+
+      const botBarY = ty + 4;
+      page.drawLine({ start: { x: x1 + 18, y: botBarY }, end: { x: x2 - 18, y: botBarY }, thickness: 2.2, color: crimson });
+
+      if (subTitleText) {
+        page.drawText(subTitleText, { x: centerX - timesItalic.widthOfTextAtSize(subTitleText, 12) / 2, y: botBarY - 24, size: 12, font: timesItalic, color: parchment });
+      }
+
+      const midY = ph * 0.32;
+      page.drawLine({ start: { x: x1 + 14, y: midY }, end: { x: x2 - 14, y: midY }, thickness: 0.9, color: crimson });
+
+      const treeXs = [0.08, 0.16, 0.25, 0.34, 0.44, 0.56, 0.66, 0.75, 0.84, 0.92];
+      const treeHs = [30, 44, 26, 38, 22, 24, 42, 28, 40, 32];
+      treeXs.forEach((txF, idx) => {
+        const tx = x1 + 14 + (w - 28) * txF;
+        const th = treeHs[idx];
+        page.drawLine({ start: { x: tx, y: midY }, end: { x: tx, y: midY + th }, thickness: 5, color: rgb(0.14, 0.09, 0.12) });
+        page.drawLine({ start: { x: tx, y: midY }, end: { x: tx, y: midY - th * 0.85 }, thickness: 5, color: rgb(0.30, 0.05, 0.07) });
+      });
+
+      for (let i = 0; i < 14; i++) {
+        const sx = x1 + 20 + (w - 40) * (((i * 29 + 7) % 100) / 100);
+        const sy = m + 42 + (midY - m - 48) * (((i * 47 + 13) % 100) / 100);
+        page.drawCircle({ x: sx, y: sy, size: 1.0 + (i % 2) * 0.6, color: rgb(0.92, 0.90, 0.96), opacity: 0.45 });
+      }
+
+      page.drawText(authorText || 'CHAPTER ONE · THE VANISHING', { x: x1 + 16, y: m + 18, size: 9.5, font: timesFont, color: parchment });
+      const dUp = todayStr.toUpperCase();
+      page.drawText(dUp, { x: x2 - 16 - courierBold.widthOfTextAtSize(dUp, 7.8), y: m + 18, size: 7.8, font: courierBold, color: crimson });
+
+    } else if (tpl === 'barry_lyndon') {
+      // Kubrick Candlelight / 18th-Century Folio (Barry Lyndon)
+      const umber = rgb(0.11, 0.082, 0.062);
+      const gold = rgb(0.79, 0.64, 0.36);
+      const cream = rgb(0.96, 0.935, 0.885);
+      const muted = rgb(0.68, 0.60, 0.46);
+
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: umber });
+
+      const m = Math.max(options.margin || 28, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      page.drawRectangle({ x: x1, y: m, width: w, height: ph - 2 * m, borderColor: gold, borderWidth: 1.3 });
+      page.drawRectangle({ x: x1 + 7, y: m + 7, width: w - 14, height: ph - 2 * m - 14, borderColor: gold, borderWidth: 0.55 });
+      [x1, x2 - 7].forEach((cxSq) => {
+        [m, ph - m - 7].forEach((cySq) => {
+          page.drawRectangle({ x: cxSq, y: cySq, width: 7, height: 7, borderColor: gold, borderWidth: 0.55 });
+        });
+      });
+
+      const rub = 'M E M O I R S   O F   T H E   E I G H T E E N T H   C E N T U R Y';
+      page.drawText(rub, { x: centerX - timesFont.widthOfTextAtSize(rub, 7.6) / 2, y: ph - m - 34, size: 7.6, font: timesFont, color: gold });
+
+      const flY = ph * 0.74;
+      page.drawCircle({ x: centerX, y: flY, size: 16, borderColor: gold, borderWidth: 0.8 });
+      page.drawCircle({ x: centerX, y: flY - 2, size: 4.5, color: gold });
+      page.drawLine({ start: { x: centerX, y: flY - 2 }, end: { x: centerX, y: flY + 9 }, thickness: 2.2, color: gold });
+
+      const titleSize = w > 360 ? 26 : 20;
+      const lines = wrapText(timesBold, titleText.toUpperCase(), titleSize, w - 56);
+      let ty = ph * 0.56;
+      for (const line of lines.slice(0, 3)) {
+        page.drawText(line, { x: centerX - timesBold.widthOfTextAtSize(line, titleSize) / 2, y: ty, size: titleSize, font: timesBold, color: cream });
+        ty -= (titleSize + 9);
+      }
+      if (subTitleText) {
+        page.drawText(subTitleText, { x: centerX - timesItalic.widthOfTextAtSize(subTitleText, 12.5) / 2, y: ty - 6, size: 12.5, font: timesItalic, color: gold });
+      }
+
+      page.drawLine({ start: { x: centerX - 48, y: ph * 0.28 }, end: { x: centerX + 48, y: ph * 0.28 }, thickness: 0.6, color: gold });
+      page.drawCircle({ x: centerX, y: ph * 0.28, size: 2.2, color: gold });
+
+      const authL = authorText || 'BY CANDLELIGHT · f/0.7 ZEISS PLANAR';
+      page.drawText(authL, { x: centerX - timesFont.widthOfTextAtSize(authL, 10.5) / 2, y: m + 56, size: 10.5, font: timesFont, color: cream });
+      const ext = options.numSlides ? ` · ${options.numSlides} ${options.isNotebook ? 'Pages' : 'Slides'}` : '';
+      const dLine = `${todayStr}${ext}`;
+      page.drawText(dLine, { x: centerX - timesItalic.widthOfTextAtSize(dLine, 9) / 2, y: m + 36, size: 9, font: timesItalic, color: muted });
+
+    } else if (tpl === 'latex_monograph') {
+      // First Principles / LaTeX Monograph (TeX + Computational Physics)
+      const paper = rgb(0.98, 0.976, 0.96);
+      const ink = rgb(0.08, 0.095, 0.12);
+      const burgundy = rgb(0.48, 0.12, 0.14);
+      const slate = rgb(0.42, 0.45, 0.50);
+
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: paper });
+
+      const m = Math.max(options.margin || 28, 36);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      page.drawText('\\documentclass[11pt,a4paper]{memoir}', { x: x1, y: ph - m - 10, size: 7.2, font: courierFont, color: slate });
+      const revTxt = `REV ${todayStr}`;
+      page.drawText(revTxt, { x: x2 - courierFont.widthOfTextAtSize(revTxt, 7.2), y: ph - m - 10, size: 7.2, font: courierFont, color: slate });
+      page.drawLine({ start: { x: x1, y: ph - m - 18 }, end: { x: x2, y: ph - m - 18 }, thickness: 1.2, color: ink });
+      page.drawLine({ start: { x: x1, y: ph - m - 21.5 }, end: { x: x2, y: ph - m - 21.5 }, thickness: 0.5, color: burgundy });
+
+      const ser = 'LECTURE NOTES IN FIRST-PRINCIPLES PHYSICS';
+      page.drawText(ser, { x: centerX - timesFont.widthOfTextAtSize(ser, 8.5) / 2, y: ph - m - 46, size: 8.5, font: timesFont, color: burgundy });
+
+      const titleSize = w > 360 ? 24 : 19;
+      const lines = wrapText(timesBold, titleText, titleSize, w - 32);
+      let ty = ph - m - 92;
+      for (const line of lines.slice(0, 3)) {
+        page.drawText(line, { x: centerX - timesBold.widthOfTextAtSize(line, titleSize) / 2, y: ty, size: titleSize, font: timesBold, color: ink });
+        ty -= (titleSize + 7);
+      }
+      if (subTitleText) {
+        page.drawText(subTitleText, { x: centerX - timesItalic.widthOfTextAtSize(subTitleText, 12) / 2, y: ty - 4, size: 12, font: timesItalic, color: slate });
+      }
+
+      const gx0 = x1 + w * 0.14;
+      const gw = w * 0.72;
+      const gy0 = ph * 0.40;
+      const gh = ph >= 650 ? 58 : 42;
+      page.drawLine({ start: { x: gx0, y: gy0 }, end: { x: gx0 + gw, y: gy0 }, thickness: 0.6, color: ink, opacity: 0.35 });
+      page.drawLine({ start: { x: centerX, y: gy0 - gh }, end: { x: centerX, y: gy0 + gh }, thickness: 0.6, color: ink, opacity: 0.35 });
+
+      const steps = 64;
+      let prevX = gx0;
+      let prevY = gy0;
+      for (let i = 0; i <= steps; i++) {
+        const u = (i / steps) * 2 - 1;
+        const px = gx0 + (i / steps) * gw;
+        const env = Math.exp(-4.5 * u * u);
+        const py = gy0 + gh * 0.88 * env * Math.cos(16 * u);
+        if (i > 0) {
+          page.drawLine({ start: { x: prevX, y: prevY }, end: { x: px, y: py }, thickness: 1.2, color: burgundy });
+        }
+        prevX = px;
+        prevY = py;
+      }
+
+      const eqTxt = 'psi(x,t) = A exp(-x^2 / 2 sigma^2) cos(k0 x - w t)';
+      page.drawText(eqTxt, { x: centerX - courierFont.widthOfTextAtSize(eqTxt, 7.2) / 2, y: gy0 - gh - 16, size: 7.2, font: courierFont, color: slate });
+
+      page.drawLine({ start: { x: x1, y: m + 42 }, end: { x: x2, y: m + 42 }, thickness: 0.6, color: ink, opacity: 0.25 });
+      page.drawText(authorText || 'Department of Theoretical Physics', { x: x1, y: m + 22, size: 10.5, font: timesBold, color: ink });
+      const ext = options.numSlides ? `${options.numSlides} ${options.isNotebook ? 'pp.' : 'slides'}` : 'Typeset in LaTeX';
+      page.drawText(ext, { x: x2 - courierFont.widthOfTextAtSize(ext, 7.5), y: m + 22, size: 7.5, font: courierFont, color: burgundy });
+
+    } else if (tpl === 'compact_disc') {
+      // Compact Disc Digital Audio 1982 (Lossless Jewel-Case Archive)
+      const silver = rgb(0.925, 0.935, 0.945);
+      const graphite = rgb(0.09, 0.10, 0.125);
+      const prismCyan = rgb(0.18, 0.74, 0.84);
+      const prismViolet = rgb(0.54, 0.36, 0.84);
+      const prismGold = rgb(0.90, 0.72, 0.26);
+      const muted = rgb(0.42, 0.45, 0.50);
+
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: ph, color: silver });
+      const trayH = ph * 0.26;
+      page.drawRectangle({ x: 0, y: 0, width: pw, height: trayH, color: graphite });
+
+      const m = Math.max(options.margin || 28, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      page.drawText('COMPACT DISC · DIGITAL AUDIO', { x: x1, y: ph - m - 14, size: 7.5, font: helveticaBold, color: graphite });
+      const pcmTxt = `44.1 kHz / 16-BIT PCM · ${todayStr}`;
+      page.drawText(pcmTxt, { x: x2 - courierBold.widthOfTextAtSize(pcmTxt, 7.5), y: ph - m - 14, size: 7.5, font: courierBold, color: muted });
+      page.drawLine({ start: { x: x1, y: ph - m - 22 }, end: { x: x2, y: ph - m - 22 }, thickness: 1.4, color: graphite });
+
+      const discR = Math.min(w * 0.31, 108);
+      const discCx = centerX;
+      const discCy = ph * 0.55;
+      page.drawCircle({ x: discCx, y: discCy, size: discR, color: rgb(0.84, 0.86, 0.89), borderColor: rgb(0.55, 0.58, 0.64), borderWidth: 0.9 });
+
+      // Spectral reflection accent rays
+      [[prismCyan, 32], [prismViolet, 48], [prismGold, 215]].forEach(([col, deg]) => {
+        const rad = (deg * Math.PI) / 180;
+        page.drawLine({
+          start: { x: discCx + discR * 0.32 * Math.cos(rad), y: discCy + discR * 0.32 * Math.sin(rad) },
+          end: { x: discCx + discR * 0.96 * Math.cos(rad), y: discCy + discR * 0.96 * Math.sin(rad) },
+          thickness: 14,
+          color: col,
+          opacity: 0.22,
+        });
+      });
+
+      [0.88, 0.76, 0.64, 0.52].forEach((frac) => {
+        page.drawCircle({ x: discCx, y: discCy, size: discR * frac, borderColor: rgb(0.62, 0.65, 0.70), borderWidth: 0.4, borderOpacity: 0.55 });
+      });
+
+      page.drawCircle({ x: discCx, y: discCy, size: discR * 0.32, color: rgb(0.76, 0.79, 0.83), borderColor: rgb(0.45, 0.48, 0.54), borderWidth: 0.7 });
+      page.drawCircle({ x: discCx, y: discCy, size: discR * 0.14, color: silver });
+
+      const titleSize = w > 360 ? 22 : 17.5;
+      const lines = wrapText(helveticaBold, titleText, titleSize, w - 16);
+      let ty = trayH - 44;
+      for (const line of lines.slice(0, 2)) {
+        page.drawText(line, { x: x1, y: ty, size: titleSize, font: helveticaBold, color: rgb(0.96, 0.97, 0.98) });
+        ty -= (titleSize + 5);
+      }
+      if (subTitleText) {
+        page.drawText(subTitleText, { x: x1, y: ty - 2, size: 10.5, font: helveticaOblique, color: prismCyan });
+      }
+
+      page.drawText((authorText || 'EXACT AUDIO COPY · LOSSLESS ARCHIVE').toUpperCase(), { x: x1, y: m * 0.65, size: 7.5, font: courierBold, color: rgb(0.75, 0.78, 0.84) });
+      if (options.numSlides) {
+        const sWord = options.isNotebook ? 'PAGES' : 'SLIDES';
+        const addTxt = `${options.numSlides} ${sWord} · ADD`;
+        page.drawText(addTxt, { x: x2 - courierBold.widthOfTextAtSize(addTxt, 7.5), y: m * 0.65, size: 7.5, font: courierBold, color: prismGold });
+      }
 
     } else {
       // Default: Atelier Notebook (Zara Home Classic)

@@ -52,15 +52,15 @@ Each page of your presentation is placed on the sheet, followed by a customizabl
 
 - **Web Studio 3.0 PWA (100% Client-Side & Offline)**:
   - Instant in-browser PDF handout & digital notebook studio with zero server uploads, installable as a desktop/Android PWA.
-  - **Visual Cover Gallery (`G`) & Instant Search**: Browse live-rendered previews of all **55 editorial & scientific covers** with real-time search and category pills.
+  - **Visual Cover Gallery (`G`) & Instant Search**: Browse live-rendered previews of all **67 editorial, scientific & signature covers** with real-time search and category pills.
   - **Auto-Saved Presets**: Persistent settings in `localStorage` across both **Handouts** and **Digital Notebook Studio**, plus 1-click Smart Presets and multilingual UI (`en`, `es`, `gl`).
 - **Digital Notebook Studio & Full-Page Templates (`--notebook [PAGES]`, `-N`)**:
-  - Generate full-sheet digital notebooks and paper templates tailored for **stylus handwriting in Samsung Notes, GoodNotes, Notability, or physical printing**.
+  - Generate full-sheet digital notebooks and paper templates tailored for **stylus handwriting in Samsung Notes, GoodNotes, Notability, or physical printing** (supporting `A5`, `A4`, `Letter`, `Legal`, and `A3`).
   - Ruled lines, graph grid, bullet dots, clean blank sheets, or **Cornell Note-taking layout** (`cornell` with cue column and summary block) extended across the entire page.
-  - **7 Paper Tints (`--paper-tint`)**: Classic White, Warm Ivory, Cream Book Paper, OLED Pure Black (`#000000`), Dark Slate (`#141518`), Legal Pad Yellow, and Sage Green.
+  - **7 Paper Tints (`--paper-tint`)**: Classic White, Warm Ivory, Cream Book Paper, OLED Pure Black (`#000000`), Dark Slate (`#262B33`), Legal Pad Yellow, and Sage Green.
   - **Stationery Margin Rule (`--margin-line`)**: Classic vertical red margin line with optional duplex left/right alternation.
   - Choose between running with or without centered page numbers (`--page-numbers` vs `--no-page-numbers`).
-  - Preserves all binding options (spiral coil, ring binder, hole guides, duplex alternating margins, and 55 editorial cover templates).
+  - Preserves all binding options (spiral coil, ring binder, hole guides, duplex alternating margins, and 67 editorial cover templates).
 - **5 Note Patterns (1-Up, 2-Up & Full-Page Notebook)**:
   - **Ruled Lines (`lines`)**: Clean horizontal lines tailored for handwriting (~4.9 mm / ~14 pt spacing).
   - **Graph Grid (`grid`)**: Technical squared grid for math, diagrams, sketches, and charts.
@@ -75,7 +75,20 @@ Each page of your presentation is placed on the sheet, followed by a customizabl
   - **Spiral / Coil Binding (`--binding spiral` / `--spiral`)**: +8 mm (+22 pt) margin optimized for spiral wire-o and coil combs, saving 3 mm of slide space.
   - **Hole & Spiral Guides (`--hole-guides`)**: Prints subtle punch targets (crosshair circles at ISO 838 centers) or spiral coil clearance ticks.
   - **Duplex Intelligence (`--duplex`)**: Shifts odd sheets (recto) to the right (left gutter) and even sheets (verso) to the left (right gutter) so punched holes never bite into content.
-- **55 Editorial & Scientific Cover Templates (`--generate-cover`, `--cover-template`, `--cover-date`)**:
+- **67 Editorial, Scientific & Signature Cover Templates (`--generate-cover`, `--cover-template`, `--cover-date`)**:
+  - **Personal Signature Collection (12 Bespoke Designs — Hi-Fi, Synth, Cinema, Coffee, Sartorial & LaTeX)**:
+    - **Chrome Cassette Hi-Fi (`cassette_hifi` / `cassette` / `tdk`)**: 1980s Type II CrO2 high-bias cassette J-card with vermilion/amber/gold/cobalt stripes, dual-reel shell, Dolby NR stamp, and `-20` to `+3dB` VU meter scale.
+    - **Roland Juno Synth Panel (`juno_synth` / `juno` / `synth`)**: 80s polyphonic synthesizer console with iconic Juno blue/red header bars, 8 calibrated DCO/VCF/VCA/LFO faders, LED indicators, and a 2-octave keyboard.
+    - **Noir Detective Dossier (`noir_gotham` / `noir` / `batman` / `twin_peaks`)**: Midnight obsidian casefile with amber searchlight beam, *Year One* file badge, *Twin Peaks* Red Room crimson chevron zigzag, and Art-Deco Gotham skyline.
+    - **Specialty Coffee Ledger (`barista_brew` / `barista` / `coffee` / `moka`)**: Warm unbleached kraft roaster's compendium featuring an architectural Moka pot vector elevation, rising copper steam, and `1:16 · 93°C` extraction header.
+    - **70s Prog & Yacht Rock Gatefold (`vinyl_prog` / `vinyl` / `prog` / `ecm`)**: ECM / Hipgnosis-inspired 33⅓ RPM vinyl sleeve with protruding grooved LP disc, burnt-orange/ochre/teal horizon stripes, and Swiss catalogue header.
+    - **Sartorial Oxford Stripe (`oxford_stripe` / `oxford_shirt` / `sartorial`)**: Classic blue Bengal-pinstripe Oxford shirting fabric with a centered deep-navy woven bookplate, burgundy ribbon crest, and antique gold hairline frame.
+    - **Miami Vice 1984 (`miami_vice` / `miami` / `vice_city` / `gta`)**: Midnight tropical Art Deco neon frame in electric cyan and magenta, venetian-sliced sunset sun, and perspective synthwave horizon grid.
+    - **Blade Runner 2019 (`blade_runner` / `voight_kampff` / `tyrell`)**: Wet-asphalt neo-noir diagnostic cover with amber/cyan Voight-Kampff iris reticle, atmospheric rain streaks, and stepped Tyrell pyramid silhouette.
+    - **Hawkins 1983 (`stranger_things` / `hawkins` / `upside_down`)**: 1980s sci-fi horror paperback in pitch black and crimson double-bar serif lockup with mirrored *Upside Down* pine forest and floating ash spores.
+    - **Kubrick Candlelight (`barry_lyndon` / `kubrick` / `candlelight`)**: 18th-century museum umber folio with antique-gold baroque mitered double frame, minimalist candlelight emblem, and `f/0.7 ZEISS PLANAR` rubric.
+    - **First Principles LaTeX (`latex_monograph` / `latex` / `first_principles`)**: Academic `\documentclass[11pt,a4paper]{memoir}` physics monograph with Gaussian wave-packet vector plot and classic serif typography.
+    - **Compact Disc 1982 (`compact_disc` / `cd` / `eac` / `lossless`)**: Brushed-silver and matte-graphite jewel-case cover with grooved optical CD disc, spectral prism reflections, and `44.1 kHz / 16-BIT PCM` spec bar.
   - **Standard Editorial & Classic Presses (Literary & Stationery Heritage)**:
     - **Penguin Classics (`penguin` / `penguin_classics`)**: 1935 Allen Lane tri-band horizontal layout in vintage mandarin orange and warm cream, complete with the oval Penguin publisher badge and classic Gill Sans typography.
     - **Gallimard NRF Blanche (`gallimard` / `nrf` / `collection_blanche`)**: Iconic 1911 French vellum monograph featuring double carmine-red border rules, Garamond serif typography, and the historic NRF monogram medallion.

@@ -10,14 +10,14 @@ This document defines the architecture, design invariants, and verification rule
 - **CI (`.github/workflows/ci.yml`):** Runs `pytest -v` across Ubuntu, Windows, and macOS on Python 3.9–3.14.
 
 Slide-Printer offers two complete modes across both Python and the 100% client-side Web Studio PWA:
-1. **Slide Handouts:** Converts 16:9 / 4:3 presentation PDFs onto `A4`, `Letter`, `Legal`, or `A3` in `1-up` or `2-up` layouts with 5 note patterns (`blank`, `lines`, `grid`, `dots`, `cornell`), active hyperlink preservation (`/Annots` `/Rect`), `study_header`, page range filtering (`--pages`), grayscale eco mode, and multi-file ZIP batch export.
-2. **Digital Notebook Studio (`--notebook`):** Generates full-sheet digital/printable notebooks (Samsung Notes, GoodNotes, Notability, or print) with all 5 note styles, 7 paper tints (`white`, `ivory`, `cream`, `dark`, `oled`, `legal`, `sage`), classic red `margin_line` (with optional duplex mirroring), binding gutters (`none`, `binder` +30pt, `spiral` +22pt), punch/spiral guides, duplex alternating gutters, and 55 editorial/scientific covers.
+1. **Slide Handouts:** Converts 16:9 / 4:3 presentation PDFs onto `A5`, `A4`, `Letter`, `Legal`, or `A3` in `1-up` or `2-up` layouts with 5 note patterns (`blank`, `lines`, `grid`, `dots`, `cornell`), active hyperlink preservation (`/Annots` `/Rect`), `study_header`, page range filtering (`--pages`), grayscale eco mode, and multi-file ZIP batch export.
+2. **Digital Notebook Studio (`--notebook`):** Generates full-sheet digital/printable notebooks (Samsung Notes, GoodNotes, Notability, or print) with all 5 note styles, 7 paper tints (`white`, `ivory`, `cream`, `dark`, `oled`, `legal`, `sage`), classic red `margin_line` (with optional duplex mirroring), binding gutters (`none`, `binder` +30pt, `spiral` +22pt), punch/spiral guides, duplex alternating gutters, and 67 editorial/scientific/signature covers.
 
 ---
 
 ## 2. Repository Architecture
 - **Python Package (`slide_printer/`):**
-  - `constants.py`: Paper sizes, 5 note styles, 7 paper tints (`oled` = pure `#000000`, `dark` = `#141518`), binding constants, and `COVER_TEMPLATES` / `COVER_TEMPLATE_ALIASES` (**55 canonical cover templates**).
+  - `constants.py`: Paper sizes (`A5`, `A4`, `Letter`, `Legal`, `A3`), 5 note styles, 7 paper tints (`oled` = pure `#000000`, `dark` = `#262B33`), binding constants, and `COVER_TEMPLATES` / `COVER_TEMPLATE_ALIASES` (**67 canonical cover templates**, including the 12-template Signature Collection).
   - `core.py`: `SlidePrinter`, `parse_page_ranges`, `transform_annotations`, `convert_slide_page`, `convert_2up_page` (uses a staging `PdfWriter` for `pypdf >= 7.0` compatibility), `process_file`, `generate_notebook`.
   - `patterns.py`: ReportLab vector engine for 1-up/2-up note overlays, `create_notebook_page`, duplex gutters, hole/spiral guides, `format_cover_date` (`DD/MM/YY` input -> per-template localized output), and `generate_cover_page`.
   - `cli.py`: CLI parser, interactive wizard, `--dry-run`, and local Web Studio server (`--web`).
@@ -38,7 +38,7 @@ Slide-Printer offers two complete modes across both Python and the 100% client-s
    - Web PDF Exporter (`web/js/engine.js`)
    - Web Canvas Preview (`web/js/preview.js`)
 2. **Cover Catalog & PWA Integrity (`tests/test_pwa.py`):**
-   - Both `#coverTemplateSelect` and `#nbCoverTemplateSelect` in `web/index.html` MUST list all canonical templates in `COVER_TEMPLATES` (55).
+   - Both `#coverTemplateSelect` and `#nbCoverTemplateSelect` in `web/index.html` MUST list all canonical templates in `COVER_TEMPLATES` (67).
    - Whenever web assets are added, renamed, or updated, update `PRECACHE_ASSETS` (if new files) and bump `CACHE_NAME` in `web/sw.js`.
    - Keep `slide_printer/assets/covers/` ↔ `web/covers/` and `slide_printer/assets/math/` ↔ `web/assets/math/` + `web/js/math_assets.js` synchronized.
 3. **Full Trilingual UI (`en`, `es`, `gl`):** Every new UI label or placeholder in `web/` must have translations in `en`, `es`, and `gl` inside `web/js/app.js`.

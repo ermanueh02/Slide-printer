@@ -416,13 +416,13 @@ _LATIN_ABBR_MONTHS = (
 
 _ISO_DATE_TEMPLATES = frozenset({
     "blueprint", "field_notes", "circuits_instrumentation", "circuits_flat",
-    "materials_sim", "materials_sim_flat",
+    "materials_sim", "materials_sim_flat", "juno_synth", "blade_runner", "latex_monograph",
 })
 _DOT_TIMESTAMP_TEMPLATES = frozenset({
     "forties", "1940s", "eighties", "1980s", "nineties", "1990s",
-    "twothousands", "2000s", "twentytwenties", "2020s",
+    "twothousands", "2000s", "twentytwenties", "2020s", "cassette_hifi", "miami_vice", "compact_disc",
 })
-_SWISS_DATE_TEMPLATES = frozenset({"sixties", "1960s", "twenty10s", "2010s", "midori", "swiss"})
+_SWISS_DATE_TEMPLATES = frozenset({"sixties", "1960s", "twenty10s", "2010s", "midori", "swiss", "vinyl_prog"})
 _FRENCH_DATE_TEMPLATES = frozenset({"gallimard", "cahier"})
 
 
@@ -3893,6 +3893,1226 @@ def generate_cover_page(
         c.setFont("Helvetica", 6.5)
         c.setFillColor(Color(0.45, 0.42, 0.38, alpha=0.85))
         c.drawCentredString(center_x, tbl_y - 116.0, "DURABLE BOUND EDITION · PRINTED IN GALICIA · SLIDE-PRINTER STANDARD")
+
+    elif tpl == "cassette_hifi":
+        # Chrome Cassette Hi-Fi (Type II · 90 Min · TDK SA / Maxell XLII inspired)
+        bg = Color(0.086, 0.090, 0.106)
+        gold = Color(0.84, 0.69, 0.36)
+        vermilion = Color(0.84, 0.25, 0.19)
+        amber = Color(0.88, 0.56, 0.18)
+        cobalt = Color(0.24, 0.48, 0.72)
+        ivory = Color(0.95, 0.93, 0.88)
+        muted = Color(0.62, 0.63, 0.66)
+
+        c.setFillColor(bg)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        # Classic 80s calibration stripes across upper-mid band
+        stripe_y = ph - 66.0
+        for idx, col in enumerate((vermilion, amber, gold, cobalt)):
+            c.setFillColor(col)
+            c.rect(left_gutter, stripe_y - idx * 7.0, pw - left_gutter - right_gutter, 4.5, fill=1, stroke=0)
+
+        m = max(margin, 32.0)
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        # Top Hi-Fi technical header
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(gold)
+        c.drawString(x1, ph - 44.0, "HIGH BIAS 70us EQ · TYPE II (CrO2)")
+        c.drawRightString(x2, ph - 44.0, "C-90 · -14 LUFS MASTER")
+
+        # Title & Subtitle
+        title_size = 24.0 if w > 360 else 19.0
+        c.setFont("Helvetica-Bold", title_size)
+        c.setFillColor(ivory)
+        lines = wrap_text_lines(clean_title.upper(), "Helvetica-Bold", title_size, w - 16.0, c)
+        ty = ph - 132.0
+        for line in lines[:3]:
+            c.drawString(x1, ty, line)
+            ty -= (title_size + 6.0)
+
+        if subtitle:
+            c.setFont("Times-Italic", 11.5)
+            c.setFillColor(gold)
+            c.drawString(x1, ty - 2.0, subtitle)
+
+        # Precision Vector Compact Cassette Shell in center
+        cw = min(w * 0.78, 280.0)
+        ch = cw * 0.62
+        cx0 = center_x - cw / 2.0
+        cy0 = ph * 0.44 - ch / 2.0
+
+        c.setFillColor(Color(0.14, 0.15, 0.18))
+        c.setStrokeColor(gold)
+        c.setLineWidth(1.2)
+        c.roundRect(cx0, cy0, cw, ch, 8.0, fill=1, stroke=1)
+
+        # Inner label card
+        c.setFillColor(Color(0.95, 0.92, 0.85))
+        c.setStrokeColor(Color(0.75, 0.70, 0.60))
+        c.setLineWidth(0.5)
+        c.roundRect(cx0 + cw * 0.06, cy0 + ch * 0.28, cw * 0.88, ch * 0.60, 4.0, fill=1, stroke=1)
+
+        # Label stripe + Side A badge
+        c.setFillColor(vermilion)
+        c.rect(cx0 + cw * 0.06, cy0 + ch * 0.74, cw * 0.88, ch * 0.14, fill=1, stroke=0)
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(ivory)
+        c.drawString(cx0 + cw * 0.09, cy0 + ch * 0.78, "SIDE A · ANALOG ARCHIVE")
+        c.drawRightString(cx0 + cw * 0.91, cy0 + ch * 0.78, "DOLBY B-C NR")
+
+        # Tape window & dual reels
+        win_w = cw * 0.54
+        win_h = ch * 0.26
+        win_x = center_x - win_w / 2.0
+        win_y = cy0 + ch * 0.36
+        c.setFillColor(Color(0.08, 0.08, 0.10))
+        c.setStrokeColor(Color(0.35, 0.35, 0.40))
+        c.roundRect(win_x, win_y, win_w, win_h, 4.0, fill=1, stroke=1)
+
+        reel_r = win_h * 0.36
+        for rx in (win_x + win_w * 0.25, win_x + win_w * 0.75):
+            ry = win_y + win_h / 2.0
+            c.setFillColor(ivory)
+            c.setStrokeColor(gold)
+            c.setLineWidth(0.8)
+            c.circle(rx, ry, reel_r, fill=1, stroke=1)
+            c.setFillColor(Color(0.10, 0.10, 0.12))
+            c.circle(rx, ry, reel_r * 0.48, fill=1, stroke=0)
+
+        # Bottom trapezoid capstan housing
+        p = c.beginPath()
+        p.moveTo(cx0 + cw * 0.20, cy0)
+        p.lineTo(cx0 + cw * 0.26, cy0 + ch * 0.20)
+        p.lineTo(cx0 + cw * 0.74, cy0 + ch * 0.20)
+        p.lineTo(cx0 + cw * 0.80, cy0)
+        p.close()
+        c.setFillColor(Color(0.11, 0.12, 0.14))
+        c.setStrokeColor(Color(0.45, 0.46, 0.50))
+        c.setLineWidth(0.7)
+        c.drawPath(p, fill=1, stroke=1)
+
+        # VU Meter scale bar below cassette
+        vu_y = cy0 - 36.0
+        c.setStrokeColor(Color(0.35, 0.36, 0.40))
+        c.setLineWidth(0.6)
+        c.line(x1, vu_y, x2, vu_y)
+        ticks = ("-20", "-10", "-7", "-3", "0", "+3dB")
+        for idx, lbl in enumerate(ticks):
+            tx = x1 + (w * idx / (len(ticks) - 1))
+            is_red = lbl in ("0", "+3dB")
+            c.setStrokeColor(vermilion if is_red else gold)
+            c.line(tx, vu_y, tx, vu_y + (7.0 if is_red else 4.5))
+            c.setFont("Courier-Bold", 6.5)
+            c.setFillColor(vermilion if is_red else muted)
+            c.drawCentredString(tx, vu_y - 10.0, lbl)
+
+        # Footer metadata
+        meta_y = m + 36.0
+        c.setStrokeColor(Color(0.84, 0.69, 0.36, alpha=0.45))
+        c.setLineWidth(0.6)
+        c.line(x1, meta_y + 18.0, x2, meta_y + 18.0)
+        c.setFont("Courier-Bold", 8.5)
+        c.setFillColor(ivory)
+        c.drawString(x1, meta_y, author or "ANALOG STUDIO RECORDING")
+        c.setFillColor(gold)
+        c.drawRightString(x2, meta_y, date_str)
+        if num_slides is not None:
+            s_word = "PAGES" if is_notebook else "SLIDES"
+            c.setFont("Courier", 7.0)
+            c.setFillColor(muted)
+            c.drawString(x1, meta_y - 14.0, f"PROGRAM LENGTH: {num_slides} {s_word} · INDEXED NOTES")
+
+    elif tpl == "juno_synth":
+        # Roland Juno / Analog Synth Panel (80s Studio Console)
+        chassis = Color(0.11, 0.125, 0.145)
+        juno_blue = Color(0.17, 0.42, 0.66)
+        juno_red = Color(0.79, 0.22, 0.22)
+        panel_silver = Color(0.88, 0.89, 0.91)
+        led_amber = Color(0.95, 0.64, 0.18)
+        muted = Color(0.60, 0.64, 0.70)
+
+        c.setFillColor(chassis)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = max(margin, 30.0)
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        # Iconic Roland Juno top blue & red horizontal strips
+        c.setFillColor(juno_blue)
+        c.rect(x1, ph - m - 24.0, w, 14.0, fill=1, stroke=0)
+        c.setFillColor(juno_red)
+        c.rect(x1, ph - m - 30.0, w, 4.0, fill=1, stroke=0)
+        c.setFont("Helvetica-Bold", 8.5)
+        c.setFillColor(Color(1, 1, 1))
+        c.drawString(x1 + 8.0, ph - m - 20.0, "PROGRAMMABLE POLYPHONIC SYNTHESIZER · JUNO-DS SERIES")
+        c.drawRightString(x2 - 8.0, ph - m - 20.0, "CHORUS I / II")
+
+        # Title & Subtitle
+        title_size = 24.0 if w > 360 else 18.0
+        c.setFont("Helvetica-Bold", title_size)
+        c.setFillColor(panel_silver)
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", title_size, w - 12.0, c)
+        ty = ph - m - 78.0
+        for line in lines[:3]:
+            c.drawString(x1, ty, line)
+            ty -= (title_size + 6.0)
+        if subtitle:
+            c.setFont("Courier", 10.5)
+            c.setFillColor(led_amber)
+            c.drawString(x1, ty - 4.0, f"// {subtitle}")
+
+        # Modular Synth Fader Bank (DCO / HPF / VCF / VCA / ENV)
+        panel_h = min(145.0, ph * 0.22)
+        panel_y = ph * 0.42 - panel_h / 2.0
+        c.setFillColor(Color(0.15, 0.17, 0.20))
+        c.setStrokeColor(juno_blue)
+        c.setLineWidth(1.0)
+        c.rect(x1, panel_y, w, panel_h, fill=1, stroke=1)
+
+        sections = [("DCO", 0.68), ("SUB", 0.42), ("HPF", 0.30), ("VCF", 0.76), ("RES", 0.55), ("VCA", 0.82), ("ENV", 0.60), ("LFO", 0.48)]
+        col_w = w / len(sections)
+        for idx, (lbl, val) in enumerate(sections):
+            sx = x1 + col_w * (idx + 0.5)
+            # Section header
+            c.setFont("Helvetica-Bold", 6.5)
+            c.setFillColor(panel_silver)
+            c.drawCentredString(sx, panel_y + panel_h - 14.0, lbl)
+            # Track
+            tr_bot = panel_y + 22.0
+            tr_top = panel_y + panel_h - 28.0
+            c.setStrokeColor(Color(0.06, 0.07, 0.08))
+            c.setLineWidth(3.0)
+            c.line(sx, tr_bot, sx, tr_top)
+            # Tick marks
+            c.setStrokeColor(Color(0.45, 0.48, 0.54))
+            c.setLineWidth(0.4)
+            for t in range(5):
+                ty_tick = tr_bot + (tr_top - tr_bot) * (t / 4.0)
+                c.line(sx - 8.0, ty_tick, sx - 4.0, ty_tick)
+                c.line(sx + 4.0, ty_tick, sx + 8.0, ty_tick)
+            # Fader cap
+            cap_y = tr_bot + (tr_top - tr_bot) * val
+            c.setFillColor(Color(0.24, 0.26, 0.30))
+            c.setStrokeColor(panel_silver)
+            c.setLineWidth(0.7)
+            c.rect(sx - 6.5, cap_y - 4.0, 13.0, 8.0, fill=1, stroke=1)
+            c.setStrokeColor(juno_red if idx in (3, 4) else led_amber)
+            c.setLineWidth(1.2)
+            c.line(sx - 5.0, cap_y, sx + 5.0, cap_y)
+            # LED dot below
+            c.setFillColor(juno_red if idx in (0, 3, 5) else Color(0.25, 0.28, 0.32))
+            c.circle(sx, panel_y + 11.0, 2.2, fill=1, stroke=0)
+
+        # Vector Piano Keyboard strip along lower band
+        kb_h = 54.0
+        kb_y = m + 64.0
+        num_white = 14
+        wk_w = w / num_white
+        c.setStrokeColor(Color(0.12, 0.13, 0.15))
+        c.setLineWidth(0.6)
+        for i in range(num_white):
+            c.setFillColor(Color(0.95, 0.95, 0.94))
+            c.rect(x1 + i * wk_w, kb_y, wk_w, kb_h, fill=1, stroke=1)
+        black_pattern = (0, 1, 3, 4, 5, 7, 8, 10, 11, 12)
+        for b_idx in black_pattern:
+            if b_idx < num_white - 1:
+                bx = x1 + (b_idx + 0.68) * wk_w
+                c.setFillColor(Color(0.08, 0.09, 0.11))
+                c.rect(bx, kb_y + kb_h * 0.38, wk_w * 0.64, kb_h * 0.62, fill=1, stroke=0)
+
+        # Metadata footer
+        c.setFont("Courier-Bold", 8.5)
+        c.setFillColor(panel_silver)
+        c.drawString(x1, m + 28.0, f"PATCH: {author or 'STUDIO SESSION'}")
+        c.setFillColor(led_amber)
+        c.drawRightString(x2, m + 28.0, date_str)
+        if num_slides is not None:
+            s_word = "PAGES" if is_notebook else "SLIDES"
+            c.setFont("Courier", 7.0)
+            c.setFillColor(muted)
+            c.drawString(x1, m + 14.0, f"BANK A · {num_slides} {s_word} · MIDI CH 01")
+
+    elif tpl == "noir_gotham":
+        # Noir Detective Dossier (Year One / Twin Peaks / Chiaroscuro Cinema)
+        obsidian = Color(0.055, 0.062, 0.082)
+        amber_beam = Color(0.84, 0.62, 0.21)
+        crimson = Color(0.72, 0.14, 0.18)
+        ivory = Color(0.95, 0.93, 0.88)
+        slate = Color(0.56, 0.58, 0.64)
+
+        c.setFillColor(obsidian)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        # Dramatic diagonal chiaroscuro searchlight beam
+        p_beam = c.beginPath()
+        p_beam.moveTo(left_gutter, ph * 0.78)
+        p_beam.lineTo(pw - right_gutter, ph * 0.44)
+        p_beam.lineTo(pw - right_gutter, ph * 0.26)
+        p_beam.lineTo(left_gutter, ph * 0.60)
+        p_beam.close()
+        c.setFillColor(Color(0.84, 0.62, 0.21, alpha=0.11))
+        c.drawPath(p_beam, fill=1, stroke=0)
+
+        m = max(margin, 32.0)
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        # Outer dossier frame
+        c.setStrokeColor(Color(0.84, 0.62, 0.21, alpha=0.45))
+        c.setLineWidth(0.9)
+        c.rect(x1, m, w, ph - 2 * m, fill=0, stroke=1)
+
+        # Top comic-dossier issue corner box
+        box_w, box_h = 56.0, 62.0
+        c.setFillColor(amber_beam)
+        c.rect(x1 + 14.0, ph - m - 14.0 - box_h, box_w, box_h, fill=1, stroke=0)
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(obsidian)
+        c.drawCentredString(x1 + 14.0 + box_w / 2.0, ph - m - 28.0, "NOIR FILE")
+        c.setFont("Times-Bold", 20.0)
+        c.drawCentredString(x1 + 14.0 + box_w / 2.0, ph - m - 54.0, "01")
+        c.setFont("Courier-Bold", 6.0)
+        c.drawCentredString(x1 + 14.0 + box_w / 2.0, ph - m - 69.0, "YEAR ONE")
+
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(slate)
+        c.drawRightString(x2 - 14.0, ph - m - 28.0, "CONFIDENTIAL ARCHIVE · CASEBOOK")
+        c.setFillColor(crimson)
+        c.drawRightString(x2 - 14.0, ph - m - 42.0, date_str.upper())
+
+        # Bold Noir Title block
+        title_size = 28.0 if w > 360 else 21.0
+        c.setFont("Times-Bold", title_size)
+        c.setFillColor(ivory)
+        lines = wrap_text_lines(clean_title.upper(), "Times-Bold", title_size, w - 36.0, c)
+        ty = ph * 0.62
+        for line in lines[:3]:
+            c.drawString(x1 + 18.0, ty, line)
+            ty -= (title_size + 7.0)
+
+        if subtitle:
+            c.setFont("Times-Italic", 12.5)
+            c.setFillColor(amber_beam)
+            c.drawString(x1 + 18.0, ty - 4.0, subtitle)
+
+        # Twin Peaks Red Room subtle geometric chevron divider
+        zig_y = ph * 0.34
+        c.setStrokeColor(crimson)
+        c.setLineWidth(1.5)
+        p_zig = c.beginPath()
+        zig_steps = 16
+        step_x = (w - 36.0) / zig_steps
+        for i in range(zig_steps + 1):
+            zx = x1 + 18.0 + i * step_x
+            zy = zig_y + (5.5 if i % 2 == 0 else -5.5)
+            if i == 0:
+                p_zig.moveTo(zx, zy)
+            else:
+                p_zig.lineTo(zx, zy)
+        c.drawPath(p_zig, fill=0, stroke=1)
+
+        # Art-Deco Gotham Skyline silhouette at bottom
+        sky_base = m + 46.0
+        buildings = [
+            (0.00, 0.08, 42.0), (0.08, 0.07, 74.0), (0.15, 0.10, 56.0),
+            (0.25, 0.08, 96.0), (0.33, 0.09, 64.0), (0.42, 0.11, 118.0),
+            (0.53, 0.09, 82.0), (0.62, 0.10, 102.0), (0.72, 0.08, 60.0),
+            (0.80, 0.11, 86.0), (0.91, 0.09, 48.0),
+        ]
+        c.setFillColor(Color(0.11, 0.125, 0.16))
+        for bx_f, bw_f, bh in buildings:
+            c.rect(x1 + 14.0 + (w - 28.0) * bx_f, sky_base, (w - 28.0) * bw_f - 1.5, bh * (0.75 if ph < 650 else 1.0), fill=1, stroke=0)
+
+        # Footer metadata bar
+        c.setFont("Courier-Bold", 8.5)
+        c.setFillColor(ivory)
+        c.drawString(x1 + 18.0, m + 20.0, (author or "DETECTIVE DIVISION").upper())
+        if num_slides is not None:
+            s_word = "PAGES" if is_notebook else "SLIDES"
+            c.setFillColor(amber_beam)
+            c.drawRightString(x2 - 18.0, m + 20.0, f"{num_slides} {s_word} · CLASSIFIED")
+
+    elif tpl == "barista_brew":
+        # Specialty Coffee Ledger (Moka Pot & Pour-Over Artisan Roaster Card)
+        kraft = Color(0.957, 0.929, 0.878)
+        espresso = Color(0.17, 0.12, 0.086)
+        copper = Color(0.70, 0.35, 0.165)
+        crema = Color(0.54, 0.43, 0.34)
+
+        c.setFillColor(kraft)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = max(margin, 32.0)
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        # Double apothecary border
+        c.setStrokeColor(espresso)
+        c.setLineWidth(1.2)
+        c.rect(x1, m, w, ph - 2 * m, fill=0, stroke=1)
+        c.setStrokeColor(copper)
+        c.setLineWidth(0.5)
+        c.rect(x1 + 6.0, m + 6.0, w - 12.0, ph - 2 * m - 12.0, fill=0, stroke=1)
+
+        # Header
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(copper)
+        c.drawCentredString(center_x, ph - m - 28.0, "SPECIALTY BREW LEDGER · MOKA · POUR-OVER · COLD BREW")
+        c.setStrokeColor(Color(0.17, 0.12, 0.086, alpha=0.25))
+        c.setLineWidth(0.5)
+        c.line(x1 + 24.0, ph - m - 38.0, x2 - 24.0, ph - m - 38.0)
+
+        # Title & Subtitle
+        title_size = 25.0 if w > 360 else 19.0
+        c.setFont("Times-Bold", title_size)
+        c.setFillColor(espresso)
+        lines = wrap_text_lines(clean_title, "Times-Bold", title_size, w - 48.0, c)
+        ty = ph - m - 84.0
+        for line in lines[:3]:
+            c.drawCentredString(center_x, ty, line)
+            ty -= (title_size + 7.0)
+        if subtitle:
+            c.setFont("Times-Italic", 12.0)
+            c.setFillColor(copper)
+            c.drawCentredString(center_x, ty - 2.0, subtitle)
+
+        # Architectural Geometric Moka Pot Elevation Vector Drawing
+        mk_s = min(w * 0.34, 118.0)
+        mk_cx = center_x
+        mk_by = ph * 0.35
+        c.setStrokeColor(espresso)
+        c.setLineWidth(1.3)
+
+        # Base boiler trapezoid
+        p_base = c.beginPath()
+        p_base.moveTo(mk_cx - mk_s * 0.42, mk_by)
+        p_base.lineTo(mk_cx + mk_s * 0.42, mk_by)
+        p_base.lineTo(mk_cx + mk_s * 0.28, mk_by + mk_s * 0.44)
+        p_base.lineTo(mk_cx - mk_s * 0.28, mk_by + mk_s * 0.44)
+        p_base.close()
+        c.setFillColor(Color(0.91, 0.87, 0.80))
+        c.drawPath(p_base, fill=1, stroke=1)
+
+        # Center waist collar
+        c.setFillColor(copper)
+        c.rect(mk_cx - mk_s * 0.31, mk_by + mk_s * 0.44, mk_s * 0.62, mk_s * 0.08, fill=1, stroke=1)
+
+        # Upper carafe trapezoid
+        p_top = c.beginPath()
+        p_top.moveTo(mk_cx - mk_s * 0.28, mk_by + mk_s * 0.52)
+        p_top.lineTo(mk_cx + mk_s * 0.28, mk_by + mk_s * 0.52)
+        p_top.lineTo(mk_cx + mk_s * 0.40, mk_by + mk_s * 1.06)
+        p_top.lineTo(mk_cx - mk_s * 0.46, mk_by + mk_s * 1.06)
+        p_top.close()
+        c.setFillColor(Color(0.94, 0.90, 0.84))
+        c.drawPath(p_top, fill=1, stroke=1)
+
+        # Vertical facet ribs
+        c.setStrokeColor(Color(0.17, 0.12, 0.086, alpha=0.45))
+        c.setLineWidth(0.6)
+        c.line(mk_cx, mk_by, mk_cx, mk_by + mk_s * 1.06)
+        c.line(mk_cx - mk_s * 0.18, mk_by, mk_cx - mk_s * 0.14, mk_by + mk_s * 0.44)
+        c.line(mk_cx + mk_s * 0.18, mk_by, mk_cx + mk_s * 0.14, mk_by + mk_s * 0.44)
+
+        # Lid & knob
+        p_lid = c.beginPath()
+        p_lid.moveTo(mk_cx - mk_s * 0.40, mk_by + mk_s * 1.06)
+        p_lid.lineTo(mk_cx + mk_s * 0.40, mk_by + mk_s * 1.06)
+        p_lid.lineTo(mk_cx, mk_by + mk_s * 1.24)
+        p_lid.close()
+        c.setFillColor(copper)
+        c.setStrokeColor(espresso)
+        c.setLineWidth(1.2)
+        c.drawPath(p_lid, fill=1, stroke=1)
+        c.setFillColor(espresso)
+        c.rect(mk_cx - mk_s * 0.07, mk_by + mk_s * 1.24, mk_s * 0.14, mk_s * 0.09, fill=1, stroke=0)
+
+        # Handle loop on right
+        p_hdl = c.beginPath()
+        p_hdl.moveTo(mk_cx + mk_s * 0.36, mk_by + mk_s * 0.96)
+        p_hdl.lineTo(mk_cx + mk_s * 0.62, mk_by + mk_s * 0.92)
+        p_hdl.lineTo(mk_cx + mk_s * 0.56, mk_by + mk_s * 0.56)
+        p_hdl.lineTo(mk_cx + mk_s * 0.30, mk_by + mk_s * 0.56)
+        c.setStrokeColor(espresso)
+        c.setLineWidth(2.6)
+        c.drawPath(p_hdl, fill=0, stroke=1)
+
+        # Subtle rising steam lines
+        c.setStrokeColor(copper)
+        c.setLineWidth(0.9)
+        for dx in (-12.0, 0.0, 12.0):
+            c.line(mk_cx + dx, mk_by + mk_s * 1.38, mk_cx + dx + 3.0, mk_by + mk_s * 1.54)
+
+        # Brew spec rubric footer
+        spec_y = m + 66.0
+        c.setStrokeColor(espresso)
+        c.setLineWidth(0.7)
+        c.line(x1 + 20.0, spec_y + 18.0, x2 - 20.0, spec_y + 18.0)
+        c.setFont("Courier-Bold", 7.0)
+        c.setFillColor(copper)
+        c.drawCentredString(center_x, spec_y + 4.0, "RATIO 1:16 · 93°C · MEDIUM ROAST · EXTRACTION NOTES")
+        c.setFont("Times-Bold", 10.5)
+        c.setFillColor(espresso)
+        c.drawCentredString(center_x, spec_y - 16.0, author or "Roaster & Kitchen Compendium")
+        c.setFont("Times-Italic", 9.0)
+        c.setFillColor(crema)
+        ext = f" · {num_slides} {'Pages' if is_notebook else 'Slides'}" if num_slides is not None else ""
+        c.drawCentredString(center_x, spec_y - 32.0, f"{date_str}{ext}")
+
+    elif tpl == "vinyl_prog":
+        # 70s Prog & Yacht Rock Gatefold (ECM / Hipgnosis Minimalist LP Sleeve)
+        bone = Color(0.965, 0.953, 0.922)
+        ink = Color(0.10, 0.105, 0.12)
+        burnt_orange = Color(0.84, 0.34, 0.14)
+        ochre = Color(0.87, 0.67, 0.22)
+        teal = Color(0.14, 0.44, 0.46)
+        muted = Color(0.42, 0.42, 0.40)
+
+        c.setFillColor(bone)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = max(margin, 32.0)
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        # Top catalog header (ECM Records style)
+        c.setFont("Helvetica-Bold", 7.5)
+        c.setFillColor(muted)
+        c.drawString(x1, ph - m - 14.0, "STEREO 33 1/3 RPM · HI-FI GATEFOLD ARCHIVE")
+        c.drawRightString(x2, ph - m - 14.0, f"CAT. NO. SP-77 · {date_str}")
+        c.setStrokeColor(ink)
+        c.setLineWidth(1.4)
+        c.line(x1, ph - m - 22.0, x2, ph - m - 22.0)
+
+        # Geometric LP Sleeve + Emerging Vinyl Record artwork
+        art_size = min(w * 0.56, 200.0)
+        sleeve_x = x1 + (w - art_size * 1.32) / 2.0
+        sleeve_y = ph * 0.46 - art_size / 2.0
+        disc_r = art_size * 0.46
+        disc_cx = sleeve_x + art_size * 0.92
+        disc_cy = sleeve_y + art_size / 2.0
+
+        # Vinyl disc with concentric micro-grooves
+        c.setFillColor(ink)
+        c.circle(disc_cx, disc_cy, disc_r, fill=1, stroke=0)
+        c.setStrokeColor(Color(0.28, 0.29, 0.32))
+        c.setLineWidth(0.45)
+        for frac in (0.88, 0.78, 0.68, 0.58):
+            c.circle(disc_cx, disc_cy, disc_r * frac, fill=0, stroke=1)
+        # Center label & spindle hole
+        c.setFillColor(burnt_orange)
+        c.circle(disc_cx, disc_cy, disc_r * 0.36, fill=1, stroke=0)
+        c.setFillColor(ochre)
+        c.circle(disc_cx, disc_cy, disc_r * 0.20, fill=1, stroke=0)
+        c.setFillColor(bone)
+        c.circle(disc_cx, disc_cy, disc_r * 0.06, fill=1, stroke=0)
+
+        # Square album sleeve with 70s geometric tri-color bands
+        c.setFillColor(Color(0.14, 0.16, 0.19))
+        c.setStrokeColor(ink)
+        c.setLineWidth(0.8)
+        c.rect(sleeve_x, sleeve_y, art_size, art_size, fill=1, stroke=1)
+        band_h = art_size * 0.11
+        c.setFillColor(burnt_orange)
+        c.rect(sleeve_x, sleeve_y + art_size * 0.62, art_size, band_h, fill=1, stroke=0)
+        c.setFillColor(ochre)
+        c.rect(sleeve_x, sleeve_y + art_size * 0.51, art_size, band_h, fill=1, stroke=0)
+        c.setFillColor(teal)
+        c.rect(sleeve_x, sleeve_y + art_size * 0.40, art_size, band_h, fill=1, stroke=0)
+
+        # Bold Swiss/1970s Title below sleeve
+        title_size = 25.0 if w > 360 else 19.0
+        c.setFont("Helvetica-Bold", title_size)
+        c.setFillColor(ink)
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", title_size, w - 12.0, c)
+        ty = sleeve_y - 38.0
+        for line in lines[:3]:
+            c.drawString(x1, ty, line)
+            ty -= (title_size + 6.0)
+        if subtitle:
+            c.setFont("Helvetica-Oblique", 11.5)
+            c.setFillColor(burnt_orange)
+            c.drawString(x1, ty - 2.0, subtitle)
+
+        # Bottom liner-notes strip
+        c.setStrokeColor(Color(0.10, 0.105, 0.12, alpha=0.25))
+        c.setLineWidth(0.6)
+        c.line(x1, m + 36.0, x2, m + 36.0)
+        c.setFont("Helvetica-Bold", 8.5)
+        c.setFillColor(ink)
+        c.drawString(x1, m + 20.0, (author or "SIDE A · PROGRESSIVE EDITION").upper())
+        if num_slides is not None:
+            s_word = "TRACKS / PAGES" if is_notebook else "SLIDES"
+            c.setFont("Courier", 7.5)
+            c.setFillColor(muted)
+            c.drawRightString(x2, m + 20.0, f"{num_slides} {s_word}")
+
+    elif tpl == "oxford_stripe":
+        # Sartorial Oxford Stripe (Tailored Bengal Pinstripe & Woven Bookplate)
+        fabric = Color(0.973, 0.976, 0.984)
+        stripe_blue = Color(0.76, 0.83, 0.90)
+        navy = Color(0.09, 0.15, 0.26)
+        burgundy = Color(0.49, 0.13, 0.18)
+        gold = Color(0.76, 0.63, 0.36)
+        ivory = Color(0.98, 0.97, 0.94)
+
+        c.setFillColor(fabric)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        # Fine vertical Bengal Oxford shirt twin pinstripes
+        stripe_step = 14.0
+        sx = left_gutter
+        while sx < pw - right_gutter:
+            c.setFillColor(stripe_blue)
+            c.rect(sx, 0, 2.2, ph, fill=1, stroke=0)
+            c.setFillColor(Color(0.76, 0.83, 0.90, alpha=0.45))
+            c.rect(sx + 3.4, 0, 0.8, ph, fill=1, stroke=0)
+            sx += stripe_step
+
+        m = max(margin, 32.0)
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        # Centered Tailored Navy Woven-Label Bookplate
+        plate_w = min(w * 0.84, 340.0)
+        plate_h = min(ph * 0.56, 360.0)
+        px0 = center_x - plate_w / 2.0
+        py0 = ph * 0.50 - plate_h / 2.0
+
+        # Subtle drop shadow
+        c.setFillColor(Color(0.05, 0.08, 0.14, alpha=0.18))
+        c.rect(px0 + 4.0, py0 - 4.0, plate_w, plate_h, fill=1, stroke=0)
+
+        # Navy bookplate card
+        c.setFillColor(navy)
+        c.setStrokeColor(gold)
+        c.setLineWidth(1.1)
+        c.rect(px0, py0, plate_w, plate_h, fill=1, stroke=1)
+
+        # Fine stitched-style dashed inner border
+        c.setStrokeColor(Color(0.76, 0.63, 0.36, alpha=0.65))
+        c.setLineWidth(0.6)
+        c.setDash(3, 3)
+        c.rect(px0 + 9.0, py0 + 9.0, plate_w - 18.0, plate_h - 18.0, fill=0, stroke=1)
+        c.setDash()
+
+        # Burgundy regimental ribbon bar at top of plate
+        c.setFillColor(burgundy)
+        c.rect(px0 + 10.0, py0 + plate_h - 34.0, plate_w - 20.0, 14.0, fill=1, stroke=0)
+        c.setFont("Times-Roman", 7.0)
+        c.setFillColor(ivory)
+        c.drawCentredString(center_x, py0 + plate_h - 29.5, "S A R T O R I A L   E D I T I O N")
+
+        # Title & Subtitle inside bookplate
+        title_size = 22.0 if plate_w > 270 else 17.0
+        c.setFont("Times-Bold", title_size)
+        c.setFillColor(ivory)
+        lines = wrap_text_lines(clean_title, "Times-Bold", title_size, plate_w - 44.0, c)
+        ty = py0 + plate_h * 0.62 + (len(lines) - 1) * (title_size * 0.45)
+        for line in lines[:3]:
+            c.drawCentredString(center_x, ty, line)
+            ty -= (title_size + 7.0)
+
+        if subtitle:
+            c.setFont("Times-Italic", 11.5)
+            c.setFillColor(gold)
+            c.drawCentredString(center_x, ty - 4.0, subtitle)
+
+        # Gold hairline divider
+        c.setStrokeColor(gold)
+        c.setLineWidth(0.6)
+        c.line(center_x - 34.0, py0 + 78.0, center_x + 34.0, py0 + 78.0)
+
+        # Author, Date & Page Count inside lower plate
+        c.setFont("Times-Roman", 10.0)
+        c.setFillColor(ivory)
+        c.drawCentredString(center_x, py0 + 56.0, author or "Tailored Archive")
+        c.setFont("Times-Italic", 8.8)
+        c.setFillColor(gold)
+        c.drawCentredString(center_x, py0 + 38.0, date_str)
+        if num_slides is not None:
+            s_word = "Pages" if is_notebook else "Slides"
+            c.setFont("Helvetica", 7.0)
+            c.setFillColor(Color(0.75, 0.78, 0.84))
+            c.drawCentredString(center_x, py0 + 22.0, f"{num_slides} {s_word} · Bespoke Bound")
+
+    elif tpl == "miami_vice":
+        # Miami Vice / Vice City 1984 (Neon Art Deco Horizon)
+        night = Color(0.055, 0.086, 0.165)
+        magenta = Color(0.98, 0.18, 0.56)
+        cyan = Color(0.04, 0.86, 0.96)
+        sunset = Color(0.99, 0.48, 0.24)
+        gold = Color(0.99, 0.78, 0.25)
+        white = Color(0.97, 0.98, 1.0)
+
+        c.setFillColor(night)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = max(margin, 32.0)
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        # Double Neon Art Deco Frame
+        c.setStrokeColor(cyan)
+        c.setLineWidth(1.4)
+        c.rect(x1, m, w, ph - 2 * m, fill=0, stroke=1)
+        c.setStrokeColor(magenta)
+        c.setLineWidth(0.8)
+        c.rect(x1 + 5.5, m + 5.5, w - 11.0, ph - 2 * m - 11.0, fill=0, stroke=1)
+
+        # Header
+        c.setFont("Helvetica-Bold", 7.5)
+        c.setFillColor(cyan)
+        c.drawString(x1 + 16.0, ph - m - 24.0, "OCEAN DRIVE · 1984 · STEREO FM")
+        c.setFillColor(magenta)
+        c.drawRightString(x2 - 16.0, ph - m - 24.0, f"VICE EDITION · {date_str}")
+
+        # Title & Subtitle
+        title_size = 26.0 if w > 360 else 20.0
+        c.setFont("Helvetica-Bold", title_size)
+        c.setFillColor(white)
+        lines = wrap_text_lines(clean_title.upper(), "Helvetica-Bold", title_size, w - 40.0, c)
+        ty = ph - m - 78.0
+        for line in lines[:3]:
+            c.drawString(x1 + 18.0, ty, line)
+            ty -= (title_size + 6.0)
+        if subtitle:
+            c.setFont("Helvetica-Oblique", 12.0)
+            c.setFillColor(magenta)
+            c.drawString(x1 + 18.0, ty - 2.0, subtitle)
+
+        # Neon Deco sliced sunset sun
+        sun_r = min(w * 0.24, 82.0)
+        sun_cx = center_x
+        sun_cy = ph * 0.43
+        c.setFillColor(gold)
+        c.circle(sun_cx, sun_cy, sun_r, fill=1, stroke=0)
+        c.setFillColor(sunset)
+        c.circle(sun_cx, sun_cy - sun_r * 0.14, sun_r * 0.86, fill=1, stroke=0)
+        c.setFillColor(magenta)
+        c.circle(sun_cx, sun_cy - sun_r * 0.30, sun_r * 0.68, fill=1, stroke=0)
+
+        # Venetian blind horizontal slices across lower half of sun
+        c.setFillColor(night)
+        for idx, frac in enumerate([0.05, 0.22, 0.38, 0.54, 0.70, 0.84]):
+            sy = sun_cy - sun_r * frac
+            sh = 2.2 + idx * 1.1
+            c.rect(sun_cx - sun_r - 2.0, sy - sh / 2.0, 2 * sun_r + 4.0, sh, fill=1, stroke=0)
+
+        # Perspective Neon Horizon Grid
+        hor_y = sun_cy - sun_r * 0.88
+        c.setStrokeColor(cyan)
+        c.setLineWidth(1.2)
+        c.line(x1 + 14.0, hor_y, x2 - 14.0, hor_y)
+        c.setStrokeColor(Color(0.98, 0.18, 0.56, alpha=0.55))
+        c.setLineWidth(0.6)
+        grid_bot = m + 56.0
+        for i in range(1, 7):
+            frac = (i / 6.0) ** 1.45
+            gy = hor_y - (hor_y - grid_bot) * frac
+            c.line(x1 + 14.0, gy, x2 - 14.0, gy)
+        for i in range(-4, 5):
+            bx = center_x + i * (w * 0.115)
+            tx = center_x + i * (w * 0.038)
+            c.line(tx, hor_y, bx, grid_bot)
+
+        # Footer
+        c.setFont("Helvetica-Bold", 8.5)
+        c.setFillColor(white)
+        c.drawString(x1 + 16.0, m + 22.0, (author or "MIAMI NIGHT ARCHIVE").upper())
+        if num_slides is not None:
+            s_word = "PAGES" if is_notebook else "SLIDES"
+            c.setFont("Courier-Bold", 8.0)
+            c.setFillColor(cyan)
+            c.drawRightString(x2 - 16.0, m + 22.0, f"{num_slides} {s_word} · NEON DECO")
+
+    elif tpl == "blade_runner":
+        # Blade Runner 2019 (Voight-Kampff Reticle & Tyrell Neo-Noir)
+        asphalt = Color(0.04, 0.052, 0.072)
+        amber = Color(0.92, 0.56, 0.16)
+        cyan = Color(0.20, 0.72, 0.80)
+        ivory = Color(0.94, 0.92, 0.88)
+        muted = Color(0.50, 0.54, 0.60)
+
+        c.setFillColor(asphalt)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = max(margin, 30.0)
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        # Atmospheric diagonal rain streaks
+        c.setStrokeColor(Color(0.20, 0.72, 0.80, alpha=0.14))
+        c.setLineWidth(0.5)
+        for i in range(18):
+            rx = x1 + (w * ((i * 37) % 100) / 100.0)
+            ry = m + (ph - 2 * m) * (((i * 53 + 17) % 100) / 100.0)
+            c.line(rx, ry, rx - 8.0, ry - 34.0)
+
+        # Top telemetry bar
+        c.setStrokeColor(amber)
+        c.setLineWidth(0.8)
+        c.line(x1, ph - m - 20.0, x2, ph - m - 20.0)
+        c.setFont("Courier-Bold", 7.2)
+        c.setFillColor(amber)
+        c.drawString(x1, ph - m - 12.0, "VOIGHT-KAMPFF · NEXUS-6 DIAGNOSTIC")
+        c.setFillColor(cyan)
+        c.drawRightString(x2, ph - m - 12.0, f"LA 2019 · {date_str}")
+
+        # Title & Subtitle
+        title_size = 24.0 if w > 360 else 18.5
+        c.setFont("Helvetica-Bold", title_size)
+        c.setFillColor(ivory)
+        lines = wrap_text_lines(clean_title.upper(), "Helvetica-Bold", title_size, w - 16.0, c)
+        ty = ph - m - 64.0
+        for line in lines[:3]:
+            c.drawString(x1, ty, line)
+            ty -= (title_size + 6.0)
+        if subtitle:
+            c.setFont("Courier", 10.5)
+            c.setFillColor(amber)
+            c.drawString(x1, ty - 4.0, f">> {subtitle}")
+
+        # Voight-Kampff Iris Scanner Reticle
+        ret_r = min(w * 0.25, 86.0)
+        ret_cx = center_x
+        ret_cy = ph * 0.44
+        c.setStrokeColor(Color(0.92, 0.56, 0.16, alpha=0.35))
+        c.setLineWidth(0.6)
+        c.circle(ret_cx, ret_cy, ret_r, fill=0, stroke=1)
+        c.setStrokeColor(amber)
+        c.setLineWidth(1.1)
+        c.circle(ret_cx, ret_cy, ret_r * 0.74, fill=0, stroke=1)
+        c.setStrokeColor(cyan)
+        c.setLineWidth(0.7)
+        c.circle(ret_cx, ret_cy, ret_r * 0.44, fill=0, stroke=1)
+        c.setFillColor(Color(0.92, 0.56, 0.16, alpha=0.22))
+        c.circle(ret_cx, ret_cy, ret_r * 0.22, fill=1, stroke=0)
+        c.setFillColor(amber)
+        c.circle(ret_cx, ret_cy, ret_r * 0.08, fill=1, stroke=0)
+
+        # Crosshair ticks
+        c.setStrokeColor(amber)
+        c.setLineWidth(0.8)
+        c.line(ret_cx - ret_r * 1.18, ret_cy, ret_cx - ret_r * 0.52, ret_cy)
+        c.line(ret_cx + ret_r * 0.52, ret_cy, ret_cx + ret_r * 1.18, ret_cy)
+        c.line(ret_cx, ret_cy - ret_r * 1.18, ret_cx, ret_cy - ret_r * 0.52)
+        c.line(ret_cx, ret_cy + ret_r * 0.52, ret_cx, ret_cy + ret_r * 1.18)
+
+        # Corner telemetry labels
+        c.setFont("Courier", 6.5)
+        c.setFillColor(muted)
+        c.drawString(x1, ret_cy + ret_r * 0.9, "EMPATHY RESPONSE: 0.84")
+        c.drawRightString(x2, ret_cy - ret_r * 0.9, "PUPIL DILATION: NOMINAL")
+
+        # Tyrell Pyramid Silhouette at bottom
+        pyr_base = m + 42.0
+        pyr_h = 56.0 if ph >= 650 else 40.0
+        p = c.beginPath()
+        p.moveTo(x1 + w * 0.12, pyr_base)
+        p.lineTo(x1 + w * 0.34, pyr_base + pyr_h)
+        p.lineTo(x1 + w * 0.66, pyr_base + pyr_h)
+        p.lineTo(x1 + w * 0.88, pyr_base)
+        p.close()
+        c.setFillColor(Color(0.10, 0.12, 0.16))
+        c.setStrokeColor(Color(0.92, 0.56, 0.16, alpha=0.45))
+        c.setLineWidth(0.7)
+        c.drawPath(p, fill=1, stroke=1)
+
+        # Footer
+        c.setFont("Courier-Bold", 8.0)
+        c.setFillColor(ivory)
+        c.drawString(x1, m + 16.0, (author or "TYRELL ARCHIVE DIVISION").upper())
+        if num_slides is not None:
+            s_word = "PAGES" if is_notebook else "SLIDES"
+            c.setFillColor(amber)
+            c.drawRightString(x2, m + 16.0, f"{num_slides} {s_word} · OFF-WORLD")
+
+    elif tpl == "stranger_things":
+        # Hawkins 1983 / Upside Down (80s Sci-Fi Horror Paperback)
+        void = Color(0.035, 0.032, 0.048)
+        crimson = Color(0.84, 0.14, 0.16)
+        glow_red = Color(0.55, 0.08, 0.11)
+        parchment = Color(0.95, 0.92, 0.88)
+        ash = Color(0.68, 0.66, 0.72)
+
+        c.setFillColor(void)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = max(margin, 32.0)
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        # Subtle vintage paperback border
+        c.setStrokeColor(Color(0.84, 0.14, 0.16, alpha=0.35))
+        c.setLineWidth(0.7)
+        c.rect(x1, m, w, ph - 2 * m, fill=0, stroke=1)
+
+        # Top rubric
+        c.setFont("Courier-Bold", 7.2)
+        c.setFillColor(ash)
+        c.drawCentredString(center_x, ph - m - 26.0, "HAWKINS NATIONAL LABORATORY · INDIANA · 1983")
+
+        # Iconic 80s double-bar serif title lockup
+        title_size = 27.0 if w > 360 else 20.0
+        lines = wrap_text_lines(clean_title.upper(), "Times-Bold", title_size, w - 36.0, c)[:3]
+        top_bar_y = ph * 0.72
+        c.setStrokeColor(crimson)
+        c.setLineWidth(2.2)
+        c.line(x1 + 18.0, top_bar_y, x2 - 18.0, top_bar_y)
+        c.setStrokeColor(glow_red)
+        c.setLineWidth(0.7)
+        c.line(x1 + 18.0, top_bar_y + 4.0, x2 - 18.0, top_bar_y + 4.0)
+
+        c.setFont("Times-Bold", title_size)
+        c.setFillColor(crimson)
+        ty = top_bar_y - title_size - 8.0
+        for line in lines:
+            c.drawCentredString(center_x, ty, line)
+            ty -= (title_size + 6.0)
+
+        bot_bar_y = ty + 4.0
+        c.setStrokeColor(crimson)
+        c.setLineWidth(2.2)
+        c.line(x1 + 18.0, bot_bar_y, x2 - 18.0, bot_bar_y)
+
+        if subtitle:
+            c.setFont("Times-Italic", 12.0)
+            c.setFillColor(parchment)
+            c.drawCentredString(center_x, bot_bar_y - 24.0, subtitle)
+
+        # Upside Down mirrored horizon & silhouette pines
+        mid_y = ph * 0.32
+        c.setStrokeColor(crimson)
+        c.setLineWidth(0.9)
+        c.line(x1 + 14.0, mid_y, x2 - 14.0, mid_y)
+
+        tree_xs = [0.08, 0.16, 0.25, 0.34, 0.44, 0.56, 0.66, 0.75, 0.84, 0.92]
+        tree_hs = [30, 44, 26, 38, 22, 24, 42, 28, 40, 32]
+        for tx_f, th in zip(tree_xs, tree_hs):
+            tx = x1 + 14.0 + (w - 28.0) * tx_f
+            # Right-side up pine
+            p_up = c.beginPath()
+            p_up.moveTo(tx - 7.0, mid_y)
+            p_up.lineTo(tx, mid_y + th)
+            p_up.lineTo(tx + 7.0, mid_y)
+            p_up.close()
+            c.setFillColor(Color(0.12, 0.08, 0.11))
+            c.drawPath(p_up, fill=1, stroke=0)
+            # Upside-down reflection
+            p_dn = c.beginPath()
+            p_dn.moveTo(tx - 7.0, mid_y)
+            p_dn.lineTo(tx, mid_y - th * 0.85)
+            p_dn.lineTo(tx + 7.0, mid_y)
+            p_dn.close()
+            c.setFillColor(Color(0.28, 0.05, 0.07))
+            c.drawPath(p_dn, fill=1, stroke=0)
+
+        # Floating Upside Down spores
+        c.setFillColor(Color(0.92, 0.90, 0.96, alpha=0.45))
+        for i in range(14):
+            sx = x1 + 20.0 + (w - 40.0) * (((i * 29 + 7) % 100) / 100.0)
+            sy = m + 42.0 + (mid_y - m - 48.0) * (((i * 47 + 13) % 100) / 100.0)
+            c.circle(sx, sy, 1.0 + (i % 2) * 0.6, fill=1, stroke=0)
+
+        # Footer
+        c.setFont("Times-Roman", 9.5)
+        c.setFillColor(parchment)
+        c.drawString(x1 + 16.0, m + 18.0, author or "CHAPTER ONE · THE VANISHING")
+        c.setFont("Courier-Bold", 7.8)
+        c.setFillColor(crimson)
+        c.drawRightString(x2 - 16.0, m + 18.0, date_str.upper())
+
+    elif tpl == "barry_lyndon":
+        # Kubrick Candlelight / 18th-Century Folio (Barry Lyndon)
+        umber = Color(0.11, 0.082, 0.062)
+        gold = Color(0.79, 0.64, 0.36)
+        cream = Color(0.96, 0.935, 0.885)
+        muted = Color(0.68, 0.60, 0.46)
+
+        c.setFillColor(umber)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = max(margin, 32.0)
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        # Baroque double ornamental frame with corner miter squares
+        c.setStrokeColor(gold)
+        c.setLineWidth(1.3)
+        c.rect(x1, m, w, ph - 2 * m, fill=0, stroke=1)
+        c.setLineWidth(0.55)
+        c.rect(x1 + 7.0, m + 7.0, w - 14.0, ph - 2 * m - 14.0, fill=0, stroke=1)
+        for cx_sq in (x1, x2 - 7.0):
+            for cy_sq in (m, ph - m - 7.0):
+                c.rect(cx_sq, cy_sq, 7.0, 7.0, fill=0, stroke=1)
+
+        # Top classical rubric
+        c.setFont("Times-Roman", 8.0)
+        c.setFillColor(gold)
+        c.drawCentredString(center_x, ph - m - 34.0, "M E M O I R S   O F   T H E   E I G H T E E N T H   C E N T U R Y")
+
+        # Minimalist vector candlelight emblem
+        fl_y = ph * 0.74
+        c.setStrokeColor(gold)
+        c.setLineWidth(0.8)
+        c.circle(center_x, fl_y, 16.0, fill=0, stroke=1)
+        p_fl = c.beginPath()
+        p_fl.moveTo(center_x, fl_y + 9.0)
+        p_fl.curveTo(center_x + 5.5, fl_y + 2.0, center_x + 4.5, fl_y - 6.0, center_x, fl_y - 8.0)
+        p_fl.curveTo(center_x - 4.5, fl_y - 6.0, center_x - 5.5, fl_y + 2.0, center_x, fl_y + 9.0)
+        c.setFillColor(gold)
+        c.drawPath(p_fl, fill=1, stroke=0)
+
+        # Classical centered serif title
+        title_size = 26.0 if w > 360 else 20.0
+        c.setFont("Times-Bold", title_size)
+        c.setFillColor(cream)
+        lines = wrap_text_lines(clean_title.upper(), "Times-Bold", title_size, w - 56.0, c)
+        ty = ph * 0.56
+        for line in lines[:3]:
+            c.drawCentredString(center_x, ty, line)
+            ty -= (title_size + 9.0)
+
+        if subtitle:
+            c.setFont("Times-Italic", 12.5)
+            c.setFillColor(gold)
+            c.drawCentredString(center_x, ty - 6.0, subtitle)
+
+        # Ornamental rule
+        c.setStrokeColor(gold)
+        c.setLineWidth(0.6)
+        c.line(center_x - 48.0, ph * 0.28, center_x + 48.0, ph * 0.28)
+        c.setFillColor(gold)
+        c.circle(center_x, ph * 0.28, 2.2, fill=1, stroke=0)
+
+        # Footer
+        c.setFont("Times-Roman", 10.5)
+        c.setFillColor(cream)
+        c.drawCentredString(center_x, m + 56.0, author or "BY CANDLELIGHT · f/0.7 ZEISS PLANAR")
+        c.setFont("Times-Italic", 9.0)
+        c.setFillColor(muted)
+        ext = f" · {num_slides} {'Pages' if is_notebook else 'Slides'}" if num_slides is not None else ""
+        c.drawCentredString(center_x, m + 36.0, f"{date_str}{ext}")
+
+    elif tpl == "latex_monograph":
+        # First Principles / LaTeX Monograph (TeX + Computational Physics)
+        paper = Color(0.98, 0.976, 0.96)
+        ink = Color(0.08, 0.095, 0.12)
+        burgundy = Color(0.48, 0.12, 0.14)
+        slate = Color(0.42, 0.45, 0.50)
+
+        c.setFillColor(paper)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        m = max(margin, 36.0)
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        # Subtle TeX class header
+        c.setFont("Courier", 7.2)
+        c.setFillColor(slate)
+        c.drawString(x1, ph - m - 10.0, "\\documentclass[11pt,a4paper]{memoir}")
+        c.drawRightString(x2, ph - m - 10.0, f"REV {date_str}")
+        c.setStrokeColor(ink)
+        c.setLineWidth(1.2)
+        c.line(x1, ph - m - 18.0, x2, ph - m - 18.0)
+        c.setStrokeColor(burgundy)
+        c.setLineWidth(0.5)
+        c.line(x1, ph - m - 21.5, x2, ph - m - 21.5)
+
+        # Academic Monograph Series label
+        c.setFont("Times-Roman", 8.5)
+        c.setFillColor(burgundy)
+        c.drawCentredString(center_x, ph - m - 46.0, "LECTURE NOTES IN FIRST-PRINCIPLES PHYSICS")
+
+        # Title & Subtitle
+        title_size = 24.0 if w > 360 else 19.0
+        c.setFont("Times-Bold", title_size)
+        c.setFillColor(ink)
+        lines = wrap_text_lines(clean_title, "Times-Bold", title_size, w - 32.0, c)
+        ty = ph - m - 92.0
+        for line in lines[:3]:
+            c.drawCentredString(center_x, ty, line)
+            ty -= (title_size + 7.0)
+        if subtitle:
+            c.setFont("Times-Italic", 12.0)
+            c.setFillColor(slate)
+            c.drawCentredString(center_x, ty - 4.0, subtitle)
+
+        # Clean vector wave-packet & coordinate axes diagram
+        gx0 = x1 + w * 0.14
+        gw = w * 0.72
+        gy0 = ph * 0.40
+        gh = 58.0 if ph >= 650 else 42.0
+        c.setStrokeColor(Color(0.08, 0.095, 0.12, alpha=0.35))
+        c.setLineWidth(0.6)
+        c.line(gx0, gy0, gx0 + gw, gy0)
+        c.line(center_x, gy0 - gh, center_x, gy0 + gh)
+
+        # Gaussian envelope + modulated carrier wave
+        p_wave = c.beginPath()
+        steps = 80
+        for i in range(steps + 1):
+            u = (i / steps) * 2.0 - 1.0  # -1..1
+            px = gx0 + (i / steps) * gw
+            env = math.exp(-4.5 * u * u)
+            py = gy0 + gh * 0.88 * env * math.cos(16.0 * u)
+            if i == 0:
+                p_wave.moveTo(px, py)
+            else:
+                p_wave.lineTo(px, py)
+        c.setStrokeColor(burgundy)
+        c.setLineWidth(1.3)
+        c.drawPath(p_wave, fill=0, stroke=1)
+
+        # Dashed Gaussian envelope
+        p_env = c.beginPath()
+        for i in range(steps + 1):
+            u = (i / steps) * 2.0 - 1.0
+            px = gx0 + (i / steps) * gw
+            py = gy0 + gh * 0.88 * math.exp(-4.5 * u * u)
+            if i == 0:
+                p_env.moveTo(px, py)
+            else:
+                p_env.lineTo(px, py)
+        c.setStrokeColor(slate)
+        c.setLineWidth(0.6)
+        c.setDash(3, 3)
+        c.drawPath(p_env, fill=0, stroke=1)
+        c.setDash()
+
+        c.setFont("Courier", 7.2)
+        c.setFillColor(slate)
+        c.drawCentredString(center_x, gy0 - gh - 16.0, "psi(x,t) = A exp(-x^2 / 2 sigma^2) cos(k0 x - w t)")
+
+        # Footer
+        c.setStrokeColor(Color(0.08, 0.095, 0.12, alpha=0.25))
+        c.setLineWidth(0.6)
+        c.line(x1, m + 42.0, x2, m + 42.0)
+        c.setFont("Times-Bold", 10.5)
+        c.setFillColor(ink)
+        c.drawString(x1, m + 22.0, author or "Department of Theoretical Physics")
+        c.setFont("Courier", 7.5)
+        c.setFillColor(burgundy)
+        ext = f"{num_slides} {'pp.' if is_notebook else 'slides'}" if num_slides is not None else "Typeset in LaTeX"
+        c.drawRightString(x2, m + 22.0, ext)
+
+    elif tpl == "compact_disc":
+        # Compact Disc Digital Audio 1982 (Lossless Jewel-Case Archive)
+        silver = Color(0.925, 0.935, 0.945)
+        graphite = Color(0.09, 0.10, 0.125)
+        prism_cyan = Color(0.18, 0.74, 0.84)
+        prism_violet = Color(0.54, 0.36, 0.84)
+        prism_gold = Color(0.90, 0.72, 0.26)
+        muted = Color(0.42, 0.45, 0.50)
+
+        c.setFillColor(silver)
+        c.rect(0, 0, pw, ph, fill=1, stroke=0)
+
+        # Lower matte graphite tray band
+        tray_h = ph * 0.26
+        c.setFillColor(graphite)
+        c.rect(0, 0, pw, tray_h, fill=1, stroke=0)
+
+        m = max(margin, 32.0)
+        x1 = left_gutter + m
+        x2 = pw - right_gutter - m
+        w = x2 - x1
+        center_x = x1 + w / 2.0
+
+        # Top Digital Audio spec bar
+        c.setFont("Helvetica-Bold", 7.5)
+        c.setFillColor(graphite)
+        c.drawString(x1, ph - m - 14.0, "COMPACT DISC · DIGITAL AUDIO")
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(muted)
+        c.drawRightString(x2, ph - m - 14.0, f"44.1 kHz / 16-BIT PCM · {date_str}")
+        c.setStrokeColor(graphite)
+        c.setLineWidth(1.4)
+        c.line(x1, ph - m - 22.0, x2, ph - m - 22.0)
+
+        # Optical CD Disc illustration
+        disc_r = min(w * 0.31, 108.0)
+        disc_cx = center_x
+        disc_cy = ph * 0.55
+        c.setFillColor(Color(0.84, 0.86, 0.89))
+        c.setStrokeColor(Color(0.55, 0.58, 0.64))
+        c.setLineWidth(0.9)
+        c.circle(disc_cx, disc_cy, disc_r, fill=1, stroke=1)
+
+        # Subtle iridescent spectral prism wedges
+        for col, a0, a1 in [(prism_cyan, 22, 42), (prism_violet, 42, 58), (prism_gold, 205, 225)]:
+            p_w = c.beginPath()
+            p_w.moveTo(disc_cx, disc_cy)
+            p_w.lineTo(disc_cx + disc_r * math.cos(math.radians(a0)), disc_cy + disc_r * math.sin(math.radians(a0)))
+            p_w.lineTo(disc_cx + disc_r * math.cos(math.radians(a1)), disc_cy + disc_r * math.sin(math.radians(a1)))
+            p_w.close()
+            c.setFillColor(Color(col.red, col.green, col.blue, alpha=0.22))
+            c.drawPath(p_w, fill=1, stroke=0)
+
+        # Concentric optical data rings
+        c.setStrokeColor(Color(0.62, 0.65, 0.70, alpha=0.55))
+        c.setLineWidth(0.4)
+        for frac in (0.88, 0.76, 0.64, 0.52):
+            c.circle(disc_cx, disc_cy, disc_r * frac, fill=0, stroke=1)
+
+        # Clamping ring & spindle hole
+        c.setFillColor(Color(0.76, 0.79, 0.83))
+        c.setStrokeColor(Color(0.45, 0.48, 0.54))
+        c.setLineWidth(0.7)
+        c.circle(disc_cx, disc_cy, disc_r * 0.32, fill=1, stroke=1)
+        c.setFillColor(silver)
+        c.circle(disc_cx, disc_cy, disc_r * 0.14, fill=1, stroke=1)
+
+        # Title & Subtitle inside lower graphite tray
+        title_size = 22.0 if w > 360 else 17.5
+        c.setFont("Helvetica-Bold", title_size)
+        c.setFillColor(Color(0.96, 0.97, 0.98))
+        lines = wrap_text_lines(clean_title, "Helvetica-Bold", title_size, w - 16.0, c)
+        ty = tray_h - 44.0
+        for line in lines[:2]:
+            c.drawString(x1, ty, line)
+            ty -= (title_size + 5.0)
+        if subtitle:
+            c.setFont("Helvetica-Oblique", 10.5)
+            c.setFillColor(prism_cyan)
+            c.drawString(x1, ty - 2.0, subtitle)
+
+        # Footer inside graphite tray
+        c.setFont("Courier-Bold", 7.5)
+        c.setFillColor(Color(0.75, 0.78, 0.84))
+        c.drawString(x1, m * 0.65, (author or "EXACT AUDIO COPY · LOSSLESS ARCHIVE").upper())
+        if num_slides is not None:
+            s_word = "PAGES" if is_notebook else "SLIDES"
+            c.setFillColor(prism_gold)
+            c.drawRightString(x2, m * 0.65, f"{num_slides} {s_word} · ADD")
 
     else:
         # Default: Atelier Notebook (Zara Home Classic)

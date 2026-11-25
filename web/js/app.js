@@ -199,12 +199,25 @@
       pageFormatTotal: "Total (1 / N)",
       pageFormatSimple: "Simple (1)",
       ecoPrintLabel: "Ink-Saver Mode (Grayscale)",
-      openCoverGallery: "🎨 Visual Gallery (55)",
-      coverSearchPlaceholder: "Search 55 covers (e.g. Penguin, Quantum, 1980s)...",
+      openCoverGallery: "🎨 Visual Gallery (67)",
+      coverSearchPlaceholder: "Search 67 covers (e.g. Miami Vice, Blade Runner, Juno, Penguin)...",
       coverGalleryTitle: "Editorial & Scientific Cover Gallery",
-      coverGallerySub: "55 curated designs · Click any cover to apply",
+      coverGallerySub: "67 curated designs · Click any cover to apply",
       coverGallerySearchPlaceholder: "Filter covers by name, style, physics subject, decade...",
       coverGalleryEmpty: "No covers match your search.",
+      groupSignature: "★ Signature Collection (Hi-Fi, Cinema, Synth, Coffee & LaTeX)",
+      optTemplateCassetteHifi: "Chrome Cassette Hi-Fi (Type II · 90 Min · Analog Master)",
+      optTemplateJunoSynth: "Roland Juno Synth Panel (80s Polyphonic Studio)",
+      optTemplateNoirGotham: "Noir Detective Dossier (Year One & Twin Peaks)",
+      optTemplateBaristaBrew: "Specialty Coffee Ledger (Moka Pot & Pour-Over)",
+      optTemplateVinylProg: "70s Prog & Yacht Rock Gatefold (ECM / 33⅓ RPM)",
+      optTemplateOxfordStripe: "Sartorial Oxford Stripe (Tailored Bengal Pinstripe)",
+      optTemplateMiamiVice: "Miami Vice 1984 (Neon Art Deco · Vice City Horizon)",
+      optTemplateBladeRunner: "Blade Runner 2019 (Voight-Kampff · Tyrell Neo-Noir)",
+      optTemplateStrangerThings: "Hawkins 1983 (Upside Down · 80s Sci-Fi Paperback)",
+      optTemplateBarryLyndon: "Kubrick Candlelight (Barry Lyndon · 18th-C. Folio)",
+      optTemplateLatexMonograph: "First Principles LaTeX (Computational Physics Monograph)",
+      optTemplateCompactDisc: "Compact Disc 1982 (44.1 kHz PCM · Lossless Archive)",
       tintIvory: "Warm Ivory",
       tintCream: "Cream Vellum",
       tintWhite: "Pure White",
@@ -400,12 +413,25 @@
       pageFormatTotal: "Total (1 / N)",
       pageFormatSimple: "Simple (1)",
       ecoPrintLabel: "Modo ahorro de tinta (Escala de grises)",
-      openCoverGallery: "🎨 Galería Visual (55)",
-      coverSearchPlaceholder: "Buscar entre 55 portadas (ej. Penguin, Cuántica, 1980s)...",
+      openCoverGallery: "🎨 Galería Visual (67)",
+      coverSearchPlaceholder: "Buscar entre 67 portadas (ej. Miami Vice, Blade Runner, Juno, Penguin)...",
       coverGalleryTitle: "Galería de Portadas Editoriales y Científicas",
-      coverGallerySub: "55 diseños de colección · Haz clic en una portada para aplicarla",
+      coverGallerySub: "67 diseños de colección · Haz clic en una portada para aplicarla",
       coverGallerySearchPlaceholder: "Filtrar portadas por nombre, estilo, asignatura, década...",
       coverGalleryEmpty: "Ninguna portada coincide con tu búsqueda.",
+      groupSignature: "★ Colección Signature (Hi-Fi, Cine, Synth, Café & LaTeX)",
+      optTemplateCassetteHifi: "Casete Cromo Hi-Fi (Type II · 90 Min · Máster Analógico)",
+      optTemplateJunoSynth: "Sintetizador Roland Juno (Consola Polifónica 80s)",
+      optTemplateNoirGotham: "Dossier Noir Detective (Año Uno & Twin Peaks)",
+      optTemplateBaristaBrew: "Cuaderno Barista Especialidad (Cafetera Moka & Pour-Over)",
+      optTemplateVinylProg: "Vinilo Prog & Yacht Rock 70s (ECM / 33⅓ RPM)",
+      optTemplateOxfordStripe: "Camisa Oxford de Rayas (Sastrería Clásica & Etiqueta)",
+      optTemplateMiamiVice: "Miami Vice 1984 (Neón Art Déco · Vice City)",
+      optTemplateBladeRunner: "Blade Runner 2019 (Voight-Kampff · Neo-Noir)",
+      optTemplateStrangerThings: "Hawkins 1983 (El Mundo del Revés · Bolsillo 80s)",
+      optTemplateBarryLyndon: "Kubrick Luz de Velas (Barry Lyndon · Folio XVIII)",
+      optTemplateLatexMonograph: "Monografía LaTeX (Física de Primeros Principios)",
+      optTemplateCompactDisc: "Compact Disc 1982 (44.1 kHz PCM · Archivo Lossless)",
       tintIvory: "Marfil Cálido",
       tintCream: "Crema Editorial",
       tintWhite: "Blanco Puro",
@@ -601,12 +627,25 @@
       pageFormatTotal: "Total (1 / N)",
       pageFormatSimple: "Simple (1)",
       ecoPrintLabel: "Modo aforro de tinta (Escala de grises)",
-      openCoverGallery: "🎨 Galería Visual (55)",
-      coverSearchPlaceholder: "Buscar entre 55 portadas (ex. Penguin, Cuántica, 1980s)...",
+      openCoverGallery: "🎨 Galería Visual (67)",
+      coverSearchPlaceholder: "Buscar entre 67 portadas (ex. Miami Vice, Blade Runner, Juno, Penguin)...",
       coverGalleryTitle: "Galería de Portadas Editoriais e Científicas",
-      coverGallerySub: "55 deseños de colección · Fai clic nunha portada para aplicala",
+      coverGallerySub: "67 deseños de colección · Fai clic nunha portada para aplicala",
       coverGallerySearchPlaceholder: "Filtrar portadas por nome, estilo, materia, década...",
       coverGalleryEmpty: "Ningunha portada coincide coa túa busca.",
+      groupSignature: "★ Colección Signature (Hi-Fi, Cine, Synth, Café e LaTeX)",
+      optTemplateCassetteHifi: "Casete Cromo Hi-Fi (Type II · 90 Min · Máster Analóxico)",
+      optTemplateJunoSynth: "Sintetizador Roland Juno (Consola Polifónica 80s)",
+      optTemplateNoirGotham: "Dossier Noir Detective (Ano Un e Twin Peaks)",
+      optTemplateBaristaBrew: "Caderno Barista Especialidade (Cafeteira Moka e Pour-Over)",
+      optTemplateVinylProg: "Vinilo Prog e Yacht Rock 70s (ECM / 33⅓ RPM)",
+      optTemplateOxfordStripe: "Camisa Oxford de Raias (Xastraría Clásica e Etiqueta)",
+      optTemplateMiamiVice: "Miami Vice 1984 (Neón Art Déco · Vice City)",
+      optTemplateBladeRunner: "Blade Runner 2019 (Voight-Kampff · Neo-Noir)",
+      optTemplateStrangerThings: "Hawkins 1983 (O Mundo do Revés · Peto 80s)",
+      optTemplateBarryLyndon: "Kubrick Luz de Velas (Barry Lyndon · Folio XVIII)",
+      optTemplateLatexMonograph: "Monografía LaTeX (Física de Primeiros Principios)",
+      optTemplateCompactDisc: "Compact Disc 1982 (44.1 kHz PCM · Arquivo Lossless)",
       tintIvory: "Marfil Cálido",
       tintCream: "Crema Editorial",
       tintWhite: "Branco Puro",
@@ -961,6 +1000,7 @@
       const el = document.getElementById(id);
       if (el && label) el.label = label;
     };
+    setOptgroupLabel('groupSignature', dict.groupSignature);
     setOptgroupLabel('groupEditorialStandard', dict.groupEditorialStandard);
     setOptgroupLabel('groupClassics', dict.groupClassics);
     setOptgroupLabel('groupNotebooks', dict.groupNotebooks);
@@ -970,6 +1010,19 @@
     setOptgroupLabel('groupSeasons', dict.groupSeasons);
     setOptgroupLabel('groupRalphLauren', dict.groupRalphLauren);
     setOptgroupLabel('groupNature', dict.groupNature);
+
+    setText('optTemplateCassetteHifi', dict.optTemplateCassetteHifi);
+    setText('optTemplateJunoSynth', dict.optTemplateJunoSynth);
+    setText('optTemplateNoirGotham', dict.optTemplateNoirGotham);
+    setText('optTemplateBaristaBrew', dict.optTemplateBaristaBrew);
+    setText('optTemplateVinylProg', dict.optTemplateVinylProg);
+    setText('optTemplateOxfordStripe', dict.optTemplateOxfordStripe);
+    setText('optTemplateMiamiVice', dict.optTemplateMiamiVice);
+    setText('optTemplateBladeRunner', dict.optTemplateBladeRunner);
+    setText('optTemplateStrangerThings', dict.optTemplateStrangerThings);
+    setText('optTemplateBarryLyndon', dict.optTemplateBarryLyndon);
+    setText('optTemplateLatexMonograph', dict.optTemplateLatexMonograph);
+    setText('optTemplateCompactDisc', dict.optTemplateCompactDisc);
 
     setText('optTemplateNineteen00s', dict.optTemplateNineteen00s);
     setText('optTemplateNineteen10s', dict.optTemplateNineteen10s);

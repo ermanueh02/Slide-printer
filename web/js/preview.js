@@ -620,9 +620,9 @@
   const COVER_GL_MONTHS = ['xaneiro', 'febreiro', 'marzo', 'abril', 'maio', 'xuño', 'xullo', 'agosto', 'setembro', 'outubro', 'novembro', 'decembro'];
   const COVER_FR_MONTHS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
   const COVER_LATIN_ABBR_MONTHS = ['Ian.', 'Feb.', 'Mar.', 'Apr.', 'Mai.', 'Iun.', 'Iul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
-  const COVER_ISO_TEMPLATES = new Set(['blueprint', 'field_notes', 'circuits_instrumentation', 'circuits_flat', 'materials_sim', 'materials_sim_flat']);
-  const COVER_DOT_TEMPLATES = new Set(['forties', '1940s', 'eighties', '1980s', 'nineties', '1990s', 'twothousands', '2000s', 'twentytwenties', '2020s']);
-  const COVER_SWISS_TEMPLATES = new Set(['sixties', '1960s', 'twenty10s', '2010s', 'midori', 'swiss']);
+  const COVER_ISO_TEMPLATES = new Set(['blueprint', 'field_notes', 'circuits_instrumentation', 'circuits_flat', 'materials_sim', 'materials_sim_flat', 'juno_synth', 'blade_runner', 'latex_monograph']);
+  const COVER_DOT_TEMPLATES = new Set(['forties', '1940s', 'eighties', '1980s', 'nineties', '1990s', 'twothousands', '2000s', 'twentytwenties', '2020s', 'cassette_hifi', 'miami_vice', 'compact_disc']);
+  const COVER_SWISS_TEMPLATES = new Set(['sixties', '1960s', 'twenty10s', '2010s', 'midori', 'swiss', 'vinyl_prog']);
   const COVER_FRENCH_TEMPLATES = new Set(['gallimard', 'cahier']);
 
   function parseCoverDateInput(raw) {
@@ -4313,6 +4313,1090 @@
       ctx.fillStyle = '#6e685e';
       ctx.textAlign = 'center';
       ctx.fillText('DURABLE BOUND EDITION · PRINTED IN GALICIA · SLIDE-PRINTER STANDARD', centerX, tblY + 114);
+      ctx.restore();
+
+    } else if (tpl === 'cassette_hifi') {
+      // Chrome Cassette Hi-Fi (Type II · 90 Min)
+      ctx.save();
+      ctx.fillStyle = '#16171b';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const stripes = ['#d64030', '#e08f2e', '#d6b05c', '#3d7ab8'];
+      stripes.forEach((col, idx) => {
+        ctx.fillStyle = col;
+        ctx.fillRect(leftGutter, 62 + idx * 7, pw - leftGutter - rightGutter, 4.5);
+      });
+
+      const m = Math.max(userMargin, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      ctx.font = '700 7.5px "Space Mono", ui-monospace, monospace';
+      ctx.fillStyle = '#d6b05c';
+      ctx.textAlign = 'left';
+      ctx.fillText('HIGH BIAS 70us EQ · TYPE II (CrO2)', x1, 44);
+      ctx.textAlign = 'right';
+      ctx.fillText('C-90 · -14 LUFS MASTER', x2, 44);
+
+      const titleSize = w > 360 ? 24 : 19;
+      ctx.font = `700 ${titleSize}px "Plus Jakarta Sans", system-ui, sans-serif`;
+      ctx.fillStyle = '#f2ede0';
+      ctx.textAlign = 'left';
+      const endTy = drawWrappedText(ctx, titleText.toUpperCase(), x1, 132, w - 16, titleSize + 6);
+      if (subTitleText) {
+        ctx.font = 'italic 11.5px "Newsreader", Georgia, serif';
+        ctx.fillStyle = '#d6b05c';
+        ctx.fillText(subTitleText, x1, endTy + 18);
+      }
+
+      const cw = Math.min(w * 0.78, 280);
+      const ch = cw * 0.62;
+      const cx0 = centerX - cw / 2;
+      const cy0 = ph * 0.56 - ch / 2;
+
+      ctx.fillStyle = '#24262e';
+      ctx.strokeStyle = '#d6b05c';
+      ctx.lineWidth = 1.2;
+      ctx.fillRect(cx0, cy0, cw, ch);
+      ctx.strokeRect(cx0, cy0, cw, ch);
+
+      ctx.fillStyle = '#f2ebd9';
+      ctx.fillRect(cx0 + cw * 0.06, cy0 + ch * 0.12, cw * 0.88, ch * 0.60);
+      ctx.fillStyle = '#d64030';
+      ctx.fillRect(cx0 + cw * 0.06, cy0 + ch * 0.12, cw * 0.88, ch * 0.14);
+
+      ctx.font = '700 7px "Plus Jakarta Sans", sans-serif';
+      ctx.fillStyle = '#f2ede0';
+      ctx.textAlign = 'left';
+      ctx.fillText('SIDE A · ANALOG ARCHIVE', cx0 + cw * 0.09, cy0 + ch * 0.21);
+      ctx.textAlign = 'right';
+      ctx.fillText('DOLBY B-C NR', cx0 + cw * 0.91, cy0 + ch * 0.21);
+
+      const winW = cw * 0.54, winH = ch * 0.26;
+      const winX = centerX - winW / 2, winY = cy0 + ch * 0.38;
+      ctx.fillStyle = '#141419';
+      ctx.fillRect(winX, winY, winW, winH);
+
+      const reelR = winH * 0.36;
+      [winX + winW * 0.25, winX + winW * 0.75].forEach((rx) => {
+        const ry = winY + winH / 2;
+        ctx.beginPath();
+        ctx.arc(rx, ry, reelR, 0, Math.PI * 2);
+        ctx.fillStyle = '#f2ede0';
+        ctx.fill();
+        ctx.strokeStyle = '#d6b05c';
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(rx, ry, reelR * 0.48, 0, Math.PI * 2);
+        ctx.fillStyle = '#19191f';
+        ctx.fill();
+      });
+
+      ctx.fillStyle = '#1c1e24';
+      ctx.strokeStyle = '#737580';
+      ctx.lineWidth = 0.7;
+      ctx.fillRect(cx0 + cw * 0.22, cy0 + ch * 0.81, cw * 0.56, ch * 0.19);
+      ctx.strokeRect(cx0 + cw * 0.22, cy0 + ch * 0.81, cw * 0.56, ch * 0.19);
+
+      const vuY = cy0 + ch + 34;
+      ctx.strokeStyle = '#595c66';
+      ctx.beginPath();
+      ctx.moveTo(x1, vuY);
+      ctx.lineTo(x2, vuY);
+      ctx.stroke();
+      const ticks = ['-20', '-10', '-7', '-3', '0', '+3dB'];
+      ticks.forEach((lbl, idx) => {
+        const tx = x1 + (w * idx / (ticks.length - 1));
+        const isRed = (lbl === '0' || lbl === '+3dB');
+        ctx.strokeStyle = isRed ? '#d64030' : '#d6b05c';
+        ctx.beginPath();
+        ctx.moveTo(tx, vuY);
+        ctx.lineTo(tx, vuY - (isRed ? 7 : 4.5));
+        ctx.stroke();
+        ctx.font = '700 6.5px "Space Mono", monospace';
+        ctx.fillStyle = isRed ? '#d64030' : '#9ea0a8';
+        ctx.textAlign = 'center';
+        ctx.fillText(lbl, tx, vuY + 11);
+      });
+
+      const metaY = ph - m - 36;
+      ctx.strokeStyle = 'rgba(214, 176, 92, 0.45)';
+      ctx.beginPath();
+      ctx.moveTo(x1, metaY - 16);
+      ctx.lineTo(x2, metaY - 16);
+      ctx.stroke();
+      ctx.font = '700 8.5px "Space Mono", monospace';
+      ctx.fillStyle = '#f2ede0';
+      ctx.textAlign = 'left';
+      ctx.fillText(authorText || 'ANALOG STUDIO RECORDING', x1, metaY);
+      ctx.fillStyle = '#d6b05c';
+      ctx.textAlign = 'right';
+      ctx.fillText(dateFormatted, x2, metaY);
+      if (options.numSlides) {
+        ctx.font = '500 7px "Space Mono", monospace';
+        ctx.fillStyle = '#9ea0a8';
+        ctx.textAlign = 'left';
+        ctx.fillText(`PROGRAM LENGTH: ${options.numSlides} ${options.isNotebook ? 'PAGES' : 'SLIDES'} · INDEXED NOTES`, x1, metaY + 14);
+      }
+      ctx.restore();
+
+    } else if (tpl === 'juno_synth') {
+      // Roland Juno / Analog Synth Panel (80s Studio Console)
+      ctx.save();
+      ctx.fillStyle = '#1c2025';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const m = Math.max(userMargin, 30);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+
+      ctx.fillStyle = '#2b6ba8';
+      ctx.fillRect(x1, m + 10, w, 14);
+      ctx.fillStyle = '#c93838';
+      ctx.fillRect(x1, m + 26, w, 4);
+      ctx.font = '700 8px "Plus Jakarta Sans", sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'left';
+      ctx.fillText('PROGRAMMABLE POLYPHONIC SYNTHESIZER · JUNO-DS SERIES', x1 + 8, m + 20);
+      ctx.textAlign = 'right';
+      ctx.fillText('CHORUS I / II', x2 - 8, m + 20);
+
+      const titleSize = w > 360 ? 24 : 18;
+      ctx.font = `700 ${titleSize}px "Plus Jakarta Sans", sans-serif`;
+      ctx.fillStyle = '#e0e3e8';
+      ctx.textAlign = 'left';
+      const endTy = drawWrappedText(ctx, titleText, x1, m + 76, w - 12, titleSize + 6);
+      if (subTitleText) {
+        ctx.font = '500 10.5px "Space Mono", monospace';
+        ctx.fillStyle = '#f2a32e';
+        ctx.fillText(`// ${subTitleText}`, x1, endTy + 18);
+      }
+
+      const panelH = Math.min(145, ph * 0.22);
+      const panelY = ph * 0.58 - panelH / 2;
+      ctx.fillStyle = '#262b33';
+      ctx.strokeStyle = '#2b6ba8';
+      ctx.lineWidth = 1.0;
+      ctx.fillRect(x1, panelY, w, panelH);
+      ctx.strokeRect(x1, panelY, w, panelH);
+
+      const sections = [['DCO', 0.68], ['SUB', 0.42], ['HPF', 0.30], ['VCF', 0.76], ['RES', 0.55], ['VCA', 0.82], ['ENV', 0.60], ['LFO', 0.48]];
+      const colW = w / sections.length;
+      sections.forEach(([lbl, val], idx) => {
+        const sx = x1 + colW * (idx + 0.5);
+        ctx.font = '700 6.5px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = '#e0e3e8';
+        ctx.textAlign = 'center';
+        ctx.fillText(lbl, sx, panelY + 14);
+        const trTop = panelY + 26;
+        const trBot = panelY + panelH - 22;
+        ctx.strokeStyle = '#0f1214';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(sx, trTop);
+        ctx.lineTo(sx, trBot);
+        ctx.stroke();
+        const capY = trBot - (trBot - trTop) * val;
+        ctx.fillStyle = '#3d424d';
+        ctx.strokeStyle = '#e0e3e8';
+        ctx.lineWidth = 0.7;
+        ctx.fillRect(sx - 6.5, capY - 4, 13, 8);
+        ctx.strokeRect(sx - 6.5, capY - 4, 13, 8);
+        ctx.strokeStyle = (idx === 3 || idx === 4) ? '#c93838' : '#f2a32e';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(sx - 5, capY);
+        ctx.lineTo(sx + 5, capY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(sx, panelY + panelH - 11, 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = (idx === 0 || idx === 3 || idx === 5) ? '#c93838' : '#404752';
+        ctx.fill();
+      });
+
+      const kbH = 54;
+      const kbY = ph - m - 64 - kbH;
+      const numWhite = 14;
+      const wkW = w / numWhite;
+      for (let i = 0; i < numWhite; i++) {
+        ctx.fillStyle = '#f2f2f0';
+        ctx.strokeStyle = '#1f2126';
+        ctx.lineWidth = 0.6;
+        ctx.fillRect(x1 + i * wkW, kbY, wkW, kbH);
+        ctx.strokeRect(x1 + i * wkW, kbY, wkW, kbH);
+      }
+      [0, 1, 3, 4, 5, 7, 8, 10, 11, 12].forEach((bIdx) => {
+        if (bIdx < numWhite - 1) {
+          ctx.fillStyle = '#14171c';
+          ctx.fillRect(x1 + (bIdx + 0.68) * wkW, kbY, wkW * 0.64, kbH * 0.62);
+        }
+      });
+
+      ctx.font = '700 8.5px "Space Mono", monospace';
+      ctx.fillStyle = '#e0e3e8';
+      ctx.textAlign = 'left';
+      ctx.fillText(`PATCH: ${authorText || 'STUDIO SESSION'}`, x1, ph - m - 26);
+      ctx.fillStyle = '#f2a32e';
+      ctx.textAlign = 'right';
+      ctx.fillText(dateFormatted, x2, ph - m - 26);
+      if (options.numSlides) {
+        ctx.font = '500 7px "Space Mono", monospace';
+        ctx.fillStyle = '#99a3b2';
+        ctx.textAlign = 'left';
+        ctx.fillText(`BANK A · ${options.numSlides} ${options.isNotebook ? 'PAGES' : 'SLIDES'} · MIDI CH 01`, x1, ph - m - 12);
+      }
+      ctx.restore();
+
+    } else if (tpl === 'noir_gotham') {
+      // Noir Detective Dossier (Year One / Twin Peaks)
+      ctx.save();
+      ctx.fillStyle = '#0e1015';
+      ctx.fillRect(0, 0, pw, ph);
+
+      ctx.fillStyle = 'rgba(214, 158, 54, 0.11)';
+      ctx.beginPath();
+      ctx.moveTo(leftGutter, ph * 0.22);
+      ctx.lineTo(pw - rightGutter, ph * 0.56);
+      ctx.lineTo(pw - rightGutter, ph * 0.74);
+      ctx.lineTo(leftGutter, ph * 0.40);
+      ctx.closePath();
+      ctx.fill();
+
+      const m = Math.max(userMargin, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+
+      ctx.strokeStyle = 'rgba(214, 158, 54, 0.45)';
+      ctx.lineWidth = 0.9;
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
+
+      const boxW = 56, boxH = 62;
+      const boxX = x1 + 14, boxY = m + 14;
+      ctx.fillStyle = '#d69e36';
+      ctx.fillRect(boxX, boxY, boxW, boxH);
+      ctx.fillStyle = '#0e1015';
+      ctx.textAlign = 'center';
+      ctx.font = '700 7px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('NOIR FILE', boxX + boxW / 2, boxY + 14);
+      ctx.font = '700 20px "Newsreader", Georgia, serif';
+      ctx.fillText('01', boxX + boxW / 2, boxY + 40);
+      ctx.font = '700 6px "Space Mono", monospace';
+      ctx.fillText('YEAR ONE', boxX + boxW / 2, boxY + 55);
+
+      ctx.textAlign = 'right';
+      ctx.font = '700 7.5px "Space Mono", monospace';
+      ctx.fillStyle = '#8f94a3';
+      ctx.fillText('CONFIDENTIAL ARCHIVE · CASEBOOK', x2 - 14, m + 28);
+      ctx.fillStyle = '#b8242e';
+      ctx.fillText(dateFormatted.toUpperCase(), x2 - 14, m + 42);
+
+      const titleSize = w > 360 ? 28 : 21;
+      ctx.font = `700 ${titleSize}px "Newsreader", Georgia, serif`;
+      ctx.fillStyle = '#f2ede0';
+      ctx.textAlign = 'left';
+      const endTy = drawWrappedText(ctx, titleText.toUpperCase(), x1 + 18, ph * 0.38, w - 36, titleSize + 7);
+      if (subTitleText) {
+        ctx.font = 'italic 12.5px "Newsreader", Georgia, serif';
+        ctx.fillStyle = '#d69e36';
+        ctx.fillText(subTitleText, x1 + 18, endTy + 22);
+      }
+
+      const zigY = ph * 0.66;
+      const zigSteps = 16;
+      const stepX = (w - 36) / zigSteps;
+      ctx.strokeStyle = '#b8242e';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let i = 0; i <= zigSteps; i++) {
+        const zx = x1 + 18 + i * stepX;
+        const zy = zigY + (i % 2 === 0 ? -5.5 : 5.5);
+        if (i === 0) ctx.moveTo(zx, zy);
+        else ctx.lineTo(zx, zy);
+      }
+      ctx.stroke();
+
+      const skyBase = ph - m - 46;
+      const buildings = [
+        [0.00, 0.08, 42], [0.08, 0.07, 74], [0.15, 0.10, 56],
+        [0.25, 0.08, 96], [0.33, 0.09, 64], [0.42, 0.11, 118],
+        [0.53, 0.09, 82], [0.62, 0.10, 102], [0.72, 0.08, 60],
+        [0.80, 0.11, 86], [0.91, 0.09, 48],
+      ];
+      const hScale = ph < 650 ? 0.75 : 1.0;
+      ctx.fillStyle = '#1c2029';
+      buildings.forEach(([bxF, bwF, bh]) => {
+        const h = bh * hScale;
+        ctx.fillRect(x1 + 14 + (w - 28) * bxF, skyBase - h, (w - 28) * bwF - 1.5, h);
+      });
+
+      ctx.font = '700 8.5px "Space Mono", monospace';
+      ctx.fillStyle = '#f2ede0';
+      ctx.textAlign = 'left';
+      ctx.fillText((authorText || 'DETECTIVE DIVISION').toUpperCase(), x1 + 18, ph - m - 20);
+      if (options.numSlides) {
+        ctx.fillStyle = '#d69e36';
+        ctx.textAlign = 'right';
+        ctx.fillText(`${options.numSlides} ${options.isNotebook ? 'PAGES' : 'SLIDES'} · CLASSIFIED`, x2 - 18, ph - m - 20);
+      }
+      ctx.restore();
+
+    } else if (tpl === 'barista_brew') {
+      // Specialty Coffee Ledger (Moka & Pour-Over)
+      ctx.save();
+      ctx.fillStyle = '#f4ede0';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const m = Math.max(userMargin, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      ctx.strokeStyle = '#2b1e16';
+      ctx.lineWidth = 1.2;
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
+      ctx.strokeStyle = '#b3592a';
+      ctx.lineWidth = 0.5;
+      ctx.strokeRect(x1 + 6, m + 6, w - 12, ph - 2 * m - 12);
+
+      ctx.font = '700 7.2px "Space Mono", monospace';
+      ctx.fillStyle = '#b3592a';
+      ctx.textAlign = 'center';
+      ctx.fillText('SPECIALTY BREW LEDGER · MOKA · POUR-OVER · COLD BREW', centerX, m + 28);
+      ctx.strokeStyle = 'rgba(43, 30, 22, 0.25)';
+      ctx.beginPath();
+      ctx.moveTo(x1 + 24, m + 38);
+      ctx.lineTo(x2 - 24, m + 38);
+      ctx.stroke();
+
+      const titleSize = w > 360 ? 25 : 19;
+      ctx.font = `700 ${titleSize}px "Newsreader", Georgia, serif`;
+      ctx.fillStyle = '#2b1e16';
+      const endTy = drawWrappedText(ctx, titleText, centerX, m + 84, w - 48, titleSize + 7);
+      if (subTitleText) {
+        ctx.font = 'italic 12px "Newsreader", Georgia, serif';
+        ctx.fillStyle = '#b3592a';
+        ctx.fillText(subTitleText, centerX, endTy + 20);
+      }
+
+      // Geometric Moka Pot Elevation
+      const mkS = Math.min(w * 0.34, 118);
+      const mkCx = centerX;
+      const mkBy = ph * 0.65;
+      ctx.strokeStyle = '#2b1e16';
+      ctx.lineWidth = 1.3;
+      ctx.fillStyle = '#e8decb';
+      ctx.fillRect(mkCx - mkS * 0.36, mkBy - mkS * 0.44, mkS * 0.72, mkS * 0.44);
+      ctx.strokeRect(mkCx - mkS * 0.36, mkBy - mkS * 0.44, mkS * 0.72, mkS * 0.44);
+      ctx.fillStyle = '#b3592a';
+      ctx.fillRect(mkCx - mkS * 0.31, mkBy - mkS * 0.52, mkS * 0.62, mkS * 0.08);
+      ctx.strokeRect(mkCx - mkS * 0.31, mkBy - mkS * 0.52, mkS * 0.62, mkS * 0.08);
+      ctx.fillStyle = '#f0e6d6';
+      ctx.fillRect(mkCx - mkS * 0.38, mkBy - mkS * 1.06, mkS * 0.76, mkS * 0.54);
+      ctx.strokeRect(mkCx - mkS * 0.38, mkBy - mkS * 1.06, mkS * 0.76, mkS * 0.54);
+      ctx.fillStyle = '#b3592a';
+      ctx.fillRect(mkCx - mkS * 0.34, mkBy - mkS * 1.18, mkS * 0.68, mkS * 0.12);
+      ctx.strokeRect(mkCx - mkS * 0.34, mkBy - mkS * 1.18, mkS * 0.68, mkS * 0.12);
+      ctx.fillStyle = '#2b1e16';
+      ctx.fillRect(mkCx - mkS * 0.07, mkBy - mkS * 1.27, mkS * 0.14, mkS * 0.09);
+
+      ctx.strokeStyle = '#2b1e16';
+      ctx.lineWidth = 2.6;
+      ctx.beginPath();
+      ctx.moveTo(mkCx + mkS * 0.38, mkBy - mkS * 0.96);
+      ctx.lineTo(mkCx + mkS * 0.60, mkBy - mkS * 0.92);
+      ctx.lineTo(mkCx + mkS * 0.55, mkBy - mkS * 0.56);
+      ctx.lineTo(mkCx + mkS * 0.38, mkBy - mkS * 0.56);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#b3592a';
+      ctx.lineWidth = 0.9;
+      [-12, 0, 12].forEach((dx) => {
+        ctx.beginPath();
+        ctx.moveTo(mkCx + dx, mkBy - mkS * 1.34);
+        ctx.lineTo(mkCx + dx + 3, mkBy - mkS * 1.50);
+        ctx.stroke();
+      });
+
+      const specY = ph - m - 66;
+      ctx.strokeStyle = '#2b1e16';
+      ctx.lineWidth = 0.7;
+      ctx.beginPath();
+      ctx.moveTo(x1 + 20, specY - 18);
+      ctx.lineTo(x2 - 20, specY - 18);
+      ctx.stroke();
+      ctx.font = '700 7px "Space Mono", monospace';
+      ctx.fillStyle = '#b3592a';
+      ctx.fillText('RATIO 1:16 · 93°C · MEDIUM ROAST · EXTRACTION NOTES', centerX, specY - 4);
+      ctx.font = '700 10.5px "Newsreader", Georgia, serif';
+      ctx.fillStyle = '#2b1e16';
+      ctx.fillText(authorText || 'Roaster & Kitchen Compendium', centerX, specY + 16);
+      ctx.font = 'italic 9px "Newsreader", Georgia, serif';
+      ctx.fillStyle = '#8a6e57';
+      const ext = options.numSlides ? ` · ${options.numSlides} ${options.isNotebook ? 'Pages' : 'Slides'}` : '';
+      ctx.fillText(`${dateFormatted}${ext}`, centerX, specY + 32);
+      ctx.restore();
+
+    } else if (tpl === 'vinyl_prog') {
+      // 70s Prog & Yacht Rock Gatefold (ECM / Hipgnosis LP Sleeve)
+      ctx.save();
+      ctx.fillStyle = '#f6f3eb';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const m = Math.max(userMargin, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+
+      ctx.font = '700 7.5px "Plus Jakarta Sans", sans-serif';
+      ctx.fillStyle = '#6b6b66';
+      ctx.textAlign = 'left';
+      ctx.fillText('STEREO 33 1/3 RPM · HI-FI GATEFOLD ARCHIVE', x1, m + 14);
+      ctx.textAlign = 'right';
+      ctx.fillText(`CAT. NO. SP-77 · ${dateFormatted}`, x2, m + 14);
+      ctx.strokeStyle = '#1a1b1f';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(x1, m + 22);
+      ctx.lineTo(x2, m + 22);
+      ctx.stroke();
+
+      const artSize = Math.min(w * 0.56, 200);
+      const sleeveX = x1 + (w - artSize * 1.32) / 2;
+      const sleeveY = ph * 0.44 - artSize / 2;
+      const discR = artSize * 0.46;
+      const discCx = sleeveX + artSize * 0.92;
+      const discCy = sleeveY + artSize / 2;
+
+      ctx.beginPath();
+      ctx.arc(discCx, discCy, discR, 0, Math.PI * 2);
+      ctx.fillStyle = '#1a1b1f';
+      ctx.fill();
+      ctx.strokeStyle = '#474a52';
+      ctx.lineWidth = 0.5;
+      [0.88, 0.78, 0.68, 0.58].forEach((frac) => {
+        ctx.beginPath();
+        ctx.arc(discCx, discCy, discR * frac, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+      ctx.beginPath(); ctx.arc(discCx, discCy, discR * 0.36, 0, Math.PI * 2); ctx.fillStyle = '#d65724'; ctx.fill();
+      ctx.beginPath(); ctx.arc(discCx, discCy, discR * 0.20, 0, Math.PI * 2); ctx.fillStyle = '#deab38'; ctx.fill();
+      ctx.beginPath(); ctx.arc(discCx, discCy, discR * 0.06, 0, Math.PI * 2); ctx.fillStyle = '#f6f3eb'; ctx.fill();
+
+      ctx.fillStyle = '#242930';
+      ctx.fillRect(sleeveX, sleeveY, artSize, artSize);
+      const bandH = artSize * 0.11;
+      ctx.fillStyle = '#d65724'; ctx.fillRect(sleeveX, sleeveY + artSize * 0.27, artSize, bandH);
+      ctx.fillStyle = '#deab38'; ctx.fillRect(sleeveX, sleeveY + artSize * 0.38, artSize, bandH);
+      ctx.fillStyle = '#247075'; ctx.fillRect(sleeveX, sleeveY + artSize * 0.49, artSize, bandH);
+
+      const titleSize = w > 360 ? 25 : 19;
+      ctx.font = `700 ${titleSize}px "Plus Jakarta Sans", sans-serif`;
+      ctx.fillStyle = '#1a1b1f';
+      ctx.textAlign = 'left';
+      const endTy = drawWrappedText(ctx, titleText, x1, sleeveY + artSize + 44, w - 12, titleSize + 6);
+      if (subTitleText) {
+        ctx.font = 'italic 11.5px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = '#d65724';
+        ctx.fillText(subTitleText, x1, endTy + 18);
+      }
+
+      ctx.strokeStyle = 'rgba(26, 27, 31, 0.25)';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(x1, ph - m - 36);
+      ctx.lineTo(x2, ph - m - 36);
+      ctx.stroke();
+      ctx.font = '700 8.5px "Plus Jakarta Sans", sans-serif';
+      ctx.fillStyle = '#1a1b1f';
+      ctx.fillText((authorText || 'SIDE A · PROGRESSIVE EDITION').toUpperCase(), x1, ph - m - 20);
+      if (options.numSlides) {
+        ctx.font = '500 7.5px "Space Mono", monospace';
+        ctx.fillStyle = '#6b6b66';
+        ctx.textAlign = 'right';
+        ctx.fillText(`${options.numSlides} ${options.isNotebook ? 'TRACKS / PAGES' : 'SLIDES'}`, x2, ph - m - 20);
+      }
+      ctx.restore();
+
+    } else if (tpl === 'oxford_stripe') {
+      // Sartorial Oxford Stripe (Tailored Bengal Pinstripe & Woven Bookplate)
+      ctx.save();
+      ctx.fillStyle = '#f8f9fb';
+      ctx.fillRect(0, 0, pw, ph);
+      for (let sx = leftGutter; sx < pw - rightGutter; sx += 14) {
+        ctx.fillStyle = '#c2d4e6';
+        ctx.fillRect(sx, 0, 2.2, ph);
+        ctx.fillStyle = 'rgba(194, 212, 230, 0.45)';
+        ctx.fillRect(sx + 3.4, 0, 0.8, ph);
+      }
+
+      const m = Math.max(userMargin, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      const plateW = Math.min(w * 0.84, 340);
+      const plateH = Math.min(ph * 0.56, 360);
+      const px0 = centerX - plateW / 2;
+      const py0 = ph * 0.50 - plateH / 2;
+
+      ctx.fillStyle = 'rgba(12, 20, 36, 0.18)';
+      ctx.fillRect(px0 + 4, py0 + 4, plateW, plateH);
+      ctx.fillStyle = '#172642';
+      ctx.strokeStyle = '#c2a15c';
+      ctx.lineWidth = 1.1;
+      ctx.fillRect(px0, py0, plateW, plateH);
+      ctx.strokeRect(px0, py0, plateW, plateH);
+
+      ctx.setLineDash([3, 3]);
+      ctx.strokeStyle = 'rgba(194, 161, 92, 0.65)';
+      ctx.lineWidth = 0.6;
+      ctx.strokeRect(px0 + 9, py0 + 9, plateW - 18, plateH - 18);
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#7d212e';
+      ctx.fillRect(px0 + 10, py0 + 20, plateW - 20, 14);
+      ctx.font = '500 7px "Newsreader", Georgia, serif';
+      ctx.fillStyle = '#faf7f0';
+      ctx.textAlign = 'center';
+      ctx.fillText('S A R T O R I A L   E D I T I O N', centerX, py0 + 29.5);
+
+      const titleSize = plateW > 270 ? 22 : 17;
+      ctx.font = `700 ${titleSize}px "Newsreader", Georgia, serif`;
+      ctx.fillStyle = '#faf7f0';
+      const endTy = drawWrappedText(ctx, titleText, centerX, py0 + plateH * 0.36, plateW - 44, titleSize + 7);
+      if (subTitleText) {
+        ctx.font = 'italic 11.5px "Newsreader", Georgia, serif';
+        ctx.fillStyle = '#c2a15c';
+        ctx.fillText(subTitleText, centerX, endTy + 20);
+      }
+
+      ctx.strokeStyle = '#c2a15c';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(centerX - 34, py0 + plateH - 78);
+      ctx.lineTo(centerX + 34, py0 + plateH - 78);
+      ctx.stroke();
+
+      ctx.font = '500 10px "Newsreader", Georgia, serif';
+      ctx.fillStyle = '#faf7f0';
+      ctx.fillText(authorText || 'Tailored Archive', centerX, py0 + plateH - 56);
+      ctx.font = 'italic 8.8px "Newsreader", Georgia, serif';
+      ctx.fillStyle = '#c2a15c';
+      ctx.fillText(dateFormatted, centerX, py0 + plateH - 38);
+      if (options.numSlides) {
+        ctx.font = '500 7px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = '#bfc7d6';
+        ctx.fillText(`${options.numSlides} ${options.isNotebook ? 'Pages' : 'Slides'} · Bespoke Bound`, centerX, py0 + plateH - 22);
+      }
+      ctx.restore();
+
+    } else if (tpl === 'miami_vice') {
+      // Miami Vice / Vice City 1984 (Neon Art Deco Horizon)
+      ctx.save();
+      ctx.fillStyle = '#0e162a';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const m = Math.max(userMargin, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      ctx.strokeStyle = '#0adbf5';
+      ctx.lineWidth = 1.4;
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
+      ctx.strokeStyle = '#fa2e8f';
+      ctx.lineWidth = 0.8;
+      ctx.strokeRect(x1 + 5.5, m + 5.5, w - 11, ph - 2 * m - 11);
+
+      ctx.font = '700 7.5px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#0adbf5';
+      ctx.fillText('OCEAN DRIVE · 1984 · STEREO FM', x1 + 16, m + 24);
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#fa2e8f';
+      ctx.fillText(`VICE EDITION · ${dateFormatted}`, x2 - 16, m + 24);
+
+      const titleSize = w > 360 ? 26 : 20;
+      ctx.textAlign = 'left';
+      ctx.font = `800 ${titleSize}px "Plus Jakarta Sans", sans-serif`;
+      ctx.fillStyle = '#f7faff';
+      const endTy = drawWrappedText(ctx, titleText.toUpperCase(), x1 + 18, m + 76, w - 40, titleSize + 6);
+      if (subTitleText) {
+        ctx.font = 'italic 12px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = '#fa2e8f';
+        ctx.fillText(subTitleText, x1 + 18, endTy + 18);
+      }
+
+      const sunR = Math.min(w * 0.24, 82);
+      const sunCx = centerX;
+      const sunCy = ph * 0.57;
+      ctx.fillStyle = '#fcc740';
+      ctx.beginPath(); ctx.arc(sunCx, sunCy, sunR, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#fc7a3d';
+      ctx.beginPath(); ctx.arc(sunCx, sunCy + sunR * 0.14, sunR * 0.86, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#fa2e8f';
+      ctx.beginPath(); ctx.arc(sunCx, sunCy + sunR * 0.30, sunR * 0.68, 0, Math.PI * 2); ctx.fill();
+
+      ctx.fillStyle = '#0e162a';
+      [0.05, 0.22, 0.38, 0.54, 0.70, 0.84].forEach((frac, idx) => {
+        const sy = sunCy + sunR * frac;
+        const sh = 2.2 + idx * 1.1;
+        ctx.fillRect(sunCx - sunR - 2, sy - sh / 2, 2 * sunR + 4, sh);
+      });
+
+      const horY = sunCy + sunR * 0.88;
+      const gridBot = ph - m - 56;
+      ctx.strokeStyle = '#0adbf5';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(x1 + 14, horY); ctx.lineTo(x2 - 14, horY); ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(250, 46, 143, 0.55)';
+      ctx.lineWidth = 0.6;
+      for (let i = 1; i <= 6; i++) {
+        const frac = Math.pow(i / 6, 1.45);
+        const gy = horY + (gridBot - horY) * frac;
+        ctx.beginPath(); ctx.moveTo(x1 + 14, gy); ctx.lineTo(x2 - 14, gy); ctx.stroke();
+      }
+      for (let i = -4; i <= 4; i++) {
+        const bx = centerX + i * (w * 0.115);
+        const tx = centerX + i * (w * 0.038);
+        ctx.beginPath(); ctx.moveTo(tx, horY); ctx.lineTo(bx, gridBot); ctx.stroke();
+      }
+
+      ctx.font = '700 8.5px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#f7faff';
+      ctx.fillText((authorText || 'MIAMI NIGHT ARCHIVE').toUpperCase(), x1 + 16, ph - m - 22);
+      if (options.numSlides) {
+        ctx.font = '700 8px "JetBrains Mono", monospace';
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#0adbf5';
+        ctx.fillText(`${options.numSlides} ${options.isNotebook ? 'PAGES' : 'SLIDES'} · NEON DECO`, x2 - 16, ph - m - 22);
+      }
+      ctx.restore();
+
+    } else if (tpl === 'blade_runner') {
+      // Blade Runner 2019 (Voight-Kampff Reticle & Tyrell Neo-Noir)
+      ctx.save();
+      ctx.fillStyle = '#0a0d12';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const m = Math.max(userMargin, 30);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      ctx.strokeStyle = 'rgba(51, 184, 204, 0.14)';
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < 18; i++) {
+        const rx = x1 + (w * ((i * 37) % 100) / 100);
+        const ry = m + (ph - 2 * m) * (((i * 53 + 17) % 100) / 100);
+        ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(rx - 8, ry + 34); ctx.stroke();
+      }
+
+      ctx.strokeStyle = '#eb8f29';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath(); ctx.moveTo(x1, m + 20); ctx.lineTo(x2, m + 20); ctx.stroke();
+      ctx.font = '700 7.2px "JetBrains Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#eb8f29';
+      ctx.fillText('VOIGHT-KAMPFF · NEXUS-6 DIAGNOSTIC', x1, m + 12);
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#33b8cc';
+      ctx.fillText(`LA 2019 · ${dateFormatted}`, x2, m + 12);
+
+      const titleSize = w > 360 ? 24 : 18.5;
+      ctx.textAlign = 'left';
+      ctx.font = `800 ${titleSize}px "Plus Jakarta Sans", sans-serif`;
+      ctx.fillStyle = '#f0ebe0';
+      const endTy = drawWrappedText(ctx, titleText.toUpperCase(), x1, m + 64, w - 16, titleSize + 6);
+      if (subTitleText) {
+        ctx.font = '500 10.5px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#eb8f29';
+        ctx.fillText(`>> ${subTitleText}`, x1, endTy + 18);
+      }
+
+      const retR = Math.min(w * 0.25, 86);
+      const retCx = centerX;
+      const retCy = ph * 0.56;
+      ctx.strokeStyle = 'rgba(235, 143, 41, 0.35)';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath(); ctx.arc(retCx, retCy, retR, 0, Math.PI * 2); ctx.stroke();
+      ctx.strokeStyle = '#eb8f29';
+      ctx.lineWidth = 1.1;
+      ctx.beginPath(); ctx.arc(retCx, retCy, retR * 0.74, 0, Math.PI * 2); ctx.stroke();
+      ctx.strokeStyle = '#33b8cc';
+      ctx.lineWidth = 0.7;
+      ctx.beginPath(); ctx.arc(retCx, retCy, retR * 0.44, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = 'rgba(235, 143, 41, 0.22)';
+      ctx.beginPath(); ctx.arc(retCx, retCy, retR * 0.22, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#eb8f29';
+      ctx.beginPath(); ctx.arc(retCx, retCy, retR * 0.08, 0, Math.PI * 2); ctx.fill();
+
+      ctx.strokeStyle = '#eb8f29';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(retCx - retR * 1.18, retCy); ctx.lineTo(retCx - retR * 0.52, retCy);
+      ctx.moveTo(retCx + retR * 0.52, retCy); ctx.lineTo(retCx + retR * 1.18, retCy);
+      ctx.moveTo(retCx, retCy - retR * 1.18); ctx.lineTo(retCx, retCy - retR * 0.52);
+      ctx.moveTo(retCx, retCy + retR * 0.52); ctx.lineTo(retCx, retCy + retR * 1.18);
+      ctx.stroke();
+
+      ctx.font = '500 6.5px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#808a99';
+      ctx.textAlign = 'left';
+      ctx.fillText('EMPATHY RESPONSE: 0.84', x1, retCy - retR * 0.9);
+      ctx.textAlign = 'right';
+      ctx.fillText('PUPIL DILATION: NOMINAL', x2, retCy + retR * 0.9);
+
+      // Tyrell Pyramid
+      const pyrBase = ph - m - 42;
+      const pyrH = ph >= 650 ? 56 : 40;
+      ctx.fillStyle = '#1a1f29';
+      ctx.strokeStyle = 'rgba(235, 143, 41, 0.45)';
+      ctx.lineWidth = 0.7;
+      ctx.beginPath();
+      ctx.moveTo(x1 + w * 0.12, pyrBase);
+      ctx.lineTo(x1 + w * 0.34, pyrBase - pyrH);
+      ctx.lineTo(x1 + w * 0.66, pyrBase - pyrH);
+      ctx.lineTo(x1 + w * 0.88, pyrBase);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.font = '700 8px "JetBrains Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#f0ebe0';
+      ctx.fillText((authorText || 'TYRELL ARCHIVE DIVISION').toUpperCase(), x1, ph - m - 16);
+      if (options.numSlides) {
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#eb8f29';
+        ctx.fillText(`${options.numSlides} ${options.isNotebook ? 'PAGES' : 'SLIDES'} · OFF-WORLD`, x2, ph - m - 16);
+      }
+      ctx.restore();
+
+    } else if (tpl === 'stranger_things') {
+      // Hawkins 1983 / Upside Down (80s Sci-Fi Horror Paperback)
+      ctx.save();
+      ctx.fillStyle = '#09080c';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const m = Math.max(userMargin, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      ctx.strokeStyle = 'rgba(214, 36, 41, 0.35)';
+      ctx.lineWidth = 0.7;
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
+
+      ctx.font = '700 7.2px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#ada8b8';
+      ctx.fillText('HAWKINS NATIONAL LABORATORY · INDIANA · 1983', centerX, m + 26);
+
+      const topBarY = ph * 0.28;
+      ctx.strokeStyle = '#d62429';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath(); ctx.moveTo(x1 + 18, topBarY); ctx.lineTo(x2 - 18, topBarY); ctx.stroke();
+      ctx.strokeStyle = '#8c141c';
+      ctx.lineWidth = 0.7;
+      ctx.beginPath(); ctx.moveTo(x1 + 18, topBarY - 4); ctx.lineTo(x2 - 18, topBarY - 4); ctx.stroke();
+
+      const titleSize = w > 360 ? 27 : 20;
+      ctx.font = `800 ${titleSize}px "Newsreader", Georgia, serif`;
+      ctx.fillStyle = '#d62429';
+      const endTy = drawWrappedText(ctx, titleText.toUpperCase(), centerX, topBarY + titleSize + 10, w - 36, titleSize + 6);
+
+      const botBarY = endTy + 12;
+      ctx.strokeStyle = '#d62429';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath(); ctx.moveTo(x1 + 18, botBarY); ctx.lineTo(x2 - 18, botBarY); ctx.stroke();
+
+      if (subTitleText) {
+        ctx.font = 'italic 12px "Newsreader", Georgia, serif';
+        ctx.fillStyle = '#f2ebe0';
+        ctx.fillText(subTitleText, centerX, botBarY + 24);
+      }
+
+      const midY = ph * 0.68;
+      ctx.strokeStyle = '#d62429';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath(); ctx.moveTo(x1 + 14, midY); ctx.lineTo(x2 - 14, midY); ctx.stroke();
+
+      const treeXs = [0.08, 0.16, 0.25, 0.34, 0.44, 0.56, 0.66, 0.75, 0.84, 0.92];
+      const treeHs = [30, 44, 26, 38, 22, 24, 42, 28, 40, 32];
+      treeXs.forEach((txF, idx) => {
+        const tx = x1 + 14 + (w - 28) * txF;
+        const th = treeHs[idx];
+        ctx.fillStyle = '#1f141c';
+        ctx.beginPath(); ctx.moveTo(tx - 7, midY); ctx.lineTo(tx, midY - th); ctx.lineTo(tx + 7, midY); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = '#470d12';
+        ctx.beginPath(); ctx.moveTo(tx - 7, midY); ctx.lineTo(tx, midY + th * 0.85); ctx.lineTo(tx + 7, midY); ctx.closePath(); ctx.fill();
+      });
+
+      ctx.fillStyle = 'rgba(235, 230, 245, 0.45)';
+      for (let i = 0; i < 14; i++) {
+        const sx = x1 + 20 + (w - 40) * (((i * 29 + 7) % 100) / 100);
+        const sy = midY + 12 + (ph - m - 48 - midY) * (((i * 47 + 13) % 100) / 100);
+        ctx.beginPath(); ctx.arc(sx, sy, 1.0 + (i % 2) * 0.6, 0, Math.PI * 2); ctx.fill();
+      }
+
+      ctx.font = '500 9.5px "Newsreader", Georgia, serif';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#f2ebe0';
+      ctx.fillText(authorText || 'CHAPTER ONE · THE VANISHING', x1 + 16, ph - m - 18);
+      ctx.font = '700 7.8px "JetBrains Mono", monospace';
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#d62429';
+      ctx.fillText(dateFormatted.toUpperCase(), x2 - 16, ph - m - 18);
+      ctx.restore();
+
+    } else if (tpl === 'barry_lyndon') {
+      // Kubrick Candlelight / 18th-Century Folio (Barry Lyndon)
+      ctx.save();
+      ctx.fillStyle = '#1c1510';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const m = Math.max(userMargin, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      ctx.strokeStyle = '#c9a35c';
+      ctx.lineWidth = 1.3;
+      ctx.strokeRect(x1, m, w, ph - 2 * m);
+      ctx.lineWidth = 0.55;
+      ctx.strokeRect(x1 + 7, m + 7, w - 14, ph - 2 * m - 14);
+      [x1, x2 - 7].forEach((cxSq) => {
+        [m, ph - m - 7].forEach((cySq) => {
+          ctx.strokeRect(cxSq, cySq, 7, 7);
+        });
+      });
+
+      ctx.textAlign = 'center';
+      ctx.font = '500 7.6px "Newsreader", Georgia, serif';
+      ctx.fillStyle = '#c9a35c';
+      ctx.fillText('M E M O I R S   O F   T H E   E I G H T E E N T H   C E N T U R Y', centerX, m + 34);
+
+      const flY = ph * 0.26;
+      ctx.strokeStyle = '#c9a35c';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath(); ctx.arc(centerX, flY, 16, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = '#c9a35c';
+      ctx.beginPath();
+      ctx.moveTo(centerX, flY - 9);
+      ctx.quadraticCurveTo(centerX + 6, flY + 2, centerX, flY + 8);
+      ctx.quadraticCurveTo(centerX - 6, flY + 2, centerX, flY - 9);
+      ctx.fill();
+
+      const titleSize = w > 360 ? 26 : 20;
+      ctx.font = `700 ${titleSize}px "Newsreader", Georgia, serif`;
+      ctx.fillStyle = '#f5efe2';
+      const endTy = drawWrappedText(ctx, titleText.toUpperCase(), centerX, ph * 0.44, w - 56, titleSize + 9);
+      if (subTitleText) {
+        ctx.font = 'italic 12.5px "Newsreader", Georgia, serif';
+        ctx.fillStyle = '#c9a35c';
+        ctx.fillText(subTitleText, centerX, endTy + 22);
+      }
+
+      ctx.strokeStyle = '#c9a35c';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath(); ctx.moveTo(centerX - 48, ph * 0.72); ctx.lineTo(centerX + 48, ph * 0.72); ctx.stroke();
+      ctx.fillStyle = '#c9a35c';
+      ctx.beginPath(); ctx.arc(centerX, ph * 0.72, 2.2, 0, Math.PI * 2); ctx.fill();
+
+      ctx.font = '500 10.5px "Newsreader", Georgia, serif';
+      ctx.fillStyle = '#f5efe2';
+      ctx.fillText(authorText || 'BY CANDLELIGHT · f/0.7 ZEISS PLANAR', centerX, ph - m - 56);
+      ctx.font = 'italic 9px "Newsreader", Georgia, serif';
+      ctx.fillStyle = '#ad9975';
+      const ext = options.numSlides ? ` · ${options.numSlides} ${options.isNotebook ? 'Pages' : 'Slides'}` : '';
+      ctx.fillText(`${dateFormatted}${ext}`, centerX, ph - m - 36);
+      ctx.restore();
+
+    } else if (tpl === 'latex_monograph') {
+      // First Principles / LaTeX Monograph (TeX + Computational Physics)
+      ctx.save();
+      ctx.fillStyle = '#faf9f5';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const m = Math.max(userMargin, 36);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      ctx.font = '500 7.2px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#6b7380';
+      ctx.textAlign = 'left';
+      ctx.fillText('\\documentclass[11pt,a4paper]{memoir}', x1, m + 10);
+      ctx.textAlign = 'right';
+      ctx.fillText(`REV ${dateFormatted}`, x2, m + 10);
+      ctx.strokeStyle = '#14181f';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(x1, m + 18); ctx.lineTo(x2, m + 18); ctx.stroke();
+      ctx.strokeStyle = '#7a1e24';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(x1, m + 21.5); ctx.lineTo(x2, m + 21.5); ctx.stroke();
+
+      ctx.textAlign = 'center';
+      ctx.font = '500 8.5px "Newsreader", Georgia, serif';
+      ctx.fillStyle = '#7a1e24';
+      ctx.fillText('LECTURE NOTES IN FIRST-PRINCIPLES PHYSICS', centerX, m + 46);
+
+      const titleSize = w > 360 ? 24 : 19;
+      ctx.font = `700 ${titleSize}px "Newsreader", Georgia, serif`;
+      ctx.fillStyle = '#14181f';
+      const endTy = drawWrappedText(ctx, titleText, centerX, m + 92, w - 32, titleSize + 7);
+      if (subTitleText) {
+        ctx.font = 'italic 12px "Newsreader", Georgia, serif';
+        ctx.fillStyle = '#6b7380';
+        ctx.fillText(subTitleText, centerX, endTy + 20);
+      }
+
+      const gx0 = x1 + w * 0.14;
+      const gw = w * 0.72;
+      const gy0 = ph * 0.60;
+      const gh = ph >= 650 ? 58 : 42;
+      ctx.strokeStyle = 'rgba(20, 24, 31, 0.35)';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(gx0, gy0); ctx.lineTo(gx0 + gw, gy0);
+      ctx.moveTo(centerX, gy0 - gh); ctx.lineTo(centerX, gy0 + gh);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#7a1e24';
+      ctx.lineWidth = 1.3;
+      ctx.beginPath();
+      const steps = 80;
+      for (let i = 0; i <= steps; i++) {
+        const u = (i / steps) * 2 - 1;
+        const px = gx0 + (i / steps) * gw;
+        const env = Math.exp(-4.5 * u * u);
+        const py = gy0 - gh * 0.88 * env * Math.cos(16 * u);
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      ctx.setLineDash([3, 3]);
+      ctx.strokeStyle = '#6b7380';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      for (let i = 0; i <= steps; i++) {
+        const u = (i / steps) * 2 - 1;
+        const px = gx0 + (i / steps) * gw;
+        const py = gy0 - gh * 0.88 * Math.exp(-4.5 * u * u);
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.font = '500 7.2px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#6b7380';
+      ctx.fillText('psi(x,t) = A exp(-x^2 / 2 sigma^2) cos(k0 x - w t)', centerX, gy0 + gh + 16);
+
+      ctx.strokeStyle = 'rgba(20, 24, 31, 0.25)';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath(); ctx.moveTo(x1, ph - m - 42); ctx.lineTo(x2, ph - m - 42); ctx.stroke();
+      ctx.textAlign = 'left';
+      ctx.font = '700 10.5px "Newsreader", Georgia, serif';
+      ctx.fillStyle = '#14181f';
+      ctx.fillText(authorText || 'Department of Theoretical Physics', x1, ph - m - 22);
+      ctx.textAlign = 'right';
+      ctx.font = '500 7.5px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#7a1e24';
+      const ext = options.numSlides ? `${options.numSlides} ${options.isNotebook ? 'pp.' : 'slides'}` : 'Typeset in LaTeX';
+      ctx.fillText(ext, x2, ph - m - 22);
+      ctx.restore();
+
+    } else if (tpl === 'compact_disc') {
+      // Compact Disc Digital Audio 1982 (Lossless Jewel-Case Archive)
+      ctx.save();
+      ctx.fillStyle = '#eceef0';
+      ctx.fillRect(0, 0, pw, ph);
+
+      const trayH = ph * 0.26;
+      ctx.fillStyle = '#171a20';
+      ctx.fillRect(0, ph - trayH, pw, trayH);
+
+      const m = Math.max(userMargin, 32);
+      const x1 = leftGutter + m;
+      const x2 = pw - rightGutter - m;
+      const w = x2 - x1;
+      const centerX = x1 + w / 2;
+
+      ctx.font = '700 7.5px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#171a20';
+      ctx.fillText('COMPACT DISC · DIGITAL AUDIO', x1, m + 14);
+      ctx.font = '700 7.5px "JetBrains Mono", monospace';
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#6b7380';
+      ctx.fillText(`44.1 kHz / 16-BIT PCM · ${dateFormatted}`, x2, m + 14);
+      ctx.strokeStyle = '#171a20';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath(); ctx.moveTo(x1, m + 22); ctx.lineTo(x2, m + 22); ctx.stroke();
+
+      const discR = Math.min(w * 0.31, 108);
+      const discCx = centerX;
+      const discCy = ph * 0.45;
+      ctx.fillStyle = '#d6dbe3';
+      ctx.strokeStyle = '#8c94a3';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath(); ctx.arc(discCx, discCy, discR, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+      [['rgba(46,189,214,0.22)', 22, 42], ['rgba(138,92,214,0.22)', 42, 58], ['rgba(230,184,66,0.22)', 205, 225]].forEach(([col, a0, a1]) => {
+        ctx.fillStyle = col;
+        ctx.beginPath();
+        ctx.moveTo(discCx, discCy);
+        ctx.arc(discCx, discCy, discR, (a0 * Math.PI) / 180, (a1 * Math.PI) / 180);
+        ctx.closePath();
+        ctx.fill();
+      });
+
+      ctx.strokeStyle = 'rgba(158, 166, 179, 0.55)';
+      ctx.lineWidth = 0.4;
+      [0.88, 0.76, 0.64, 0.52].forEach((frac) => {
+        ctx.beginPath(); ctx.arc(discCx, discCy, discR * frac, 0, Math.PI * 2); ctx.stroke();
+      });
+
+      ctx.fillStyle = '#c2c9d4';
+      ctx.strokeStyle = '#737a8a';
+      ctx.lineWidth = 0.7;
+      ctx.beginPath(); ctx.arc(discCx, discCy, discR * 0.32, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#eceef0';
+      ctx.beginPath(); ctx.arc(discCx, discCy, discR * 0.14, 0, Math.PI * 2); ctx.fill();
+
+      const titleSize = w > 360 ? 22 : 17.5;
+      ctx.textAlign = 'left';
+      ctx.font = `700 ${titleSize}px "Plus Jakarta Sans", sans-serif`;
+      ctx.fillStyle = '#f5f7fa';
+      const endTy = drawWrappedText(ctx, titleText, x1, ph - trayH + 44, w - 16, titleSize + 5);
+      if (subTitleText) {
+        ctx.font = 'italic 10.5px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = '#2ebdd6';
+        ctx.fillText(subTitleText, x1, endTy + 16);
+      }
+
+      ctx.font = '700 7.5px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#bfc7d6';
+      ctx.fillText((authorText || 'EXACT AUDIO COPY · LOSSLESS ARCHIVE').toUpperCase(), x1, ph - m * 0.65);
+      if (options.numSlides) {
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#e6b842';
+        ctx.fillText(`${options.numSlides} ${options.isNotebook ? 'PAGES' : 'SLIDES'} · ADD`, x2, ph - m * 0.65);
+      }
       ctx.restore();
 
     } else {
