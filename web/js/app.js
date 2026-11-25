@@ -19,7 +19,7 @@
       themeDarkTitle: "Theme: OLED Pure Black (#000000)",
       installApp: "Install",
       installAppTitle: "Install Slide-Printer as App",
-      heroSuper: "PDF Handout Generator",
+      heroSuper: "PDF Handout & Notebook Studio · v3.0",
       heroTitle: "Print slides with dedicated note space",
       heroSubtitle: "Transform any presentation into clean, printable study handouts. Adds note-taking area beneath each slide while preserving aspect ratios and clickable links.",
       dropTitle: "Drop presentation PDF(s) here",
@@ -39,8 +39,8 @@
       feat1Title: "Active Hyperlinks",
       feat1Desc: "Original clickable links are mathematically recalculated and stay active in the output PDF.",
       feat2Num: "02",
-      feat2Title: "4 Note Styles",
-      feat2Desc: "Ruled lines, grid, bullet points, or blank space to match your note-taking style.",
+      feat2Title: "5 Note Styles",
+      feat2Desc: "Ruled lines, grid, bullet points, Cornell Notes, or blank space to match your study workflow.",
       feat3Num: "03",
       feat3Title: "100% Private",
       feat3Desc: "Everything is processed locally in your browser. No files are uploaded to any server.",
@@ -53,6 +53,8 @@
       styleGridDesc: "Technical grid for diagrams and math",
       styleDotsTitle: "Bullet points",
       styleDotsDesc: "Subtle dot matrix for flexible notes",
+      styleCornellTitle: "Cornell Notes",
+      styleCornellDesc: "Cue column, ruled notes & summary block",
       styleBlankTitle: "Blank",
       styleBlankDesc: "Clean open space with subtle divider",
       paperLabel: "Page & Layout",
@@ -73,7 +75,7 @@
       sepLabel: "Slide Separation",
       restoreBtn: "Reset to Defaults",
       exportBtn: "Download PDF",
-      archiveBtn: "Download All 4 (ZIP)",
+      archiveBtn: "Download All 5 (ZIP)",
       archiveBtnCount: "Download Selected ({count} in ZIP)",
       archiveBtnSingle: "Download Selected (ZIP)",
       styleSelectionCount: "{count} styles selected",
@@ -88,12 +90,12 @@
       folioLabel: "Slide",
       ofLabel: "of",
       progressTitle: "Generating handout...",
-      footerTitle: "Slide—Printer",
-      footerSubtitle: "Open-source presentation handout generator",
+      footerTitle: "Slide—Printer 3.0",
+      footerSubtitle: "Open-source presentation handout & notebook studio",
       footerPrivacy: "100% Client-Side Processing",
       readingMsg: "Reading PDF presentation...",
       generatingMsg: "Generating printable handout...",
-      bundlingMsg: "Bundling all 4 note styles into ZIP...",
+      bundlingMsg: "Bundling all 5 note styles into ZIP...",
       bundlingSelectedMsg: "Generating {count} selected styles in ZIP...",
       compressingMsg: "Compressing archive...",
       preparingPrintMsg: "Preparing print view...",
@@ -196,6 +198,19 @@
       pageFormatTotal: "Total (1 / N)",
       pageFormatSimple: "Simple (1)",
       ecoPrintLabel: "Ink-Saver Mode (Grayscale)",
+      openCoverGallery: "🎨 Visual Gallery (55)",
+      coverSearchPlaceholder: "Search 55 covers (e.g. Penguin, Quantum, 1980s)...",
+      coverGalleryTitle: "Editorial & Scientific Cover Gallery",
+      coverGallerySub: "55 curated designs · Click any cover to apply",
+      coverGallerySearchPlaceholder: "Filter covers by name, style, physics subject, decade...",
+      coverGalleryEmpty: "No covers match your search.",
+      tintIvory: "Warm Ivory",
+      tintCream: "Cream Vellum",
+      tintWhite: "Pure White",
+      tintDark: "Dark Slate",
+      tintOled: "Pure OLED",
+      tintLegal: "Legal Yellow",
+      tintSage: "Soft Sage",
     },
     es: {
       brandSubtitle: "Diapositivas con notas",
@@ -208,7 +223,7 @@
       themeDarkTitle: "Tema: Negro puro OLED (#000000)",
       installApp: "Instalar",
       installAppTitle: "Instalar Slide-Printer como aplicación",
-      heroSuper: "Conversor de PDF a apuntes",
+      heroSuper: "Estudio de Apuntes y Libretas PDF · v3.0",
       heroTitle: "Imprime diapositivas con espacio para notas",
       heroSubtitle: "Convierte cualquier presentación en documentos listos para imprimir. Añade espacio para escribir debajo de cada diapositiva conservando proporciones e hiperenlaces.",
       dropTitle: "Arrastra tus presentaciones PDF aquí",
@@ -228,8 +243,8 @@
       feat1Title: "Hiperenlaces activos",
       feat1Desc: "Los enlaces originales se recalculan y permanecen clicables en el PDF generado.",
       feat2Num: "02",
-      feat2Title: "4 estilos de notas",
-      feat2Desc: "Líneas de pauta, cuadrícula, bullet points o blanco según tu método de estudio.",
+      feat2Title: "5 estilos de notas",
+      feat2Desc: "Líneas de pauta, cuadrícula, bullet points, método Cornell o blanco según tu estudio.",
       feat3Num: "03",
       feat3Title: "100% privado",
       feat3Desc: "El procesamiento se realiza en tu navegador. El archivo nunca sale de tu ordenador.",
@@ -242,6 +257,8 @@
       styleGridDesc: "Cuadrícula técnica para diagramas",
       styleDotsTitle: "Bullet points",
       styleDotsDesc: "Matriz de puntos guía",
+      styleCornellTitle: "Cornell Notes",
+      styleCornellDesc: "Columna de ideas, notas y resumen al pie",
       styleBlankTitle: "Blanco",
       styleBlankDesc: "Espacio despejado con separador",
       paperLabel: "Formato de página",
@@ -258,7 +275,7 @@
       sepLabel: "Separación de diapositiva",
       restoreBtn: "Restablecer valores",
       exportBtn: "Descargar PDF",
-      archiveBtn: "Descargar los 4 (ZIP)",
+      archiveBtn: "Descargar los 5 (ZIP)",
       archiveBtnCount: "Descargar seleccionados ({count} en ZIP)",
       archiveBtnSingle: "Descargar seleccionado (ZIP)",
       styleSelectionCount: "{count} pautas seleccionadas",
@@ -273,12 +290,12 @@
       folioLabel: "Diapositiva",
       ofLabel: "de",
       progressTitle: "Generando documento...",
-      footerTitle: "Slide—Printer",
-      footerSubtitle: "Conversor de presentaciones a formato de apuntes",
+      footerTitle: "Slide—Printer 3.0",
+      footerSubtitle: "Estudio open-source de apuntes y libretas digitales",
       footerPrivacy: "Procesamiento 100% en el navegador",
       readingMsg: "Cargando presentación...",
       generatingMsg: "Generando PDF...",
-      bundlingMsg: "Generando los 4 estilos en ZIP...",
+      bundlingMsg: "Generando los 5 estilos en ZIP...",
       bundlingSelectedMsg: "Generando {count} estilos seleccionados en ZIP...",
       compressingMsg: "Comprimiendo archivo ZIP...",
       preparingPrintMsg: "Preparando vista de impresión...",
@@ -381,6 +398,19 @@
       pageFormatTotal: "Total (1 / N)",
       pageFormatSimple: "Simple (1)",
       ecoPrintLabel: "Modo ahorro de tinta (Escala de grises)",
+      openCoverGallery: "🎨 Galería Visual (55)",
+      coverSearchPlaceholder: "Buscar entre 55 portadas (ej. Penguin, Cuántica, 1980s)...",
+      coverGalleryTitle: "Galería de Portadas Editoriales y Científicas",
+      coverGallerySub: "55 diseños de colección · Haz clic en una portada para aplicarla",
+      coverGallerySearchPlaceholder: "Filtrar portadas por nombre, estilo, asignatura, década...",
+      coverGalleryEmpty: "Ninguna portada coincide con tu búsqueda.",
+      tintIvory: "Marfil Cálido",
+      tintCream: "Crema Editorial",
+      tintWhite: "Blanco Puro",
+      tintDark: "Pizarra Oscura",
+      tintOled: "Negro OLED",
+      tintLegal: "Amarillo Legal",
+      tintSage: "Menta Suave",
     },
     gl: {
       brandSubtitle: "Diapositivas con notas",
@@ -393,7 +423,7 @@
       themeDarkTitle: "Tema: Negro puro OLED (#000000)",
       installApp: "Instalar",
       installAppTitle: "Instalar Slide-Printer como aplicación",
-      heroSuper: "Conversor de PDF a apuntamentos",
+      heroSuper: "Estudio de Apuntamentos e Libretas PDF · v3.0",
       heroTitle: "Imprime diapositivas con espazo para notas",
       heroSubtitle: "Converte calquera presentación en documentos listos para imprimir. Engade espazo para escribir debaixo de cada diapositiva conservando proporcións e ligazóns.",
       dropTitle: "Arrastra as túas presentacións PDF aquí",
@@ -413,8 +443,8 @@
       feat1Title: "Ligazóns activas",
       feat1Desc: "As ligazóns orixinais son recalculadas e fican clicables no PDF xerado.",
       feat2Num: "02",
-      feat2Title: "4 estilos de notas",
-      feat2Desc: "Liñas de pauta, cuadrícula, bullet points ou branco segundo precises.",
+      feat2Title: "5 estilos de notas",
+      feat2Desc: "Liñas de pauta, cuadrícula, bullet points, método Cornell ou branco segundo precises.",
       feat3Num: "03",
       feat3Title: "100% privado",
       feat3Desc: "O procesamento faise no teu navegador. O ficheiro nunca sae do teu ordenador.",
@@ -427,6 +457,8 @@
       styleGridDesc: "Cadro técnico para esquemas e diagramas",
       styleDotsTitle: "Bullet points",
       styleDotsDesc: "Matriz de puntos guía para notas",
+      styleCornellTitle: "Cornell Notes",
+      styleCornellDesc: "Columna de ideas, notas e resumo ao pé",
       styleBlankTitle: "Branco",
       styleBlankDesc: "Espazo despexado con liña separadora",
       paperLabel: "Formato de páxina",
@@ -443,7 +475,7 @@
       sepLabel: "Separación de diapositiva",
       restoreBtn: "Restablecer valores",
       exportBtn: "Descargar PDF",
-      archiveBtn: "Descargar os 4 estilos (ZIP)",
+      archiveBtn: "Descargar os 5 estilos (ZIP)",
       archiveBtnCount: "Descargar seleccionados ({count} en ZIP)",
       archiveBtnSingle: "Descargar seleccionado (ZIP)",
       styleSelectionCount: "{count} pautas seleccionadas",
@@ -458,12 +490,12 @@
       folioLabel: "Diapositiva",
       ofLabel: "de",
       progressTitle: "Xerando documento...",
-      footerTitle: "Slide—Printer",
-      footerSubtitle: "Conversor de presentacións a formato de apuntamentos",
+      footerTitle: "Slide—Printer 3.0",
+      footerSubtitle: "Estudio open-source de apuntamentos e libretas dixitais",
       footerPrivacy: "Procesamento 100% no navegador",
       readingMsg: "Cargando presentación...",
       generatingMsg: "Xerando PDF...",
-      bundlingMsg: "Xerando os 4 estilos en ZIP...",
+      bundlingMsg: "Xerando os 5 estilos en ZIP...",
       bundlingSelectedMsg: "Xerando {count} estilos seleccionados en ZIP...",
       compressingMsg: "Comprimindo arquivo ZIP...",
       preparingPrintMsg: "Preparando vista de impresión...",
@@ -566,6 +598,19 @@
       pageFormatTotal: "Total (1 / N)",
       pageFormatSimple: "Simple (1)",
       ecoPrintLabel: "Modo aforro de tinta (Escala de grises)",
+      openCoverGallery: "🎨 Galería Visual (55)",
+      coverSearchPlaceholder: "Buscar entre 55 portadas (ex. Penguin, Cuántica, 1980s)...",
+      coverGalleryTitle: "Galería de Portadas Editoriais e Científicas",
+      coverGallerySub: "55 deseños de colección · Fai clic nunha portada para aplicala",
+      coverGallerySearchPlaceholder: "Filtrar portadas por nome, estilo, materia, década...",
+      coverGalleryEmpty: "Ningunha portada coincide coa túa busca.",
+      tintIvory: "Marfil Cálido",
+      tintCream: "Crema Editorial",
+      tintWhite: "Branco Puro",
+      tintDark: "Lousa Escura",
+      tintOled: "Negro OLED",
+      tintLegal: "Amarelo Legal",
+      tintSage: "Menta Suave",
     }
   };
 
@@ -868,8 +913,18 @@
     setText('styleGridDesc', dict.styleGridDesc);
     setText('styleDotsTitle', dict.styleDotsTitle);
     setText('styleDotsDesc', dict.styleDotsDesc);
+    setText('styleCornellTitle', dict.styleCornellTitle);
+    setText('styleCornellDesc', dict.styleCornellDesc);
     setText('styleBlankTitle', dict.styleBlankTitle);
     setText('styleBlankDesc', dict.styleBlankDesc);
+
+    setText('tintIvoryLabel', dict.tintIvory);
+    setText('tintCreamLabel', dict.tintCream);
+    setText('tintWhiteLabel', dict.tintWhite);
+    setText('tintDarkLabel', dict.tintDark);
+    setText('tintOledLabel', dict.tintOled);
+    setText('tintLegalLabel', dict.tintLegal);
+    setText('tintSageLabel', dict.tintSage);
 
     setText('selectAllStylesBtn', dict.quickAll);
     setText('selectLinesGridBtn', dict.quickLinesGrid);
@@ -1039,6 +1094,17 @@
     setText('resetCoverBtn', dict.restoreBtn);
     setText('resetPrintBtn', dict.restoreBtn);
     setText('resetSettingsBtn', dict.restoreBtn);
+    setText('resetNotebookStudioBtnText', dict.restoreBtn);
+    setText('openCoverGalleryText', dict.openCoverGallery);
+    setText('nbOpenCoverGalleryText', dict.openCoverGallery);
+    setText('coverGalleryModalTitle', dict.coverGalleryTitle);
+    setText('coverGalleryModalSub', dict.coverGallerySub);
+    const coverSearchInput = document.getElementById('coverSearchInput');
+    if (coverSearchInput && dict.coverSearchPlaceholder) coverSearchInput.placeholder = dict.coverSearchPlaceholder;
+    const nbCoverSearchInput = document.getElementById('nbCoverSearchInput');
+    if (nbCoverSearchInput && dict.coverSearchPlaceholder) nbCoverSearchInput.placeholder = dict.coverSearchPlaceholder;
+    const coverGallerySearchInput = document.getElementById('coverGallerySearchInput');
+    if (coverGallerySearchInput && dict.coverGallerySearchPlaceholder) coverGallerySearchInput.placeholder = dict.coverGallerySearchPlaceholder;
 
     // Actions
     setText('downloadBtnText', dict.exportBtn);
@@ -1381,7 +1447,15 @@
       // Update footer summary
       const summaryElem = document.getElementById('nbPreviewSummaryText');
       if (summaryElem) {
-        const tintNames = { ivory: 'Papel Marfil', white: 'Blanco Puro', dark: 'Dark OLED', legal: 'Amarillo Legal', sage: 'Menta Suave' };
+        const tintNames = {
+          ivory: 'Papel Marfil',
+          cream: 'Crema Editorial',
+          white: 'Blanco Puro',
+          dark: 'Pizarra Oscura',
+          oled: 'Negro OLED',
+          legal: 'Amarillo Legal',
+          sage: 'Menta Suave',
+        };
         const styleNames = { lines: 'Renglones', grid: 'Cuadrícula', dots: 'Puntos', cornell: 'Cornell Notes', blank: 'En Blanco' };
         const mm = (notebookState.step * 25.4 / 72).toFixed(1);
         const duplexPart = notebookState.duplex ? ' · Doble Cara (Alterno Izq./Der.)' : '';
@@ -1391,7 +1465,65 @@
           : '';
         summaryElem.textContent = `${notebookState.paperSize.toUpperCase()} · ${tintNames[notebookState.paperTint] || 'Papel'} · ${styleNames[notebookState.style] || 'Líneas'} (${mm} mm) · ${notebookState.numPages} págs${duplexPart}${marginPart}${coverPart}`;
       }
+      saveNotebookPresets();
     }
+
+    const NB_PRESET_STORAGE_KEY = 'slide_printer_notebook_presets';
+
+    function saveNotebookPresets() {
+      try {
+        const data = {
+          paperTint: notebookState.paperTint,
+          style: notebookState.style,
+          step: notebookState.step,
+          marginLine: notebookState.marginLine,
+          mirrorMarginLine: notebookState.mirrorMarginLine,
+          studyHeader: notebookState.studyHeader,
+          studyTitle: notebookState.studyTitle,
+          pageNumbers: notebookState.pageNumbers,
+          pageNumberFormat: notebookState.pageNumberFormat,
+          binding: notebookState.binding,
+          duplex: notebookState.duplex,
+          holeGuides: notebookState.holeGuides,
+          includeCover: notebookState.includeCover,
+          coverTemplate: notebookState.coverTemplate,
+          coverTitle: notebookState.coverTitle,
+          coverSubtitle: notebookState.coverSubtitle,
+          coverAuthor: notebookState.coverAuthor,
+          paperSize: notebookState.paperSize,
+          numPages: notebookState.numPages,
+        };
+        localStorage.setItem(NB_PRESET_STORAGE_KEY, JSON.stringify(data));
+      } catch (_) {}
+    }
+
+    function loadNotebookPresets() {
+      try {
+        const raw = localStorage.getItem(NB_PRESET_STORAGE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        if (data.paperTint) notebookState.paperTint = data.paperTint;
+        if (data.style) notebookState.style = data.style;
+        if (typeof data.step === 'number') notebookState.step = data.step;
+        if (typeof data.marginLine === 'boolean') notebookState.marginLine = data.marginLine;
+        if (typeof data.mirrorMarginLine === 'boolean') notebookState.mirrorMarginLine = data.mirrorMarginLine;
+        if (typeof data.studyHeader === 'boolean') notebookState.studyHeader = data.studyHeader;
+        if (typeof data.studyTitle === 'string') notebookState.studyTitle = data.studyTitle;
+        if (typeof data.pageNumbers === 'boolean') notebookState.pageNumbers = data.pageNumbers;
+        if (data.pageNumberFormat) notebookState.pageNumberFormat = data.pageNumberFormat;
+        if (data.binding) notebookState.binding = data.binding;
+        if (typeof data.duplex === 'boolean') notebookState.duplex = data.duplex;
+        if (typeof data.holeGuides === 'boolean') notebookState.holeGuides = data.holeGuides;
+        if (typeof data.includeCover === 'boolean') notebookState.includeCover = data.includeCover;
+        if (data.coverTemplate) notebookState.coverTemplate = data.coverTemplate;
+        if (typeof data.coverTitle === 'string') notebookState.coverTitle = data.coverTitle;
+        if (typeof data.coverSubtitle === 'string') notebookState.coverSubtitle = data.coverSubtitle;
+        if (typeof data.coverAuthor === 'string') notebookState.coverAuthor = data.coverAuthor;
+        if (data.paperSize) notebookState.paperSize = data.paperSize;
+        if (typeof data.numPages === 'number') notebookState.numPages = data.numPages;
+      } catch (_) {}
+    }
+    loadNotebookPresets();
 
     function syncNotebookStudioDOM() {
       // Tint chips
@@ -1619,32 +1751,45 @@
       });
     }
 
+    function handleNotebookReset() {
+      notebookState.paperTint = 'ivory';
+      notebookState.style = 'lines';
+      notebookState.step = 19.8;
+      notebookState.marginLine = true;
+      notebookState.mirrorMarginLine = false;
+      notebookState.studyHeader = false;
+      notebookState.studyTitle = '';
+      notebookState.pageNumbers = true;
+      notebookState.pageNumberFormat = 'total';
+      notebookState.binding = 'none';
+      notebookState.duplex = false;
+      notebookState.holeGuides = false;
+      notebookState.includeCover = true;
+      notebookState.coverTemplate = 'atelier';
+      notebookState.coverTitle = 'Cuaderno de Apuntes';
+      notebookState.coverSubtitle = '';
+      notebookState.coverAuthor = '';
+      notebookState.coverDate = getDefaultCoverDate();
+      notebookState.paperSize = 'a4';
+      notebookState.numPages = 50;
+      notebookState.previewPage = 1;
+      notebookState.activeTab = 'sheet';
+      notebookState.zoom = 1.0;
+      try {
+        localStorage.removeItem(NB_PRESET_STORAGE_KEY);
+      } catch (_) {}
+      syncNotebookStudioDOM();
+      applyNotebookZoom();
+      renderNotebookStudioPreview();
+      showToast('↺ Valores de la libreta restablecidos');
+    }
+
     if (resetNotebookStudioBtn) {
-      resetNotebookStudioBtn.addEventListener('click', () => {
-        notebookState.paperTint = 'ivory';
-        notebookState.style = 'lines';
-        notebookState.step = 19.8;
-        notebookState.marginLine = true;
-        notebookState.mirrorMarginLine = false;
-        notebookState.studyHeader = false;
-        notebookState.studyTitle = '';
-        notebookState.pageNumbers = true;
-        notebookState.pageNumberFormat = 'total';
-        notebookState.binding = 'none';
-        notebookState.duplex = false;
-        notebookState.holeGuides = false;
-        notebookState.includeCover = true;
-        notebookState.coverTemplate = 'atelier';
-        notebookState.coverTitle = 'Cuaderno de Apuntes';
-        notebookState.coverAuthor = '';
-        notebookState.paperSize = 'a4';
-        notebookState.numPages = 50;
-        notebookState.previewPage = 1;
-        notebookState.activeTab = 'sheet';
-        syncNotebookStudioDOM();
-        renderNotebookStudioPreview();
-        showToast('Valores de la libreta restablecidos');
-      });
+      resetNotebookStudioBtn.addEventListener('click', handleNotebookReset);
+    }
+    const resetNotebookFooterBtn = document.getElementById('resetNotebookFooterBtn');
+    if (resetNotebookFooterBtn) {
+      resetNotebookFooterBtn.addEventListener('click', handleNotebookReset);
     }
 
     // Tint chips
@@ -2464,8 +2609,8 @@
     const exportAllBtnText = document.getElementById('exportAllBtnText');
     if (exportAllBtnText) {
       const count = state.selectedStyles.length;
-      if (count === 4) {
-        exportAllBtnText.textContent = dict.archiveBtn || 'Descargar los 4 (ZIP)';
+      if (count === 5) {
+        exportAllBtnText.textContent = dict.archiveBtn || 'Descargar los 5 (ZIP)';
       } else if (count === 1) {
         exportAllBtnText.textContent = dict.archiveBtnSingle || 'Descargar seleccionado (ZIP)';
       } else {
@@ -2504,6 +2649,7 @@
         if (!state.selectedStyles.includes(s)) {
           state.selectedStyles.push(s);
         }
+        savePresets();
         updateStyleSelectionUI();
         renderCurrentPreview();
       });
@@ -2522,6 +2668,7 @@
           } else {
             state.selectedStyles.push(s);
           }
+          savePresets();
           updateStyleSelectionUI();
         });
       }
@@ -2531,7 +2678,8 @@
     const selectAllBtn = document.getElementById('selectAllStylesBtn');
     if (selectAllBtn) {
       selectAllBtn.addEventListener('click', () => {
-        state.selectedStyles = ['lines', 'grid', 'dots', 'blank'];
+        state.selectedStyles = ['lines', 'grid', 'dots', 'cornell', 'blank'];
+        savePresets();
         updateStyleSelectionUI();
       });
     }
@@ -3068,6 +3216,8 @@
       const totalSheets = getTotalSheets();
       const shortcutsModal = document.getElementById('shortcutsModal');
       const isModalOpen = shortcutsModal && !shortcutsModal.classList.contains('hidden');
+      const coverGalleryModal = document.getElementById('coverGalleryModal');
+      const isGalleryOpen = coverGalleryModal && !coverGalleryModal.classList.contains('hidden');
 
       if (e.key === '?' || (e.shiftKey && e.key === '/')) {
         e.preventDefault();
@@ -3078,7 +3228,9 @@
       }
 
       if (e.key === 'Escape') {
-        if (isModalOpen) {
+        if (isGalleryOpen) {
+          coverGalleryModal.classList.add('hidden');
+        } else if (isModalOpen) {
           shortcutsModal.classList.add('hidden');
         } else if (document.body.classList.contains('theater-active')) {
           document.body.classList.remove('theater-active');
@@ -3088,6 +3240,8 @@
         }
         return;
       }
+
+      if (isGalleryOpen || isModalOpen) return;
 
       if (e.key === 'ArrowLeft' && state.currentPage > 1) {
         goToPage(state.currentPage - 1);
@@ -3109,6 +3263,12 @@
       } else if ((e.key === 'p' || e.key === 'P') && !e.ctrlKey && !e.metaKey) {
         const printBtn = document.getElementById('printBtn');
         if (printBtn && state.pdfBytes) printBtn.click();
+      } else if ((e.key === 'g' || e.key === 'G') && !e.ctrlKey && !e.metaKey) {
+        const nbWs = document.getElementById('notebookWorkspace');
+        const btn = (nbWs && !nbWs.classList.contains('hidden'))
+          ? document.getElementById('nbOpenCoverGalleryBtn')
+          : document.getElementById('openCoverGalleryBtn');
+        if (btn) btn.click();
       } else if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.metaKey) {
         const themeToggleBtn = document.getElementById('themeToggleBtn');
         if (themeToggleBtn) themeToggleBtn.click();
@@ -3778,59 +3938,297 @@
     }
   }
 
-  // --- Web 2.0: Cover Category Filter ---
+  // --- Web Studio 3.0: Cover Category Filter, Instant Search & Visual Gallery ---
   function setupCoverFilter() {
-    function bindFilterRow(filterRowId, selectId, onChangeCallback) {
+    const normalizeText = (s) => (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    function bindFilterAndSearch(filterRowId, selectId, searchInputId, onChangeCallback) {
       const filterRow = document.getElementById(filterRowId);
       const select = document.getElementById(selectId);
-      if (!filterRow || !select) return;
-      const pills = filterRow.querySelectorAll('.cover-cat-pill');
-      if (pills.length === 0) return;
+      const searchInput = document.getElementById(searchInputId);
+      if (!select) return;
 
-      pills.forEach((pill) => {
-        pill.addEventListener('click', () => {
-          pills.forEach((p) => p.classList.remove('active'));
-          pill.classList.add('active');
-          const cat = pill.getAttribute('data-cover-cat') || pill.getAttribute('data-nb-cover-cat') || 'all';
+      let activeCat = 'all';
+      let activeQuery = '';
 
-          const optgroups = select.querySelectorAll('optgroup');
-          optgroups.forEach((group) => {
-            const groupCat = group.getAttribute('data-cat-id') || group.id;
-            const show = (cat === 'all' || groupCat === cat);
-            group.hidden = !show;
-            group.disabled = !show;
-            group.style.display = show ? '' : 'none';
+      function applySelectFilters() {
+        const q = normalizeText(activeQuery.trim());
+        const optgroups = select.querySelectorAll('optgroup');
+        let firstVisibleOption = null;
+
+        optgroups.forEach((group) => {
+          const groupCat = group.getAttribute('data-cat-id') || group.id;
+          const catMatches = (activeCat === 'all' || groupCat === activeCat);
+          let groupHasMatch = false;
+
+          group.querySelectorAll('option').forEach((opt) => {
+            const hay = normalizeText(`${opt.value} ${opt.textContent} ${group.label}`);
+            const optMatches = catMatches && (!q || hay.includes(q));
+            opt.hidden = !optMatches;
+            opt.disabled = !optMatches;
+            opt.style.display = optMatches ? '' : 'none';
+            if (optMatches) {
+              groupHasMatch = true;
+              if (!firstVisibleOption) firstVisibleOption = opt;
+            }
           });
 
-          // If currently selected option is now hidden in filtered view, switch to first visible
-          const currentGroup = select.selectedOptions[0]?.parentElement;
-          const currentGroupCat = currentGroup?.getAttribute('data-cat-id') || currentGroup?.id;
-          if (cat !== 'all' && currentGroupCat !== cat) {
-            const targetGroup = Array.from(optgroups).find(
-              (g) => (g.getAttribute('data-cat-id') || g.id) === cat
-            );
-            if (targetGroup) {
-              const firstOpt = targetGroup.querySelector('option');
-              if (firstOpt) {
-                select.value = firstOpt.value;
-                select.dispatchEvent(new Event('change', { bubbles: true }));
-                if (onChangeCallback) onChangeCallback(firstOpt.value, cat);
-              }
-            }
-          }
+          group.hidden = !groupHasMatch;
+          group.disabled = !groupHasMatch;
+          group.style.display = groupHasMatch ? '' : 'none';
         });
-      });
+
+        const selectedOpt = select.selectedOptions[0];
+        if (firstVisibleOption && (!selectedOpt || selectedOpt.disabled || selectedOpt.parentElement?.disabled)) {
+          select.value = firstVisibleOption.value;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          if (onChangeCallback) onChangeCallback(firstVisibleOption.value, activeCat);
+        }
+      }
+
+      if (filterRow) {
+        const pills = filterRow.querySelectorAll('.cover-cat-pill');
+        pills.forEach((pill) => {
+          pill.addEventListener('click', () => {
+            pills.forEach((p) => p.classList.remove('active'));
+            pill.classList.add('active');
+            activeCat = pill.getAttribute('data-cover-cat') || pill.getAttribute('data-nb-cover-cat') || 'all';
+            applySelectFilters();
+          });
+        });
+      }
+
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          activeQuery = e.target.value || '';
+          applySelectFilters();
+        });
+      }
     }
 
-    // Bind main Slide Workspace cover category filter
-    bindFilterRow('coverFilterRow', 'coverTemplateSelect', (val, cat) => {
+    bindFilterAndSearch('coverFilterRow', 'coverTemplateSelect', 'coverSearchInput', (val, cat) => {
       state.coverCategory = cat;
       state.coverTemplate = val;
       savePresets();
     });
 
-    // Bind Digital Notebook Studio cover category filter
-    bindFilterRow('nbCoverFilterRow', 'nbCoverTemplateSelect');
+    bindFilterAndSearch('nbCoverFilterRow', 'nbCoverTemplateSelect', 'nbCoverSearchInput');
+
+    // Visual Cover Gallery Modal (55 templates rendered via Canvas + IntersectionObserver)
+    const modal = document.getElementById('coverGalleryModal');
+    const grid = document.getElementById('coverGalleryGrid');
+    const closeBtn = document.getElementById('closeCoverGalleryBtn');
+    const gallerySearch = document.getElementById('coverGallerySearchInput');
+    const galleryCatRow = document.getElementById('coverGalleryCatRow');
+    const openHandoutBtn = document.getElementById('openCoverGalleryBtn');
+    const openNbBtn = document.getElementById('nbOpenCoverGalleryBtn');
+
+    if (!modal || !grid) return;
+
+    let galleryTargetMode = 'handout'; // 'handout' | 'notebook'
+    let galleryCat = 'all';
+    let galleryQuery = '';
+    let thumbObserver = null;
+
+    function getCatalogFromSelect() {
+      const mainSelect = document.getElementById('coverTemplateSelect');
+      if (!mainSelect) return [];
+      const items = [];
+      mainSelect.querySelectorAll('optgroup').forEach((grp) => {
+        const catId = grp.id;
+        const catLabel = grp.label || catId;
+        grp.querySelectorAll('option').forEach((opt) => {
+          items.push({
+            value: opt.value,
+            name: opt.textContent.trim(),
+            catId,
+            catLabel,
+          });
+        });
+      });
+      return items;
+    }
+
+    function renderGalleryCards() {
+      if (thumbObserver) {
+        thumbObserver.disconnect();
+        thumbObserver = null;
+      }
+      grid.innerHTML = '';
+
+      const catalog = getCatalogFromSelect();
+      const q = normalizeText(galleryQuery.trim());
+      const targetSelect = document.getElementById(
+        galleryTargetMode === 'notebook' ? 'nbCoverTemplateSelect' : 'coverTemplateSelect'
+      );
+      const currentVal = targetSelect ? targetSelect.value : state.coverTemplate;
+
+      const filtered = catalog.filter((item) => {
+        if (galleryCat !== 'all' && item.catId !== galleryCat) return false;
+        if (!q) return true;
+        return normalizeText(`${item.value} ${item.name} ${item.catLabel}`).includes(q);
+      });
+
+      if (filtered.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'cover-gallery-empty';
+        const dict = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
+        empty.textContent = dict.coverGalleryEmpty || 'No covers match your search.';
+        grid.appendChild(empty);
+        return;
+      }
+
+      const titleVal = galleryTargetMode === 'notebook'
+        ? (document.getElementById('nbCoverTitleInput')?.value || 'Cuaderno de Apuntes')
+        : (state.coverTitle || getBaseFileName() || 'Slide—Printer');
+      const subVal = galleryTargetMode === 'notebook'
+        ? (document.getElementById('nbCoverSubtitleInput')?.value || '')
+        : (state.coverSubtitle || '');
+      const authorVal = galleryTargetMode === 'notebook'
+        ? (document.getElementById('nbCoverAuthorInput')?.value || '')
+        : (state.coverAuthor || '');
+      const dateVal = galleryTargetMode === 'notebook'
+        ? (document.getElementById('nbCoverDateInput')?.value || '')
+        : (state.coverDate || '');
+
+      if ('IntersectionObserver' in window) {
+        thumbObserver = new IntersectionObserver((entries, obs) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const cvs = entry.target;
+            obs.unobserve(cvs);
+            if (window.SlidePrinterPreview && SlidePrinterPreview.renderCoverThumbnail) {
+              SlidePrinterPreview.renderCoverThumbnail(cvs, {
+                coverTemplate: cvs.dataset.tpl,
+                coverTitle: titleVal,
+                coverSubtitle: subVal,
+                coverAuthor: authorVal,
+                coverDate: dateVal,
+                lang: state.lang,
+                width: 156,
+              });
+            }
+          });
+        }, { root: grid, rootMargin: '180px' });
+      }
+
+      filtered.forEach((item) => {
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'cover-gallery-card' + (item.value === currentVal ? ' is-selected' : '');
+        card.setAttribute('role', 'option');
+        card.setAttribute('aria-selected', item.value === currentVal ? 'true' : 'false');
+
+        const thumbWrap = document.createElement('div');
+        thumbWrap.className = 'cover-gallery-thumb-wrap';
+        const cvs = document.createElement('canvas');
+        cvs.className = 'cover-gallery-thumb';
+        cvs.width = 156;
+        cvs.height = 220;
+        cvs.dataset.tpl = item.value;
+        thumbWrap.appendChild(cvs);
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'cover-gallery-card-name';
+        nameEl.textContent = item.name;
+
+        const catEl = document.createElement('div');
+        catEl.className = 'cover-gallery-card-cat';
+        catEl.textContent = item.value;
+
+        card.appendChild(thumbWrap);
+        card.appendChild(nameEl);
+        card.appendChild(catEl);
+
+        card.addEventListener('click', () => {
+          if (targetSelect) {
+            // Ensure option is enabled before selecting
+            const opt = targetSelect.querySelector(`option[value="${item.value}"]`);
+            if (opt) {
+              opt.hidden = false;
+              opt.disabled = false;
+              opt.style.display = '';
+              if (opt.parentElement && opt.parentElement.tagName === 'OPTGROUP') {
+                opt.parentElement.hidden = false;
+                opt.parentElement.disabled = false;
+                opt.parentElement.style.display = '';
+              }
+            }
+            targetSelect.value = item.value;
+            targetSelect.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+          modal.classList.add('hidden');
+          showToast(`🎨 <strong>${item.name}</strong>`);
+        });
+
+        grid.appendChild(card);
+
+        if (thumbObserver) {
+          thumbObserver.observe(cvs);
+        } else if (window.SlidePrinterPreview && SlidePrinterPreview.renderCoverThumbnail) {
+          SlidePrinterPreview.renderCoverThumbnail(cvs, {
+            coverTemplate: item.value,
+            coverTitle: titleVal,
+            coverSubtitle: subVal,
+            coverAuthor: authorVal,
+            coverDate: dateVal,
+            lang: state.lang,
+            width: 156,
+          });
+        }
+      });
+    }
+
+    function openGallery(mode) {
+      galleryTargetMode = mode;
+      modal.classList.remove('hidden');
+      renderGalleryCards();
+      if (gallerySearch) gallerySearch.focus();
+    }
+
+    if (openHandoutBtn) {
+      openHandoutBtn.addEventListener('click', () => openGallery('handout'));
+    }
+    if (openNbBtn) {
+      openNbBtn.addEventListener('click', () => openGallery('notebook'));
+    }
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+    }
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.add('hidden');
+    });
+    if (gallerySearch) {
+      gallerySearch.addEventListener('input', (e) => {
+        galleryQuery = e.target.value || '';
+        renderGalleryCards();
+      });
+    }
+    if (galleryCatRow) {
+      const pills = galleryCatRow.querySelectorAll('.cover-cat-pill');
+      pills.forEach((pill) => {
+        pill.addEventListener('click', () => {
+          pills.forEach((p) => p.classList.remove('active'));
+          pill.classList.add('active');
+          galleryCat = pill.getAttribute('data-gal-cat') || 'all';
+          renderGalleryCards();
+        });
+      });
+    }
+    window.addEventListener('slideprinter-cover-loaded', () => {
+      if (!modal.classList.contains('hidden')) {
+        grid.querySelectorAll('canvas.cover-gallery-thumb').forEach((cvs) => {
+          if (window.SlidePrinterPreview && SlidePrinterPreview.renderCoverThumbnail) {
+            SlidePrinterPreview.renderCoverThumbnail(cvs, {
+              coverTemplate: cvs.dataset.tpl,
+              coverTitle: state.coverTitle || 'Slide—Printer',
+              lang: state.lang,
+              width: 156,
+            });
+          }
+        });
+      }
+    });
   }
 
   // --- Web 2.0: Zoom Engine ---

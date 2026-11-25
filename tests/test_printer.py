@@ -143,14 +143,20 @@ def test_study_header_and_gutter(sample_slide_pdf, tmp_path):
 def test_layout_2up(sample_slide_pdf, tmp_path):
     # sample_slide_pdf has 2 slides -> with 2-up layout and cover_mode="none" it should fit in 1 sheet!
     printer = SlidePrinter(output_dir=str(tmp_path / "2up"), layout="2-up", cover_mode="none")
-    res = printer.process_file(sample_slide_pdf, styles=["grid"])
-    assert len(res) == 1
+    res = printer.process_file(sample_slide_pdf, styles=["grid", "cornell"])
+    assert len(res) == 2
     reader = PdfReader(res[0])
     assert len(reader.pages) == 1
     text = reader.pages[0].extract_text()
     assert "Slide 1: Introduction" in text
     assert "Slide 2: Details" in text
     assert "1 / 1" in text
+
+    cornell_reader = PdfReader(res[1])
+    assert len(cornell_reader.pages) == 1
+    cornell_text = cornell_reader.pages[0].extract_text()
+    assert "CUES / IDEAS" in cornell_text
+    assert "NOTES" in cornell_text
 
 
 def test_cover_modes(sample_slide_pdf, tmp_path):

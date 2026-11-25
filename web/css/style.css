@@ -2638,8 +2638,10 @@ body.theater-active .preview-pane #previewCanvas {
 }
 
 .tint-swatch-ivory { background-color: #faf7ee; }
+.tint-swatch-cream { background-color: #fbf8ea; }
 .tint-swatch-white { background-color: #ffffff; }
 .tint-swatch-dark { background-color: #141518; border-color: rgba(255, 255, 255, 0.25); }
+.tint-swatch-oled { background-color: #000000; border-color: rgba(255, 255, 255, 0.40); }
 .tint-swatch-legal { background-color: #fefce8; }
 .tint-swatch-sage { background-color: #f0f7f4; }
 
@@ -2746,6 +2748,171 @@ body.theater-active .preview-pane #previewCanvas {
   transition: transform 0.15s ease-out;
 }
 
+/* --- Web Studio 3.0: Cover Search & Visual Gallery Modal --- */
+.cover-style-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
 
+.cover-gallery-trigger {
+  font-size: 0.7rem;
+  padding: 0.24rem 0.55rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
 
+.cover-search-wrap {
+  margin-bottom: 0.4rem;
+}
+
+.cover-search-input {
+  font-size: 0.76rem;
+  padding: 0.38rem 0.65rem;
+}
+
+.cover-gallery-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(10, 11, 14, 0.74);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+}
+
+.cover-gallery-modal.hidden {
+  display: none !important;
+}
+
+.cover-gallery-dialog {
+  width: min(1140px, 96vw);
+  max-height: 88vh;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-md);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.cover-gallery-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.35rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-surface-elevated);
+}
+
+.cover-gallery-title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cover-gallery-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.cover-gallery-controls {
+  padding: 0.85rem 1.35rem 0.65rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  background: var(--bg-surface);
+}
+
+.cover-gallery-search {
+  max-width: 440px;
+}
+
+.cover-gallery-grid {
+  padding: 1.15rem 1.35rem 1.5rem;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(176px, 1fr));
+  gap: 1rem;
+}
+
+.cover-gallery-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem;
+  cursor: pointer;
+  transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+  text-align: left;
+}
+
+.cover-gallery-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-dark);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
+}
+
+.cover-gallery-card.is-selected {
+  border-color: var(--text-primary);
+  outline: 2px solid var(--text-primary);
+}
+
+.cover-gallery-thumb-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background: var(--bg-base);
+  border-radius: 2px;
+  padding: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.cover-gallery-thumb {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+  border-radius: 1px;
+  max-width: 100%;
+  height: auto;
+}
+
+.cover-gallery-card-name {
+  width: 100%;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cover-gallery-card-cat {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  color: var(--text-muted);
+  margin-top: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.cover-gallery-empty {
+  grid-column: 1 / -1;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
 

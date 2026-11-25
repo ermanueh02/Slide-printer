@@ -70,8 +70,8 @@ PAPER_TINTS: Dict[str, Tuple[float, float, float]] = {
     "white": (1.0, 1.0, 1.0),
     "ivory": (0.980, 0.969, 0.933),      # #FAF7EE Moleskine / Midori Warm Ivory
     "cream": (0.984, 0.973, 0.918),      # #FBF8EA Warm Cream Vellum
-    "dark": (0.078, 0.082, 0.094),       # #141518 Dark Mode / OLED Obsidian
-    "oled": (0.078, 0.082, 0.094),
+    "dark": (0.078, 0.082, 0.094),       # #141518 Dark Mode Slate
+    "oled": (0.0, 0.0, 0.0),             # #000000 Pure OLED True Black
     "legal": (0.996, 0.988, 0.910),      # #FEFCE8 American Legal Pad
     "sage": (0.941, 0.969, 0.957),       # #F0F7F4 Soft Sage Relaxed Reading
 }

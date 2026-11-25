@@ -302,10 +302,10 @@ class SlidePrinter:
         writer: Optional[PdfWriter] = None,
     ) -> PageObject:
         """Composes two presentation slides onto a single sheet (2-Up layout)."""
-        if writer is not None:
-            page1.pdf = writer
-            if page2 is not None:
-                page2.pdf = writer
+        staging_writer = PdfWriter()
+        page1 = staging_writer.add_page(page1)
+        if page2 is not None:
+            page2 = staging_writer.add_page(page2)
 
         paper_width, paper_height = self.paper_dimensions
 

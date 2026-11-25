@@ -439,7 +439,7 @@ def test_cli_execution_extended_flags(sample_slide_pdf, tmp_path):
 
 def test_cli_version():
     from slide_printer import __version__
-    assert __version__ == "4.3.0"
+    assert __version__ == "5.0.0"
     with pytest.raises(SystemExit) as exc:
         parse_args(["-v"])
     assert exc.value.code == 0

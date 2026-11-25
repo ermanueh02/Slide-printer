@@ -542,6 +542,41 @@
           ctx.fill();
         }
       }
+    } else if (style === 'cornell') {
+      const zoneH = Math.max(0, bottomLimit - yStart);
+      const summaryH = zoneH > 220 ? 85 : Math.min(40, zoneH * 0.28);
+      const summaryTopY = bottomLimit - summaryH;
+      const cueX = x1 + width * 0.28;
+
+      ctx.strokeStyle = 'rgba(100, 100, 100, 0.22)';
+      ctx.lineWidth = 0.4;
+      ctx.beginPath();
+      for (let y = yStart + step; y <= summaryTopY; y += step) {
+        ctx.moveTo(cueX, y);
+        ctx.lineTo(x2, y);
+      }
+      ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(80, 80, 80, 0.32)';
+      ctx.lineWidth = 0.65;
+      ctx.beginPath();
+      ctx.moveTo(cueX, yStart);
+      ctx.lineTo(cueX, summaryTopY);
+      ctx.moveTo(x1, summaryTopY);
+      ctx.lineTo(x2, summaryTopY);
+      ctx.stroke();
+
+      ctx.save();
+      ctx.font = '700 6px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = 'rgba(85, 85, 85, 0.65)';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      ctx.fillText('CUES / IDEAS', x1 + 4, yStart + 2);
+      ctx.fillText('NOTES', cueX + 6, yStart + 2);
+      if (summaryH >= 16) {
+        ctx.fillText('SUMMARY', x1 + 4, summaryTopY + 3);
+      }
+      ctx.restore();
     }
   }
 
@@ -4416,7 +4451,7 @@
       ivory: '#faf7ee',
       cream: '#fbf8ea',
       dark: '#141518',
-      oled: '#141518',
+      oled: '#000000',
       legal: '#fefce8',
       sage: '#f0f7f4',
     };
@@ -4592,9 +4627,43 @@
     ctx.restore();
   }
 
+  function renderCoverThumbnail(canvas, options = {}) {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const pw = 595.28;
+    const ph = 841.89;
+    const targetW = options.width || 168;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const scale = targetW / pw;
+    const targetH = Math.round(ph * scale);
+    canvas.width = Math.round(targetW * dpr);
+    canvas.height = Math.round(targetH * dpr);
+    canvas.style.width = `${targetW}px`;
+    canvas.style.height = `${targetH}px`;
+
+    ctx.save();
+    ctx.scale(scale * dpr, scale * dpr);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, pw, ph);
+    renderPreviewEditorialCover(ctx, pw, ph, {
+      coverTemplate: options.coverTemplate || 'atelier',
+      coverTitle: options.coverTitle || 'Slide—Printer',
+      coverSubtitle: options.coverSubtitle || 'Editorial Collection',
+      coverAuthor: options.coverAuthor || '',
+      coverDate: options.coverDate || '',
+      lang: options.lang || 'en',
+      binding: 'none',
+      gutterMargin: 0,
+      pageNum: 1,
+      numSlides: options.numSlides || 24,
+    });
+    ctx.restore();
+  }
+
   return {
     renderPreview,
     renderNotebookPreview,
+    renderCoverThumbnail,
     resetCache,
   };
 });

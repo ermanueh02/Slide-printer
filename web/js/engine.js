@@ -390,6 +390,49 @@
           }
           currY -= step;
         }
+      } else if (normStyle === 'cornell') {
+        const zoneH = Math.max(0, yStart - bottomLimit);
+        const summaryH = Math.min(38, zoneH * 0.28);
+        const summaryTopY = bottomLimit + summaryH;
+        const cueX = x1 + width * 0.28;
+
+        let currY = yStart - step;
+        while (currY >= summaryTopY) {
+          page.drawLine({
+            start: { x: cueX, y: currY },
+            end: { x: x2, y: currY },
+            thickness: 0.4,
+            color: rgb(0.4, 0.4, 0.4),
+            opacity: 0.22,
+          });
+          currY -= step;
+        }
+
+        page.drawLine({
+          start: { x: cueX, y: summaryTopY },
+          end: { x: cueX, y: yStart },
+          thickness: 0.6,
+          color: rgb(0.3, 0.3, 0.3),
+          opacity: 0.30,
+        });
+        page.drawLine({
+          start: { x: x1, y: summaryTopY },
+          end: { x: x2, y: summaryTopY },
+          thickness: 0.6,
+          color: rgb(0.3, 0.3, 0.3),
+          opacity: 0.30,
+        });
+
+        if (options.font) {
+          const lblColor = rgb(0.35, 0.35, 0.35);
+          try {
+            page.drawText('CUES / IDEAS', { x: x1 + 3, y: yStart - 8, size: 5.8, font: options.font, color: lblColor, opacity: 0.62 });
+            page.drawText('NOTES', { x: cueX + 6, y: yStart - 8, size: 5.8, font: options.font, color: lblColor, opacity: 0.62 });
+            if (summaryH >= 16) {
+              page.drawText('SUMMARY', { x: x1 + 3, y: summaryTopY - 9, size: 5.8, font: options.font, color: lblColor, opacity: 0.62 });
+            }
+          } catch (_) {}
+        }
       }
     }
 
@@ -5309,6 +5352,7 @@
           slot2Bottom,
           style,
           step,
+          font: helveticaBold,
         });
 
         drawFooter(newPage, sheetCounter);
@@ -5381,6 +5425,7 @@
             style,
             step,
             drawSeparator: true,
+            font: helveticaBold,
           });
 
           drawFooter(newPage, sheetCounter);
@@ -5510,7 +5555,7 @@
       ivory: [0.980, 0.969, 0.933],
       cream: [0.984, 0.973, 0.918],
       dark: [0.078, 0.082, 0.094],
-      oled: [0.078, 0.082, 0.094],
+      oled: [0.0, 0.0, 0.0],
       legal: [0.996, 0.988, 0.910],
       sage: [0.941, 0.969, 0.957],
     };

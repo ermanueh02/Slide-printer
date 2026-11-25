@@ -3,10 +3,10 @@
 [![CI](https://github.com/ermanueh02/Slide-printer/actions/workflows/ci.yml/badge.svg)](https://github.com/ermanueh02/Slide-printer/actions/workflows/ci.yml)
 [![Python Version](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-36%20passing-brightgreen.svg)](tests/)
-[![Web App](https://img.shields.io/badge/Web%20Studio-Live-blueviolet.svg)](https://ermanueh02.github.io/Slide-printer/)
+[![Tests](https://img.shields.io/badge/tests-255%2B%20passing-brightgreen.svg)](tests/)
+[![Web App](https://img.shields.io/badge/Web%20Studio%203.0-Live-blueviolet.svg)](https://ermanueh02.github.io/Slide-printer/)
 
-**Slide-Printer** transforms digital presentation slides (16:9 widescreen or 4:3 standard) into clean, printable handouts on **DIN A4**, **US Letter**, **US Legal**, or **DIN A3** paper, adding dedicated note-taking space directly below each slide.
+**Slide-Printer** transforms digital presentation slides (16:9 widescreen or 4:3 standard) into clean, printable handouts on **DIN A4**, **US Letter**, **US Legal**, or **DIN A3** paper, adding dedicated note-taking space directly below each slide — and includes a full **Digital Notebook Studio** for tablets and print.
 
 Whether you're attending a lecture, giving a seminar, or preparing study material, Slide-Printer gives you physical paper space to write handwritten notes while preserving original slide proportions and keeping **interactive PDF hyperlinks fully functional**.
 
@@ -34,11 +34,12 @@ Each page of your presentation is placed on the sheet, followed by a customizabl
 |   |                                           |   |
 |   |            NOTE-TAKING AREA               |   |
 |   |                                           |   |
-|   |   Available styles:                       |   |
+|   |   Available styles (1-Up & 2-Up):         |   |
 |   |    1. Ruled lines (handwriting lines)     |   |
 |   |    2. Graph grid (technical math/plots)   |   |
 |   |    3. Dot matrix (flexible bullet points) |   |
-|   |    4. Blank (clean open space)            |   |
+|   |    4. Cornell Notes (cues, notes, summary)|   |
+|   |    5. Blank (clean open space)            |   |
 |   |                                           |   |
 |   +-------------------------------------------+   |
 |                      1 / 24                       |  <-- Centered Page Number
@@ -49,14 +50,18 @@ Each page of your presentation is placed on the sheet, followed by a customizabl
 
 ## ✨ Features
 
+- **Web Studio 3.0 PWA (100% Client-Side & Offline)**:
+  - Instant in-browser PDF handout & digital notebook studio with zero server uploads, installable as a desktop/Android PWA.
+  - **Visual Cover Gallery (`G`) & Instant Search**: Browse live-rendered previews of all **55 editorial & scientific covers** with real-time search and category pills.
+  - **Auto-Saved Presets**: Persistent settings in `localStorage` across both **Handouts** and **Digital Notebook Studio**, plus 1-click Smart Presets and multilingual UI (`en`, `es`, `gl`).
 - **Digital Notebook Studio & Full-Page Templates (`--notebook [PAGES]`, `-N`)**:
   - Generate full-sheet digital notebooks and paper templates tailored for **stylus handwriting in Samsung Notes, GoodNotes, Notability, or physical printing**.
   - Ruled lines, graph grid, bullet dots, clean blank sheets, or **Cornell Note-taking layout** (`cornell` with cue column and summary block) extended across the entire page.
-  - **Paper Tints (`--paper-tint`)**: Classic White, Warm Ivory, Cream Book Paper, OLED Pure Black (`#000000`), Dark Mode, Legal Pad Yellow, and Sage Green.
-  - **Stationery Margin Rule (`--margin-line`)**: Classic vertical red margin line for traditional notebook aesthetics.
+  - **7 Paper Tints (`--paper-tint`)**: Classic White, Warm Ivory, Cream Book Paper, OLED Pure Black (`#000000`), Dark Slate (`#141518`), Legal Pad Yellow, and Sage Green.
+  - **Stationery Margin Rule (`--margin-line`)**: Classic vertical red margin line with optional duplex left/right alternation.
   - Choose between running with or without centered page numbers (`--page-numbers` vs `--no-page-numbers`).
-  - Preserves all binding options (spiral coil, ring binder, hole guides, duplex alternating margins, and 45+ editorial cover templates).
-- **5 Note Patterns**:
+  - Preserves all binding options (spiral coil, ring binder, hole guides, duplex alternating margins, and 55 editorial cover templates).
+- **5 Note Patterns (1-Up, 2-Up & Full-Page Notebook)**:
   - **Ruled Lines (`lines`)**: Clean horizontal lines tailored for handwriting (~4.9 mm / ~14 pt spacing).
   - **Graph Grid (`grid`)**: Technical squared grid for math, diagrams, sketches, and charts.
   - **Dot Matrix (`dots`)**: Subtle bullet dot grid for flexible note-taking.
@@ -70,7 +75,7 @@ Each page of your presentation is placed on the sheet, followed by a customizabl
   - **Spiral / Coil Binding (`--binding spiral` / `--spiral`)**: +8 mm (+22 pt) margin optimized for spiral wire-o and coil combs, saving 3 mm of slide space.
   - **Hole & Spiral Guides (`--hole-guides`)**: Prints subtle punch targets (crosshair circles at ISO 838 centers) or spiral coil clearance ticks.
   - **Duplex Intelligence (`--duplex`)**: Shifts odd sheets (recto) to the right (left gutter) and even sheets (verso) to the left (right gutter) so punched holes never bite into content.
-- **45+ Editorial Cover Templates (`--generate-cover`, `--cover-template`)**:
+- **55 Editorial & Scientific Cover Templates (`--generate-cover`, `--cover-template`, `--cover-date`)**:
   - **Standard Editorial & Classic Presses (Literary & Stationery Heritage)**:
     - **Penguin Classics (`penguin` / `penguin_classics`)**: 1935 Allen Lane tri-band horizontal layout in vintage mandarin orange and warm cream, complete with the oval Penguin publisher badge and classic Gill Sans typography.
     - **Gallimard NRF Blanche (`gallimard` / `nrf` / `collection_blanche`)**: Iconic 1911 French vellum monograph featuring double carmine-red border rules, Garamond serif typography, and the historic NRF monogram medallion.

@@ -4060,6 +4060,30 @@ def create_2up_notes_overlay(
                     cx = grid_x1 + col * step
                     c.circle(cx, curr_y, dot_radius, fill=1, stroke=0)
                 curr_y -= step
+        elif norm_style in ("cornell", "cornell_notes"):
+            zone_h = max(0.0, y_start - bottom_limit)
+            summary_h = min(38.0, zone_h * 0.28)
+            summary_top_y = bottom_limit + summary_h
+            cue_x = x1 + width * 0.28
+
+            c.setStrokeColor(Color(0.4, 0.4, 0.4, alpha=0.22))
+            c.setLineWidth(0.4)
+            curr_y = y_start - step
+            while curr_y >= summary_top_y:
+                c.line(cue_x, curr_y, x2, curr_y)
+                curr_y -= step
+
+            c.setStrokeColor(Color(0.3, 0.3, 0.3, alpha=0.30))
+            c.setLineWidth(0.6)
+            c.line(cue_x, summary_top_y, cue_x, y_start)
+            c.line(x1, summary_top_y, x2, summary_top_y)
+
+            c.setFont("Helvetica-Bold", 5.8)
+            c.setFillColor(Color(0.35, 0.35, 0.35, alpha=0.60))
+            c.drawString(x1 + 3.0, y_start - 7.0, "CUES / IDEAS")
+            c.drawString(cue_x + 6.0, y_start - 7.0, "NOTES")
+            if summary_h >= 16.0:
+                c.drawString(x1 + 3.0, summary_top_y - 8.5, "SUMMARY")
 
     # Draw Slot 1 pattern
     draw_pattern_zone(slot1_sep_y, slot1_bottom)

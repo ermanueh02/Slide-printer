@@ -995,7 +995,7 @@ def launch_web_ui(port: int = 8000) -> int:
     for offset in range(max_attempts):
         curr_port = port + offset
         try:
-            httpd = socketserver.TCPServer(("127.0.0.1", curr_port), handler)
+            httpd = socketserver.TCPServer(("0.0.0.0", curr_port), handler)
             target_port = curr_port
             break
         except OSError as e:
@@ -1010,14 +1010,17 @@ def launch_web_ui(port: int = 8000) -> int:
 
     with httpd:
         url = f"http://127.0.0.1:{target_port}"
-        web_hdr = f"Slide-Printer Web Studio · {url}"
+        web_hdr = f"Slide-Printer Web Studio 3.0 · {url}"
         box_w = max(len(web_hdr) + 4, 60)
         print(bold(f"\n╭{'─' * box_w}╮"))
         print(bold(f"│ {web_hdr.center(box_w - 2)} │"))
         print(bold(f"╰{'─' * box_w}╯"))
         print(dim("100% Private · Zero cloud uploads · Running locally."))
         print(dim("Press Ctrl+C to stop the server.\n"))
-        webbrowser.open(url)
+        try:
+            webbrowser.open(url)
+        except Exception:
+            pass
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
