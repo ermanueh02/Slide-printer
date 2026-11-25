@@ -459,7 +459,6 @@ class SlidePrinter:
 
             # 1. Prepend generated cover page if requested
             if has_gen_cover:
-                today_str = self.cover_date or datetime.date.today().strftime("%B %d, %Y")
                 cover_title = self.cover_title or base_name.replace("_", " ").title()
                 cover_sub = self.cover_subtitle or self.study_title
                 cover_page = generate_cover_page(
@@ -467,7 +466,7 @@ class SlidePrinter:
                     title=cover_title,
                     subtitle=cover_sub,
                     author=self.cover_author,
-                    date_str=today_str,
+                    date_str=self.cover_date,
                     num_slides=len(selected_indices),
                     grayscale=self.grayscale,
                     template=self.cover_template,
@@ -623,7 +622,6 @@ class SlidePrinter:
 
             # 1. Prepend cover if requested
             if has_gen_cover:
-                today_str = self.cover_date or datetime.date.today().strftime("%B %d, %Y")
                 cover_title = self.cover_title or clean_base.replace("_", " ").title()
                 cover_sub = self.cover_subtitle or self.study_title or "Notebook"
                 cover_page = generate_cover_page(
@@ -631,7 +629,7 @@ class SlidePrinter:
                     title=cover_title,
                     subtitle=cover_sub,
                     author=self.cover_author,
-                    date_str=today_str,
+                    date_str=self.cover_date,
                     num_slides=num_pages,
                     grayscale=self.grayscale,
                     template=self.cover_template,

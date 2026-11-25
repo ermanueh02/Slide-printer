@@ -580,16 +580,67 @@
     return coverImageCache[name];
   }
 
+  const COVER_EN_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const COVER_ES_MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  const COVER_GL_MONTHS = ['xaneiro', 'febreiro', 'marzo', 'abril', 'maio', 'xuño', 'xullo', 'agosto', 'setembro', 'outubro', 'novembro', 'decembro'];
+  const COVER_FR_MONTHS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+  const COVER_LATIN_ABBR_MONTHS = ['Ian.', 'Feb.', 'Mar.', 'Apr.', 'Mai.', 'Iun.', 'Iul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
+  const COVER_ISO_TEMPLATES = new Set(['blueprint', 'field_notes', 'circuits_instrumentation', 'circuits_flat', 'materials_sim', 'materials_sim_flat']);
+  const COVER_DOT_TEMPLATES = new Set(['forties', '1940s', 'eighties', '1980s', 'nineties', '1990s', 'twothousands', '2000s', 'twentytwenties', '2020s']);
+  const COVER_SWISS_TEMPLATES = new Set(['sixties', '1960s', 'twenty10s', '2010s', 'midori', 'swiss']);
+  const COVER_FRENCH_TEMPLATES = new Set(['gallimard', 'cahier']);
+
+  function parseCoverDateInput(raw) {
+    const text = (raw !== undefined && raw !== null) ? String(raw).trim() : '';
+    if (!text) {
+      const now = new Date();
+      return { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
+    }
+    const makeValid = (year, month, day) => {
+      if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+      const d = new Date(year, month - 1, day);
+      if (d.getFullYear() !== year || d.getMonth() !== month - 1 || d.getDate() !== day) return null;
+      return { year, month, day };
+    };
+    let m = text.match(/^(\d{1,2})[/.\-](\d{1,2})[/.\-](\d{2})$/);
+    if (m) return makeValid(2000 + parseInt(m[3], 10), parseInt(m[2], 10), parseInt(m[1], 10));
+    m = text.match(/^(\d{1,2})[/.\-](\d{1,2})[/.\-](\d{4})$/);
+    if (m) return makeValid(parseInt(m[3], 10), parseInt(m[2], 10), parseInt(m[1], 10));
+    m = text.match(/^(\d{4})[/.\-](\d{1,2})[/.\-](\d{1,2})$/);
+    if (m) return makeValid(parseInt(m[1], 10), parseInt(m[2], 10), parseInt(m[3], 10));
+    return null;
+  }
+
+  function formatCoverDateForTemplate(raw, templateName, lang) {
+    const parsed = parseCoverDateInput(raw);
+    if (!parsed) return (raw !== undefined && raw !== null) ? String(raw).trim() : '';
+    const { year, month, day } = parsed;
+    const dd = String(day).padStart(2, '0');
+    const mm = String(month).padStart(2, '0');
+    const yyyy = String(year).padStart(4, '0');
+    const t = (templateName || 'atelier').toLowerCase().trim();
+    if (COVER_ISO_TEMPLATES.has(t)) return `${yyyy}-${mm}-${dd}`;
+    if (COVER_DOT_TEMPLATES.has(t)) return `${yyyy}.${mm}.${dd}`;
+    if (COVER_SWISS_TEMPLATES.has(t)) return `${dd}.${mm}.${yyyy}`;
+    if (COVER_FRENCH_TEMPLATES.has(t)) return `${day} ${COVER_FR_MONTHS[month - 1]} ${yyyy}`;
+    if (t === 'celestial') return `${day} ${COVER_LATIN_ABBR_MONTHS[month - 1]} ${yyyy}`;
+    const cleanLang = (lang || 'en').toLowerCase().trim();
+    if (cleanLang === 'es') return `${day} de ${COVER_ES_MONTHS[month - 1]} de ${yyyy}`;
+    if (cleanLang === 'gl') return `${day} de ${COVER_GL_MONTHS[month - 1]} de ${yyyy}`;
+    return `${COVER_EN_MONTHS[month - 1]} ${day}, ${yyyy}`;
+  }
+
   function renderPreviewEditorialCover(ctx, pw, ph, options) {
     const tpl = (options.coverTemplate || 'atelier').toLowerCase();
     const titleText = (options.coverTitle || options.title || 'Presentation').trim();
     const subTitleText = (options.coverSubtitle || options.subtitle || options.studyTitle || '').trim();
     const authorText = (options.coverAuthor || options.author || '').trim();
-    const dateFormatted = (options.coverDate !== undefined && options.coverDate !== null && String(options.coverDate).trim() !== '')
+    const rawDateInput = (options.coverDate !== undefined && options.coverDate !== null && String(options.coverDate).trim() !== '')
       ? String(options.coverDate).trim()
       : ((options.date !== undefined && options.date !== null && String(options.date).trim() !== '')
           ? String(options.date).trim()
-          : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
+          : '');
+    const dateFormatted = formatCoverDateForTemplate(rawDateInput, tpl, options.lang || 'en');
 
     options.coverTitle = titleText;
     options.title = titleText;

@@ -1,5 +1,6 @@
 """Pattern overlay generators for note sections."""
 
+import datetime
 import io
 import math
 import os
@@ -392,6 +393,114 @@ def create_notebook_page(
     )
 
 
+_EN_MONTHS = (
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+)
+_ES_MONTHS = (
+    "enero", "febrero", "marzo", "abril", "mayo", "junio",
+    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
+)
+_GL_MONTHS = (
+    "xaneiro", "febreiro", "marzo", "abril", "maio", "xuño",
+    "xullo", "agosto", "setembro", "outubro", "novembro", "decembro",
+)
+_FR_MONTHS = (
+    "janvier", "février", "mars", "avril", "mai", "juin",
+    "juillet", "août", "septembre", "octobre", "novembre", "décembre",
+)
+_LATIN_ABBR_MONTHS = (
+    "Ian.", "Feb.", "Mar.", "Apr.", "Mai.", "Iun.",
+    "Iul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec.",
+)
+
+_ISO_DATE_TEMPLATES = frozenset({
+    "blueprint", "field_notes", "circuits_instrumentation", "circuits_flat",
+    "materials_sim", "materials_sim_flat",
+})
+_DOT_TIMESTAMP_TEMPLATES = frozenset({
+    "forties", "1940s", "eighties", "1980s", "nineties", "1990s",
+    "twothousands", "2000s", "twentytwenties", "2020s",
+})
+_SWISS_DATE_TEMPLATES = frozenset({"sixties", "1960s", "twenty10s", "2010s", "midori", "swiss"})
+_FRENCH_DATE_TEMPLATES = frozenset({"gallimard", "cahier"})
+
+
+def _parse_cover_date(raw: Optional[str]) -> Optional[datetime.date]:
+    """Parses DD/MM/YY (primary), DD/MM/YYYY, or YYYY-MM-DD into a date.
+
+    Empty/None defaults to today. Unparseable free-text returns None so callers
+    can render it verbatim.
+    """
+    text = (raw or "").strip()
+    if not text:
+        return datetime.date.today()
+
+    import re
+
+    m = re.match(r"^(\d{1,2})[/.\-](\d{1,2})[/.\-](\d{2})$", text)
+    if m:
+        day, month, yy = int(m.group(1)), int(m.group(2)), int(m.group(3))
+        try:
+            return datetime.date(2000 + yy, month, day)
+        except ValueError:
+            return None
+
+    m = re.match(r"^(\d{1,2})[/.\-](\d{1,2})[/.\-](\d{4})$", text)
+    if m:
+        day, month, year = int(m.group(1)), int(m.group(2)), int(m.group(3))
+        try:
+            return datetime.date(year, month, day)
+        except ValueError:
+            return None
+
+    m = re.match(r"^(\d{4})[/.\-](\d{1,2})[/.\-](\d{1,2})$", text)
+    if m:
+        year, month, day = int(m.group(1)), int(m.group(2)), int(m.group(3))
+        try:
+            return datetime.date(year, month, day)
+        except ValueError:
+            return None
+
+    return None
+
+
+def format_cover_date(
+    date_str: Optional[str],
+    template: str = "atelier",
+    lang: str = "en",
+) -> str:
+    """Formats a cover date input (default today, DD/MM/YY) for a cover template."""
+    parsed = _parse_cover_date(date_str)
+    if parsed is None:
+        return (date_str or "").strip()
+
+    raw_tpl = (template or "atelier").lower().strip()
+    tpl = COVER_TEMPLATE_ALIASES.get(raw_tpl, raw_tpl)
+
+    dd = f"{parsed.day:02d}"
+    mm = f"{parsed.month:02d}"
+    yyyy = f"{parsed.year:04d}"
+
+    if tpl in _ISO_DATE_TEMPLATES:
+        return f"{yyyy}-{mm}-{dd}"
+    if tpl in _DOT_TIMESTAMP_TEMPLATES:
+        return f"{yyyy}.{mm}.{dd}"
+    if tpl in _SWISS_DATE_TEMPLATES:
+        return f"{dd}.{mm}.{yyyy}"
+    if tpl in _FRENCH_DATE_TEMPLATES:
+        return f"{parsed.day} {_FR_MONTHS[parsed.month - 1]} {yyyy}"
+    if tpl == "celestial":
+        return f"{parsed.day} {_LATIN_ABBR_MONTHS[parsed.month - 1]} {yyyy}"
+
+    clean_lang = (lang or "en").lower().strip()
+    if clean_lang == "es":
+        return f"{parsed.day} de {_ES_MONTHS[parsed.month - 1]} de {yyyy}"
+    if clean_lang == "gl":
+        return f"{parsed.day} de {_GL_MONTHS[parsed.month - 1]} de {yyyy}"
+    return f"{_EN_MONTHS[parsed.month - 1]} {parsed.day}, {yyyy}"
+
+
 def generate_cover_page(
     page_size: Tuple[float, float],
     title: str,
@@ -408,6 +517,7 @@ def generate_cover_page(
     margin: float = 40.0,
     is_notebook: bool = False,
     num_pages: Optional[int] = None,
+    lang: str = "en",
 ) -> PageObject:
     """Generates an editorial notebook cover page inspired by vintage and modernist designs.
 
@@ -419,6 +529,7 @@ def generate_cover_page(
     clean_title = (title or ("Notebook" if is_notebook else "Presentation")).strip()
     raw_tpl = (template or "atelier").lower().strip()
     tpl = COVER_TEMPLATE_ALIASES.get(raw_tpl, raw_tpl)
+    date_str = format_cover_date(date_str, tpl, lang=lang)
 
     if is_notebook and num_pages is not None:
         num_slides = num_pages

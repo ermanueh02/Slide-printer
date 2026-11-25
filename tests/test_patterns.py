@@ -372,6 +372,56 @@ def test_editorial_covers_with_binding_gutter():
         assert "Cosas" in text
 
 
+def test_cover_date_default_ddmmyy_and_custom_override():
+    import datetime
+    from slide_printer.patterns import format_cover_date, generate_cover_page
+
+    today = datetime.date.today()
+    expected_today_iso = today.strftime("%Y-%m-%d")
+    expected_today_en = format_cover_date(None, "atelier", lang="en")
+
+    # Default (None or blank) formats today's date according to template
+    cover_default = generate_cover_page(
+        page_size=PAPER_SIZES["a4"],
+        title="Default Date Test",
+        date_str=None,
+        template="atelier",
+    )
+    assert expected_today_en in cover_default.extract_text()
+
+    cover_blank = generate_cover_page(
+        page_size=PAPER_SIZES["a4"],
+        title="Blank Date Test",
+        date_str="   ",
+        template="field_notes",
+    )
+    assert expected_today_iso in cover_blank.extract_text()
+
+    # DD/MM/YY input adapts output format to each cover template & language
+    assert format_cover_date("19/11/26", "atelier", lang="es") == "19 de noviembre de 2026"
+    assert format_cover_date("19/11/26", "atelier", lang="gl") == "19 de novembro de 2026"
+    assert format_cover_date("19/11/26", "atelier", lang="en") == "November 19, 2026"
+    assert format_cover_date("19/11/26", "field_notes", lang="es") == "2026-11-19"
+    assert format_cover_date("19/11/26", "blueprint", lang="es") == "2026-11-19"
+    assert format_cover_date("19/11/26", "1980s", lang="es") == "2026.11.19"
+    assert format_cover_date("19/11/26", "midori", lang="es") == "19.11.2026"
+    assert format_cover_date("19/11/26", "gallimard", lang="es") == "19 novembre 2026"
+    assert format_cover_date("19/11/26", "celestial", lang="es") == "19 Nov. 2026"
+
+    # Custom edited DD/MM/YY date renders formatted in PDF
+    cover_es = generate_cover_page(
+        page_size=PAPER_SIZES["a4"],
+        title="Custom Date ES",
+        date_str="19/11/26",
+        template="atelier",
+        lang="es",
+    )
+    assert "19 de noviembre de 2026" in cover_es.extract_text()
+
+    # Non-date free text passes through verbatim
+    assert format_cover_date("Curso 2026/27", "atelier", lang="es") == "Curso 2026/27"
+
+
 
 
 

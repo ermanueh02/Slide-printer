@@ -854,7 +854,7 @@ Examples:
         dest="cover_date",
         type=str,
         default=None,
-        help="Custom date string for the cover page (DATE OF ENTRY).",
+        help="Custom cover date in DD/MM/YY format (default: today; formatted per cover template).",
     )
     parser.add_argument(
         "--layout",

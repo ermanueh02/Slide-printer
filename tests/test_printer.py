@@ -335,6 +335,52 @@ def test_slide_printer_generate_notebook_stationery_features(tmp_path):
         assert "SUMMARY" in text
 
 
+def test_cover_date_default_and_custom_in_printer(sample_slide_pdf, tmp_path):
+    from slide_printer.patterns import format_cover_date
+
+    expected_atelier_today = format_cover_date(None, "atelier", lang="en")
+    expected_field_notes_today = format_cover_date(None, "field_notes", lang="en")
+
+    # Handout default cover date -> formatted for atelier
+    p_default = SlidePrinter(
+        output_dir=str(tmp_path / "handout_default_date"),
+        cover_mode="generate",
+        cover_template="atelier",
+    )
+    res_default = p_default.process_file(sample_slide_pdf, styles=["blank"])
+    cover_default_text = PdfReader(res_default[0]).pages[0].extract_text()
+    assert expected_atelier_today in cover_default_text
+
+    # Handout custom DD/MM/YY cover date -> formatted for atelier ("February 14, 2025")
+    p_custom = SlidePrinter(
+        output_dir=str(tmp_path / "handout_custom_date"),
+        cover_mode="generate",
+        cover_template="atelier",
+        cover_date="14/02/25",
+    )
+    res_custom = p_custom.process_file(sample_slide_pdf, styles=["blank"])
+    cover_custom_text = PdfReader(res_custom[0]).pages[0].extract_text()
+    assert "February 14, 2025" in cover_custom_text
+
+    # Notebook default and custom DD/MM/YY cover date -> formatted for field_notes (ISO YYYY-MM-DD)
+    nb_default = SlidePrinter(
+        output_dir=str(tmp_path / "nb_default_date"),
+        cover_mode="generate",
+        cover_template="field_notes",
+    )
+    nb_res_default = nb_default.generate_notebook(num_pages=2, styles=["lines"])
+    assert expected_field_notes_today in PdfReader(nb_res_default[0]).pages[0].extract_text()
+
+    nb_custom = SlidePrinter(
+        output_dir=str(tmp_path / "nb_custom_date"),
+        cover_mode="generate",
+        cover_template="field_notes",
+        cover_date="01/09/26",
+    )
+    nb_res_custom = nb_custom.generate_notebook(num_pages=2, styles=["lines"])
+    assert "2026-09-01" in PdfReader(nb_res_custom[0]).pages[0].extract_text()
+
+
 
 
 

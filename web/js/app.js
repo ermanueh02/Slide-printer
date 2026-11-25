@@ -179,7 +179,7 @@
       coverTitlePlaceholder: "Cover title",
       coverSubtitlePlaceholder: "Cover subtitle / Topic (optional)",
       coverAuthorPlaceholder: "Author / Student / Subject",
-      coverDatePlaceholder: "Date of entry (DATE OF ENTRY)",
+      coverDatePlaceholder: "Cover date (DD/MM/YY)",
       pageRangeLabel: "Slide Range",
       pageRangePlaceholder: "All (e.g. 1-10, 2-, 15)",
       gutterLabel: "Binder / Ring margin (+11 mm)",
@@ -364,7 +364,7 @@
       coverTitlePlaceholder: "Título para la portada",
       coverSubtitlePlaceholder: "Subtítulo / Tema (opcional)",
       coverAuthorPlaceholder: "Autor / Estudiante / Asignatura",
-      coverDatePlaceholder: "Fecha de registro (DATE OF ENTRY)",
+      coverDatePlaceholder: "Fecha de portada (DD/MM/AA)",
       pageRangeLabel: "Rango de diapositivas",
       pageRangePlaceholder: "Todas (ej. 1-10, 15)",
       gutterLabel: "Margen para archivador / anillas (+11 mm)",
@@ -549,7 +549,7 @@
       coverTitlePlaceholder: "Título para a portada",
       coverSubtitlePlaceholder: "Subtítulo / Tema (opcional)",
       coverAuthorPlaceholder: "Autor / Estudante / Materia",
-      coverDatePlaceholder: "Data de rexistro (DATE OF ENTRY)",
+      coverDatePlaceholder: "Data da portada (DD/MM/AA)",
       pageRangeLabel: "Rango de diapositivas",
       pageRangePlaceholder: "Todas (ex. 1-10, 15)",
       gutterLabel: "Marxe para arquivador / anelas (+11 mm)",
@@ -579,7 +579,11 @@
   }
 
   function getDefaultCoverDate() {
-    return new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0');
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const yy = String(now.getFullYear()).slice(-2);
+    return `${dd}/${mm}/${yy}`;
   }
 
   // App State
@@ -1076,6 +1080,10 @@
       btn.addEventListener('click', () => {
         const lang = btn.getAttribute('data-lang');
         setLanguage(lang, true);
+        if (state.pdfjsDoc && state.coverMode === 'generate') {
+          renderCurrentPreview();
+        }
+        window.dispatchEvent(new CustomEvent('slideprinter:langchange', { detail: { lang } }));
       });
     });
   }
@@ -1346,6 +1354,7 @@
         coverSubtitle: notebookState.coverSubtitle,
         coverAuthor: notebookState.coverAuthor,
         coverDate: notebookState.coverDate,
+        lang: state.lang,
       });
 
       // Update page navigator & Recto/Verso indicators
@@ -1920,6 +1929,11 @@
         renderNotebookStudioPreview();
       });
     }
+    window.addEventListener('slideprinter:langchange', () => {
+      if (notebookState.includeCover && notebookState.activeTab === 'cover') {
+        renderNotebookStudioPreview();
+      }
+    });
 
     // Paper size & pages
     const nbPaperSizeSelect = document.getElementById('nbPaperSizeSelect');
@@ -2054,6 +2068,7 @@
         coverSubtitle: notebookState.coverSubtitle || notebookState.studyTitle || '',
         coverAuthor: notebookState.coverAuthor || '',
         coverDate: notebookState.coverDate,
+        lang: state.lang,
         studyHeader: notebookState.studyHeader,
         studyTitle: notebookState.studyTitle || '',
       });
@@ -3152,6 +3167,7 @@
         coverSubtitle: state.coverSubtitle,
         coverAuthor: state.coverAuthor,
         coverDate: state.coverDate,
+          lang: state.lang,
         ecoPrint: state.ecoPrint,
         selectedIndices: selectedIndices,
       }
@@ -3240,6 +3256,7 @@
               coverSubtitle: state.coverSubtitle,
               coverAuthor: state.coverAuthor,
               coverDate: state.coverDate,
+          lang: state.lang,
               pageRanges: state.pageRanges,
               studyHeader: state.studyHeader,
               studyTitle: state.studyTitle,
@@ -3301,6 +3318,7 @@
           coverSubtitle: state.coverSubtitle,
           coverAuthor: state.coverAuthor,
           coverDate: state.coverDate,
+          lang: state.lang,
           pageRanges: state.pageRanges,
           studyHeader: state.studyHeader,
           studyTitle: state.studyTitle,
@@ -3375,6 +3393,7 @@
             coverSubtitle: state.coverSubtitle,
             coverAuthor: state.coverAuthor,
             coverDate: state.coverDate,
+          lang: state.lang,
             pageRanges: state.pageRanges,
             studyHeader: state.studyHeader,
             studyTitle: state.studyTitle,
@@ -3521,6 +3540,7 @@
           coverSubtitle: state.coverSubtitle,
           coverAuthor: state.coverAuthor,
           coverDate: state.coverDate,
+          lang: state.lang,
           pageRanges: state.pageRanges,
           studyHeader: state.studyHeader,
           studyTitle: state.studyTitle,
