@@ -159,3 +159,31 @@ def test_javascript_syntax_and_engine_integrity():
     )
     res = subprocess.run([node_bin, '-e', engine_test_script], cwd=REPO_ROOT, capture_output=True, text=True)
     assert res.returncode == 0, f'SlidePrinterEngine failed to load:\n{res.stderr}'
+
+
+def test_trilingual_i18n_parity():
+    """Verify that en, es, and gl dictionaries in web/js/app.js share 100% of keys."""
+    import shutil
+    import subprocess
+
+    node_bin = shutil.which('node')
+    if not node_bin:
+        return
+
+    parity_script = (
+        "const fs = require('fs');"
+        "const src = fs.readFileSync('./web/js/app.js', 'utf8');"
+        "const m = src.match(/const TRANSLATIONS = (\\{[\\s\\S]*?\\n  \\});/);"
+        "if (!m) { console.error('TRANSLATIONS not found'); process.exit(1); }"
+        "const T = eval('(' + m[1] + ')');"
+        "const enKeys = Object.keys(T.en);"
+        "const esMissing = enKeys.filter(k => !(k in T.es));"
+        "const glMissing = enKeys.filter(k => !(k in T.gl));"
+        "if (esMissing.length || glMissing.length) {"
+        "  console.error('Missing es:', esMissing, 'Missing gl:', glMissing);"
+        "  process.exit(1);"
+        "}"
+    )
+    res = subprocess.run([node_bin, '-e', parity_script], cwd=REPO_ROOT, capture_output=True, text=True)
+    assert res.returncode == 0, f'Trilingual i18n parity check failed:\n{res.stderr}'
+

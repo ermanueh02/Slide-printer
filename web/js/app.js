@@ -225,6 +225,116 @@
       tintOled: "Pure OLED",
       tintLegal: "Legal Yellow",
       tintSage: "Soft Sage",
+      navModeSlides: "📑 Slides",
+      navModeNotebook: "📓 Digital Notebook",
+      nbBannerBadge: "✨ Samsung Notes · GoodNotes · Tablets",
+      nbBannerTitle: "Digital Notebook & Template Studio",
+      nbBannerDesc: "Create full-page notebooks with ruled lines, grid, Cornell, or dot matrix. Choose ivory, dark OLED, or legal yellow paper and classic covers for stylus writing or printing.",
+      openNotebookStudioBtn: "📓 Design My Notebook",
+      smartPresetsTitle: "⚡ Smart Presets",
+      presetStudentTitle: "🎓 Student",
+      presetStudentDesc: "A4 · Lined · Binder · Cover",
+      presetStemTitle: "🔬 STEM & Lab",
+      presetStemDesc: "A4 · Tech Grid · Header",
+      presetEcoTitle: "🌱 Eco Compact",
+      presetEcoDesc: "A4 · 2-Up · Blank · Eco",
+      presetDossierTitle: "📖 Archival",
+      presetDossierDesc: "A4 · Dots · Spiral · Duplex",
+      nbStudioTitle: "📓 Digital Notebook & Template Studio",
+      nbStudioPill1: "Samsung Notes & GoodNotes",
+      nbStudioPill2: "100% Vector",
+      nbStudioPill3: "Duplex & Covers",
+      exitNotebookStudio: "← Slides",
+      nbSmartPresetsTitle: "⚡ Quick Templates",
+      nbPresetUniTitle: "🎓 University",
+      nbPresetUniDesc: "Ruled · Spiral Duplex · Cover",
+      nbPresetStemTitle: "🔬 STEM / Physics",
+      nbPresetStemDesc: "5mm Grid · Science Cover",
+      nbPresetTabletTitle: "📱 Tablet OLED",
+      nbPresetTabletDesc: "Dark OLED · Dots · 1 pg",
+      nbPresetCornellTitle: "📝 Cornell Duplex",
+      nbPresetCornellDesc: "Cornell · Binder Duplex · Ivory",
+      nbTintSection: "Paper Tone",
+      nbPatternSection: "Full-Page Pattern",
+      nbSpacingSection: "Line Spacing / Ruling",
+      nbSpacing5: "5 mm (Fine)",
+      nbSpacing7: "7 mm (Standard)",
+      nbSpacing8: "8.5 mm (Wide)",
+      nbSpacingFine: "Fine tuning",
+      nbDetailsSection: "Binding & Margins",
+      nbBindingLabel: "Binding type",
+      nbDuplexLabel: "Binding margin (Print sides)",
+      nbHoleGuides: "Draw punch / spiral guides",
+      nbMarginLineTitle: "Classic notebook margin",
+      nbMarginLineDesc: "Vertical red/pink margin rule",
+      nbMarginLineLeft: "Always on left",
+      nbMarginLineDuplex: "Alternate Left / Right",
+      nbStudyHeaderTitle: "Study header",
+      nbStudyHeaderDesc: "Top bar with subject & date",
+      nbStudyTitlePlaceholder: "Subject or Topic (e.g. Theoretical Physics)",
+      nbPageNumbersTitle: "Footer page numbers",
+      nbPageNumbersDesc: "Disable for infinite tablet template",
+      nbCoverSection: "Editorial Cover",
+      nbIncludeCoverTitle: "Include Editorial Cover",
+      nbIncludeCoverDesc: "Adds a collectible cover at the start of the PDF",
+      nbCoverTemplateLabel: "Cover Style (67 designs)",
+      nbCoverTitlePlaceholder: "Notebook Title",
+      nbCoverTitleDefault: "Study Notebook",
+      nbCoverAuthorPlaceholder: "Author, Subject, or Course (Optional)",
+      nbPagesSection: "Pages & Paper Size",
+      nbPaperSizeLabel: "Paper size",
+      nbPaperA4: "DIN A4 (210 × 297 mm · Tablet & Print)",
+      nbPaperA5: "DIN A5 (148 × 210 mm · Pocket Notebook)",
+      nbPaperLetter: "US Letter (216 × 279 mm)",
+      nbPaperLegal: "US Legal (216 × 356 mm)",
+      nbPaperA3: "DIN A3 (297 × 420 mm · Large Canvas)",
+      nbPageCountHeader: "Number of interior pages",
+      nbPages1: "1 pg",
+      nbPages25: "25 pgs",
+      nbPages50: "50 pgs",
+      nbPages80: "80 pgs",
+      nbPages100: "100 pgs",
+      nbPagesCustomHint: "pages (1–500)",
+      nbDownloadBtn: "Download Notebook PDF",
+      nbPrintBtn: "Print Notebook",
+      nbTabSheet: "📄 Interior Sheet",
+      nbTabCover: "🎨 Cover",
+      nbSideRecto: "Odd (Left)",
+      nbSideVerso: "Even (Right)",
+      nbPagePrefix: "Pg.",
+      nbSideOddShort: "Odd · Left",
+      nbSideEvenShort: "Even · Right",
+      nbCoverIndicator: "Editorial Cover",
+      nbSummaryPages: "pgs",
+      nbSummaryDuplex: " · Duplex (Alt. L/R)",
+      nbSummaryCover: " · With Cover",
+      nbSummaryMarginAlt: " · Alt. Margin",
+      nbSummaryMarginClassic: " · Classic Margin",
+      catAll: "All",
+      catAllCount: "All (67)",
+      catSignature: "★ Signature",
+      catEditorial: "Editorial",
+      catScienceFlat: "Physics 90s",
+      catScienceAI: "Physics AI",
+      catComposition: "Composition",
+      catClassics: "Classics",
+      catDecades: "Decades",
+      catSeasons: "Seasons",
+      catNature: "Nature",
+      zoomFit: "Fit",
+      darkPaperBtn: "🌙 Dark Paper",
+      stripBtn: "▦ Strip",
+      theaterBtn: "⛶ Theater",
+      shortcutsTitle: "Keyboard Shortcuts",
+      scNextPrev: "Next / Previous Slide",
+      scZoom: "Zoom In / Zoom Out",
+      scResetZoom: "Reset Zoom to Fit",
+      scDownload: "Download Handout PDF",
+      scPrint: "Print Handouts",
+      scGallery: "Open Cover Gallery",
+      scTheme: "Cycle Theme (OLED / Light / Auto)",
+      scDarkPaper: "Toggle Dark Paper Mode",
+      scClose: "Close Modal / Exit Theater",
     },
     es: {
       brandSubtitle: "Diapositivas con notas",
@@ -277,6 +387,10 @@
       styleBlankDesc: "Espacio despejado con separador",
       paperLabel: "Formato de página",
       section2: "02",
+      coverSectionLabel: "Portada y Cabecera",
+      section3: "03",
+      printSectionLabel: "Impresión y Encuadernación",
+      section4: "04",
       paperSelectLabel: "Tamaño de papel",
       paperA4: "DIN A4 (210 × 297 mm)",
       paperA5: "DIN A5 (148 × 210 mm)",
@@ -439,6 +553,116 @@
       tintOled: "Negro OLED",
       tintLegal: "Amarillo Legal",
       tintSage: "Menta Suave",
+      navModeSlides: "📑 Diapositivas",
+      navModeNotebook: "📓 Libreta Digital",
+      nbBannerBadge: "✨ Samsung Notes · GoodNotes · Tablets",
+      nbBannerTitle: "Estudio de Libretas y Plantillas Digitales",
+      nbBannerDesc: "Crea cuadernos a toda página con renglones, cuadrícula, Cornell o puntos. Elige papel marfil, dark OLED o amarillo legal y portadas clásicas para escribir en pantalla con tu stylus o imprimir.",
+      openNotebookStudioBtn: "📓 Diseñar Mi Libreta",
+      smartPresetsTitle: "⚡ Plantillas Rápidas",
+      presetStudentTitle: "🎓 Estudiante",
+      presetStudentDesc: "A4 · Renglones · Anillas · Portada",
+      presetStemTitle: "🔬 STEM y Lab",
+      presetStemDesc: "A4 · Cuadrícula · Encabezado",
+      presetEcoTitle: "🌱 Eco Compacto",
+      presetEcoDesc: "A4 · 2-Up · Blanco · Eco",
+      presetDossierTitle: "📖 Archivo",
+      presetDossierDesc: "A4 · Puntos · Espiral · Dúplex",
+      nbStudioTitle: "📓 Estudio de Libretas y Plantillas Digitales",
+      nbStudioPill1: "Samsung Notes & GoodNotes",
+      nbStudioPill2: "Vectorial 100%",
+      nbStudioPill3: "Doble Cara y Portadas",
+      exitNotebookStudio: "← Diapositivas",
+      nbSmartPresetsTitle: "⚡ Plantillas Rápidas",
+      nbPresetUniTitle: "🎓 Universitario",
+      nbPresetUniDesc: "Rayado · Espiral Dúplex · Portada",
+      nbPresetStemTitle: "🔬 STEM / Física",
+      nbPresetStemDesc: "Cuadrícula 5mm · Portada Ciencia",
+      nbPresetTabletTitle: "📱 Tablet OLED",
+      nbPresetTabletDesc: "Dark OLED · Puntos · 1 pág",
+      nbPresetCornellTitle: "📝 Cornell Dúplex",
+      nbPresetCornellDesc: "Cornell · Anillas Dúplex · Marfil",
+      nbTintSection: "Tono de Papel",
+      nbPatternSection: "Patrón a Toda Página",
+      nbSpacingSection: "Interlineado / Espaciado",
+      nbSpacing5: "5 mm (Fino)",
+      nbSpacing7: "7 mm (Estándar)",
+      nbSpacing8: "8.5 mm (Amplio)",
+      nbSpacingFine: "Ajuste preciso",
+      nbDetailsSection: "Encuadernación y Márgenes",
+      nbBindingLabel: "Tipo de encuadernación",
+      nbDuplexLabel: "Margen de encuadernación (Lados de impresión)",
+      nbHoleGuides: "Dibujar guías de perforación / espiral",
+      nbMarginLineTitle: "Margen de libreta clásico",
+      nbMarginLineDesc: "Línea vertical roja/rosa de margen",
+      nbMarginLineLeft: "Siempre a la izquierda",
+      nbMarginLineDuplex: "Alternar Izq. / Der.",
+      nbStudyHeaderTitle: "Encabezado de estudio",
+      nbStudyHeaderDesc: "Barra superior con asignatura y fecha",
+      nbStudyTitlePlaceholder: "Asignatura o Tema (ej. Física Teórica)",
+      nbPageNumbersTitle: "Números de página en el pie",
+      nbPageNumbersDesc: "Desactivar para plantilla infinita en tablet",
+      nbCoverSection: "Portada Editorial",
+      nbIncludeCoverTitle: "Incluir Portada Editorial",
+      nbIncludeCoverDesc: "Añade portada de colección al principio del PDF",
+      nbCoverTemplateLabel: "Estilo de Portada (67 diseños)",
+      nbCoverTitlePlaceholder: "Título de la Libreta",
+      nbCoverTitleDefault: "Cuaderno de Apuntes",
+      nbCoverAuthorPlaceholder: "Autor, Asignatura o Curso (Opcional)",
+      nbPagesSection: "Páginas y Formato",
+      nbPaperSizeLabel: "Tamaño de papel",
+      nbPaperA4: "DIN A4 (210 × 297 mm · Tablet e Impresión)",
+      nbPaperA5: "DIN A5 (148 × 210 mm · Libreta de bolsillo)",
+      nbPaperLetter: "US Letter (216 × 279 mm)",
+      nbPaperLegal: "US Legal (216 × 356 mm)",
+      nbPaperA3: "DIN A3 (297 × 420 mm · Lienzo grande)",
+      nbPageCountHeader: "Número de páginas interiores",
+      nbPages1: "1 pág",
+      nbPages25: "25 págs",
+      nbPages50: "50 págs",
+      nbPages80: "80 págs",
+      nbPages100: "100 págs",
+      nbPagesCustomHint: "páginas (1–500)",
+      nbDownloadBtn: "Descargar Libreta PDF",
+      nbPrintBtn: "Imprimir Libreta",
+      nbTabSheet: "📄 Hoja Interior",
+      nbTabCover: "🎨 Portada",
+      nbSideRecto: "Impar (Izq.)",
+      nbSideVerso: "Par (Der.)",
+      nbPagePrefix: "Pág.",
+      nbSideOddShort: "Impar · Izq.",
+      nbSideEvenShort: "Par · Der.",
+      nbCoverIndicator: "Portada Editorial",
+      nbSummaryPages: "págs",
+      nbSummaryDuplex: " · Doble Cara (Alterno Izq./Der.)",
+      nbSummaryCover: " · Con Portada",
+      nbSummaryMarginAlt: " · Margen Alterno",
+      nbSummaryMarginClassic: " · Margen Clásico",
+      catAll: "Todas",
+      catAllCount: "Todas (67)",
+      catSignature: "★ Signature",
+      catEditorial: "Editoriales",
+      catScienceFlat: "Ciencia 90s",
+      catScienceAI: "Ciencia IA",
+      catComposition: "Composición",
+      catClassics: "Clásicos",
+      catDecades: "Décadas",
+      catSeasons: "Estaciones",
+      catNature: "Naturaleza",
+      zoomFit: "Ajustar",
+      darkPaperBtn: "🌙 Papel Oscuro",
+      stripBtn: "▦ Tira",
+      theaterBtn: "⛶ Cine",
+      shortcutsTitle: "Atajos de Teclado",
+      scNextPrev: "Diapositiva Siguiente / Anterior",
+      scZoom: "Acercar / Alejar Zoom",
+      scResetZoom: "Ajustar Zoom a Página",
+      scDownload: "Descargar PDF",
+      scPrint: "Imprimir Apuntes",
+      scGallery: "Abrir Galería de Portadas",
+      scTheme: "Cambiar Tema (OLED / Claro / Auto)",
+      scDarkPaper: "Activar Modo Papel Oscuro",
+      scClose: "Cerrar Ventana / Salir Modo Cine",
     },
     gl: {
       brandSubtitle: "Diapositivas con notas",
@@ -491,6 +715,10 @@
       styleBlankDesc: "Espazo despexado con liña separadora",
       paperLabel: "Formato de páxina",
       section2: "02",
+      coverSectionLabel: "Portada e Cabeceira",
+      section3: "03",
+      printSectionLabel: "Impresión e Encadernación",
+      section4: "04",
       paperSelectLabel: "Tamaño de papel",
       paperA4: "DIN A4 (210 × 297 mm)",
       paperA5: "DIN A5 (148 × 210 mm)",
@@ -653,6 +881,116 @@
       tintOled: "Negro OLED",
       tintLegal: "Amarelo Legal",
       tintSage: "Menta Suave",
+      navModeSlides: "📑 Diapositivas",
+      navModeNotebook: "📓 Caderno Dixital",
+      nbBannerBadge: "✨ Samsung Notes · GoodNotes · Tablets",
+      nbBannerTitle: "Estudio de Cadernos e Modelos Dixitais",
+      nbBannerDesc: "Crea cadernos a toda páxina con regos, cuadrícula, Cornell ou puntos. Escolle papel marfil, dark OLED ou amarelo legal e portadas clásicas para escribir en pantalla co teu stylus ou imprimir.",
+      openNotebookStudioBtn: "📓 Deseñar o Meu Caderno",
+      smartPresetsTitle: "⚡ Modelos Rápidos",
+      presetStudentTitle: "🎓 Estudante",
+      presetStudentDesc: "A4 · Regos · Anelas · Portada",
+      presetStemTitle: "🔬 STEM e Lab",
+      presetStemDesc: "A4 · Cuadrícula · Cabeceira",
+      presetEcoTitle: "🌱 Eco Compacto",
+      presetEcoDesc: "A4 · 2-Up · Branco · Eco",
+      presetDossierTitle: "📖 Arquivo",
+      presetDossierDesc: "A4 · Puntos · Espiral · Dúplex",
+      nbStudioTitle: "📓 Estudio de Cadernos e Modelos Dixitais",
+      nbStudioPill1: "Samsung Notes & GoodNotes",
+      nbStudioPill2: "Vectorial 100%",
+      nbStudioPill3: "Dobre Cara e Portadas",
+      exitNotebookStudio: "← Diapositivas",
+      nbSmartPresetsTitle: "⚡ Modelos Rápidos",
+      nbPresetUniTitle: "🎓 Universitario",
+      nbPresetUniDesc: "Raiado · Espiral Dúplex · Portada",
+      nbPresetStemTitle: "🔬 STEM / Física",
+      nbPresetStemDesc: "Cuadrícula 5mm · Portada Ciencia",
+      nbPresetTabletTitle: "📱 Tablet OLED",
+      nbPresetTabletDesc: "Dark OLED · Puntos · 1 páx",
+      nbPresetCornellTitle: "📝 Cornell Dúplex",
+      nbPresetCornellDesc: "Cornell · Anelas Dúplex · Marfil",
+      nbTintSection: "Ton de Papel",
+      nbPatternSection: "Patrón a Toda Páxina",
+      nbSpacingSection: "Interliñado / Espazado",
+      nbSpacing5: "5 mm (Fino)",
+      nbSpacing7: "7 mm (Estándar)",
+      nbSpacing8: "8.5 mm (Amplo)",
+      nbSpacingFine: "Axuste preciso",
+      nbDetailsSection: "Encadernación e Marxes",
+      nbBindingLabel: "Tipo de encadernación",
+      nbDuplexLabel: "Marxe de encadernación (Lados de impresión)",
+      nbHoleGuides: "Debuxar guías de perforación / espiral",
+      nbMarginLineTitle: "Marxe de caderno clásica",
+      nbMarginLineDesc: "Liña vertical vermella/rosa de marxe",
+      nbMarginLineLeft: "Sempre á esquerda",
+      nbMarginLineDuplex: "Alternar Esq. / Der.",
+      nbStudyHeaderTitle: "Cabeceira de estudo",
+      nbStudyHeaderDesc: "Barra superior con materia e data",
+      nbStudyTitlePlaceholder: "Materia ou Tema (ex. Física Teórica)",
+      nbPageNumbersTitle: "Números de páxina no pé",
+      nbPageNumbersDesc: "Desactivar para modelo infinito en tablet",
+      nbCoverSection: "Portada Editorial",
+      nbIncludeCoverTitle: "Incluír Portada Editorial",
+      nbIncludeCoverDesc: "Engade portada de colección ao principio do PDF",
+      nbCoverTemplateLabel: "Estilo de Portada (67 deseños)",
+      nbCoverTitlePlaceholder: "Título do Caderno",
+      nbCoverTitleDefault: "Caderno de Apuntamentos",
+      nbCoverAuthorPlaceholder: "Autor, Materia ou Curso (Opcional)",
+      nbPagesSection: "Páxinas e Formato",
+      nbPaperSizeLabel: "Tamaño de papel",
+      nbPaperA4: "DIN A4 (210 × 297 mm · Tablet e Impresión)",
+      nbPaperA5: "DIN A5 (148 × 210 mm · Caderno de peto)",
+      nbPaperLetter: "US Letter (216 × 279 mm)",
+      nbPaperLegal: "US Legal (216 × 356 mm)",
+      nbPaperA3: "DIN A3 (297 × 420 mm · Lenzo grande)",
+      nbPageCountHeader: "Número de páxinas interiores",
+      nbPages1: "1 páx",
+      nbPages25: "25 páxs",
+      nbPages50: "50 páxs",
+      nbPages80: "80 páxs",
+      nbPages100: "100 páxs",
+      nbPagesCustomHint: "páxinas (1–500)",
+      nbDownloadBtn: "Descargar Caderno PDF",
+      nbPrintBtn: "Imprimir Caderno",
+      nbTabSheet: "📄 Folla Interior",
+      nbTabCover: "🎨 Portada",
+      nbSideRecto: "Impar (Esq.)",
+      nbSideVerso: "Par (Der.)",
+      nbPagePrefix: "Páx.",
+      nbSideOddShort: "Impar · Esq.",
+      nbSideEvenShort: "Par · Der.",
+      nbCoverIndicator: "Portada Editorial",
+      nbSummaryPages: "páxs",
+      nbSummaryDuplex: " · Dobre Cara (Alterno Esq./Der.)",
+      nbSummaryCover: " · Con Portada",
+      nbSummaryMarginAlt: " · Marxe Alterna",
+      nbSummaryMarginClassic: " · Marxe Clásica",
+      catAll: "Todas",
+      catAllCount: "Todas (67)",
+      catSignature: "★ Signature",
+      catEditorial: "Editoriais",
+      catScienceFlat: "Ciencia 90s",
+      catScienceAI: "Ciencia IA",
+      catComposition: "Composición",
+      catClassics: "Clásicos",
+      catDecades: "Décadas",
+      catSeasons: "Estacións",
+      catNature: "Natureza",
+      zoomFit: "Axustar",
+      darkPaperBtn: "🌙 Papel Escuro",
+      stripBtn: "▦ Tira",
+      theaterBtn: "⛶ Cine",
+      shortcutsTitle: "Atallos de Teclado",
+      scNextPrev: "Diapositiva Seguinte / Anterior",
+      scZoom: "Achegar / Afastar Zoom",
+      scResetZoom: "Axustar Zoom á Páxina",
+      scDownload: "Descargar PDF",
+      scPrint: "Imprimir Apuntamentos",
+      scGallery: "Abrir Galería de Portadas",
+      scTheme: "Cambiar Tema (OLED / Claro / Auto)",
+      scDarkPaper: "Activar Modo Papel Escuro",
+      scClose: "Pechar Xanelas / Saír Modo Cine",
     }
   };
 
@@ -1192,6 +1530,181 @@
       setText('metaPageCount', `${state.numPages} ${label}`);
     }
 
+    // Header Mode Switcher & Hero Notebook Banner
+    setText('navModeSlidesText', dict.navModeSlides);
+    setText('navModeNotebookText', dict.navModeNotebook);
+    setText('nbBannerBadge', dict.nbBannerBadge);
+    setText('nbBannerTitle', dict.nbBannerTitle);
+    setText('nbBannerDesc', dict.nbBannerDesc);
+    setText('openNotebookStudioBtnText', dict.openNotebookStudioBtn);
+
+    // Helper for preset chip title + desc
+    const setPresetChip = (btnId, title, desc) => {
+      const btn = document.getElementById(btnId);
+      if (!btn) return;
+      const tEl = btn.querySelector('.preset-chip-title');
+      const dEl = btn.querySelector('.preset-chip-desc');
+      if (tEl && title) tEl.textContent = title;
+      if (dEl && desc) dEl.textContent = desc;
+    };
+
+    // Handouts Smart Presets
+    const spTitle = document.querySelector('#smartPresetsCard .smart-presets-title span');
+    if (spTitle && dict.smartPresetsTitle) spTitle.textContent = dict.smartPresetsTitle;
+    setPresetChip('presetStudentBtn', dict.presetStudentTitle, dict.presetStudentDesc);
+    setPresetChip('presetStemBtn', dict.presetStemTitle, dict.presetStemDesc);
+    setPresetChip('presetEcoBtn', dict.presetEcoTitle, dict.presetEcoDesc);
+    setPresetChip('presetDossierBtn', dict.presetDossierTitle, dict.presetDossierDesc);
+
+    // Digital Notebook Studio Header Bar & Smart Presets
+    setText('nbStudioTitleText', dict.nbStudioTitle);
+    setText('nbStudioPill1', dict.nbStudioPill1);
+    setText('nbStudioPill2', dict.nbStudioPill2);
+    setText('nbStudioPill3', dict.nbStudioPill3);
+    setText('resetNotebookStudioBtn', dict.restoreBtn);
+    setText('exitNotebookStudioBtn', dict.exitNotebookStudio);
+    setText('nbSmartPresetsTitle', dict.nbSmartPresetsTitle);
+    setPresetChip('nbPresetUniBtn', dict.nbPresetUniTitle, dict.nbPresetUniDesc);
+    setPresetChip('nbPresetStemBtn', dict.nbPresetStemTitle, dict.nbPresetStemDesc);
+    setPresetChip('nbPresetTabletBtn', dict.nbPresetTabletTitle, dict.nbPresetTabletDesc);
+    setPresetChip('nbPresetCornellBtn', dict.nbPresetCornellTitle, dict.nbPresetCornellDesc);
+
+    // Digital Notebook Studio Sections 01–07
+    setText('nbTintSectionLabel', dict.nbTintSection);
+    setText('nbPatternSectionLabel', dict.nbPatternSection);
+    setText('nbStyleLinesTitle', dict.styleLinesTitle);
+    setText('nbStyleLinesDesc', dict.styleLinesDesc);
+    setText('nbStyleGridTitle', dict.styleGridTitle);
+    setText('nbStyleGridDesc', dict.styleGridDesc);
+    setText('nbStyleDotsTitle', dict.styleDotsTitle);
+    setText('nbStyleDotsDesc', dict.styleDotsDesc);
+    setText('nbStyleCornellTitle', dict.styleCornellTitle);
+    setText('nbStyleCornellDesc', dict.styleCornellDesc);
+    setText('nbStyleBlankTitle', dict.styleBlankTitle);
+    setText('nbStyleBlankDesc', dict.styleBlankDesc);
+
+    setText('nbSpacingSectionLabel', dict.nbSpacingSection);
+    setText('nbSpacing5Btn', dict.nbSpacing5);
+    setText('nbSpacing7Btn', dict.nbSpacing7);
+    setText('nbSpacing8Btn', dict.nbSpacing8);
+    setText('nbSpacingFineLabel', dict.nbSpacingFine);
+
+    setText('nbDetailsSectionLabel', dict.nbDetailsSection);
+    setText('nbBindingLabel', dict.nbBindingLabel);
+    setText('nbBindingNoneText', dict.bindingNone);
+    setText('nbBindingBinderText', dict.bindingBinder);
+    setText('nbBindingSpiralText', dict.bindingSpiral);
+    setText('nbDuplexLabel', dict.nbDuplexLabel);
+    setText('nbDuplexSimplexText', dict.duplexSimplex);
+    setText('nbDuplexDuplexText', dict.duplexDuplex);
+    setText('nbHoleGuidesLabel', dict.nbHoleGuides);
+
+    setText('nbMarginLineTitle', dict.nbMarginLineTitle);
+    setText('nbMarginLineDesc', dict.nbMarginLineDesc);
+    setText('nbMarginLineLeftText', dict.nbMarginLineLeft);
+    setText('nbMarginLineDuplexText', dict.nbMarginLineDuplex);
+
+    setText('nbStudyHeaderTitle', dict.nbStudyHeaderTitle);
+    setText('nbStudyHeaderDesc', dict.nbStudyHeaderDesc);
+    const nbStudyTitleInput = document.getElementById('nbStudyTitleInput');
+    if (nbStudyTitleInput && dict.nbStudyTitlePlaceholder) nbStudyTitleInput.placeholder = dict.nbStudyTitlePlaceholder;
+
+    setText('nbPageNumbersTitle', dict.nbPageNumbersTitle);
+    setText('nbPageNumbersDesc', dict.nbPageNumbersDesc);
+    setText('nbPageFormatTotalBtn', dict.pageFormatTotal);
+    setText('nbPageFormatSimpleBtn', dict.pageFormatSimple);
+
+    setText('nbCoverSectionLabel', dict.nbCoverSection);
+    setText('nbIncludeCoverTitle', dict.nbIncludeCoverTitle);
+    setText('nbIncludeCoverDesc', dict.nbIncludeCoverDesc);
+    setText('nbCoverTemplateLabel', dict.nbCoverTemplateLabel);
+    const nbCoverTitleInput = document.getElementById('nbCoverTitleInput');
+    if (nbCoverTitleInput && dict.nbCoverTitlePlaceholder) {
+      nbCoverTitleInput.placeholder = dict.nbCoverTitlePlaceholder;
+      const defaultTitles = new Set(['Cuaderno de Apuntes', 'Study Notebook', 'Caderno de Apuntamentos']);
+      if (defaultTitles.has(nbCoverTitleInput.value.trim()) && dict.nbCoverTitleDefault) {
+        nbCoverTitleInput.value = dict.nbCoverTitleDefault;
+      }
+    }
+    const nbCoverAuthorInput = document.getElementById('nbCoverAuthorInput');
+    if (nbCoverAuthorInput && dict.nbCoverAuthorPlaceholder) nbCoverAuthorInput.placeholder = dict.nbCoverAuthorPlaceholder;
+
+    setText('nbPagesSectionLabel', dict.nbPagesSection);
+    setText('nbPaperSizeLabel', dict.nbPaperSizeLabel);
+    const nbPaperSelect = document.getElementById('nbPaperSizeSelect');
+    if (nbPaperSelect) {
+      const pMap = { a4: dict.nbPaperA4, a5: dict.nbPaperA5, letter: dict.nbPaperLetter, legal: dict.nbPaperLegal, a3: dict.nbPaperA3 };
+      Object.entries(pMap).forEach(([val, lbl]) => {
+        const opt = nbPaperSelect.querySelector(`option[value="${val}"]`);
+        if (opt && lbl) opt.textContent = lbl;
+      });
+    }
+    setText('nbPageCountHeader', dict.nbPageCountHeader);
+    setText('nbPages1Btn', dict.nbPages1);
+    setText('nbPages25Btn', dict.nbPages25);
+    setText('nbPages50Btn', dict.nbPages50);
+    setText('nbPages80Btn', dict.nbPages80);
+    setText('nbPages100Btn', dict.nbPages100);
+    setText('nbPagesCustomHint', dict.nbPagesCustomHint);
+
+    setText('downloadNotebookStudioBtnText', dict.nbDownloadBtn);
+    setText('printNotebookStudioBtnText', dict.nbPrintBtn);
+    setText('nbTabSheetBtn', dict.nbTabSheet);
+    setText('nbTabCoverBtn', dict.nbTabCover);
+    setText('nbSideRectoBtn', dict.nbSideRecto);
+    setText('nbSideVersoBtn', dict.nbSideVerso);
+    setText('nbZoomFitBtn', dict.zoomFit);
+
+    // Handouts Preview Toolbar & Shortcuts Modal
+    setText('zoomFitBtn', dict.zoomFit);
+    setText('darkPaperToggleBtn', dict.darkPaperBtn);
+    setText('filmstripToggleBtn', dict.stripBtn);
+    setText('theaterBtn', dict.theaterBtn);
+    setText('shortcutsTitle', dict.shortcutsTitle);
+    const scKeys = [
+      dict.scNextPrev, dict.scZoom, dict.scResetZoom, dict.scDownload,
+      dict.scPrint, dict.scGallery, dict.scTheme, dict.scDarkPaper, dict.scClose,
+    ];
+    document.querySelectorAll('#shortcutsModal .shortcut-desc').forEach((el, idx) => {
+      if (scKeys[idx]) el.textContent = scKeys[idx];
+    });
+
+    // Cover Category Filter Pills (Handouts, Notebook Studio & Cover Gallery Modal)
+    const catMap = {
+      all: dict.catAll,
+      groupSignature: dict.catSignature,
+      nbGroupSignature: dict.catSignature,
+      groupEditorialStandard: dict.catEditorial,
+      nbGroupEditorialStandard: dict.catEditorial,
+      groupScienceFlat: dict.catScienceFlat,
+      nbGroupScienceFlat: dict.catScienceFlat,
+      groupScience: dict.catScienceAI,
+      nbGroupScience: dict.catScienceAI,
+      groupNotebooks: dict.catComposition,
+      nbGroupNotebooks: dict.catComposition,
+      groupClassics: dict.catClassics,
+      nbGroupClassics: dict.catClassics,
+      groupDecades: dict.catDecades,
+      nbGroupDecades: dict.catDecades,
+      groupSeasons: dict.catSeasons,
+      nbGroupSeasons: dict.catSeasons,
+      groupNature: dict.catNature,
+      nbGroupNature: dict.catNature,
+    };
+    document.querySelectorAll('#coverFilterRow [data-cover-cat]').forEach((btn) => {
+      const k = btn.getAttribute('data-cover-cat');
+      if (catMap[k]) btn.textContent = catMap[k];
+    });
+    document.querySelectorAll('#nbCoverFilterRow [data-nb-cover-cat]').forEach((btn) => {
+      const k = btn.getAttribute('data-nb-cover-cat');
+      if (catMap[k]) btn.textContent = catMap[k];
+    });
+    document.querySelectorAll('#coverGalleryCatRow [data-gal-cat]').forEach((btn) => {
+      const k = btn.getAttribute('data-gal-cat');
+      if (k === 'all' && dict.catAllCount) btn.textContent = dict.catAllCount;
+      else if (catMap[k]) btn.textContent = catMap[k];
+    });
+
     updateStyleSelectionUI();
   }
 
@@ -1488,12 +2001,13 @@
       const nbSideVersoBtn = document.getElementById('nbSideVersoBtn');
       const isOdd = (notebookState.previewPage % 2) === 1;
 
+      const nbDict = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
       if (nbPageIndicator) {
         if (notebookState.activeTab === 'cover') {
-          nbPageIndicator.textContent = 'Portada Editorial';
+          nbPageIndicator.textContent = nbDict.nbCoverIndicator || 'Editorial Cover';
         } else {
-          const sideLabel = isOdd ? 'Impar · Izq.' : 'Par · Der.';
-          nbPageIndicator.textContent = `Pág. ${notebookState.previewPage}/${notebookState.numPages} (${sideLabel})`;
+          const sideLabel = isOdd ? (nbDict.nbSideOddShort || 'Odd · Left') : (nbDict.nbSideEvenShort || 'Even · Right');
+          nbPageIndicator.textContent = `${nbDict.nbPagePrefix || 'Pg.'} ${notebookState.previewPage}/${notebookState.numPages} (${sideLabel})`;
         }
       }
       if (nbPrevPageBtn) nbPrevPageBtn.disabled = (notebookState.activeTab === 'cover' || notebookState.previewPage <= 1);
@@ -1505,22 +2019,28 @@
       const summaryElem = document.getElementById('nbPreviewSummaryText');
       if (summaryElem) {
         const tintNames = {
-          ivory: 'Papel Marfil',
-          cream: 'Crema Editorial',
-          white: 'Blanco Puro',
-          dark: 'Pizarra Oscura',
-          oled: 'Negro OLED',
-          legal: 'Amarillo Legal',
-          sage: 'Menta Suave',
+          ivory: nbDict.tintIvory || 'Warm Ivory',
+          cream: nbDict.tintCream || 'Cream Vellum',
+          white: nbDict.tintWhite || 'Pure White',
+          dark: nbDict.tintDark || 'Dark Slate',
+          oled: nbDict.tintOled || 'Pure OLED',
+          legal: nbDict.tintLegal || 'Legal Yellow',
+          sage: nbDict.tintSage || 'Soft Sage',
         };
-        const styleNames = { lines: 'Renglones', grid: 'Cuadrícula', dots: 'Puntos', cornell: 'Cornell Notes', blank: 'En Blanco' };
+        const styleNames = {
+          lines: nbDict.styleLinesTitle || 'Lines',
+          grid: nbDict.styleGridTitle || 'Grid',
+          dots: nbDict.styleDotsTitle || 'Dots',
+          cornell: nbDict.styleCornellTitle || 'Cornell Notes',
+          blank: nbDict.styleBlankTitle || 'Blank',
+        };
         const mm = (notebookState.step * 25.4 / 72).toFixed(1);
-        const duplexPart = notebookState.duplex ? ' · Doble Cara (Alterno Izq./Der.)' : '';
-        const coverPart = notebookState.includeCover ? ' · Con Portada' : '';
+        const duplexPart = notebookState.duplex ? (nbDict.nbSummaryDuplex || ' · Duplex') : '';
+        const coverPart = notebookState.includeCover ? (nbDict.nbSummaryCover || ' · With Cover') : '';
         const marginPart = notebookState.marginLine
-          ? (notebookState.mirrorMarginLine && notebookState.duplex ? ' · Margen Alterno' : ' · Margen Clásico')
+          ? (notebookState.mirrorMarginLine && notebookState.duplex ? (nbDict.nbSummaryMarginAlt || ' · Alt. Margin') : (nbDict.nbSummaryMarginClassic || ' · Classic Margin'))
           : '';
-        summaryElem.textContent = `${notebookState.paperSize.toUpperCase()} · ${tintNames[notebookState.paperTint] || 'Papel'} · ${styleNames[notebookState.style] || 'Líneas'} (${mm} mm) · ${notebookState.numPages} págs${duplexPart}${marginPart}${coverPart}`;
+        summaryElem.textContent = `${notebookState.paperSize.toUpperCase()} · ${tintNames[notebookState.paperTint] || ''} · ${styleNames[notebookState.style] || ''} (${mm} mm) · ${notebookState.numPages} ${nbDict.nbSummaryPages || 'pgs'}${duplexPart}${marginPart}${coverPart}`;
       }
       saveNotebookPresets();
     }
@@ -2145,9 +2665,9 @@
       });
     }
     window.addEventListener('slideprinter:langchange', () => {
-      if (notebookState.includeCover && notebookState.activeTab === 'cover') {
-        renderNotebookStudioPreview();
-      }
+      const nbTitleEl = document.getElementById('nbCoverTitleInput');
+      if (nbTitleEl) notebookState.coverTitle = nbTitleEl.value.trim() || notebookState.coverTitle;
+      renderNotebookStudioPreview();
     });
 
     // Paper size & pages
