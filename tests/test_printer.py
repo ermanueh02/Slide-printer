@@ -387,6 +387,24 @@ def test_cover_date_default_and_custom_in_printer(sample_slide_pdf, tmp_path):
     assert "2026-09-01" in PdfReader(nb_res_custom[0]).pages[0].extract_text()
 
 
+def test_a5_paper_size_handout_and_notebook(sample_slide_pdf, tmp_path):
+    # Handout on DIN A5
+    printer = SlidePrinter(output_dir=str(tmp_path / "a5_handout"), paper_size="a5", cover_mode="none")
+    res = printer.process_file(sample_slide_pdf, styles=["lines"])
+    assert len(res) == 1
+    page = PdfReader(res[0]).pages[0]
+    assert float(page.mediabox.width) == pytest.approx(PAPER_SIZES["a5"][0], 0.1)
+    assert float(page.mediabox.height) == pytest.approx(PAPER_SIZES["a5"][1], 0.1)
+
+    # Notebook on DIN A5
+    nb_printer = SlidePrinter(output_dir=str(tmp_path / "a5_nb"), paper_size="a5", cover_mode="none")
+    nb_res = nb_printer.generate_notebook(num_pages=2, styles=["grid"])
+    assert len(nb_res) == 1
+    nb_page = PdfReader(nb_res[0]).pages[0]
+    assert float(nb_page.mediabox.width) == pytest.approx(PAPER_SIZES["a5"][0], 0.1)
+    assert float(nb_page.mediabox.height) == pytest.approx(PAPER_SIZES["a5"][1], 0.1)
+
+
 
 
 

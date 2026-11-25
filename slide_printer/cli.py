@@ -413,9 +413,10 @@ def interactive_wizard() -> int:
     print(f"  [{cyan('2')}] US Letter   (8.5 × 11 in)")
     print(f"  [{cyan('3')}] US Legal    (8.5 × 14 in)")
     print(f"  [{cyan('4')}] DIN A3      (297 × 420 mm)")
+    print(f"  [{cyan('5')}] DIN A5      (148 × 210 mm)")
 
-    paper_choice = input(f"\nEnter paper choice [{bold('1')}, 2, 3, 4] (default: 1): ").strip()
-    paper_map = {"1": "a4", "2": "letter", "3": "legal", "4": "a3"}
+    paper_choice = input(f"\nEnter paper choice [{bold('1')}, 2, 3, 4, 5] (default: 1): ").strip()
+    paper_map = {"1": "a4", "2": "letter", "3": "legal", "4": "a3", "5": "a5"}
     selected_paper = paper_map.get(paper_choice, "a4")
 
     # 3. Binding & Gutter Margin

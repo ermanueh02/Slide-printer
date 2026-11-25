@@ -4450,7 +4450,7 @@
       white: '#ffffff',
       ivory: '#faf7ee',
       cream: '#fbf8ea',
-      dark: '#141518',
+      dark: '#262b33',
       oled: '#000000',
       legal: '#fefce8',
       sage: '#f0f7f4',

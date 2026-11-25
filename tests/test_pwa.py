@@ -98,6 +98,8 @@ def test_html_pwa_integration():
     assert 'id="nbCoverSearchInput"' in html
     assert 'data-tint="cream"' in html
     assert 'data-tint="oled"' in html
+    assert '<option value="a5"' in html
+    assert 'id="optA5"' in html
 
     # Verify both #coverTemplateSelect and #nbCoverTemplateSelect contain all 55 canonical cover templates
     from slide_printer.constants import COVER_TEMPLATES, COVER_TEMPLATE_ALIASES

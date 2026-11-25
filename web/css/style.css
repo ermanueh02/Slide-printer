@@ -2640,8 +2640,8 @@ body.theater-active .preview-pane #previewCanvas {
 .tint-swatch-ivory { background-color: #faf7ee; }
 .tint-swatch-cream { background-color: #fbf8ea; }
 .tint-swatch-white { background-color: #ffffff; }
-.tint-swatch-dark { background-color: #141518; border-color: rgba(255, 255, 255, 0.25); }
-.tint-swatch-oled { background-color: #000000; border-color: rgba(255, 255, 255, 0.40); }
+.tint-swatch-dark { background-color: #262b33; border-color: rgba(255, 255, 255, 0.30); }
+.tint-swatch-oled { background-color: #000000; border-color: rgba(255, 255, 255, 0.45); }
 .tint-swatch-legal { background-color: #fefce8; }
 .tint-swatch-sage { background-color: #f0f7f4; }
 

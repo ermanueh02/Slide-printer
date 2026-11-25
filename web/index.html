@@ -373,6 +373,7 @@
               </label>
               <select id="paperSelect" class="form-select">
                 <option value="a4" id="optA4" selected>DIN A4 (210 × 297 mm)</option>
+                <option value="a5" id="optA5">DIN A5 (148 × 210 mm)</option>
                 <option value="letter" id="optLetter">US Letter (8.5 × 11 in)</option>
                 <option value="legal" id="optLegal">US Legal (8.5 × 14 in)</option>
                 <option value="a3" id="optA3">DIN A3 (297 × 420 mm)</option>
@@ -888,7 +889,7 @@
             </div>
             <div class="segmented-control" role="group" style="margin-bottom: 0.75rem;">
               <button type="button" class="segmented-btn btn-chip" data-nbspacing="5" id="nbSpacing5Btn">5 mm (Fino)</button>
-              <button type="button" class="segmented-btn btn-chip active is-active" data-nbspacing="7" id="nbSpacing7Btn">7 mm (Estándar)</button>
+              <button type="button" class="segmented-btn btn-chip is-active" data-nbspacing="7" id="nbSpacing7Btn">7 mm (Estándar)</button>
               <button type="button" class="segmented-btn btn-chip" data-nbspacing="8.5" id="nbSpacing8Btn">8.5 mm (Amplio)</button>
             </div>
             <div class="form-group" style="margin-bottom: 0;">
@@ -1000,7 +1001,7 @@
               </label>
               <div id="nbPageNumberFormatGroup" style="display: none; margin-top: 0.5rem; margin-left: 2.85rem;">
                 <div class="segmented-control segmented-control-sm" role="group">
-                  <button type="button" class="segmented-btn btn-chip active is-active" id="nbPageFormatTotalBtn">Total (1 / N)</button>
+                  <button type="button" class="segmented-btn btn-chip is-active" id="nbPageFormatTotalBtn">Total (1 / N)</button>
                   <button type="button" class="segmented-btn btn-chip" id="nbPageFormatSimpleBtn">Simple (1)</button>
                 </div>
               </div>
@@ -1144,6 +1145,7 @@
               <label for="nbPaperSizeSelect" class="form-label" id="nbPaperSizeLabel">Tamaño de papel</label>
               <select id="nbPaperSizeSelect" class="form-select select-control">
                 <option value="a4" selected>DIN A4 (210 × 297 mm · Tablet &amp; Impresión)</option>
+                <option value="a5">DIN A5 (148 × 210 mm · Libreta de bolsillo)</option>
                 <option value="letter">US Letter (216 × 279 mm)</option>
                 <option value="legal">US Legal (216 × 356 mm)</option>
                 <option value="a3">DIN A3 (297 × 420 mm · Lienzo grande)</option>
@@ -1157,7 +1159,7 @@
               <div class="segmented-control segmented-control-sm" role="group" style="margin-bottom: 0.5rem; flex-wrap: wrap;">
                 <button type="button" class="segmented-btn btn-chip" data-nbpages="1" id="nbPages1Btn" title="Plantilla maestra: en Samsung Notes añade páginas infinitas de esta plantilla">1 pág</button>
                 <button type="button" class="segmented-btn btn-chip" data-nbpages="25" id="nbPages25Btn">25 págs</button>
-                <button type="button" class="segmented-btn btn-chip active is-active" data-nbpages="50" id="nbPages50Btn">50 págs</button>
+                <button type="button" class="segmented-btn btn-chip is-active" data-nbpages="50" id="nbPages50Btn">50 págs</button>
                 <button type="button" class="segmented-btn btn-chip" data-nbpages="80" id="nbPages80Btn">80 págs</button>
                 <button type="button" class="segmented-btn btn-chip" data-nbpages="100" id="nbPages100Btn">100 págs</button>
               </div>
@@ -1198,7 +1200,7 @@
           <!-- Toolbar over canvas -->
           <div class="preview-toolbar preview-controls-bar">
             <div class="toolbar-group preview-tabs-track">
-              <button type="button" class="tool-btn active is-active" id="nbTabSheetBtn">📄 Hoja Interior</button>
+              <button type="button" class="tool-btn is-active" id="nbTabSheetBtn">📄 Hoja Interior</button>
               <button type="button" class="tool-btn" id="nbTabCoverBtn">🎨 Portada</button>
             </div>
 

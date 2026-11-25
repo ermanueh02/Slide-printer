@@ -5,6 +5,7 @@ from typing import Dict, Tuple
 # Standard paper sizes in points (1 pt = 1/72 inch)
 PAPER_SIZES: Dict[str, Tuple[float, float]] = {
     "a4": (595.28, 841.89),
+    "a5": (419.53, 595.28),
     "letter": (612.0, 792.0),
     "legal": (612.0, 1008.0),
     "a3": (841.89, 1190.55),
@@ -70,7 +71,7 @@ PAPER_TINTS: Dict[str, Tuple[float, float, float]] = {
     "white": (1.0, 1.0, 1.0),
     "ivory": (0.980, 0.969, 0.933),      # #FAF7EE Moleskine / Midori Warm Ivory
     "cream": (0.984, 0.973, 0.918),      # #FBF8EA Warm Cream Vellum
-    "dark": (0.078, 0.082, 0.094),       # #141518 Dark Mode Slate
+    "dark": (0.149, 0.169, 0.200),       # #262B33 Dark Mode Slate
     "oled": (0.0, 0.0, 0.0),             # #000000 Pure OLED True Black
     "legal": (0.996, 0.988, 0.910),      # #FEFCE8 American Legal Pad
     "sage": (0.941, 0.969, 0.957),       # #F0F7F4 Soft Sage Relaxed Reading

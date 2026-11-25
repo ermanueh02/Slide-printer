@@ -65,6 +65,7 @@
       section4: "04",
       paperSelectLabel: "Paper Size",
       paperA4: "DIN A4 (210 × 297 mm)",
+      paperA5: "DIN A5 (148 × 210 mm)",
       paperLetter: "US Letter (8.5 × 11 in)",
       paperLegal: "US Legal (8.5 × 14 in)",
       paperA3: "DIN A3 (297 × 420 mm)",
@@ -265,6 +266,7 @@
       section2: "02",
       paperSelectLabel: "Tamaño de papel",
       paperA4: "DIN A4 (210 × 297 mm)",
+      paperA5: "DIN A5 (148 × 210 mm)",
       paperLetter: "US Letter (8.5 × 11 in)",
       paperLegal: "US Legal (8.5 × 14 in)",
       paperA3: "DIN A3 (297 × 420 mm)",
@@ -465,6 +467,7 @@
       section2: "02",
       paperSelectLabel: "Tamaño de papel",
       paperA4: "DIN A4 (210 × 297 mm)",
+      paperA5: "DIN A5 (148 × 210 mm)",
       paperLetter: "US Letter (8.5 × 11 in)",
       paperLegal: "US Legal (8.5 × 14 in)",
       paperA3: "DIN A3 (297 × 420 mm)",
@@ -938,6 +941,7 @@
     setText('printSectionSub', dict.section4 || "04");
     setText('paperSelectLabelText', dict.paperSelectLabel);
     setText('optA4', dict.paperA4);
+    setText('optA5', dict.paperA5);
     setText('optLetter', dict.paperLetter);
     setText('optLegal', dict.paperLegal);
     setText('optA3', dict.paperA3);
@@ -1542,7 +1546,9 @@
       if (nbStepValueLabel) nbStepValueLabel.textContent = `${notebookState.step.toFixed(1)} pt (~${mm} mm)`;
       document.querySelectorAll('[data-nbspacing]').forEach(b => {
         const bMm = parseFloat(b.getAttribute('data-nbspacing') || '0');
-        b.classList.toggle('is-active', Math.abs(bMm - parseFloat(mm)) < 0.3);
+        const match = Math.abs(bMm - parseFloat(mm)) < 0.3;
+        b.classList.toggle('is-active', match);
+        b.classList.toggle('active', match);
       });
       // Margin line & mirror margin line
       const nbMarginLineCheck = document.getElementById('nbMarginLineCheck');
@@ -1612,7 +1618,9 @@
       if (nbPaperSizeSelect) nbPaperSizeSelect.value = notebookState.paperSize;
       if (nbPagesInput) nbPagesInput.value = notebookState.numPages;
       document.querySelectorAll('[data-nbpages]').forEach(b => {
-        b.classList.toggle('is-active', b.getAttribute('data-nbpages') === String(notebookState.numPages));
+        const match = b.getAttribute('data-nbpages') === String(notebookState.numPages);
+        b.classList.toggle('is-active', match);
+        b.classList.toggle('active', match);
       });
 
       setNotebookPreviewTab(notebookState.activeTab);
@@ -1819,8 +1827,12 @@
     const nbStepValueLabel = document.getElementById('nbStepValueLabel');
     document.querySelectorAll('[data-nbspacing]').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-nbspacing]').forEach(b => b.classList.remove('is-active'));
+        document.querySelectorAll('[data-nbspacing]').forEach(b => {
+          b.classList.remove('is-active');
+          b.classList.remove('active');
+        });
         btn.classList.add('is-active');
+        btn.classList.add('active');
         const mm = parseFloat(btn.getAttribute('data-nbspacing') || '7');
         const pt = (mm * 72 / 25.4);
         notebookState.step = pt;
@@ -1837,7 +1849,12 @@
         const mm = (pt * 25.4 / 72).toFixed(1);
         notebookState.step = pt;
         if (nbStepValueLabel) nbStepValueLabel.textContent = `${pt.toFixed(1)} pt (~${mm} mm)`;
-        document.querySelectorAll('[data-nbspacing]').forEach(b => b.classList.remove('is-active'));
+        document.querySelectorAll('[data-nbspacing]').forEach(b => {
+          const bMm = parseFloat(b.getAttribute('data-nbspacing') || '0');
+          const match = Math.abs(bMm - parseFloat(mm)) < 0.3;
+          b.classList.toggle('is-active', match);
+          b.classList.toggle('active', match);
+        });
         setNotebookPreviewTab('sheet');
         renderNotebookStudioPreview();
       });
@@ -2092,8 +2109,12 @@
     const nbPagesInput = document.getElementById('nbPagesInput');
     document.querySelectorAll('[data-nbpages]').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-nbpages]').forEach(b => b.classList.remove('is-active'));
+        document.querySelectorAll('[data-nbpages]').forEach(b => {
+          b.classList.remove('is-active');
+          b.classList.remove('active');
+        });
         btn.classList.add('is-active');
+        btn.classList.add('active');
         const num = parseInt(btn.getAttribute('data-nbpages') || '50', 10);
         notebookState.numPages = num;
         if (nbPagesInput) nbPagesInput.value = num;
@@ -2105,8 +2126,9 @@
         const num = Math.max(1, parseInt(e.target.value, 10) || 1);
         notebookState.numPages = num;
         document.querySelectorAll('[data-nbpages]').forEach(b => {
-          if (b.getAttribute('data-nbpages') === String(num)) b.classList.add('is-active');
-          else b.classList.remove('is-active');
+          const match = b.getAttribute('data-nbpages') === String(num);
+          b.classList.toggle('is-active', match);
+          b.classList.toggle('active', match);
         });
         renderNotebookStudioPreview();
       });
